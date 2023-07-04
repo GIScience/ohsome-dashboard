@@ -16,7 +16,7 @@ The following steps describe possible setups using `npm`.
 If you only want to change things in the `dashboard` code:
 ```bash
 export DASHBOARD_FOLDER=$(pwd)/ohsome-dashboard # modify to your desired dashboard source folder
-git clone ssh://git@gitlab.gistools.geog.uni-heidelberg.de:2022/giscience/big-data/ohsome/apps/dashboard.git $DASHBOARD_FOLDER
+git clone ssh://git@github.com:GIScience/ohsome-dashboard.git $DASHBOARD_FOLDER
 
 # eventually switch to a development branch
 npm install
@@ -30,8 +30,8 @@ If you need to make changes in dashboard code and ohsome-js-utils at the same ti
 ```bash
 export DASHBOARD_FOLDER=$(pwd)/ohsome-dashboard # modify to your desired dashboard source folder
 export OHSOME_UTILS_FOLDER=$(pwd)/ohsome-js-utils # modify to your desired ohsome-js-utils source folder
-git clone ssh://git@gitlab.gistools.geog.uni-heidelberg.de:2022/giscience/big-data/ohsome/apps/dashboard.git $DASHBOARD_FOLDER
-git clone ssh://git@gitlab.gistools.geog.uni-heidelberg.de:2022/giscience/big-data/ohsome/libs/ohsome-js-utils.git $OHSOME_UTILS_FOLDER
+git clone ssh://git@github.com:GIScience/ohsome-dashboard.git $DASHBOARD_FOLDER
+git clone ssh://git@github.com:GIScience/ohsome-js-utils.git $OHSOME_UTILS_FOLDER
 
 cd $OHSOME_UTILS_FOLDER/dist
 npm link
