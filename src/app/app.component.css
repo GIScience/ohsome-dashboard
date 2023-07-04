@@ -1,0 +1,18 @@
+#main {
+  padding-top: 60px;
+}
+
+.menu img {
+  height: 32px;
+}
+
+.footer img {
+  max-height: 90px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* for mobile < 768px */
+@media screen and (width < 768px ){
+  #header-message-item {display: none}
+}

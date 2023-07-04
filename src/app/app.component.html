@@ -1,0 +1,58 @@
+<div class="ui top fixed borderless menu" [ngClass]="window.innerWidth <= 440? 'mini': ''">
+  <div class="ui container">
+    <a href="https://ohsome.org" target="_blank" class="header link item">
+      <img class="ui inline image" src="assets/images/ohsome_narrow.svg" alt="ohsome logo">
+      <span style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
+    </a>
+    <div id="header-message-item" class="header item">Easy access to OSM History and Quality Analyses</div>
+    <div class="right link item"><a href="https://heigit.org" target="_blank">
+      <img class="ui image" src="assets/images/HeiGIT_Logo_only.svg">
+    </a></div>
+  </div>
+</div>
+<div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
+  <app-query-panel></app-query-panel>
+  <app-result-panel></app-result-panel>
+</div>
+
+<!-- footer -->
+<div class="ui horizontal divider">About</div>
+<div class="ui vertical footer segment">
+  <div class="ui container">
+    <div class="ui stackable inverted divided equal height center aligned grid">
+      <div class="five wide column">
+        <h3 class="header">Data Sources</h3>
+        <p>
+          Analyses OSM data &copy;&nbsp;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors.</a><br>
+          Base map from OpenStreetMap and OpenStreetMap Foundation.<br>
+        </p>
+      </div>
+      <div class="five wide column">
+        <h3 class="header">Technology</h3>
+        <p>
+          The “<a href="https://ohsome.org" target="_blank">ohsome</a>” OpenStreetMap History Analyzer Platform
+          and <a href="https://oqt.ohsome.org" target="_blank">ohsome quality analyst</a> is based
+          on technology developed by <a href="https://heigit.org" target="_blank">HeiGIT</a>.
+        </p>
+        <h4 class="header">OSM Quality Analyses are powered by:</h4>
+        <div class=""><a href="https://oqt.ohsome.org" target="_blank">
+          <img class="ui image" src="assets/images/ohsome-quality-analyst_without_fonts.svg">
+        </a></div>
+      </div>
+      <div class="five wide column">
+        <h3 class="header">Contact</h3>
+        <p>
+          HeiGIT gGmbH<br>
+          Heidelberg, Germany<br>
+          Email: <a href="mailto:ohsome@heigit.org">ohsome@heigit.org</a><br>
+          Web: <a href="https://ohsome.org" target="_blank">ohsome.org</a> and
+            <a href="https://oqt.ohsome.org" target="_blank">oqt.ohsome.org</a><br><br>
+        </p>
+      </div>
+    </div>
+    <div class="ui horizontal divider"></div>
+    <div class="ui stackable equal width center aligned padded grid">
+      <div class="column">&copy; 2023 HeiGIT gGmbH</div>
+    </div>
+  </div>
+</div>

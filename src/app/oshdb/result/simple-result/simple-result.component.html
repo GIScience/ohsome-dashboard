@@ -1,0 +1,32 @@
+<div class="main ui segment">
+  <div class="ui stackable divided column grid">
+    <!--Chart-->
+    <div class="ui nine wide column ">
+      <app-simple-chart [chartJsData]="chartJsData" [chartJsOptions]="chartJsOptions" [chartJsPlugins]="chartJsPlugins"
+                        [type]="'line'"></app-simple-chart>
+    </div>
+
+    <!-- statistics column -->
+    <div class="ui seven wide column ">
+      <div [style.backgroundColor]="simpleRequestColor" [style.backgroundImage]="'none'"
+           class="ui tertiary inverted segment">
+        <div class="ui three mini statistics">
+          <div class="ui inverted statistic">
+            <div class="value">{{kFormatter(chartJsDataStart[0].y, unit)}}</div>
+            <div class="small label">{{moment(chartJsDataStart[0].x).format('YYYY-MM-DD')}}</div>
+          </div>
+          <div class="ui inverted statistic">
+            <div class="value">{{kFormatter(chartJsDataEnd[0].y, unit)}}</div>
+            <div class="small label">{{moment(chartJsDataEnd[0].x).format('YYYY-MM-DD')}}</div>
+          </div>
+          <div class="ui inverted statistic">
+            <div class="value"><i
+              [ngClass]="computeGrowthRateCssClass(growthRate)"
+              class="arrow icon"></i> {{percentFormatter(growthRate)}}</div>
+            <div class="small label">growth rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

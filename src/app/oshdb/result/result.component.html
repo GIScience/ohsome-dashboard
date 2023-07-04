@@ -1,0 +1,77 @@
+<!--Result-->
+<!--Result header-->
+<div id="header" class="ui  top attached menu">
+  <div class="ui borderless stackable text menu">
+    <h3 class="ui header item">
+      <i class="chart bar outline icon"></i><span>OSM History Stats</span>
+    </h3>
+    <!--      <i class="filter icon"></i>-->
+    <!-- simple filter -->
+    <div class="ui item">
+      <span *ngIf="formValues.key" class="ui circular label osmtag">
+              {{formValues.key}} = {{(!!formValues.value) ? formValues.value : '*'}}
+      </span>
+      <!-- advanced filter -->
+      <span *ngIf="formValues.filter" class="ui circular label osmtag" [title]="formValues.filter">
+      {{title}}
+      </span>
+    </div>
+    <div class="ui header item">
+      <i *ngFor="let type of formValues?.types"
+         [class]="type + ' icon'" [title]="'The result includes OSM '+type+'s.'">
+      </i>
+    </div>
+    <!--    </h3>-->
+
+    <div class="ui item">
+      <i class="expand icon" title="measure"></i>{{formValues?.measure}}
+    </div>
+    <div *ngIf="formValues?.groupBy !== 'none'" class="ui item">
+      <i class="list icon" title="group By"></i>{{formValues?.groupBy}}
+    </div>
+    <div *ngIf="formValues?.groupBy === 'tag'" class="ui item">
+      <i class="key icon" title="group By Key"></i>{{formValues?.groupByKey}}
+    </div>
+    <div *ngIf="formValues?.groupBy === 'tag' && formValues?.groupByValues !== ''" class="ui item">
+      <i class="info icon" title="group By Values"></i>{{formValues?.groupByValues}}
+    </div>
+    <div *ngIf="formValues?.groupBy === 'key'" class="ui item">
+      <i class="key icon" title="group By Keys"></i>{{formValues?.groupByKeys}}
+    </div>
+    <div *ngIf="getSelectedNames() !== ''" class="ui item">
+      <i class="circle outline icon" title="selected areas"></i>{{ getSelectedNames() }}
+    </div>
+  </div>
+
+  <div class="ui right borderless text menu">
+    <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">
+      Download
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <a class="item" [href]="getJSONDataURL()" download="result.json"><i class="file icon"></i> Ohsome JSON</a>
+        <a class="item" [href]="getCSVDataURL()" download="result.csv"><i class="file icon"></i> CSV</a>
+      </div>
+    </div>
+    <a class="ui link item" [href]="getPermalink()" (click)="showPermalink($event)"><i
+      class="share icon" title="Share"></i></a>
+    <a class="ui link item" (click)="onClose()"><i class="large close icon"></i></a>
+  </div>
+</div>
+
+<div [ngClass]="{'loading' : isLoading}" class="result ui bottom attached segment">
+  <!-- Error -->
+  <div *ngIf="!!error" class="ui segment">
+    <div>{{error | json}}</div>
+  </div>
+  <div *ngIf="responseType === 'groupByResponse' && groupByResponse.getResult().length === 0">
+    <p>Empty result.</p>
+  </div>
+
+  <!-- Non Error results -->
+  <app-simple-result *ngIf="responseType === 'simpleResponse'" [chartJsData]="chartJsData"
+                     [chartJsOptions]="chartJsOptions" [chartJsPlugins]="chartJsPlugins"
+                     [unit]="unit"></app-simple-result>
+  <app-simple-groupby-type-result *ngIf="responseType === 'groupByResponse' && groupByResponse.getResult().length > 0"
+                                  [response]="groupByResponse"
+                                  [formValues]="formValues"></app-simple-groupby-type-result>
+</div>

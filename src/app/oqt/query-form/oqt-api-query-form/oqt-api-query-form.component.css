@@ -1,0 +1,12 @@
+#topicFilter {
+  display: block;
+  min-height: 5rem;
+  height: 6rem;
+  max-height: 40rem;
+  overflow: auto;
+  resize: vertical;
+  width: 100%;
+  white-space: pre-wrap;
+  border: 1px solid lightgrey;
+  background-color: #f9f9f9
+}

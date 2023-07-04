@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+html {
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: 'latin_modern_mono_light_c10Rg';
+  src: url("assets/fonts/lmmonoltcond10-regular-webfont.woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'latin_modern_mono_prop10Rg';
+  src: url("assets/fonts/lmmonoprop10-regular-webfont.woff");
+  font-weight: normal;
+  font-style: normal;
+}

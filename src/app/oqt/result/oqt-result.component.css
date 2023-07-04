@@ -1,0 +1,16 @@
+#header {
+  padding: 0 1rem;
+}
+
+.result {
+  margin-bottom: 1rem !important;
+  background-color: whitesmoke;
+}
+
+.ui.circular.label.topic {
+  font-family: 'latin_modern_mono_prop10Rg', monospace;
+  background-color: #E8E8E8 !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+  margin: 0 0.5rem !important;
+  text-transform: none !important;
+}

@@ -1,0 +1,12 @@
+.result-panel-container {
+  margin-top: 3rem;
+  margin-bottom: 4rem;
+}
+
+.ui.header > .icon {
+  display: inline-block;
+}
+
+.message {
+  justify-content: center;
+}

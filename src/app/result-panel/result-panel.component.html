@@ -1,0 +1,17 @@
+<div class="result-panel-container">
+  <h3 class="ui center aligned header"><i class="angle double down icon"></i> Result Log <i class="angle double down icon"></i></h3>
+  <div *ngIf="numResults < 1" class="ui blue icon message"><i class="info circle icon"></i>Results will be shown here!</div>
+  <ng-template appResultList></ng-template>
+</div>
+
+<div class="ui basic tiny modal" id="permalinkModal">
+  <i class="close icon"></i>
+  <div class="header">
+    Copy Permalink
+  </div>
+  <!-- see https://semantic-ui.com/modules/modal.html -->
+  <div class="ui input fluid">
+    <input type="text" id="permalink" placeholder="">
+    <button class="ui primary button" onClick="document.querySelector('#permalink').select(); document.execCommand('copy'); $('#permalinkModal').modal('hide');"><i class="copy icon"></i>&nbsp;Copy</button>
+  </div>
+</div>

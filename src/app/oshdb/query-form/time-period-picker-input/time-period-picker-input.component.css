@@ -1,0 +1,23 @@
+.bottom.attached.fields {
+    margin-bottom: 0;
+}
+
+#startfield,#endfield{
+    width: unset;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    /*min-width: 33.333%;*/
+    /*transition: all 0.5s ease !important;
+    -webkit-transition: all 0.5s ease !important;*/
+}
+
+input[name=start],input[name=end]{
+    transition: all 0.5s ease !important;
+    -webkit-transition: all 0.5s ease !important;
+    padding: 0.67em 0.9em !important;
+}
+
+input[name=start]:focus,input[name=end]:focus{
+    width: 13em !important;
+}
