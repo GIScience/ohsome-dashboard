@@ -1,5 +1,7 @@
 # ohsome dashboard
 
+Try out the online version here: https://dashboard.ohsome.org/
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
 
 ## Setup
