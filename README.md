@@ -8,9 +8,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Use node v18
 
-**Troubleshooting**: If there are gyp errors compiling node-sass, try with `node v14` during initial `npm install`.
-
-
 The following steps describe possible setups using `npm`.
 
 ### Simple Setup
