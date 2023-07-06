@@ -3,7 +3,9 @@
   "ignorePatterns": [
     "projects/**/*"
   ],
-  "plugins": ["unused-imports"],
+  "plugins": [
+    "unused-imports"
+  ],
   "overrides": [
     {
       "files": [
