@@ -5,13 +5,9 @@ Changelog
 * chore: upgrade to angular 16 and other dependency upgrades
 
 ## v0.2.1
-* chore: license adjustment from AGPL to GPL [46e3ff3]
+* release: license adjustment from AGPL to GPL [46e3ff3]
 
 [46e3ff3]: https://github.com/GIScience/ohsome-dashboard/commit/46e3ff31a9be0c22d8b3a54553da0474988c9c8e
-
-
-## v0.2.1
-* release: license changed from AGPL to GPL
 
 ## v0.2.0
 * feat: a lot of little css and layout changes
