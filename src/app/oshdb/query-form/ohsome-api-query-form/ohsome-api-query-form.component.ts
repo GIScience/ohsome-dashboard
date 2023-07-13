@@ -79,7 +79,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
     this.types = (this.hashParams.has('types'))
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      ? this.hashParams.get('types').split(',')
+      ? this.hashParams.get('types').split(',').filter(t => this.typeOptions.includes(t))
       : environment.selectedTypes || this.typeOptions;
     this.whichFilter = this.hashParams.has('filter') ? 'advanced' : 'simple';
     this.selectedKey = Utils.getFromParamsOrDefault(this.hashParams, 'key', environment.selectedKey);
