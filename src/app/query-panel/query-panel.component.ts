@@ -77,9 +77,9 @@ export class QueryPanelComponent implements AfterViewChecked {
     const backendValue = this.hashParams.get('backend');
     this.activeBackend = (backendValue === 'ohsomeApi' || backendValue === 'oqtApi') ? backendValue : 'ohsomeApi';
     // settings from hash: map setttings for ohsomeApi AND oqtApi
-    this.bboxes = this.hashParams.get('bboxes') || Utils.loadEnv('bboxes', this.bboxes);
-    this.bcircles = this.hashParams.get('bcircles') || Utils.loadEnv('bcircles', this.bcircles);
-    this.bpolys = this.hashParams.get('bpolys') || Utils.loadEnv('bpolys', this.bpolys);
+    this.bboxes = Utils.getFromParamsOrDefault(this.hashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
+    this.bcircles = Utils.getFromParamsOrDefault(this.hashParams, 'bcircles', Utils.loadEnv('bcircles', this.bcircles));
+    this.bpolys = Utils.getFromParamsOrDefault(this.hashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
     this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) || Utils.loadEnv('boundaryType', this._boundaryType);
     const ids =  this.hashParams.get('adminids')?.split(',').map(Number);
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
