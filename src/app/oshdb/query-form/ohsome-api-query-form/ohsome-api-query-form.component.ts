@@ -81,15 +81,15 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       // @ts-ignore
       ? this.hashParams.get('types').split(',')
       : environment.selectedTypes || this.typeOptions;
-    this.whichFilter = this.hashParams.get('filter') ? 'advanced' : 'simple';
-    this.selectedKey = this.hashParams.get('key') || environment.selectedKey;
-    this.selectedValue = this.hashParams.get('value') || environment.selectedValue;
-    this.selectedFilter = this.hashParams.get('filter') || environment.selectedFilter;
-    this.measure = this.hashParams.get('measure') || this.measureOptions[0];
-    this.groupBy = this.hashParams.get('groupBy') || 'none';
-    this.groupByKeys = this.hashParams.get('groupByKeys') || '';
-    this.groupByKey = this.hashParams.get('groupByKey') || '';
-    this.groupByValues = this.hashParams.get('groupByValues') || '';
+    this.whichFilter = this.hashParams.has('filter') ? 'advanced' : 'simple';
+    this.selectedKey = Utils.getFromParamsOrDefault(this.hashParams, 'key', environment.selectedKey);
+    this.selectedValue = Utils.getFromParamsOrDefault(this.hashParams, 'value', environment.selectedValue);
+    this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
+    this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0]);
+    this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
+    this.groupByKeys = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKeys', '');
+    this.groupByKey = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKey', '');
+    this.groupByValues = Utils.getFromParamsOrDefault(this.hashParams, 'groupByValues', '');
   }
 
   ngAfterViewInit() {

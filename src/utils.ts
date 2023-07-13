@@ -21,4 +21,12 @@ export default class Utils {
     const last = keys.pop()
     keys.reduce((o, k) => o[k] ??= {}, obj)[last] = val
   }
+
+  static getFromParamsOrDefault(params: URLSearchParams, key: string, def: string): string {
+    if (!params.has(key)) {
+      return def;
+    } else {
+      return params.get(key) || '';
+    }
+  }
 }
