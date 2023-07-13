@@ -2,7 +2,14 @@ Changelog
 =========
 
 ## current main
+
+## v0.2.2
+* fix: accept empty parameters from permalink hash [#3]
+* feat: add link to github repo [#1]
 * chore: upgrade to angular 16 and other dependency upgrades
+
+[#1]: https://github.com/GIScience/ohsome-dashboard/issues/1
+[#3]: https://github.com/GIScience/ohsome-dashboard/issues/3
 
 ## v0.2.1
 * release: license adjustment from AGPL to GPL [46e3ff3]
