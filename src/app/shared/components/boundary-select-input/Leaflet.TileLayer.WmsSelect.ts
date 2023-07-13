@@ -98,7 +98,7 @@ class WmsSelect extends L.TileLayer.WMS {
     fetch(request)
       .then((response) => {
         // console.log('fullfilled');
-        if (response.ok && response.headers.get('Content-Type') == 'application/json') {
+        if (response.ok && response.headers.get('Content-Type')?.toLowerCase().includes('json')) {
           return response.json();
         } else {
           // console.log('not fullfilled');
