@@ -12,6 +12,7 @@ import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {SharedModule} from './shared/shared.module';
 import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
+import {catchError, EMPTY} from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -33,9 +34,24 @@ import {ResultPanelComponent} from './result-panel/result-panel.component';
     ResultListDirective
   ],
   providers: [
-    {provide: APP_INITIALIZER, useFactory: urlHashParamsProviderFactory, deps: [UrlHashParamsProviderService], multi: true},
-    {provide: APP_INITIALIZER, useFactory: ohsomeApiMetadataProviderFactory, deps: [OhsomeApiMetadataProviderService], multi: true},
-    {provide: APP_INITIALIZER, useFactory: oqtApiMetadataProviderFactory, deps: [OqtApiMetadataProviderService], multi: true},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: urlHashParamsProviderFactory,
+      deps: [UrlHashParamsProviderService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: ohsomeApiMetadataProviderFactory,
+      deps: [OhsomeApiMetadataProviderService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: oqtApiMetadataProviderFactory,
+      deps: [OqtApiMetadataProviderService],
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })
@@ -47,9 +63,11 @@ export function ohsomeApiMetadataProviderFactory(provider: OhsomeApiMetadataProv
 }
 
 export function oqtApiMetadataProviderFactory(provider: OqtApiMetadataProviderService) {
-  return () => provider.loadOqtApiMetadata();
+  return () => provider.loadOqtApiMetadata().pipe(
+    catchError((err, caught) => EMPTY)
+  )
 }
 
-export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService){
-  return ()=> provider.updateHashParamsStoreFromUrl()
+export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
+  return () => provider.updateHashParamsStoreFromUrl()
 }

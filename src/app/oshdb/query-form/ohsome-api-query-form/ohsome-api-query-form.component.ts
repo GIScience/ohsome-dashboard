@@ -83,7 +83,9 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       : environment.selectedTypes || this.typeOptions;
     this.whichFilter = this.hashParams.has('filter') ? 'advanced' : 'simple';
     this.selectedKey = Utils.getFromParamsOrDefault(this.hashParams, 'key', environment.selectedKey);
-    this.selectedValue = Utils.getFromParamsOrDefault(this.hashParams, 'value', environment.selectedValue);
+    this.selectedValue = this.hashParams.has('key') || this.hashParams.has('value')
+      ? this.hashParams.get('value') || ''
+      : environment.selectedValue;
     this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
     this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0]);
     this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
