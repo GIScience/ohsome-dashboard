@@ -3,7 +3,7 @@ pipeline {
     dockerfile {
       filename 'Dockerfile.test'
       reuseNode true
-      args '--privileged'
+      args '--privileged -v /jenkins/tools:/jenkins/tools'
     }
   }
   options {
