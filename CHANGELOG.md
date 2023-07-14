@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current main
+* feat: display user info in case oqt service is unavailable [!8]
+
+[!8]: https://github.com/GIScience/ohsome-dashboard/pull/8
 
 ## v0.2.2
 * fix: accept empty parameters from permalink hash [#3]
