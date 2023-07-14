@@ -21,8 +21,22 @@
     </div>
     <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''">
-      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi'" [hashParams]=hashParams></app-oqt-api-query-form>
+      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable" [hashParams]=hashParams></app-oqt-api-query-form>
+      <!-- Error message -->
+      <div *ngIf="activeBackend==='oqtApi' && !oqtApiMetadataProviderService.oqtApiAvailable" class="ui one column grid">
+        <!-- Identifier to distinguish ohsome query from oqt query -->
+        <div class="row">
+          <div class="column">
+            <h4 class="ui header"><i class="exclamation triangle icon"></i>ohsome quality analyst</h4>
+            <p>Sorry.</p>
+            <p>This service is temporarily unavailable.</p>
+            <p>Please try again later.</p>
+            <p>Thanks for your patience.</p>
+          </div>
+        </div>
+      </div>
     </div>
+    <!-- End of Error message -->
 
   </div>
   <!-- End of column 1 -->
