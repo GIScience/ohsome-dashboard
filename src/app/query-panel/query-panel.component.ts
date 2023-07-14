@@ -54,7 +54,7 @@ export class QueryPanelComponent implements AfterViewChecked {
   constructor(
     private dataService: DataService,
     private metadataProvider: OhsomeApiMetadataProviderService,
-    private oqtApiMetadataProviderService: OqtApiMetadataProviderService,
+    public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
     private urlHashParamsProviderService: UrlHashParamsProviderService,
     private osmBoundaryProviderService: OsmBoundaryProviderService
   ) {
