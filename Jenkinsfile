@@ -1,8 +1,9 @@
 pipeline {
   agent {
-    docker {
-      image 'node:18'
+    dockerfile {
+      filename 'Dockerfile.test'
       reuseNode true
+      args '--privileged'
     }
   }
   options {
@@ -41,7 +42,7 @@ pipeline {
 
     stage ('Test') {
       steps {
-        sh 'npm run test'
+        sh 'npm run test-chromium-headless'
       }
     }
 

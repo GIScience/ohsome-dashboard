@@ -10,6 +10,7 @@
     "test": "ng test",
     "test-chrome": "ng test --browsers=Chrome",
     "test-chromium": "ng test --browsers=Chromium",
+    "test-chromium-headless": "ng test --browsers=ChromiumHeadless --watch=false",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "e2e": "ng e2e"
