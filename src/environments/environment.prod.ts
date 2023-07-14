@@ -12,13 +12,16 @@ export const environment = {
   //the WFS endpoint which will get appended a CQL_FILTER="id" IN (number, number, ...) param and should return a GeoJSON<FeatureCollection>
   ohsomeBoundaryWFSUrl: 'https://maps.heigit.org/ohsome/wfs?service=wfs&request=GetFeature&typeNames=ohsome:admin_world_water&outputFormat=application/json&version=2.0.0&srsName=EPSG:4326',
 
+  // url to fetch an announcement text
+  announcementUrl: 'https://dashboard.ohsome.org/statuspage',
+
   //map options
   zoomLevel : 2,
   mapCenter : {lat: 0.0, lng: 0.0},
   mapCenterFromPoly : false,
 
   //ohsomeAPI options
-  selectedFilter : `building=* and building!=no and geometry:polygon`,
+  selectedFilter : `natural=tree and type:node`,
   selectedKey : 'natural',
   selectedValue : 'tree',
   selectedTypes : ['node'],
