@@ -1,5 +1,11 @@
 # ohsome dashboard
 
+[![Build Status](https://jenkins.heigit.org/buildStatus/icon?job=ohsome-dashboard/main)](https://jenkins.heigit.org/job/ohsome-dashboard/job/main/)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=GIScience_ohsome-dashboard&metric=alert_status)](https://sonarcloud.io/dashboard?id=GIScience_ohsome-dashboard)
+[![status: active](https://github.com/GIScience/badges/raw/master/status/active.svg)](https://github.com/GIScience/badges#active)
+[![LICENSE](https://img.shields.io/github/license/GIScience/ohsome-dashboard)](LICENSE)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fdashboard.ohsome.org)](https://dashboard.ohsome.org)
+
 Try out the online version here: https://dashboard.ohsome.org/
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
