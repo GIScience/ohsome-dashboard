@@ -24,7 +24,6 @@ export class OhsomeApiService {
   }
 
   getOhsomeApiAnnouncement() {
-    return of({"Announce":"<p>Planned <strong>maintenance from 2023-07-15 05:30 UTC to 2023-07-15 15:00 UTC</strong>. All ohsome services will be affected and may not be available.</p>"});
-    // return this.http.get(OHSOME_API_ANNOUNCEMENT_URL);
+    return this.http.get(OHSOME_API_ANNOUNCEMENT_URL);
   }
 }
