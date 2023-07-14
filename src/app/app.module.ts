@@ -48,6 +48,12 @@ import {catchError, EMPTY} from 'rxjs';
     },
     {
       provide: APP_INITIALIZER,
+      useFactory: ohsomeApiAnnouncementProviderFactory,
+      deps: [OhsomeApiMetadataProviderService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
       useFactory: oqtApiMetadataProviderFactory,
       deps: [OqtApiMetadataProviderService],
       multi: true
@@ -60,6 +66,10 @@ export class AppModule {
 
 export function ohsomeApiMetadataProviderFactory(provider: OhsomeApiMetadataProviderService) {
   return () => provider.loadOhsomeMetadata();
+}
+
+export function ohsomeApiAnnouncementProviderFactory(provider: OhsomeApiMetadataProviderService) {
+  return () => provider.loadOhsomeApiAnnouncement();
 }
 
 export function oqtApiMetadataProviderFactory(provider: OqtApiMetadataProviderService) {

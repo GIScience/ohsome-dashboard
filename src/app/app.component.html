@@ -10,6 +10,14 @@
     </a></div>
   </div>
 </div>
+<div id="announcement" *ngIf="hasAnnouncement" class="ui bottom fixed one item menu">
+  <div class="ui item info message">
+    <i class="medium close icon"></i>
+    <div class="header" [innerHTML]="announcement">
+    </div>
+  </div>
+</div>
+
 <div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
   <app-query-panel></app-query-panel>
   <app-result-panel></app-result-panel>
@@ -23,7 +31,8 @@
       <div class="five wide column">
         <h3 class="header">Data Sources</h3>
         <p>
-          Analyses OSM data &copy;&nbsp;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors.</a><br>
+          Analyses OSM data &copy;&nbsp;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap
+          contributors.</a><br>
           Base map from OpenStreetMap and OpenStreetMap Foundation.<br>
         </p>
       </div>
@@ -35,7 +44,8 @@
           on technology developed by <a href="https://heigit.org" target="_blank">HeiGIT</a>.
         </p>
         <p>
-          The source code for this dashboard is open source (GPL-3.0) and <a href="https://github.com/giscience/ohsome-dashboard">available on gihub</a>.
+          The source code for this dashboard is open source (GPL-3.0) and <a
+          href="https://github.com/giscience/ohsome-dashboard">available on gihub</a>.
         </p>
         <h4 class="header">OSM Quality Analyses are powered by:</h4>
         <div class=""><a href="https://oqt.ohsome.org" target="_blank">
@@ -49,7 +59,7 @@
           Heidelberg, Germany<br>
           Email: <a href="mailto:ohsome@heigit.org">ohsome@heigit.org</a><br>
           Web: <a href="https://ohsome.org" target="_blank">ohsome.org</a> and
-            <a href="https://oqt.ohsome.org" target="_blank">oqt.ohsome.org</a><br><br>
+          <a href="https://oqt.ohsome.org" target="_blank">oqt.ohsome.org</a><br><br>
         </p>
       </div>
     </div>

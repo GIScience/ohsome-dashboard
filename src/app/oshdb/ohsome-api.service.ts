@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
-import ResponseJSON =  OhsomeApi.v1.format.ResponseJSON;
+import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
 
 const OHSOME_API_ROOT_URL = environment.oshdbRestApiRootUrl;
+const OHSOME_API_ANNOUNCEMENT_URL = environment.announcementUrl;
 
 @Injectable()
 export class OhsomeApiService {
@@ -20,5 +21,10 @@ export class OhsomeApiService {
     return this.http.post<ResponseJSON>(OHSOME_API_ROOT_URL + '/' + urlPath,
       queryParams,
       {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'})});
+  }
+
+  getOhsomeApiAnnouncement() {
+    return of({"Announce":"<p>Planned <strong>maintenance from 2023-07-13 05:30 UTC to 2023-07-13 16:00 UTC</strong>. All ohsome services will be affected and not available.</p>"});
+    // return this.http.get(OHSOME_API_ANNOUNCEMENT_URL);
   }
 }
