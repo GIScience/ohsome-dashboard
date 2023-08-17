@@ -1,10 +1,6 @@
 pipeline {
   agent {
-    dockerfile {
-      filename 'Dockerfile.test'
-      reuseNode true
-      args '--privileged -v /jenkins/tools:/jenkins/tools'
-    }
+    label 'worker'
   }
   options {
     timeout(time: 30, unit: 'MINUTES')
@@ -14,7 +10,6 @@ pipeline {
     REPO_NAME = sh(returnStdout: true, script: 'basename `git remote get-url origin` .git').trim()
     LATEST_AUTHOR = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
     LATEST_COMMIT_ID = sh(returnStdout: true, script: 'git describe --tags --long  --always').trim()
-    HOME = sh(returnStdout: true, script: 'pwd').trim()
   }
 
   stages {
@@ -29,20 +24,25 @@ pipeline {
           echo env.BUILD_NUMBER
           echo env.TAG_NAME
         }
-
-        sh 'npm install'
+        nodejs('NodeJS 18') {
+          sh 'npm install'
+        }
       }
     }
 
     stage ('Build') {
       steps {
-        sh 'npm run build'
+        nodejs('NodeJS 18') {
+          sh 'npm run build'
+        }
       }
     }
 
     stage ('Test') {
       steps {
-        sh 'npm run test-chromium-headless'
+        nodejs('NodeJS 18') {
+          sh 'npm run test-chromium-headless'
+        }
       }
     }
 
@@ -60,7 +60,9 @@ pipeline {
               SONAR_CLI_PARAMETER = " " +
                 "-Dsonar.branch.name=${env.BRANCH_NAME}"
             }
-            sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
+            nodejs('NodeJS 18') {
+              sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
+            }
           }
         }
       }
