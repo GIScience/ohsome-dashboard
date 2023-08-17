@@ -10,6 +10,7 @@ pipeline {
     REPO_NAME = sh(returnStdout: true, script: 'basename `git remote get-url origin` .git').trim()
     LATEST_AUTHOR = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
     LATEST_COMMIT_ID = sh(returnStdout: true, script: 'git describe --tags --long  --always').trim()
+    PATH = "${WORKSPACE}/node_modules/.bin:${env.PATH}"
   }
 
   stages {
@@ -41,7 +42,7 @@ pipeline {
     stage ('Test') {
       steps {
         nodejs('NodeJS 18') {
-          sh 'npm run test-chromium-headless'
+          sh 'ng test --karma-config karma-jenkins.conf.js --code-coverage'
         }
       }
     }
