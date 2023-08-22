@@ -42,7 +42,7 @@
     "leaflet": "^1.9.3",
     "moment": "^2.29.4",
     "ngx-pipes": "^3.2.0",
-    "plotly.js-dist-min": "^2.22.0",
+    "plotly.js-dist-min": "^2.25.2",
     "reproject": "^1.2.7",
     "rxjs": "^7.8.0",
     "semantic-ui-calendar": "^0.0.8",
