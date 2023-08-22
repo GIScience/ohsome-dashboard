@@ -56,7 +56,7 @@ type Checkbox<T> = T & {
 
 
 type IndicatorResponseGeoJSON = BaseResponseJSON & Feature<Polygon | MultiPolygon, IndicatorProperties>;
-type IndicatorResponseJSON = BaseResponseJSON & {results: IndicatorProperties[]}
+type IndicatorResponseJSON = BaseResponseJSON & {result: IndicatorProperties[]}
 
 type IndicatorLabel =  'green' | 'yellow' | 'red' | 'undefined';
 interface IndicatorProperties {
