@@ -176,4 +176,5 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   protected readonly Utils = Utils;
+  protected readonly window = window;
 }

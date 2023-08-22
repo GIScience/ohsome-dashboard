@@ -38,8 +38,9 @@
 
   <!-- Non Error results -->
   <div class="main ui segment">
-    <div class="ui stackable divided column equal width grid">
-      <div *ngFor="let indicator of indicatorList" class="ui column">
+    <div class="ui two column equal width grid">
+      <div *ngFor="let indicator of indicatorList"
+           [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
         <app-indicator-result [topicKey]="formValues.topic" [indicatorKey]="indicator"
                               [bpolys]="boundaries"></app-indicator-result>
       </div>
