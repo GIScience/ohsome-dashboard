@@ -67,7 +67,7 @@ export class IndicatorResultComponent implements OnInit {
   }
 
   private handleResponse(response: IndicatorResponseJSON) {
-    const {result, metadata} = response.results[0];
+    const {result, metadata} = response.result[0];
     const {
       figure: rawPlotlyDataLayoutConfig,
       label,
