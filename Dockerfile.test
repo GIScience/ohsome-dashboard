@@ -1,6 +1,0 @@
-FROM node:18
-
-# install java and chromium for tests and sonar-scanner
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends openjdk-17-jre-headless chromium && \
-    rm -rf /var/lib/apt/lists/*
