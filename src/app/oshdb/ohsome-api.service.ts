@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
 

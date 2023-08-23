@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {OhsomeApiService} from './ohsome-api.service';
-import {catchError, EMPTY, Observable, of, tap} from 'rxjs';
+import {catchError, Observable, of, tap} from 'rxjs';
 import MetadataResponse = OhsomeApi.v1.response.MetadataResponse;
 
 
