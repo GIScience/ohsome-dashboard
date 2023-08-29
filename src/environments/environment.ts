@@ -10,7 +10,7 @@ export const environment = {
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
 
   //oqtApi (ohsome quality analyst)
-  oqtApiRootUrl: 'https://oqt.ohsome.org/api',
+  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
   // core, experimental, all, ...
   oqtApiProject: 'all',
 

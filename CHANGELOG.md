@@ -3,6 +3,9 @@ Changelog
 
 ## current main
 
+## v1.0.1
+* change quality analysis domain
+
 ## v0.2.3
 * feat: add dynamic announcement banner with content from statuspage [#10]
 * feat: display user info in case oqt service is unavailable [!8]
