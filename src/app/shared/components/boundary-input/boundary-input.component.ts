@@ -1,7 +1,12 @@
 import {AfterViewInit, Component, ElementRef, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
-import {LeafletMouseEvent, PM} from 'leaflet';
+import {
+  Layer,
+  LeafletEvent,
+  LeafletMouseEvent, Path,
+  PM
+} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
@@ -32,7 +37,8 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     maskPoly: undefined,
     maxBounds: undefined,
     minZoom: undefined,
-    maxZoom: undefined
+    maxZoom: undefined,
+    userDefinedPolygonLayers: undefined
   };
   private _value = ''; // Input value which is used by ngModel
   private _options: BoundaryInputComponentOptions = this.defaultOptions;
@@ -301,8 +307,8 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
     this.setInputType(type);
 
-
-    this.map.on('pm:create', (e: { shape: PM.SUPPORTED_SHAPES, layer: L.Layer }) => {
+//{ shape: PM.SUPPORTED_SHAPES } & LayersControlEvent
+    this.map.on('pm:create', (e: PMLeafletEvent)  => {
       const layer = e.layer;
       const shape = e.shape;
 
@@ -351,13 +357,13 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   onPmRemove(e) {
     console.log('onPmRemove', e);
-    const layer = e.layer;
+    const layer = e.propagatedFrom as Layer;
     if (layer instanceof L.Rectangle) {
-      this.bboxLayersGroup.removeLayer(layer);
+      this.bboxLayersGroup.removeLayer(<Layer>layer);
     } else if (layer instanceof L.Circle) {
-      this.bcircleLayersGroup.removeLayer(layer);
+      this.bcircleLayersGroup.removeLayer(<Layer>layer);
     } else if (layer instanceof L.Polygon) {
-      this.bpolyLayersGroup.removeLayer(layer);
+      this.bpolyLayersGroup.removeLayer(<Layer>layer);
     }
 
     this.updateValueFromMap();
@@ -417,8 +423,26 @@ export interface BoundaryInputComponentOptions {
   minZoom?: number;
   maxZoom?: number;
   maskPoly?: Polygon | MultiPolygon | Feature<Polygon | MultiPolygon> | FeatureCollection<Polygon | MultiPolygon>;
+  userDefinedPolygonLayers?: Userlayer[]
 }
 
 export interface PmOptions extends L.LayerOptions {
   pmIgnore?: boolean;
 }
+
+export interface Userlayer {
+  name: string;
+  title: string;
+  data: Polygon | MultiPolygon | Feature<Polygon | MultiPolygon> | FeatureCollection<Polygon | MultiPolygon>;
+  style: L.PathOptions
+}
+
+// declare module "leaflet" {
+  interface PMLeafletEvent extends LeafletEvent{
+    shape?: PM.SUPPORTED_SHAPES
+  }
+//}
+// export interface PMLayersControlEvent extends L.LayersControlEvent {
+//
+// }
+
