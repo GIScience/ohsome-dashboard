@@ -1,12 +1,7 @@
 import {AfterViewInit, Component, ElementRef, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
-import {
-  Layer,
-  LeafletEvent,
-  LeafletMouseEvent, Path,
-  PM
-} from 'leaflet';
+import {Layer, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
@@ -70,7 +65,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   public map: L.Map;
 
   constructor(private elRef: ElementRef) {
-    //Object.assign(this._options, this.defaultOptions);
     console.log('constructor', this.options);
   }
 
@@ -94,7 +88,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   registerOnChange(fn: any): void {
     console.log('registerOnChange', fn);
     this.propagateChange = fn;
-    // throw new Error("Method not implemented.");
   }
 
   registerOnTouched(fn: any): void {
@@ -128,7 +121,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     console.log('set options');
     Object.assign(this._options, obj);
 
-    // this._options = obj;
     if (this.map) {
       this.setInputType(obj.type);
     }
@@ -157,7 +149,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         const bounds = [[coords[1], coords[0]], [coords[3], coords[2]]];
         L.rectangle(bounds as L.LatLngBoundsExpression, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bboxLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
@@ -173,7 +165,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
           bubblingMouseEvents: false
         } as L.PathOptions).addTo(this.bcircleLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
@@ -194,7 +186,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         }
         L.polygon(latLngs, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bpolyLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
@@ -265,7 +257,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       }
     });
     // update ngModel through ControlValueAccessor
-    this.propagateChange(_value.join('|'));  // (this.value);
+    this.propagateChange(_value.join('|'));
   }
 
 
@@ -308,8 +300,8 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     this.setInputType(type);
 
 //{ shape: PM.SUPPORTED_SHAPES } & LayersControlEvent
-    this.map.on('pm:create', (e: PMLeafletEvent)  => {
-      const layer = e.layer;
+    this.map.on('pm:create', (e: PMLeafletEvent) => {
+      const layer = e.propagatedFrom;
       const shape = e.shape;
 
       switch (shape) {
@@ -331,7 +323,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       }
       //update components value
       console.log('pm:create', e);
-      // e.layer.on('pm:edit', this.updateValueFromMap(),this);
       this.updateValueFromMap();
     }, this);
 
@@ -398,7 +389,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         break;
       }
       case 'bpoly': {
-        //TODO set cutPolygon to true when bpolys format changres to WKT or GeoJSON, but currently holes are not supported
+        //TODO set cutPolygon to true when bpolys format changes to WKT or GeoJSON, but currently holes are not supported
         Object.assign(pmOptions, this.pmBaseOptions, {drawPolygon: true, rotateMode: true, cutPolygon: false});
         this.map.pm.enableDraw('Polygon');
         break;
@@ -437,12 +428,8 @@ export interface Userlayer {
   style: L.PathOptions
 }
 
-// declare module "leaflet" {
-  interface PMLeafletEvent extends LeafletEvent{
-    shape?: PM.SUPPORTED_SHAPES
-  }
-//}
-// export interface PMLayersControlEvent extends L.LayersControlEvent {
-//
-// }
+interface PMLeafletEvent extends LeafletEvent {
+  shape?: PM.SUPPORTED_SHAPES
+}
+
 
