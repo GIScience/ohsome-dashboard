@@ -138,7 +138,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   }
 
   ngOnDestroy() {
-    this.formChangesSubscription.unsubscribe();
+    this.formChangesSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked() {
