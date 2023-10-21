@@ -1,4 +1,4 @@
-import {GrowthRateCssClass} from '../../shared-types';
+import {GrowthRateCssClass} from '../../shared/shared-types';
 
 /**
  * Calculates a growth rate in percent. Value between 0..1.
