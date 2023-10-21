@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -13,11 +13,12 @@ import {BoundarySelectInputComponent} from '../shared/components/boundary-select
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
 import {feature, Properties} from '@turf/helpers';
-import {BoundaryType} from '../shared-types';
+import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
+import {Subscription} from 'rxjs';
 
 
 declare let $: any;
@@ -27,7 +28,7 @@ declare let $: any;
   templateUrl: './query-panel.component.html',
   styleUrls: ['./query-panel.component.css'],
 })
-export class QueryPanelComponent implements AfterViewChecked {
+export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @ViewChild('f', {static: true})
   form: NgForm;
@@ -47,9 +48,14 @@ export class QueryPanelComponent implements AfterViewChecked {
   public bpolys = '';
   private _adminBoundaries = ''; //contains the current FeatureCollection from ngModel
   private _boundaryType: BoundaryType = 'admin';
+  public userDefinedPolygonLayers: Userlayer[] = [];
+
+  public mapOptions: BoundaryInputComponentOptions;
 
   private _selectedNames: string[] = [];
+
   public activeBackend: 'ohsomeApi' | 'oqtApi' = 'ohsomeApi';
+  private formChangesSubscription: Subscription;
 
   constructor(
     private dataService: DataService,
@@ -81,10 +87,20 @@ export class QueryPanelComponent implements AfterViewChecked {
     this.bcircles = Utils.getFromParamsOrDefault(this.hashParams, 'bcircles', Utils.loadEnv('bcircles', this.bcircles));
     this.bpolys = Utils.getFromParamsOrDefault(this.hashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
     this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) || Utils.loadEnv('boundaryType', this._boundaryType);
-    const ids =  this.hashParams.get('adminids')?.split(',').map(Number);
+
+    this.mapOptions = {
+      center: this.mapCenter,
+      zoom: this.zoom,
+      minZoom: this.minZoom,
+      maxBounds: this.maxBounds,
+      maskPoly: this.maskPoly,
+      userDefinedPolygonLayers: this.userDefinedPolygonLayers
+    }
+
+    const ids = this.hashParams.get('adminids')?.split(',').map(Number);
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
       .subscribe({
-        next: (featureCollectionOrEmpty:string) => {
+        next: (featureCollectionOrEmpty: string) => {
           this.adminBoundaries = featureCollectionOrEmpty;
 
           // immediately trigger the query if there are hashparams
@@ -97,6 +113,38 @@ export class QueryPanelComponent implements AfterViewChecked {
           }
         }
       });
+  }
+
+  onChangeIndicatorCoverages($event: Userlayer[]) {
+    console.log("Got changes from OQT Panel")
+    console.log($event)
+    //show additional data on the maps (e.g. coverage of comparison data in OSMAnalysis tab for specific indicators)
+    /*
+    1. listen to Output from oqt-panel indicator (activated indicator having GeoJSON coverage geom)
+    2. Qot should already use turf mask to create the final geom, color etc. infos for userDefinedPolygonLayer
+    3. Add to a list of userDefined Layers on this component and pass it as Input option to the maps
+     */
+
+    // Note: changing a single property of an @Input Object doesn't trigger change detection, so updating the whole
+    // mapOptions Object is necessary
+    this.mapOptions = {...this.mapOptions, userDefinedPolygonLayers: $event}
+  }
+
+  ngOnInit() {
+    this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
+      const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
+      this.urlHashParamsProviderService.updateHashParams(permalinkParams);
+    })
+  }
+
+  ngOnDestroy() {
+    this.formChangesSubscription.unsubscribe();
+  }
+
+  ngAfterViewChecked() {
+    if (this.mapInput) {
+      this.mapInput.map.invalidateSize();
+    }
   }
 
   private getBoundaryTypeFromHashParams(hashParams: URLSearchParams): BoundaryType | undefined {
@@ -124,6 +172,7 @@ export class QueryPanelComponent implements AfterViewChecked {
   set boundaryType(value: BoundaryType) {
     this.mapCenter = this.mapInput.map.getCenter();
     this.zoom = this.mapInput.map.getZoom();
+    this.mapOptions = {...this.mapOptions, center: this.mapInput.map.getCenter(), zoom: this.mapInput.map.getZoom()};
     this._boundaryType = value;
   }
 
@@ -144,7 +193,7 @@ export class QueryPanelComponent implements AfterViewChecked {
   }
 
   public getSelectedPropertyValues(propertyName: string) {
-    if (!this.form.controls['bpolys'].value || this.form.controls['bpolys'].value === '') {
+    if (!('bpolys' in this.form.controls) || !this.form.controls['bpolys'].value || this.form.controls['bpolys'].value.trim() === '') {
       return [];
     }
 
@@ -160,6 +209,7 @@ export class QueryPanelComponent implements AfterViewChecked {
 
     return selectedPropertyvalues;
   }
+
 
   getPermalinkParamsFromFormValues(formValue): Record<any, any> {
     const permalinkParams = {...formValue};
@@ -191,11 +241,6 @@ export class QueryPanelComponent implements AfterViewChecked {
     return permalinkParams;
   }
 
-  ngAfterViewChecked() {
-    if (this.mapInput) {
-      this.mapInput.map.invalidateSize();
-    }
-  }
 
   onSubmit() {
     console.log('Form Value', this.form.value);
@@ -203,7 +248,6 @@ export class QueryPanelComponent implements AfterViewChecked {
     this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     this.dataService.pushFormValues(this.form.value, this._boundaryType);
   }
-
 
   setWhichApi(activeApi: 'ohsomeApi' | 'oqtApi') {
     this.activeBackend = activeApi;
@@ -216,7 +260,7 @@ export class QueryPanelComponent implements AfterViewChecked {
     const featureIndex = event.currentTarget?.['dataset']['featureIndex'];
     const featureCollection = JSON.parse(this.adminBoundaries);
     featureCollection.features.splice(featureIndex, 1);
-    if(featureCollection.features.length === 0){
+    if (featureCollection.features.length === 0) {
       this.adminBoundaries = '';
     } else {
       this.adminBoundaries = JSON.stringify(featureCollection);
@@ -225,4 +269,5 @@ export class QueryPanelComponent implements AfterViewChecked {
   }
 
   protected readonly window = window;
+  protected readonly Object = Object;
 }
