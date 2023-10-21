@@ -199,13 +199,18 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     const selectedPropertyvalues: Properties[] = [];
 
-    propEach(JSON.parse(this.form.controls['bpolys'].value), (properties, featureIndex) => {
-      if (properties) {
-        if (propertyName in properties) {
-          selectedPropertyvalues.push(properties[propertyName]);
+    try {
+      const geoJson = JSON.parse(this.form.controls['bpolys'].value);
+      propEach(geoJson, (properties, featureIndex) => {
+        if (properties) {
+          if (propertyName in properties) {
+            selectedPropertyvalues.push(properties[propertyName]);
+          }
         }
-      }
-    });
+      })
+    } catch {
+      return [];
+    }
 
     return selectedPropertyvalues;
   }
@@ -219,7 +224,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     if (this.boundaryType === 'admin') {
       // delete bpolys and add adminIds
       // replace geojson with id
-      permalinkParams.adminids = this.getSelectedPropertyValues('id').join(',');
+      if (permalinkParams.bpolys) {
+        const bpolys = JSON.parse(permalinkParams.bpolys);
+        if (bpolys.features && bpolys.features.length > 0) {
+          permalinkParams.adminids = this.getSelectedPropertyValues('id').join(',');
+        }
+      }
       delete permalinkParams.bpolys;
     }
 
