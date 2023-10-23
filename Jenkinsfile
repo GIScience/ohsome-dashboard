@@ -8,6 +8,7 @@ pipeline {
 
   environment {
     REPO_NAME = sh(returnStdout: true, script: 'basename `git remote get-url origin` .git').trim()
+    VERSION = sh(returnStdout: true, script: 'grep -Po "\\"version\\": \\"\\K([^\\"]+)" package.json').trim()
     LATEST_AUTHOR = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
     LATEST_COMMIT_ID = sh(returnStdout: true, script: 'git describe --tags --long  --always').trim()
     PATH = "${WORKSPACE}/node_modules/.bin:${env.PATH}"
@@ -52,14 +53,14 @@ pipeline {
         script {
           def scannerHome = tool 'SonarScanner 4';
           withSonarQubeEnv('sonarcloud GIScience/ohsome') {
+            SONAR_CLI_PARAMETER = "-Dsonar.projectVersion=${VERSION} "
             if (env.CHANGE_ID) {
-              SONAR_CLI_PARAMETER = " " +
+              SONAR_CLI_PARAMETER +=
                 "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
                 "-Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} " +
                 "-Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
             } else {
-              SONAR_CLI_PARAMETER = " " +
-                "-Dsonar.branch.name=${env.BRANCH_NAME}"
+              SONAR_CLI_PARAMETER += "-Dsonar.branch.name=${env.BRANCH_NAME}"
             }
             nodejs('NodeJS 18') {
               sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
