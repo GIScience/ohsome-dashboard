@@ -1,8 +1,20 @@
-import {ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
+import {Userlayer} from '../../../shared/shared-types';
 
 declare const $, Prism;
 
@@ -12,9 +24,11 @@ declare const $, Prism;
   styleUrls: ['./oqt-api-query-form.component.css'],
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
-export class OqtApiQueryFormComponent implements OnInit {
+export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   @Input() hashParams: URLSearchParams = new URLSearchParams();
+  @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
+  private indicatorCoverages: Userlayer[] = [];
 
   private oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   private renderer: Renderer2;
@@ -67,6 +81,12 @@ export class OqtApiQueryFormComponent implements OnInit {
 
     // init semantic-ui
     this.initTopicDropdown();
+  }
+
+  ngOnDestroy() {
+    //cleanup
+    this.indicatorCoverages = [];
+    this.changeIndicatorCoverages.emit([]);
   }
 
   getEnrichedIndicators(): Record<string, Checkbox<Indicator>> {
@@ -133,20 +153,49 @@ export class OqtApiQueryFormComponent implements OnInit {
         console.log(value);
         return value;
       })
-      .flatMap(indicatorKey => [this.indicators[indicatorKey]?.['qualityDimension']] as string[] | undefined)
+      .flatMap((indicatorKey: string) => [this.indicators[indicatorKey]?.['qualityDimension']] as Array<string | undefined>)
       .forEach(qualityDimension => {
         if (qualityDimension) {
           this.currentQualityDimensions.add(qualityDimension);
         }
       });
     console.log('qualityDimensions', this.currentQualityDimensions);
+
+    this.initIndicatorCoverages();
   }
 
 
-  initTopicDropdown() {
+  private initTopicDropdown() {
     setTimeout(() => {
+      $('.ui.dropdown').dropdown({
+        fullTextSearch: 'exact'
+      });
       $('.ui.dropdown').dropdown('set exactly', this.selectedTopicKey);
     }, 500);
+  }
+
+  private initIndicatorCoverages() {
+    //cleanup
+    this.indicatorCoverages = [];
+    this.changeIndicatorCoverages.emit([]);
+
+    // get a list of checked indicators
+    // request coverages for all checked indicators
+    Object.keys(this.indicators).forEach(indicatorKey => {
+      // only add coverage for indicators that are checked and available for the current selected topic
+      if (this.indicators[indicatorKey].checked && this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)) {
+        console.log("initIndicatorCoverages", indicatorKey);
+        this.addIndicatorCoverage(indicatorKey);
+      }
+    });
+  }
+
+  private async addIndicatorCoverage(indicatorKey: string) {
+
+    const maskedUserLayer = await this.oqtApiMetadataProviderService.getIndicatorCoverage(indicatorKey);
+
+    this.indicatorCoverages.push(maskedUserLayer);
+    this.changeIndicatorCoverages.emit(this.indicatorCoverages);
   }
 
   onTopicChange() {
@@ -158,5 +207,12 @@ export class OqtApiQueryFormComponent implements OnInit {
     } else {
       this.renderer.setProperty(this.preElem.nativeElement, 'innerHTML', '');
     }
+  }
+
+  onIndicatorToggle(indicatorToggleEvent) {
+    console.log("indicatorToggleEvent", indicatorToggleEvent)
+
+    //clear indicator coverages and re init
+    this.initIndicatorCoverages();
   }
 }

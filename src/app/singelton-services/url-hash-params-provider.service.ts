@@ -16,10 +16,6 @@ export class UrlHashParamsProviderService {
   }
 
   updateHashParams(paramsObject){
-    // const lowerKeyObject = Object.keys(paramsObject).reduce((newLowerCaseObject, currentKey) => {
-    //   newLowerCaseObject[currentKey.toLowerCase()] = paramsObject[currentKey];
-    //   return newLowerCaseObject;
-    // }, {})
     this.currentHashParams = new URLSearchParams(paramsObject);
     window.location.hash = this.currentHashParams.toString();
   }

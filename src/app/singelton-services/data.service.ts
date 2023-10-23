@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {BoundaryType} from '../shared-types';
+import {BoundaryType} from '../shared/shared-types';
 
 type FormData = { formValues: any, boundaryType: BoundaryType };
 

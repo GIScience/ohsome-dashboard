@@ -31,8 +31,8 @@ describe('QueryPanelComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(QueryPanelComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
+    component = fixture.componentInstance;
   });
 
   it('should create', () => {

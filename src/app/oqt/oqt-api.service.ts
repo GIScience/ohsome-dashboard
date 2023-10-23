@@ -5,6 +5,7 @@ import {IndicatorResponseJSON} from './types/types';
 import {environment} from '../../environments/environment';
 import {BaseResponseJSON} from './types/BaseResponseJSON';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
+import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 // import {oqtApiMetadataResponseMock} from './oqt-api-metadata.response.mock';
 // import {indicatorResponseMock} from './result/indicator.response.mock';
 
@@ -39,7 +40,12 @@ export class OqtApiService {
   getIndicator(indicatorKey, body): Observable<IndicatorResponseJSON> {
     // return of(indicatorResponseMock);
     const path = `indicators/${indicatorKey}`;
-    return this.post(path, body) ;
+    return this.post(path, body);
+  }
+
+  getIndicatorCoverage(indicatorKey: string): Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>> {
+    const path = `metadata/indicators/${indicatorKey}/coverage`;
+    return this.get(path) as Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>>;
   }
 
 }

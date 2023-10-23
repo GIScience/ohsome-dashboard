@@ -15,13 +15,15 @@
          (click)="setWhichApi('oqtApi')"><i class="cogs icon"></i>OSM Quality Analyses</a>
     </div>
     <!-- tab content -->
+    <!--    OSM STATS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-ohsome-api"
          [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''">
       <app-ohsome-api-query-form *ngIf="activeBackend==='ohsomeApi'" [hashParams]=hashParams></app-ohsome-api-query-form>
     </div>
+    <!--    OSM ANALYSIS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''">
-      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable" [hashParams]=hashParams></app-oqt-api-query-form>
+      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable" [hashParams]=hashParams (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
       <!-- Error message -->
       <div *ngIf="activeBackend==='oqtApi' && !oqtApiMetadataProviderService.oqtApiAvailable" class="ui one column grid">
         <!-- Identifier to distinguish ohsome query from oqt query -->
@@ -59,16 +61,19 @@
     </div>
 
     <app-boundary-select-input #bsi *ngIf="boundaryType === 'admin'" name="bpolys"
-                               [options]="{type: 'bpoly', center: mapCenter, zoom: zoom, minZoom: minZoom, maxBounds: maxBounds, maskPoly: maskPoly}"
+                               [options]="mapOptions"
                                [(ngModel)]="adminBoundaries" required></app-boundary-select-input>
     <app-boundary-input #bsi *ngIf="boundaryType === 'bbox'" name="bboxes"
-                        [options]="{type: 'bbox', center: mapCenter, zoom: zoom, minZoom: minZoom, maxBounds: maxBounds, maskPoly: maskPoly}"
+                        [interactionType]="'bbox'"
+                        [options]="mapOptions"
                         [(ngModel)]="bboxes" required></app-boundary-input>
     <app-boundary-input #bsi *ngIf="boundaryType === 'bcircle'" name="bcircles"
-                        [options]="{type: 'bcircle', center: mapCenter, zoom: zoom, minZoom: minZoom, maxBounds: maxBounds, maskPoly: maskPoly}"
+                        [interactionType]="'bcircle'"
+                        [options]="mapOptions"
                         [(ngModel)]="bcircles" required></app-boundary-input>
     <app-boundary-input #bsi *ngIf="boundaryType === 'bpoly'" name="bpolys"
-                        [options]="{type: 'bpoly', center: mapCenter, zoom: zoom, minZoom: minZoom, maxBounds: maxBounds, maskPoly: maskPoly}"
+                        [interactionType]="'bpoly'"
+                        [options]="mapOptions"
                         [(ngModel)]="bpolys" required></app-boundary-input>
 
     <div *ngIf="boundaryType === 'admin'" class="field">

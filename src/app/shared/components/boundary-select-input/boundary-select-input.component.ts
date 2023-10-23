@@ -1,12 +1,13 @@
-import {Component, ElementRef, forwardRef, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
-import {LatLngBoundsExpression, LatLngExpression, LayerOptions, LeafletEvent} from 'leaflet';
+import {LayerOptions, LeafletEvent} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {wmsSelect} from './Leaflet.TileLayer.WmsSelect';
-import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import mask from '@turf/mask';
 import area from '@turf/area';
+
+import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
 
 @Component({
   selector: 'app-boundary-select-input',
@@ -21,10 +22,20 @@ import area from '@turf/area';
   ]
 })
 
-export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit {
+export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit, OnChanges {
 
-  private defaultOptions: BoundarySelectInputComponentOptions = {
-    type: 'bpoly',
+  @Input() disabled = false;
+
+  @Input('options')
+  get options(): BoundaryInputComponentOptions {
+    return this._options;
+  }
+
+  set options(newOptions) {
+    this._options = {...this._options, ...newOptions};
+  }
+
+  private defaultOptions: BoundaryInputComponentOptions = {
     label: false,
     center: {lat: 49.4185, lng: 8.6755},
     zoom: 13,
@@ -32,13 +43,16 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     maxBounds: undefined,
     minZoom: undefined,
     maxZoom: undefined,
+    userDefinedPolygonLayers: []
   };
   private _value = ''; // Input value which is used by ngModel
-  private _options: BoundarySelectInputComponentOptions = this.defaultOptions;
+  private _options: BoundaryInputComponentOptions = this.defaultOptions;
 
   private boundaryLayer; // WmsSelect
+  //group for user defined layers
+  private userDefinedLayersGroup = L.layerGroup();
 
-  public map;
+  public map: L.Map;
 
   constructor(private elRef: ElementRef) {
     console.log('constructor', this.options);
@@ -48,6 +62,14 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     this.initMap();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("MAPCHANGE")
+    // // this.options = changes["options"].currentValue as BoundaryInputComponentOptions
+    const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
+    console.log("userLayers", userLayers)
+    this.addOrUpdateUserDefinedLayers(userLayers);
+
+  }
   // ControlValueAccesor methods
   // write value to this component (map)
   writeValue(val: string): void {
@@ -63,7 +85,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
   registerOnChange(fn: any): void {
     console.log('registerOnChange', fn);
     this.propagateChange = fn;
-    // throw new Error("Method not implemented.");
   }
 
   registerOnTouched(fn: any): void {
@@ -72,11 +93,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
 
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
-    // throw new Error("Method not implemented.");
   }
-
-  @Input() disabled = false;
-
 
   get value(): string {
     console.log('GET: value');
@@ -87,20 +104,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     console.log('SET: value', val);
     this._value = val;
     this.updateMapFromValue(val);
-  }
-
-  @Input('options')
-  get options(): BoundarySelectInputComponentOptions {
-    return this._options;
-  }
-
-  set options(obj) {
-    console.log('set options');
-    Object.assign(this._options, obj);
-
-    if (this.map) {
-      console.log('TODO: options settet. But nothing changed?');
-    }
   }
 
   // @param value is a text representation of a bpolys GeoJSON FeatureCollection
@@ -135,7 +138,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     // update ngModel through ControlValueAccessor
     this.propagateChange(_value);
   }
-
 
   private initMap(): void {
     //theMap
@@ -172,7 +174,16 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
         throw new Error('Could not create maskLayer from: ' + JSON.stringify(this.options.maskPoly));
       }
     }
+    //add user defined GeoJSON layers
+    if (this.options.userDefinedPolygonLayers){
+      try {
 
+        this.addOrUpdateUserDefinedLayers(this.options.userDefinedPolygonLayers);
+        this.userDefinedLayersGroup.addTo(this.map);
+      } catch (e) {
+        throw new Error('Could not create user-defined layer from: ' + JSON.stringify(e));
+      }
+    }
 
     type LeafletSelectEvent = LeafletEvent & { selectionLayer: L.GeoJSON };
 
@@ -201,16 +212,18 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
       })
     ;
   }
-}
 
-export interface BoundarySelectInputComponentOptions {
-  type: 'bpoly';
-  label?: string | boolean;
-  center: LatLngExpression;
-  zoom: number;
-  maxBounds?: LatLngBoundsExpression;
-  minZoom?: number;
-  maxZoom?: number;
-  maskPoly?: Polygon | MultiPolygon | Feature<Polygon | MultiPolygon> | FeatureCollection<Polygon | MultiPolygon>;
-}
+  private addOrUpdateUserDefinedLayers(userDefinedLayers: Userlayer[] | undefined) {
 
+    this.userDefinedLayersGroup.clearLayers();
+
+    userDefinedLayers?.forEach(userlayer => {
+      const layer = L.geoJSON(userlayer.data, {
+        pmIgnore: true,
+        interactive: false,
+        style: userlayer.style
+      });
+      layer.addTo(this.userDefinedLayersGroup);
+    })
+  }
+}

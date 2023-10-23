@@ -1,12 +1,13 @@
-import {AfterViewInit, Component, ElementRef, forwardRef, Input} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
-import {LeafletMouseEvent, PM} from 'leaflet';
+import {Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
-import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import mask from '@turf/mask';
+import {BoundaryInputComponentInteractionType, BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
 import OhsomeApiRequest = OhsomeApi.v1.request;
+import area from '@turf/area';
 
 @Component({
   selector: 'app-boundary-input',
@@ -21,20 +22,44 @@ import OhsomeApiRequest = OhsomeApi.v1.request;
   ]
 })
 
-export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit {
+export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+
+  @Input('interactionType')
+  get interactionType(): BoundaryInputComponentInteractionType {
+    return this._interactionType;
+  }
+
+  set interactionType(value: BoundaryInputComponentInteractionType) {
+    this._interactionType = value;
+    if (this.map) {
+      this.setInputType(value);
+    }
+  }
+
+
+  @Input('options')
+  get options(): BoundaryInputComponentOptions {
+    return this._options;
+  }
+
+  set options(newOptions) {
+    this._options = {...this._options, ...newOptions};
+  }
+
 
 
   private defaultOptions: BoundaryInputComponentOptions = {
-    type: 'bbox',
     label: false,
     center: {lat: 49.4185, lng: 8.6755},
     zoom: 13,
     maskPoly: undefined,
     maxBounds: undefined,
     minZoom: undefined,
-    maxZoom: undefined
+    maxZoom: undefined,
+    userDefinedPolygonLayers: []
   };
   private _value = ''; // Input value which is used by ngModel
+  private _interactionType: BoundaryInputComponentInteractionType = 'bbox';
   private _options: BoundaryInputComponentOptions = this.defaultOptions;
 
   //groups to manage different boundary geometry types
@@ -42,6 +67,9 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   private bcircleLayersGroup = L.layerGroup();
   private bpolyLayersGroup = L.layerGroup();
   private boundaryLayersGroup = L.layerGroup([this.bboxLayersGroup, this.bcircleLayersGroup, this.bpolyLayersGroup]);
+
+  //group for user defined layers
+  private userDefinedLayersGroup = L.layerGroup();
 
   // base options for leaflet.pm plugin to be changed as needed
   private pmBaseOptions = {
@@ -64,17 +92,24 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   public map: L.Map;
 
   constructor(private elRef: ElementRef) {
-    //Object.assign(this._options, this.defaultOptions);
     console.log('constructor', this.options);
   }
 
   ngAfterViewInit() {
     console.log('ngAfterViewInit');
-    this.initMap(this.options.type);
+    this.initMap(this.interactionType);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("MAPCHANGE")
+    // // this.options = changes["options"].currentValue as BoundaryInputComponentOptions
+    const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
+    console.log("userLayers", userLayers)
+    this.addOrUpdateUserDefinedLayers(userLayers);
+
+  }
   // ControlValueAccesor methods
-  // write value to to this component (map)
+  // write value to this component (map)
   writeValue(val: string): void {
     console.log('CVA::writeValue');
     this.value = val || '';
@@ -83,12 +118,11 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   propagateChange = (_: any) => {
     console.log('propagateChange', _);
   };
-
   // register a callback that is expected to be triggered every time the value changes from the map
+
   registerOnChange(fn: any): void {
     console.log('registerOnChange', fn);
     this.propagateChange = fn;
-    // throw new Error("Method not implemented.");
   }
 
   registerOnTouched(fn: any): void {
@@ -101,7 +135,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   @Input() disabled = false;
 
-
   get value(): string {
     console.log('GET: value');
     return this._value;
@@ -111,21 +144,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     console.log('SET: value', val);
     this._value = val;
     this.updateMapFromValue(val);
-  }
-
-  @Input('options')
-  get options(): BoundaryInputComponentOptions {
-    return this._options;
-  }
-
-  set options(obj) {
-    console.log('set options');
-    Object.assign(this._options, obj);
-
-    // this._options = obj;
-    if (this.map) {
-      this.setInputType(obj.type);
-    }
   }
 
   // @param value is a text representation of a boundary value (bboxes=... or bcircles=... or bpolys=...
@@ -142,7 +160,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     this.listenToRemove(true);
 
 
-    if (this.options.type == 'bbox') {
+    if (this.interactionType == 'bbox') {
       const bboxes = new OhsomeApiRequest.Bboxes().parse(value);
       bboxes.boundaries.forEach(bbox => {
         console.log('updateMapFromValue::bbox', bbox.toString());
@@ -151,14 +169,14 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         const bounds = [[coords[1], coords[0]], [coords[3], coords[2]]];
         L.rectangle(bounds as L.LatLngBoundsExpression, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bboxLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
           })
         ;
       });
-    } else if (this.options.type == 'bcircle') {
+    } else if (this.interactionType == 'bcircle') {
       const bcircles = new OhsomeApiRequest.Bcircles().parse(value);
       bcircles.boundaries.forEach(bcircle => {
         console.log('updateMapFromValue::bcircle', bcircle.geometry, bcircle.lng, bcircle.lat, bcircle.radius);
@@ -167,7 +185,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
           bubblingMouseEvents: false
         } as L.PathOptions).addTo(this.bcircleLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
@@ -188,7 +206,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         }
         L.polygon(latLngs, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bpolyLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', (e) => {
+          .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
               this.map.pm.enableGlobalEditMode();
             }
@@ -259,11 +277,10 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       }
     });
     // update ngModel through ControlValueAccessor
-    this.propagateChange(_value.join('|'));  // (this.value);
+    this.propagateChange(_value.join('|'));
   }
 
-
-  private initMap(type: string): void {
+  private initMap(interactionType: string): void {
     //theMap
     const mapDiv = this.elRef.nativeElement.querySelector('#boundaryMap');
 
@@ -284,14 +301,29 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     if (this.options.maskPoly) {
       try {
         const maskedPoly = mask(this.options.maskPoly);
+
+        // if extent is whole planet or bigger don't add the maskLayer
+        if (area(maskedPoly) > 0) {
         const maskLayer = L.geoJSON(maskedPoly, {
-          pmIgnore: true,
+            // pmIgnore: true,
           interactive: false,
           style: {color: '#000', stroke: false}
-        } as PmOptions);
+          } as LayerOptions);
         maskLayer.addTo(this.map);
+        }
       } catch (e) {
         throw new Error('Could not create maskLayer from: ' + JSON.stringify(this.options.maskPoly));
+      }
+    }
+
+    //add user defined GeoJSON layers
+    if (this.options.userDefinedPolygonLayers){
+      try {
+
+        this.addOrUpdateUserDefinedLayers(this.options.userDefinedPolygonLayers);
+        this.userDefinedLayersGroup.addTo(this.map);
+      } catch (e) {
+        throw new Error('Could not create user-defined layer from: ' + JSON.stringify(e));
       }
     }
 
@@ -299,10 +331,10 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     // group layer for boundaries
     this.boundaryLayersGroup.addTo(this.map);
 
-    this.setInputType(type);
+    this.setInputType(interactionType);
 
-
-    this.map.on('pm:create', (e: { shape: PM.SUPPORTED_SHAPES, layer: L.Layer }) => {
+//{ shape: PM.SUPPORTED_SHAPES } & LayersControlEvent
+    this.map.on('pm:create', (e: PMLeafletEvent) => {
       const layer = e.layer;
       const shape = e.shape;
 
@@ -325,7 +357,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       }
       //update components value
       console.log('pm:create', e);
-      // e.layer.on('pm:edit', this.updateValueFromMap(),this);
       this.updateValueFromMap();
     }, this);
 
@@ -349,15 +380,29 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   }
 
+  private addOrUpdateUserDefinedLayers(userDefinedLayers: Userlayer[] | undefined) {
+
+    this.userDefinedLayersGroup.clearLayers();
+
+    userDefinedLayers?.forEach(userlayer => {
+      const layer = L.geoJSON(userlayer.data, {
+        pmIgnore: true,
+        interactive: false,
+        style: userlayer.style
+      });
+      layer.addTo(this.userDefinedLayersGroup);
+    })
+  }
+
   onPmRemove(e) {
     console.log('onPmRemove', e);
-    const layer = e.layer;
+    const layer = e.layer as Layer;
     if (layer instanceof L.Rectangle) {
-      this.bboxLayersGroup.removeLayer(layer);
+      this.bboxLayersGroup.removeLayer(<Layer>layer);
     } else if (layer instanceof L.Circle) {
-      this.bcircleLayersGroup.removeLayer(layer);
+      this.bcircleLayersGroup.removeLayer(<Layer>layer);
     } else if (layer instanceof L.Polygon) {
-      this.bpolyLayersGroup.removeLayer(layer);
+      this.bpolyLayersGroup.removeLayer(<Layer>layer);
     }
 
     this.updateValueFromMap();
@@ -392,7 +437,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         break;
       }
       case 'bpoly': {
-        //TODO set cutPolygon to true when bpolys format changres to WKT or GeoJSON, but currently holes are not supported
+        //TODO set cutPolygon to true when bpolys format changes to WKT or GeoJSON, but currently holes are not supported
         Object.assign(pmOptions, this.pmBaseOptions, {drawPolygon: true, rotateMode: true, cutPolygon: false});
         this.map.pm.enableDraw('Polygon');
         break;
@@ -408,17 +453,12 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
 }
 
-export interface BoundaryInputComponentOptions {
-  type: 'bbox' | 'bcircle' | 'bpoly';
-  label?: string | boolean;
-  center: L.LatLngExpression;
-  zoom: number;
-  maxBounds?: L.LatLngBoundsExpression;
-  minZoom?: number;
-  maxZoom?: number;
-  maskPoly?: Polygon | MultiPolygon | Feature<Polygon | MultiPolygon> | FeatureCollection<Polygon | MultiPolygon>;
-}
-
 export interface PmOptions extends L.LayerOptions {
   pmIgnore?: boolean;
 }
+
+interface PMLeafletEvent extends LeafletEvent {
+  shape?: PM.SUPPORTED_SHAPES
+}
+
+
