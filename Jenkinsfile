@@ -30,6 +30,11 @@ pipeline {
           sh 'npm install'
         }
       }
+      post {
+        failure {
+          basicsend("*${REPO_NAME}*-build nr. ${env.BUILD_NUMBER} *failed* to install packages, check your packages.json file (<${env.BUILD_URL}|Open Build in Jenkins>). Latest commit from  ${LATEST_AUTHOR}.")
+        }
+      }
     }
 
     stage ('Build') {
@@ -38,12 +43,22 @@ pipeline {
           sh 'npm run build'
         }
       }
+      post {
+        failure {
+          rocket_buildfail()
+        }
+      }
     }
 
     stage ('Test') {
       steps {
         nodejs('NodeJS 18') {
           sh 'ng test --karma-config karma-jenkins.conf.js --code-coverage'
+        }
+      }
+      post {
+        failure {
+          rocket_testfail()
         }
       }
     }
@@ -66,6 +81,11 @@ pipeline {
               sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
             }
           }
+        }
+      }
+      post {
+        failure {
+          rocket_reportfail()
         }
       }
     }
