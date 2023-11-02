@@ -89,7 +89,11 @@ pipeline {
         }
       }
     }
-
-  // TODO add RocketChat
+    stage('Wrapping Up') {
+         steps {
+            encourage()
+            status_change()
+        }
+    }
   }
 }
