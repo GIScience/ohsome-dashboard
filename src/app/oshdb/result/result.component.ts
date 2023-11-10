@@ -7,13 +7,14 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import * as moment from 'moment';
 import Utils from '../../../utils';
+import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import GroupByResponseJSON = OhsomeApi.v1.format.GroupByResponseJSON;
 import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
 import SimpleResponseJSON = OhsomeApi.v1.format.SimpleResponseJSON;
 import Response = OhsomeApi.v1.response.Response;
 import SimpleResponse = OhsomeApi.v1.response.SimpleResponse;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
-import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
+import {RequiredAndDefined} from '../../shared/shared-types';
 
 declare let $: any;
 
@@ -43,7 +44,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   private simpleRequestColor = '#6EB0E0';
 
-  public chartJsData: Required<ChartData>;
+  public chartJsData: RequiredAndDefined<ChartData>;
+
   public chartJsOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
@@ -268,8 +270,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
       );
   }
 
-  createChartJsData(ohsomeApiResponse: ResponseJSON): Required<ChartData> {
-    const chartData: Required<ChartData> = {
+  createChartJsData(ohsomeApiResponse: ResponseJSON): RequiredAndDefined<ChartData> {
+    const chartData: RequiredAndDefined<ChartData> = {
       labels: [],
       datasets: []
     };
