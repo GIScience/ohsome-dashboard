@@ -35,6 +35,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   indicatorList: string[];
   boundaries: FeatureCollection<Polygon | MultiPolygon>;
 
+  permalink: SafeUrl;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -47,7 +48,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
+    this.permalink = this.getPermalink();
 
     //get indicators to be queried
     const potentialIndicators = Object.keys(this.metadata.result.indicators);
@@ -168,13 +169,14 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   getPermalink(): SafeUrl {
+    console.log("GET OQT PERMALINK");
     return '#' + this.urlHashParamsProviderService.getHashURLSearchParams().toString();
   }
 
   showPermalink(event): void {
     event.preventDefault();
     $('#permalinkModal').modal('show');
-    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.getPermalink();
+    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
   }
 
   protected readonly Utils = Utils;

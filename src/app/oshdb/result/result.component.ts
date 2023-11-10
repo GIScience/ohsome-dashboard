@@ -38,6 +38,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   public simpleResponse: SimpleResponse;
   public groupByResponse: GroupByResponse;
   public responseType: string;
+  public permalink: SafeUrl;
 
   public error: any;
   public isLoading = false;
@@ -145,8 +146,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log('result', this.formValues);
-
+    // console.log('result', this.formValues);
+    this.permalink = this.getPermalink();
     this.setTitle();
     this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues.measure);
     this.getData();
@@ -403,7 +404,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   showPermalink(event): void {
     event.preventDefault();
     $('#permalinkModal').modal('show');
-    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.getPermalink();
+    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
   }
 
   protected readonly GroupByResponse = GroupByResponse;
