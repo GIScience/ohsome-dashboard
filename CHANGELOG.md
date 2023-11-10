@@ -2,6 +2,15 @@ Changelog
 =========
 
 ## current main
+* fix: share link of the result is changed when selecting new properties in query form [PR #24]
+
+[PR #24]: https://github.com/GIScience/ohsome-dashboard/pull/24 
+
+## v1.1.0
+* feat(oqapi): prepare possibility to show coverage polygon for topic-indicator combination [PR #21]
+* fix(dependencies): update angular to v16.2.5
+
+[PR #21]: https://github.com/GIScience/ohsome-dashboard/pull/21
 
 ## v1.0.1
 * change quality analysis domain
