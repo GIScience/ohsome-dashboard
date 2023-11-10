@@ -169,7 +169,6 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   getPermalink(): SafeUrl {
-    console.log("GET OQT PERMALINK");
     return '#' + this.urlHashParamsProviderService.getHashURLSearchParams().toString();
   }
 
