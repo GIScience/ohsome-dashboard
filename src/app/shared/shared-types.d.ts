@@ -29,10 +29,16 @@ interface BoundaryInputComponentOptions {
   userDefinedPolygonLayers?: Userlayer[]
 }
 
+// removes the optional (?) and nullish values from types or interfaces
+type RequiredAndDefined<T> = {
+  [P in keyof T]-?: Exclude<T[P], null | undefined>
+};
+
 export {
   GrowthRateCssClass,
   BoundaryType,
   Userlayer,
   BoundaryInputComponentInteractionType,
-  BoundaryInputComponentOptions
+  BoundaryInputComponentOptions,
+  RequiredAndDefined
 }

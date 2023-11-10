@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ComponentRef, HostBinding, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit} from '@angular/core';
 import {ViewportScroller} from '@angular/common';
 import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
@@ -35,17 +35,20 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   indicatorList: string[];
   boundaries: FeatureCollection<Polygon | MultiPolygon>;
 
+  permalink: SafeUrl;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     oqtApiMetadataProviderService: OqtApiMetadataProviderService,
     private urlHashParamsProviderService: UrlHashParamsProviderService,
     private viewportScroller: ViewportScroller) {
     this.metadata = oqtApiMetadataProviderService.getOqtApiMetadata();
+    changeDetectorRef.detach();
     viewportScroller.setOffset([0, 100]);
   }
 
   ngOnInit(): void {
-
+    this.permalink = this.getPermalink();
 
     //get indicators to be queried
     const potentialIndicators = Object.keys(this.metadata.result.indicators);
@@ -126,7 +129,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
       }
 
     }
-
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
@@ -172,7 +175,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   showPermalink(event): void {
     event.preventDefault();
     $('#permalinkModal').modal('show');
-    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.getPermalink();
+    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
   }
 
   protected readonly Utils = Utils;
