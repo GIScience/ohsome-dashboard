@@ -2,8 +2,12 @@ Changelog
 =========
 
 ## current main
+
+# v1.1.1
+* fix: requesting to many aois shifts page [#16] 
 * fix: share link of the result is changed when selecting new properties in query form [PR #24]
 
+[#16]: https://github.com/GIScience/ohsome-dashboard/issues/16
 [PR #24]: https://github.com/GIScience/ohsome-dashboard/pull/24 
 
 ## v1.1.0
