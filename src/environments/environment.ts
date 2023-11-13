@@ -11,7 +11,8 @@ export const environment = {
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
-  oqtApiRootUrl: 'http://127.0.0.1:8080',
+  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
+  // oqtApiRootUrl: 'http://127.0.0.1:8080',
   // core, experimental, all, ...
   oqtApiProject: 'all',
 
