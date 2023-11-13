@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiService} from '../../oqt-api.service';
 import {IndicatorLabel, IndicatorResponseJSON} from '../../types/types';
@@ -38,7 +38,10 @@ export class IndicatorResultComponent implements OnInit {
   // display the indicator name on top of all as header
   indicatorName: string;
 
-  constructor(private oqtApi: OqtApiService, private oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
+  constructor(
+    private oqtApi: OqtApiService,
+    private oqtApiMetadataProviderService: OqtApiMetadataProviderService,
+    private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -62,6 +65,7 @@ export class IndicatorResultComponent implements OnInit {
       },
       complete: () => {
         this.isLoading = false;
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
