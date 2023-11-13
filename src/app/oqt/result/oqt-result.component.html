@@ -1,21 +1,22 @@
 <!--Result-->
 <!--Result header-->
 <div id="header" class="ui  top attached menu">
-  <div class="ui borderless stackable text menu">
+  <div id="leftMenu" class="ui borderless stackable text menu">
     <h3 class="ui header item">
       <i class="cogs icon"></i><span>OSM Quality Analyses</span>
     </h3>
     <div class="ui item">
-      <span class="ui circular label topic">
+      <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
         {{metadata.result.topics[formValues.topic].name}}
       </span>
     </div>
-    <div class="ui item">
-      <i class="circle outline icon" title="selected areas"></i>{{ Utils.sanitizeLabel(boundaries.features[0].id)  }}
+    <div id="boundaryLabelsItem" class="ui item">
+      <i class="circle outline icon" title="selected areas"></i>
+      <span id="boundaryLabelsText" title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{Utils.sanitizeLabel(boundaries.features[0].id)}}</span>
     </div>
   </div>
 
-  <div class="ui right borderless text menu">
+  <div id="rightMenu" class="ui right borderless text menu">
     <!--    <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">-->
     <!--      Download-->
     <!--      <i class="dropdown icon"></i>-->
