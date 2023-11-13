@@ -1,7 +1,7 @@
 <!--Result-->
 <!--Result header-->
 <div id="header" class="ui  top attached menu">
-  <div class="ui borderless stackable text menu">
+  <div id="leftMenu" class="ui borderless stackable text menu">
     <h3 class="ui header item">
       <i class="chart bar outline icon"></i><span>OSM History Stats</span>
     </h3>
@@ -38,23 +38,23 @@
     <div *ngIf="formValues?.groupBy === 'key'" class="ui item">
       <i class="key icon" title="group By Keys"></i>{{formValues?.groupByKeys}}
     </div>
-    <div *ngIf="getSelectedNames() !== ''" class="ui item">
-      <i class="circle outline icon" title="selected areas"></i>{{ getSelectedNames() }}
+    <div *ngIf="getSelectedNames() !== ''" id="boundaryLabelsItem" class="ui item">
+      <i class="circle outline icon" title="selected areas"></i>
+      <span id="boundaryLabelsText" title="{{getSelectedNames()}}">{{getSelectedNames()}}</span>
     </div>
   </div>
 
   <div class="ui right borderless text menu">
     <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">
-      Download
-      <i class="dropdown icon"></i>
+      <i class="download icon" title="Download"></i>
       <div class="menu">
         <a class="item" [href]="getJSONDataURL()" download="result.json"><i class="file icon"></i> Ohsome JSON</a>
         <a class="item" [href]="getCSVDataURL()" download="result.csv"><i class="file icon"></i> CSV</a>
       </div>
     </div>
-    <a class="ui link item" [href]="permalink" (click)="showPermalink($event)"><i
+    <a class="ui link item" title="Share Permalink to this result" [href]="permalink" (click)="showPermalink($event)"><i
       class="share icon" title="Share"></i></a>
-    <a class="ui link item" (click)="onClose()"><i class="large close icon"></i></a>
+    <a class="ui link item" title="Remove this result from the list" (click)="onClose()"><i class="large close icon"></i></a>
   </div>
 </div>
 
