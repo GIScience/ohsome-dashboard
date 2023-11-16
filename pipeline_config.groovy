@@ -1,4 +1,5 @@
 libraries{
+    npm
     rocketchat
     misc
 }
