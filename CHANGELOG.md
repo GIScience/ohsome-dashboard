@@ -6,12 +6,12 @@ Changelog
 
 [#29]:https://github.com/GIScience/ohsome-dashboard/issues/29
 
-# v1.1.2
+## v1.1.2
 * fix: indicator result not showing results on completion [3809ead]
 
 [3809ead]:https://github.com/GIScience/ohsome-dashboard/commit/3809ead9c1b0cb58be631585ac53a91ae8ea21da
 
-# v1.1.1
+## v1.1.1
 * fix: requesting to many aois shifts page [#16] 
 * fix: share link of the result is changed when selecting new properties in query form [PR #24]
 
