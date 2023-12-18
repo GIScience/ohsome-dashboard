@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {OqtApiService} from './oqt-api.service';
 import {catchError, firstValueFrom, retry, tap, throwError} from 'rxjs';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
-import mask from '@turf/mask';
 import {Userlayer} from '../shared/shared-types';
 
 @Injectable({
@@ -61,12 +60,12 @@ export class OqtApiMetadataProviderService {
       // Start a new download only if no download is in progress
       this.cachedData[indicatorKey] = (async () => {
         try {
-          const coverageGeoJSON = await firstValueFrom(this.oqtApi.getIndicatorCoverage(indicatorKey));
+          const coverageGeoJSON = await firstValueFrom(this.oqtApi.getIndicatorCoverage(indicatorKey,true));
           // fill cache
           this.cachedData[indicatorKey] = Promise.resolve(Object.freeze({
             name: indicatorKey,
             title: `Coverage of reference data`,
-            data: mask(coverageGeoJSON),
+            data: coverageGeoJSON,
             style: {color: '#000', stroke: false}
           }) as Userlayer);
 
