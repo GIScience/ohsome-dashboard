@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current main
+* fix: building comparison data coverage shows too much area as covered (e.g. Bremen) [#29]
+
+[#29]:https://github.com/GIScience/ohsome-dashboard/issues/29
 
 # v1.1.2
 * fix: indicator result not showing results on completion [3809ead]
