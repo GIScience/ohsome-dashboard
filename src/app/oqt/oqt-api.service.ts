@@ -45,7 +45,7 @@ export class OqtApiService {
 
   getIndicatorCoverage(indicatorKey: string, inverse: boolean = false): Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>> {
     const path = `metadata/indicators/${indicatorKey}/coverage`;
-    return this.get(path) as Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>>;
+    return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>>;
   }
 
 }
