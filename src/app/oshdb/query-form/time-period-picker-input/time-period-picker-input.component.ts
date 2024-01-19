@@ -142,14 +142,15 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
   onStartBlur() {
     const date = $('#start').calendar('get date');
     if (date == null) {
-      return;
+      this.start = '';
+    } else {
+      const offset = moment(date).utcOffset();
+      const utctime = moment(date).add(offset, 'm').toISOString().replace(/\.\d+Z/, 'Z');
+
+      this.start = utctime;
     }
-    const offset = moment(date).utcOffset();
-    const utctime = moment(date).add(offset, 'm').toISOString().replace(/\.\d+Z/, 'Z');
 
-    this.start = utctime;
-
-    //propagat complete start/end/period String
+    //propagate complete start/end/period String
     this.propagateChange(this.value);
   }
 
@@ -180,6 +181,7 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
   onEndBlur() {
     const date = $('#end').calendar('get date');
     if (date == null) {
+      $('#end').calendar('set date', this.end, true, false);
       return;
     }
     const offset = moment(date).utcOffset();
@@ -187,7 +189,7 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
 
     this.end = utctime;
 
-    //propagat complete start/end/period String
+    //propagate complete start/end/period String
     this.propagateChange(this.value);
   }
 
