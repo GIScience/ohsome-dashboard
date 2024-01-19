@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## current main
+* Choose query start date automatically based on end date and period ([33])
+
+[#33]:https://github.com/GIScience/ohsome-dashboard/pull/33
+
+
 ## v1.1.3
 * fix: building comparison data coverage shows too much area as covered (e.g. Bremen) [#29]
 
