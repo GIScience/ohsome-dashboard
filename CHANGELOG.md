@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## current main
+* Choose query start date automatically based on end date and period ([33])
+
+[#33]:https://github.com/GIScience/ohsome-dashboard/pull/33
+
 ## v1.1.5
 * fix: backend-errors-not-displayed [#37]
 * test: exclude mock data files from code duplication analysis on sonarcloud
