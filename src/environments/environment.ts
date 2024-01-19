@@ -37,7 +37,7 @@ export const environment = {
   selectedKey : 'historic',
   selectedValue : '',
   selectedTypes : ['node', 'way'],
-  startDate : '2019-03-01',
+  // startDate : '2019-03-01',
   // endDate : '2020-03-01',
   period : 'P1M',
   viewUpdateTime : false,
