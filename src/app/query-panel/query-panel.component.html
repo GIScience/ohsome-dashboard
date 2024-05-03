@@ -18,15 +18,32 @@
     <!--    OSM STATS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-ohsome-api"
          [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''">
-      <app-ohsome-api-query-form *ngIf="activeBackend==='ohsomeApi'" [hashParams]=hashParams></app-ohsome-api-query-form>
+      @if (activeBackend === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+        <app-ohsome-api-query-form [hashParams]=hashParams></app-ohsome-api-query-form>
+      }
+      @if (activeBackend === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+        <div class="ui one column grid">
+          <div class="row">
+            <div class="column">
+              <h4 class="ui header"><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome API</h4>
+              <p>Sorry.</p>
+              <p>This service is temporarily unavailable.</p>
+              <p>Please try again later.</p>
+              <p>Thanks for your patience.</p>
+            </div>
+          </div>
+        </div>
+      }
     </div>
     <!--    OSM ANALYSIS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''">
-      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable" [hashParams]=hashParams (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
+      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable"
+                              [hashParams]=hashParams
+                              (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
       <!-- Error message -->
-      <div *ngIf="activeBackend==='oqtApi' && !oqtApiMetadataProviderService.oqtApiAvailable" class="ui one column grid">
-        <!-- Identifier to distinguish ohsome query from oqt query -->
+      <div *ngIf="activeBackend==='oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)"
+           class="ui one column grid">
         <div class="row">
           <div class="column">
             <h4 class="ui header"><i class="exclamation triangle icon"></i>ohsome quality analyst</h4>
@@ -81,21 +98,21 @@
       <div class="selected-names ui blue labels">
         <ng-container *ngFor="let selected of selectedNames; let i = index">
           <a [attr.data-feature-index]="i" (click)="removeAdminBoundary($event)"
-                class="ui label">{{selected}} <i class="delete icon"></i></a>
+             class="ui label">{{ selected }} <i class="delete icon"></i></a>
         </ng-container>
       </div>
     </div>
     <div *ngIf="boundaryType === 'bbox'" class="field">
-      <label>Bounding Box</label>
-      <input type="text" name="bboxes" [(ngModel)]="bboxes">
+      <label for="bboxes">Bounding Box</label>
+      <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
     </div>
     <div *ngIf="boundaryType === 'bcircle'" class="field">
-      <label>Bounding Circle</label>
-      <input type="text" name="bcircles" [(ngModel)]="bcircles">
+      <label for="bcircles">Bounding Circle</label>
+      <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
     </div>
     <div *ngIf="boundaryType === 'bpoly'" class="field">
-      <label>Bounding Polygon</label>
-      <input type="text" name="bpolys" [(ngModel)]="bpolys">
+      <label for="bpolys">Bounding Polygon</label>
+      <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
     </div>
 
   </div>

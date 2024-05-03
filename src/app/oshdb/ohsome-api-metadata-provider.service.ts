@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {OhsomeApiService} from './ohsome-api.service';
-import {catchError, Observable, of, tap} from 'rxjs';
+import {catchError, Observable, of, retry, tap, throwError} from 'rxjs';
 import MetadataResponse = OhsomeApi.v1.response.MetadataResponse;
 
 
@@ -11,49 +11,66 @@ import MetadataResponse = OhsomeApi.v1.response.MetadataResponse;
 export class OhsomeApiMetadataProviderService {
   private ohsomeMetadataResponse: MetadataResponse;
   private ohsomeApiAnnouncement = '';
+  public ohsomeApiAvailable = false;
 
-  constructor(private restservice: OhsomeApiService) {
+  constructor(private ohsomeApiService: OhsomeApiService) {
   }
 
-  public getOhsomeMetadataResponse(): MetadataResponse {
+  public getOhsomeMetadataResponse(): MetadataResponse | undefined {
     return this.ohsomeMetadataResponse;
   }
 
   public hasOhsomeApiAnnouncement(): boolean {
     return this.ohsomeApiAnnouncement.trim() !== '';
   }
+
   public getOhsomeApiAnnouncement(): string {
     return this.ohsomeApiAnnouncement;
   }
 
-  loadOhsomeMetadata(): Observable<MetadataResponse|{message:string}> {
+  loadOhsomeMetadata(): Observable<MetadataResponse | { message: string }> {
     // return of(ohsomeApiMetadataResponse)
-    return this.restservice.get<MetadataResponse>('metadata')
+    return this.ohsomeApiService.get<MetadataResponse>('metadata')
       .pipe(
+        retry({count: 2, delay: 2000, resetOnSuccess: true}),
         tap((response) => {
           // add custom logic here
           console.log(response);
           if (MetadataResponse.isMetadataResponseJSON(response)) {
             this.ohsomeMetadataResponse = new MetadataResponse(response);
+            this.ohsomeApiAvailable = true;
           } else {
-            alert('Server response was not a metadata response: \n\n' + JSON.stringify(response, undefined, 2));
+            this.ohsomeApiAvailable = false;
           }
         }),
-        catchError( (err) => {
-          alert('Server did not respond with a metadata response: \n\n' + JSON.stringify(err, undefined, 2));
-          return of({"message": 'Server did not respond with a metadata response'})
-        } )
-    )
+        catchError((error) => {
+          this.ohsomeApiAvailable = false;
+          if (error.status === 0) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong.
+            console.error(
+              `Backend returned code ${error.status}, body was: `, error.error);
+          }
+          // Return an observable with a user-facing error message.
+          return throwError(
+            () => new Error('The ohsome API did not respond with a metadata response as expected.')
+          );
+        })
+      )
   }
 
   loadOhsomeApiAnnouncement() {
-    return this.restservice.getOhsomeApiAnnouncement()
+    return this.ohsomeApiService.getOhsomeApiAnnouncement()
       .pipe(
         tap(response => {
           this.ohsomeApiAnnouncement = response['Announce'] || '';
-        } ),
-        catchError((err, caught) => {
+        }),
+        catchError((err) => {
           console.log(err.error);
+          // if we cannot retrieve the announcement, we continue with an empty message
           return of({"Announce": ''})
         })
       )

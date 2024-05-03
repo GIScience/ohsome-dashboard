@@ -55,7 +55,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
   public map: L.Map;
 
   constructor(private elRef: ElementRef) {
-    console.log('constructor', this.options);
   }
 
   ngOnInit(): void {
@@ -63,13 +62,13 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("MAPCHANGE")
+    // console.log("MAPCHANGE")
     // // this.options = changes["options"].currentValue as BoundaryInputComponentOptions
     const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
-    console.log("userLayers", userLayers)
+    // console.log("userLayers", userLayers)
     this.addOrUpdateUserDefinedLayers(userLayers);
-
   }
+
   // ControlValueAccesor methods
   // write value to this component (map)
   writeValue(val: string): void {
@@ -128,7 +127,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
 
   private centerMapOnCurrentData() {
     const bounds = this.boundaryLayer.getBounds();
-    if(!bounds.isValid()) return;
+    if (!bounds.isValid()) return;
     this.map.flyToBounds(this.boundaryLayer.getBounds(), {padding: [20, 20]});
   }
 
@@ -143,7 +142,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     //theMap
     const mapDiv = this.elRef.nativeElement.querySelector('#boundaryMap');
 
-    console.log('initMap', this.options);
     this.map = L.map(mapDiv, {
       maxBounds: this.options.maxBounds,
       minZoom: this.options.minZoom,
@@ -175,7 +173,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
       }
     }
     //add user defined GeoJSON layers
-    if (this.options.userDefinedPolygonLayers){
+    if (this.options.userDefinedPolygonLayers) {
       try {
 
         this.addOrUpdateUserDefinedLayers(this.options.userDefinedPolygonLayers);
