@@ -19,6 +19,7 @@ import {UrlHashParamsProviderService} from '../singelton-services/url-hash-param
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
+import bboxPolygon from '@turf/bbox-polygon';
 
 
 declare let $: any;
@@ -59,12 +60,18 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   constructor(
     private dataService: DataService,
-    private metadataProvider: OhsomeApiMetadataProviderService,
+    public ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
     public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
     private urlHashParamsProviderService: UrlHashParamsProviderService,
     private osmBoundaryProviderService: OsmBoundaryProviderService
   ) {
-    this.maskPoly = feature(this.metadataProvider.getOhsomeMetadataResponse().extractRegion.spatialExtent);
+
+    const spatialExtent = this.ohsomeApiMetadataProviderService
+        .getOhsomeMetadataResponse()
+        ?.extractRegion.spatialExtent
+      ?? bboxPolygon([-180, -90, 180, 90]).geometry;
+    this.maskPoly = feature(spatialExtent);
+
 
     // Code is not necessary for global dataset
     if (environment.mapCenterFromPoly && typeof this.maskPoly === 'object') {
@@ -86,7 +93,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.bboxes = Utils.getFromParamsOrDefault(this.hashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
     this.bcircles = Utils.getFromParamsOrDefault(this.hashParams, 'bcircles', Utils.loadEnv('bcircles', this.bcircles));
     this.bpolys = Utils.getFromParamsOrDefault(this.hashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
-    this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) || Utils.loadEnv('boundaryType', this._boundaryType);
+    this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
 
     this.mapOptions = {
       center: this.mapCenter,

@@ -12,7 +12,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Setup
 
-Use node v18
+Use node v18+
 
 The following steps describe possible setups using `npm`.
 

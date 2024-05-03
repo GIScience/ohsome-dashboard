@@ -65,7 +65,9 @@ export class AppModule {
 }
 
 export function ohsomeApiMetadataProviderFactory(provider: OhsomeApiMetadataProviderService) {
-  return () => provider.loadOhsomeMetadata();
+  return () => provider.loadOhsomeMetadata().pipe(
+    catchError(()=> EMPTY)
+  );
 }
 
 export function ohsomeApiAnnouncementProviderFactory(provider: OhsomeApiMetadataProviderService) {
@@ -74,7 +76,7 @@ export function ohsomeApiAnnouncementProviderFactory(provider: OhsomeApiMetadata
 
 export function oqtApiMetadataProviderFactory(provider: OqtApiMetadataProviderService) {
   return () => provider.loadOqtApiMetadata().pipe(
-    catchError((err, caught) => EMPTY)
+    catchError(() => EMPTY)
   )
 }
 

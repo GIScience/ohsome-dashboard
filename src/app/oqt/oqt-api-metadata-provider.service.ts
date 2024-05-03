@@ -14,7 +14,7 @@ export class OqtApiMetadataProviderService {
   constructor(private oqtApi: OqtApiService) {
   }
 
-  getOqtApiMetadata() {
+  getOqtApiMetadata(): MetadataResponseJSON {
     return this.oqtMetadataResponse;
   }
 

@@ -100,7 +100,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     return enrichedIndicators;
   }
 
-  getEnrichedTopics(indicators: Record<string, Indicator>): Record<string, Topic> {
+  getEnrichedTopics(enrichedIndicators: Record<string, Checkbox<Indicator>>): Record<string, Topic> {
     // enrich topics with their indicators per qualityDimension
     const enrichedTopics = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result.topics) as Record<string, Topic>;
     Object.keys(enrichedTopics)
@@ -111,7 +111,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
         topic.indicators
           .forEach(topicIndicatorKey => {
             //is topic indicator available in indicators list? This depends on the project query param
-            const topicIndicator = this.indicators[topicIndicatorKey];
+            const topicIndicator = enrichedIndicators[topicIndicatorKey];
             if (!topicIndicator) {
               return;
             }
