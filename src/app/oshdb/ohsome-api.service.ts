@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
@@ -14,7 +14,11 @@ export class OhsomeApiService {
   }
 
   get<T>(urlPath: string, queryParams = ''): Observable<T> {
-    return this.http.get<T>(OHSOME_API_ROOT_URL + '/' + urlPath + '?' + queryParams, {responseType: 'json'});
+    return this.http.get<T>(OHSOME_API_ROOT_URL + '/' + urlPath,
+      {
+        params: new HttpParams({fromString: queryParams}),
+        responseType: 'json'
+      });
   }
 
   post(urlPath: string, queryParams?: string): Observable<ResponseJSON> {
