@@ -28,7 +28,7 @@ export class OhsomeApiMetadataProviderService {
     return this.ohsomeApiAnnouncement;
   }
 
-  loadOhsomeMetadata(): Observable<MetadataResponse | { message: string }> {
+  loadOhsomeMetadata(): Observable<MetadataResponse> {
     // return of(ohsomeApiMetadataResponse)
     return this.ohsomeApiService.get<MetadataResponse>('metadata')
       .pipe(
