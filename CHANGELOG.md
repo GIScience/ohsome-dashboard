@@ -1,5 +1,9 @@
 Changelog
 =========
+## current main
+* fix: show-banner-on-dashboard-startup-when-ohsome-api-is-down [#12]
+
+[#12]: https://github.com/GIScience/ohsome-dashboard/issues/12
 
 ## v1.1.3
 * fix: building comparison data coverage shows too much area as covered (e.g. Bremen) [#29]
