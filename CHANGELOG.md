@@ -1,7 +1,10 @@
 Changelog
 =========
-## current main
+
+## v1.1.4
 * fix: show-banner-on-dashboard-startup-when-ohsome-api-is-down [#12]
+* test: exclude *.spec.ts files from sonarcloud coverage reports
+* updated to angular v17
 
 [#12]: https://github.com/GIScience/ohsome-dashboard/issues/12
 
