@@ -8,7 +8,7 @@ export interface MetadataResponseJSON extends BaseResponseJSON {
 interface MetadataResultJSON {
   topics: { [topicKey: string]: RawTopicMetadata },
   indicators: { [indicatorKey: string]: RawIndicatorMetadata },
-  reports: {[reportKey:string]: RawReportMetadata},
+  reports?: {[reportKey:string]: RawReportMetadata},
   qualityDimensions: {[qualityDimensionKey: string]: RawQualityDimensionMetadata},
   projects: {[projectKey:string]: RawProjectMetadata}
 }
