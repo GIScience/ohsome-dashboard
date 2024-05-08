@@ -8,10 +8,11 @@ import BaseResponseJSON from './BaseResponseJSON';
 interface RawTopicMetadata {
   name: string;
   description: string;
-  project: string;
-  filter: string;
-  ratioFilter: string | null;
   endpoint: string;
+  aggregationType: string;
+  projects: string[];
+  filter: string;
+  ratioFilter?: string | null;
   source: string | null;
   indicators: string[];
 }
@@ -25,7 +26,7 @@ interface Topic extends RawTopicMetadata {
 interface RawIndicatorMetadata {
   name: string;
   description: string;
-  project: string;
+  projects: string[];
   qualityDimension: string;
 }
 
