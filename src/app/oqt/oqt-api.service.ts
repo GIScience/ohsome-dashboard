@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, /*of*/} from 'rxjs';
 import {IndicatorResponseJSON} from './types/types';
 import {environment} from '../../environments/environment';
@@ -23,7 +23,11 @@ export class OqtApiService {
   }
 
   get(urlPath: string, queryParams = ''): Observable<BaseResponseJSON> {
-    return this.http.get<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath + '?' + queryParams, {responseType: 'json'});
+    return this.http.get<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
+      {
+        params: new HttpParams({fromString: queryParams}),
+        responseType: 'json'
+      });
   }
 
   post(urlPath: string, body?: any | null): Observable<any> {
@@ -43,9 +47,9 @@ export class OqtApiService {
     return this.post(path, body);
   }
 
-  getIndicatorCoverage(indicatorKey: string, inverse: boolean = false): Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>> {
+  getIndicatorCoverage(indicatorKey: string, inverse: boolean = false): Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>> {
     const path = `metadata/indicators/${indicatorKey}/coverage`;
-    return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon|MultiPolygon>>;
+    return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>>;
   }
 
 }
