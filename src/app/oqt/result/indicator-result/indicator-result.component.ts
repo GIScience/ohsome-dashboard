@@ -61,7 +61,7 @@ export class IndicatorResultComponent implements OnInit {
         console.log(err);
         this.isLoading = false;
         this.error = err.error;
-
+        this.changeDetectorRef.detectChanges();
       },
       complete: () => {
         this.isLoading = false;
