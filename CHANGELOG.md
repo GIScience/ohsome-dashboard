@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## v1.1.5
+* fix: backend-errors-not-displayed [#37]
+* test: exclude mock data files from code duplication analysis on sonarcloud
+
+[#37]: https://github.com/GIScience/ohsome-dashboard/issues/37
+
 ## v1.1.4
 * fix: show-banner-on-dashboard-startup-when-ohsome-api-is-down [#12]
 * test: exclude *.spec.ts files from sonarcloud coverage reports
