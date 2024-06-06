@@ -213,18 +213,10 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
 
     // if start time is not specified: choose a "good" start date automatically
-    // such that: start + n*period ~= end
     if (params.time && params.time.startsWith('/')) {
-      const minDate = moment(this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp);
+      const minDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp;
       const timeParts = params.time.split('/');
-      const period = moment.duration(timeParts[2]);
-      const multiplePeriod = moment.duration();
-      do {
-        multiplePeriod.add(period);
-      } while (moment(timeParts[1]).subtract(multiplePeriod) > minDate);
-      multiplePeriod.subtract(period);
-      const autoStartDate = moment(timeParts[1]).subtract(multiplePeriod);
-      params.time = autoStartDate.toISOString() + params.time;
+      params.time = Utils.calculateStartDateFromEndAndPeriod(timeParts[1], timeParts[2], minDate) + params.time;
     }
 
     if (!this.formValues.filter) {

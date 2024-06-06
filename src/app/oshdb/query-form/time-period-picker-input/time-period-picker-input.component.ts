@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as moment from 'moment';
+import Utils from '../../../../utils';
 
 declare let $: any;
 
@@ -239,5 +240,9 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
     }
     const offset = moment(date).utcOffset();
     return moment(date).add(offset, 'm').toISOString().replace(/\.\d+Z/, 'Z');
+  }
+
+  autoStartDate(): string {
+    return Utils.calculateStartDateFromEndAndPeriod(this.end, this.period, this.options.minDate);
   }
 }

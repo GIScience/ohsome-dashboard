@@ -5,7 +5,7 @@
         <div class="ui calendar" id="start">
             <div class="ui input">
                 <!--<i class="calendar icon"></i>-->
-                <input type="text" name="start" placeholder="Date/Time" [placeholder]="this.options.minDate" autocomplete="off" [disabled]="disabled" (blur)="onStartBlur()" onfocus="this.select();">
+                <input type="text" name="start" placeholder="Date/Time" [placeholder]="this.autoStartDate()" autocomplete="off" [disabled]="disabled" (blur)="onStartBlur()" onfocus="this.select();">
             </div>
         </div>
 
