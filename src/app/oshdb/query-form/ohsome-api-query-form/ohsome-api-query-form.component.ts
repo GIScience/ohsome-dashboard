@@ -56,7 +56,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   constructor(private metadataProvider: OhsomeApiMetadataProviderService) {
     this.minDate = metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp ?? "";
     this.maxDate = metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.toTimestamp ?? "";
-    this.start = Utils.loadEnv('startDate', this.minDate);
+    this.start = Utils.loadEnv('startDate', '');
     this.end = Utils.loadEnv('endDate', this.maxDate);
     this.period = Utils.loadEnv('period', this.period);
   }

@@ -21,3 +21,8 @@ input[name=start],input[name=end]{
 input[name=start]:focus,input[name=end]:focus{
     width: 13em !important;
 }
+
+input[name=start]::placeholder {
+    color: black;
+    opacity: 1;
+}

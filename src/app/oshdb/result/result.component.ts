@@ -7,6 +7,7 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import * as moment from 'moment';
 import Utils from '../../../utils';
+import {OhsomeApiMetadataProviderService} from '../../oshdb/ohsome-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import GroupByResponseJSON = OhsomeApi.v1.format.GroupByResponseJSON;
 import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
@@ -137,6 +138,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
               private restApi: OhsomeApiService,
+              private metadataProvider: OhsomeApiMetadataProviderService,
               private urlHashParamsProviderService: UrlHashParamsProviderService,
               private viewportScroller: ViewportScroller,
               private elemRef: ElementRef,
@@ -208,6 +210,13 @@ export class ResultComponent implements OnInit, AfterViewInit {
       if (supportedParamKeys.includes(key) && !!this.formValues[key]) {
         params[key] = this.formValues[key];
       }
+    }
+
+    // if start time is not specified: choose a "good" start date automatically
+    if (params.time && params.time.startsWith('/')) {
+      const minDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp;
+      const timeParts = params.time.split('/');
+      params.time = Utils.calculateStartDateFromEndAndPeriod(timeParts[1], timeParts[2], minDate) + params.time;
     }
 
     if (!this.formValues.filter) {
