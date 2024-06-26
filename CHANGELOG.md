@@ -2,6 +2,8 @@ Changelog
 =========
 
 ## current main
+
+## v1.2.0
 * Choose query start date automatically based on end date and period ([PR #33])
 * Display message panel for announcements in a more prominent color ([PR #41])
 
