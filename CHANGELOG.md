@@ -5,8 +5,8 @@ Changelog
 * Choose query start date automatically based on end date and period ([PR #33])
 * Display message panel for announcements in a more prominent color ([PR #41])
 
-[#33]:https://github.com/GIScience/ohsome-dashboard/pull/33
-[#41]:https://github.com/GIScience/ohsome-dashboard/pull/41
+[PR #33]:https://github.com/GIScience/ohsome-dashboard/pull/33
+[PR #41]:https://github.com/GIScience/ohsome-dashboard/pull/41
 
 ## v1.1.5
 * fix: backend-errors-not-displayed [#37]
