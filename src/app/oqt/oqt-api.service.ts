@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, /*of*/} from 'rxjs';
 import {IndicatorResponseJSON} from './types/types';
+import {AttributeResponseJSON} from './types/types';
 import {environment} from '../../environments/environment';
 import {BaseResponseJSON} from './types/BaseResponseJSON';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
@@ -52,4 +53,8 @@ export class OqtApiService {
     return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>>;
   }
 
+  getAttributes(): Observable<AttributeResponseJSON>{
+    const path = `metadata/attributes`;
+    return this.get(path) as Observable<AttributeResponseJSON>;
+  }
 }

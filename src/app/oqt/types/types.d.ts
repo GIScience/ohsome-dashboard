@@ -17,6 +17,12 @@ interface RawTopicMetadata {
   indicators: string[];
 }
 
+interface Attribute {
+  filter: string;
+  name: string;
+  description: string;
+}
+
 interface Topic extends RawTopicMetadata {
   key: string;
   qualityDimensions?: { [qualityDimensionKey: string]: Checkbox<Indicator>[] };
@@ -58,6 +64,7 @@ type Checkbox<T> = T & {
 
 type IndicatorResponseGeoJSON = BaseResponseJSON & Feature<Polygon | MultiPolygon, IndicatorProperties>;
 type IndicatorResponseJSON = BaseResponseJSON & {result: IndicatorProperties[]}
+type AttributeResponseJSON = BaseResponseJSON & {result: Map<string, Attribute>}
 
 type IndicatorLabel =  'green' | 'yellow' | 'red' | 'undefined';
 interface IndicatorProperties {
@@ -88,5 +95,5 @@ export {
   IndicatorResponseGeoJSON,
   IndicatorResponseJSON,
   IndicatorLabel,
-  IndicatorProperties
+  IndicatorProperties, Attribute, AttributeResponseJSON
 };

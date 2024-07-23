@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
-import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
+import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic, Attribute} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
 
@@ -48,6 +48,9 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // Topics
   public topics: Record<string, Topic> = {};
 
+  //Attributes
+  public attributes: Map<string, Attribute>;
+
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
   private defaultCheckedIndicators: string[] = ['mapping-saturation'];
@@ -70,7 +73,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.indicators = this.getEnrichedIndicators();
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
-
+    this.attributes = this.oqtApiMetadataProviderService.getAttributes().result
+    console.log("--------------------------------------------------------------------")
+    console.log(this.attributes)
+    console.log("--------------------------------------------------------------------")
+    
     // fill form with hash or default values
     // set topic
     const topicValue = this.hashParams.get('topic');

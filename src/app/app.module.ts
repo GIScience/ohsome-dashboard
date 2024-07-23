@@ -58,6 +58,12 @@ import {catchError, EMPTY} from 'rxjs';
       deps: [OqtApiMetadataProviderService],
       multi: true
     },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: oqtApiAttributeProviderFactory,
+      deps: [OqtApiMetadataProviderService],
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })
@@ -76,6 +82,12 @@ export function ohsomeApiAnnouncementProviderFactory(provider: OhsomeApiMetadata
 
 export function oqtApiMetadataProviderFactory(provider: OqtApiMetadataProviderService) {
   return () => provider.loadOqtApiMetadata().pipe(
+    catchError(() => EMPTY)
+  )
+}
+
+export function oqtApiAttributeProviderFactory(provider: OqtApiMetadataProviderService) {
+  return () => provider.loadAttributes().pipe(
     catchError(() => EMPTY)
   )
 }
