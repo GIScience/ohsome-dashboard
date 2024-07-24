@@ -1,4 +1,14 @@
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
+import {AttributeResponseJSON} from "./types/types";
+
+// TODO: improve result mock by adding attributes
+export const oqtAttributesResponseMock: AttributeResponseJSON = {
+  "apiVersion": "1.2.1",
+  "attribution": {
+    "url": "https://github.com/GIScience/ohsome-quality-api/blob/main/COPYRIGHTS.md"
+  },
+  "result": {}
+};
 
 export const oqtApiMetadataResponseMock: MetadataResponseJSON = {
   "apiVersion": "1.2.1",
