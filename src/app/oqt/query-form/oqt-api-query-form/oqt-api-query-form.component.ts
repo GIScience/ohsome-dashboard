@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
-import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic, Attribute} from '../../types/types';
+import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic, OqtAttribute} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
 
@@ -49,7 +49,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   public topics: Record<string, Topic> = {};
 
   //Attributes
-  public attributes: Map<string, Attribute>;
+  public attributes: Map<string, OqtAttribute>;
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
@@ -77,7 +77,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     console.log("--------------------------------------------------------------------")
     console.log(this.attributes)
     console.log("--------------------------------------------------------------------")
-    
+
     // fill form with hash or default values
     // set topic
     const topicValue = this.hashParams.get('topic');
@@ -222,4 +222,24 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     //clear indicator coverages and re init
     this.initIndicatorCoverages();
   }
+
+  getEntry(map) {
+    console.log("-----------------------------------------------------------------------------")
+    console.log(map["key"]);
+    if (map["key"] == this.selectedTopicKey) {
+
+    for (const key in map["value"]) {
+      console.log(map["value"][key]["name"]);
+      // TODO: only the first attribute is returned. Also, there are blank spaces for all the attributes of all other topics in the frontend
+      return map["value"][key]["name"];
+    }
+    //console.log(map["value"]["height"]["name"])
+    //console.log(map["value"]["height"]["name"])
+    //console.log(map["value"])
+    console.log("-----------------------------------------------------------------------------")
+  }
+}
+  getEntries(): any {
+    return this.attributes
+    }
 }

@@ -17,7 +17,7 @@ interface RawTopicMetadata {
   indicators: string[];
 }
 
-interface Attribute {
+interface OqtAttribute {
   filter: string;
   name: string;
   description: string;
@@ -64,7 +64,7 @@ type Checkbox<T> = T & {
 
 type IndicatorResponseGeoJSON = BaseResponseJSON & Feature<Polygon | MultiPolygon, IndicatorProperties>;
 type IndicatorResponseJSON = BaseResponseJSON & {result: IndicatorProperties[]}
-type AttributeResponseJSON = BaseResponseJSON & {result: Map<string, Attribute>}
+type AttributeResponseJSON = BaseResponseJSON & {result: Map<string, OqtAttribute>}
 
 type IndicatorLabel =  'green' | 'yellow' | 'red' | 'undefined';
 interface IndicatorProperties {
@@ -95,5 +95,7 @@ export {
   IndicatorResponseGeoJSON,
   IndicatorResponseJSON,
   IndicatorLabel,
-  IndicatorProperties, Attribute, AttributeResponseJSON
+  IndicatorProperties,
+  OqtAttribute,
+  AttributeResponseJSON
 };
