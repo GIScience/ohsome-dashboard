@@ -15,6 +15,7 @@ import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-fi
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic, OqtAttribute} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
+import {KeyValue} from "@angular/common";
 
 declare const $, Prism;
 
@@ -43,7 +44,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // 3. possible indicators of the selected topic, assigned to quality-dimensions
   // therefore: we enrich the topics object such that we can lookup the topic related indicators by the indicators quality-dimension
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
-  private _selectedTopicKey: string;
+  _selectedTopicKey: string;
 
   // Topics
   public topics: Record<string, Topic> = {};
@@ -74,7 +75,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
     this.attributes = this.oqtApiMetadataProviderService.getAttributes().result
-    console.log("--------------------------------------------------------------------")
+    console.log("------------------------- attributes: -------------------------------------------")
     console.log(this.attributes)
     console.log("--------------------------------------------------------------------")
 
@@ -223,23 +224,28 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.initIndicatorCoverages();
   }
 
-  getEntry(map) {
-    console.log("-----------------------------------------------------------------------------")
-    console.log(map["key"]);
-    if (map["key"] == this.selectedTopicKey) {
+  getEntry(pair: KeyValue<string, OqtAttribute> ) {
+    console.log("----- START getEntry() -----")
 
-    for (const key in map["value"]) {
-      console.log(map["value"][key]["name"]);
-      // TODO: only the first attribute is returned. Also, there are blank spaces for all the attributes of all other topics in the frontend
-      return map["value"][key]["name"];
-    }
-    //console.log(map["value"]["height"]["name"])
-    //console.log(map["value"]["height"]["name"])
-    //console.log(map["value"])
-    console.log("-----------------------------------------------------------------------------")
+    console.log("----->" + pair["key"]);
+    if (pair["key"] == this.selectedTopicKey) {
+
+      console.log("key", pair["value"]);
+
+    // for (const key in pair["value"]) {
+    //   console.log(pair["value"][key]["name"]);
+    //   //TODO: only the first attribute is returned. Also, there are blank spaces for all the attributes of all other topics in the frontend
+      // return pair["value"][key]["name"];
+    // }
+
+    return pair["value"]["name"];
+
   }
+
+    console.log("----- END getEntry() -----")
+    return "NO RESULT"
 }
-  getEntries(): any {
+  getEntries(): Map<string, OqtAttribute> {
     return this.attributes
     }
 }

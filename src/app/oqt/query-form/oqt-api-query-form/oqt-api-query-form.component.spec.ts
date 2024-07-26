@@ -29,4 +29,33 @@ describe('OqtApiQueryFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('names can be extracted from attributes', () => {
+
+    // create single key-value-pair
+    const buildingCountAttribute = {
+      name: 'Height of Buildings',
+      description: 'TODO',
+      filter: 'height=* or building:levels=*'
+    }
+    const keyAndValue = {
+      key: "height",
+      value: buildingCountAttribute
+    };
+
+    // setup component
+    component._selectedTopicKey = keyAndValue.key
+
+
+    const result = component.getEntry(keyAndValue);
+    const expected: string =buildingCountAttribute.name;
+
+    console.log("*****************************************")
+    console.log(keyAndValue)
+    console.log(result)
+    console.log("*****************************************")
+
+    expect(result).toEqual(expected)
+
+  });
 });
