@@ -18,6 +18,7 @@ export class IndicatorResultComponent implements OnInit {
   @Input() topicKey: string;
   @Input() indicatorKey: string;
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
+  @Input() attributeKey: string;
 
   isLoading = true;
 
@@ -49,12 +50,21 @@ export class IndicatorResultComponent implements OnInit {
   }
 
   private getIndicatorResults() {
-    const body = {
-      'topic': this.topicKey,
+    const body: {
+      topic: string;
+      // 'indicator-key': string;
+      attribute?: string;
+      bpolys: FeatureCollection<Polygon | MultiPolygon>;
+    } = {
+      topic: this.topicKey,
       // 'indicator-key': this.indicatorKey,
       bpolys: this.bpolys
     };
 
+    if (this.attributeKey !== undefined) {
+      body.attribute = this.attributeKey;
+    }
+    console.log(body)
     this.oqtApi.getIndicator(this.indicatorKey, body).subscribe({
       next: this.handleResponse.bind(this),
       error: (err) => {

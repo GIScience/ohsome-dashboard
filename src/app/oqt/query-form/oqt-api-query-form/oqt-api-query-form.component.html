@@ -13,10 +13,10 @@
                   [value]="topic.key">{{topic.value.name}}</option>
         </select>
         <div class="field">
-          <select class="ui search selection dropdown" id="search-select2" name="attributes" [(ngModel)]="selectedAttributeKey"
+          <select class="ui search selection dropdown" id="search-select2" name="attribute" [(ngModel)]="selectedAttributeKey"
                   (change)="onTopicChange()">
-            <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue; let i = index;"
-                    [value]="entry">{{getNameOfCurrentAttribute(entry)}}</option>
+            <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
+                    [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
 
           </select>
         </div>

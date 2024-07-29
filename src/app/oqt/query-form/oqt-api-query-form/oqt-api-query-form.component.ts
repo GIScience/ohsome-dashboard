@@ -230,6 +230,10 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       return pair.value.name
   }
 
+  getKeyOfCurrentAttribute(pair: KeyValue<string, OqtAttribute> ) {
+    return pair.key
+  }
+
   getEntriesForSelectedTopicKey(): Map<string, OqtAttribute> {
     if (this.attributes[this.selectedTopicKey]  !== undefined) {
       return this.attributes[this.selectedTopicKey]

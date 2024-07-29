@@ -43,7 +43,7 @@
       <div *ngFor="let indicator of indicatorList"
            [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
         <app-indicator-result [topicKey]="formValues.topic" [indicatorKey]="indicator"
-                              [bpolys]="boundaries"></app-indicator-result>
+                              [bpolys]="boundaries" [attributeKey]="formValues.attribute"></app-indicator-result>
       </div>
     </div>
   </div>
