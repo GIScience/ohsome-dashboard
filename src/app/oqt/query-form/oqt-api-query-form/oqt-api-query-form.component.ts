@@ -224,28 +224,12 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.initIndicatorCoverages();
   }
 
-  getEntry(pair: KeyValue<string, OqtAttribute> ) {
-    console.log("----- START getEntry() -----")
-
-    console.log("----->" + pair["key"]);
-    if (pair["key"] == this.selectedTopicKey) {
-
-      console.log("key", pair["value"]);
-
-    // for (const key in pair["value"]) {
-    //   console.log(pair["value"][key]["name"]);
-    //   //TODO: only the first attribute is returned. Also, there are blank spaces for all the attributes of all other topics in the frontend
-      // return pair["value"][key]["name"];
-    // }
-
-    return pair["value"]["name"];
-
+  getNameOfCurrentAttribute(pair: KeyValue<string, OqtAttribute> ) {
+      return pair.value.name
   }
 
-    console.log("----- END getEntry() -----")
-    return "NO RESULT"
-}
-  getEntries(): Map<string, OqtAttribute> {
-    return this.attributes
-    }
+  getEntriesForSelectedTopicKey(): Map<string, OqtAttribute> {
+      return this.attributes[this.selectedTopicKey]
+  }
+
 }

@@ -46,14 +46,8 @@ describe('OqtApiQueryFormComponent', () => {
     // setup component
     component._selectedTopicKey = keyAndValue.key
 
-
-    const result = component.getEntry(keyAndValue);
-    const expected: string =buildingCountAttribute.name;
-
-    console.log("*****************************************")
-    console.log(keyAndValue)
-    console.log(result)
-    console.log("*****************************************")
+    const result: string = component.getNameOfCurrentAttribute(keyAndValue);
+    const expected: string = buildingCountAttribute.name;
 
     expect(result).toEqual(expected)
 

@@ -14,8 +14,8 @@
         </select>
         <div class="field">
           <select class="ui search selection dropdown" id="search-select2" name="attributes" (change)="onTopicChange()">
-            <option *ngFor="let entry of getEntries() | keyvalue; let i = index;"
-                    [value]="entry">{{getEntry(entry)}}</option>
+            <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue; let i = index;"
+                    [value]="entry">{{getNameOfCurrentAttribute(entry)}}</option>
 
           </select>
         </div>
