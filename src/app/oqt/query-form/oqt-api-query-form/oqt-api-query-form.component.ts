@@ -46,6 +46,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
   _selectedTopicKey: string;
 
+  selectedAttributeKey: string;
+
   // Topics
   public topics: Record<string, Topic> = {};
 
@@ -229,7 +231,12 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   }
 
   getEntriesForSelectedTopicKey(): Map<string, OqtAttribute> {
+    if (this.attributes[this.selectedTopicKey]  !== undefined) {
       return this.attributes[this.selectedTopicKey]
+    }
+    else {
+      return new Map<string, OqtAttribute>()
+    }
   }
 
 }
