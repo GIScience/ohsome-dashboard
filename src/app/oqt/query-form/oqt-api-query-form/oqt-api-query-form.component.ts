@@ -50,7 +50,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   public topics: Record<string, Topic> = {};
 
   //Attributes
-  public attributes: Map<string, OqtAttribute>;
+  public attributes: Map<string, Map<string, OqtAttribute>>;
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
