@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current main
+ 
+* support parameterization of the attribute completeness indicator via simple (topic-dependent) dropdown box
+
 
 ## v1.2.0
 * Choose query start date automatically based on end date and period ([PR #33])
