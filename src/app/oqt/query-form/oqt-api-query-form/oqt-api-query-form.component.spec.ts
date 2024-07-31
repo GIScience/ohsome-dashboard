@@ -43,9 +43,6 @@ describe('OqtApiQueryFormComponent', () => {
       value: buildingCountAttribute
     };
 
-    // setup component
-    component._selectedTopicKey = keyAndValue.key
-
     const result: string = component.getNameOfCurrentAttribute(keyAndValue);
     const expected: string = buildingCountAttribute.name;
 

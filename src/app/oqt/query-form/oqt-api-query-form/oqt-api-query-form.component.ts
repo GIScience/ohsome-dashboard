@@ -44,7 +44,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // 3. possible indicators of the selected topic, assigned to quality-dimensions
   // therefore: we enrich the topics object such that we can lookup the topic related indicators by the indicators quality-dimension
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
-  _selectedTopicKey: string;
+  private _selectedTopicKey: string;
 
   selectedAttributeKey: string;
 
@@ -52,7 +52,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   public topics: Record<string, Topic> = {};
 
   //Attributes
-  public attributes: Map<string, Map<string, OqtAttribute>>;
+  public attributes: Record<string, Record<string, OqtAttribute>>;
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
@@ -77,9 +77,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
     this.attributes = this.oqtApiMetadataProviderService.getAttributes().result
-    console.log("------------------------- attributes: -------------------------------------------")
-    console.log(this.attributes)
-    console.log("--------------------------------------------------------------------")
+
 
     // fill form with hash or default values
     // set topic
@@ -227,19 +225,19 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   }
 
   getNameOfCurrentAttribute(pair: KeyValue<string, OqtAttribute> ) {
-      return pair.value.name
+    return pair.value.name
   }
 
   getKeyOfCurrentAttribute(pair: KeyValue<string, OqtAttribute> ) {
     return pair.key
   }
 
-  getEntriesForSelectedTopicKey(): Map<string, OqtAttribute> {
+  getEntriesForSelectedTopicKey(): Record<string, OqtAttribute> {
     if (this.attributes[this.selectedTopicKey]  !== undefined) {
       return this.attributes[this.selectedTopicKey]
     }
     else {
-      return new Map<string, OqtAttribute>()
+      return {}
     }
   }
 
