@@ -64,10 +64,16 @@ export class IndicatorResultComponent implements OnInit {
     if (this.indicatorKey !== "attribute-completeness") {
       delete body.attribute;
     }
-    else if (this.attributeKey !== undefined) {
+    else if (this.attributeKey !== "") {
       body.attribute = this.attributeKey;
     }
     console.log(body)
+    if (this.indicatorKey == "attribute-completeness" && this.attributeKey == "") {
+      this.isLoading = false;
+      this.error = {apiVersion: '1.4.0', type: 'MissingParameterError', detail: [{msg: 'Attribute key is missing. Select an attribute to continue.'}]};
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
     this.oqtApi.getIndicator(this.indicatorKey, body).subscribe({
       next: this.handleResponse.bind(this),
       error: (err) => {
