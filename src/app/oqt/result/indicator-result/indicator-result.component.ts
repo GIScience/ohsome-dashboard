@@ -61,7 +61,10 @@ export class IndicatorResultComponent implements OnInit {
       bpolys: this.bpolys
     };
 
-    if (this.attributeKey !== undefined) {
+    if (this.indicatorKey !== "attribute-completeness") {
+      delete body.attribute;
+    }
+    else if (this.attributeKey !== undefined) {
       body.attribute = this.attributeKey;
     }
     console.log(body)
