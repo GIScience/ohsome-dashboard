@@ -208,6 +208,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   onTopicChange() {
     const filter = this.topics[this.selectedTopicKey].filter;
+    // reset selected attribute
+    this.selectedAttributeKey = "";
     //update filter highlighting
     if (filter) {
       const highlightedHTML = Prism.highlight(filter, Prism.languages['ohsome-filter'], 'ohsome-filter');
