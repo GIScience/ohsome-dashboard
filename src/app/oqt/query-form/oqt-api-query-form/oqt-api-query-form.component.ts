@@ -83,6 +83,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     // set topic
     const topicValue = this.hashParams.get('topic');
     this.selectedTopicKey = (topicValue && Object.keys(this.topics).includes(topicValue)) ? topicValue : Object.keys(this.topics)[0];
+
+    this.selectedAttributeKey = this.hashParams.get('attribute') || "";
     //set indicators
     const indicatorValues = this.hashParams.get('indicators')?.split(',') || this.defaultCheckedIndicators;
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
