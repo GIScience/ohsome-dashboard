@@ -46,7 +46,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
   private _selectedTopicKey: string;
 
-  selectedAttributeKey: string;
+  private _selectedAttributeKey: string;
 
   // Topics
   public topics: Record<string, Topic> = {};
@@ -78,19 +78,20 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
     this.attributes = this.oqtApiMetadataProviderService.getAttributes().result
 
-
     // fill form with hash or default values
     // set topic
     const topicValue = this.hashParams.get('topic');
     this.selectedTopicKey = (topicValue && Object.keys(this.topics).includes(topicValue)) ? topicValue : Object.keys(this.topics)[0];
 
-    this.selectedAttributeKey = this.hashParams.get('attribute') || "";
+    const attributeValue = this.hashParams.get('attribute');
+    this.selectedAttributeKey = (attributeValue && Object.keys(this.attributes[this.selectedTopicKey]).includes(attributeValue)) ? attributeValue : Object.keys(this.attributes[this.selectedTopicKey])[0];
     //set indicators
     const indicatorValues = this.hashParams.get('indicators')?.split(',') || this.defaultCheckedIndicators;
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
 
     // init semantic-ui
     this.initTopicDropdown();
+    //this.initAttributeDropdown();
   }
 
   ngOnDestroy() {
@@ -139,6 +140,19 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     return enrichedTopics;
   }
 
+  get selectedAttributeKey() {
+    return this._selectedAttributeKey;
+  }
+
+  set selectedAttributeKey(attributeKey: string) {
+    console.log('selected Attribute Key', attributeKey);
+    // ignore empty calls
+    if (attributeKey == undefined || attributeKey.trim() === '') {
+      return;
+    }
+    this._selectedAttributeKey = attributeKey;
+  }
+
   get selectedTopicKey() {
     return this._selectedTopicKey;
   }
@@ -184,6 +198,15 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
+  private initAttributeDropdown() {
+    setTimeout(() => {
+      $('.ui.dropdown2').dropdown({
+        fullTextSearch: 'exact'
+      });
+      $('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
+    }, 500);
+  }
+
   private initIndicatorCoverages() {
     //cleanup
     this.indicatorCoverages = [];
@@ -211,7 +234,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   onTopicChange() {
     const filter = this.topics[this.selectedTopicKey].filter;
     // reset selected attribute
-    this.selectedAttributeKey = "";
+    console.log("selectedAttributeKey", this.selectedAttributeKey);
+    if (this.selectedAttributeKey !== "") {
+      this.selectedAttributeKey = "";
+    }
+    console.log("selectedAttributeKeyNew", this.selectedAttributeKey);
     //update filter highlighting
     if (filter) {
       const highlightedHTML = Prism.highlight(filter, Prism.languages['ohsome-filter'], 'ohsome-filter');

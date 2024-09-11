@@ -7,14 +7,13 @@
       <!-- 1. Topic or AOI-->
       <h4 class="ui header"><i class="filter icon"></i>Topic</h4>
       <div class="field">
-        <select class="ui search selection dropdown" id="search-select" name="topic" [(ngModel)]="selectedTopicKey"
+        <select class="ui search selection dropdown2" id="search-select" name="topic" [(ngModel)]="selectedTopicKey"
                 (change)="onTopicChange()">
           <option *ngFor="let topic of topics | keyvalue; let i = index;"
                   [value]="topic.key">{{topic.value.name}}</option>
         </select>
         <div class="field">
-          <select class="ui search selection dropdown" id="search-select2" name="attribute" [(ngModel)]="selectedAttributeKey"
-                  (change)="onTopicChange()">
+          <select class="ui search selection dropdown2" id="search-select2" name="attribute" [(ngModel)]="selectedAttributeKey">
             <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
                     [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
 
