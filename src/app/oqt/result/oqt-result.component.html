@@ -9,6 +9,10 @@
       <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
         {{metadata.result.topics[formValues.topic].name}}
       </span>
+      <span *ngIf="formValues['attribute-completeness'] == true && formValues.attribute !== '' "class="ui circular label attribute" title="{{metadata.result.attributes[formValues.topic][formValues.attribute].filter}}">
+        {{metadata.result.attributes[formValues.topic][formValues.attribute].name}}
+      </span>
+
     </div>
     <div id="boundaryLabelsItem" class="ui item">
       <i class="circle outline icon" title="selected areas"></i>

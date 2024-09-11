@@ -56,6 +56,10 @@ interface RawReportMetadata {
   project: string;
 }
 
+interface RawAttributeMetadata {
+  [key: string]: any;
+}
+
 
 type Checkbox<T> = T & {
   checked: boolean
@@ -89,6 +93,7 @@ export {
   RawReportMetadata,
   RawQualityDimensionMetadata,
   RawProjectMetadata,
+  RawAttributeMetadata,
   Topic,
   Indicator,
   Checkbox,
