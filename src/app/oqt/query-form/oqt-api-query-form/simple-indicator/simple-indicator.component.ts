@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterContentInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Checkbox, Indicator} from '../../../types/types';
-import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import {ControlContainer, NgForm} from '@angular/forms';
+
+declare const $;
 
 @Component({
   selector: 'app-simple-indicator',
@@ -14,8 +15,24 @@ import {NgClass} from '@angular/common';
   styleUrl: './simple-indicator.component.css',
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
-export class SimpleIndicatorComponent {
+export class SimpleIndicatorComponent implements AfterContentInit {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
   @Output() indicatorToggle: EventEmitter<any> = new EventEmitter<{indicator: Indicator, state: boolean}>();
+
+  ngAfterContentInit(): void {
+    this.initAttributeDropdown();
+  }
+
+  private initAttributeDropdown() {
+    setTimeout(() => {
+      $('#search-select-attribute').dropdown({
+        fullTextSearch: 'exact'
+      });
+      //$('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
+
+     // $('.ui.dropdown2').dropdown('set exactly', this.indicator.params[`${this.indicator.key}--attributes`]);
+    }, 500);
+  }
+
 }
