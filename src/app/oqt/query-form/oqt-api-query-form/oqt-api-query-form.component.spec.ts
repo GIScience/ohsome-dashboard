@@ -5,6 +5,7 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../oqt-api-metadata-provider.service.mock';
+import {OqtModule} from '../../oqt.module';
 
 describe('OqtApiQueryFormComponent', () => {
   let component: OqtApiQueryFormComponent;
@@ -12,7 +13,7 @@ describe('OqtApiQueryFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientModule],
+      imports: [FormsModule, HttpClientModule, OqtModule],
       declarations: [OqtApiQueryFormComponent],
       providers: [
         NgForm,

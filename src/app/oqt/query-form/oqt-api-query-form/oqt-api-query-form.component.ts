@@ -197,10 +197,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   private initTopicDropdown() {
     setTimeout(() => {
-      $('#search-select-topic').dropdown({
+      const topicSelect = $('#search-select-topic');
+      topicSelect.dropdown({
         fullTextSearch: 'exact'
       });
-      $('#search-select-topic').dropdown('set exactly', this.selectedTopicKey);
+      topicSelect.dropdown('set exactly', this.selectedTopicKey);
     }, 500);
   }
 

@@ -22,6 +22,7 @@ describe('IndicatorResultComponent', () => {
     component = fixture.componentInstance;
     component.topicKey = 'building-area';
     component.indicatorKey = 'mapping-saturation';
+    component.attributeKey = ''
     component.bpolys = {
       'features': [{
         'bbox': [
@@ -112,6 +113,7 @@ describe('IndicatorResultComponent', () => {
 
     // allow usage of any to access private method
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    console.log("test", indicatorResponseMock);
     (component as any).handleResponse(indicatorResponseMock);
 
     expect(component.plotlyDataLayoutConfig).toBeDefined();
