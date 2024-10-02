@@ -46,6 +46,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
   private _selectedTopicKey: string;
 
+  //TODO remove and get from selectedTopic
   private _selectedAttributeKey: string;
 
   // Topics
@@ -83,15 +84,20 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     const topicValue = this.hashParams.get('topic');
     this.selectedTopicKey = (topicValue && Object.keys(this.topics).includes(topicValue)) ? topicValue : Object.keys(this.topics)[0];
 
+    // TODO set attribute should happen wheen indicators are initialized?
+    // if we have multiple indicators we could have many selected keys so we need something hierarchical
+    // or better store current params in indicator object? but might depend on topic
+    // KEY:topic-indicator VALUE: KEY:paramName VALUE: paramValue
     const attributeValue = this.hashParams.get('attribute');
     this.selectedAttributeKey = (attributeValue && Object.keys(this.attributes[this.selectedTopicKey]).includes(attributeValue)) ? attributeValue : Object.keys(this.attributes[this.selectedTopicKey])[0];
+
     //set indicators
     const indicatorValues = this.hashParams.get('indicators')?.split(',') || this.defaultCheckedIndicators;
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
 
     // init semantic-ui
     this.initTopicDropdown();
-    //this.initAttributeDropdown();
+    // this.initAttributeDropdown();
   }
 
   ngOnDestroy() {
@@ -100,12 +106,16 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.changeIndicatorCoverages.emit([]);
   }
 
+  //TODO add param info to indicators see types.d.ts
   getEnrichedIndicators(): Record<string, Checkbox<Indicator>> {
     const enrichedIndicators = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result.indicators) as Record<string, Checkbox<Indicator>>;
-    // initialise all indicator checkbox objects as unchecked except the deafult checked ones
+    // initialise all indicator checkbox objects as unchecked except the default checked ones (see ngOnInit)
     Object.keys(enrichedIndicators).forEach(indicatorKey => {
       enrichedIndicators[indicatorKey].checked = false;
       enrichedIndicators[indicatorKey].key = indicatorKey;
+      // TODO we want to be able to store multiple params per topic-indicator combination
+      //enrichedIndicators[indicatorKey].params = {};
+
     });
 
     return enrichedIndicators;
@@ -146,10 +156,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   set selectedAttributeKey(attributeKey: string) {
     console.log('selected Attribute Key', attributeKey);
-    // ignore empty calls
-    if (attributeKey == undefined || attributeKey.trim() === '') {
-      return;
-    }
     this._selectedAttributeKey = attributeKey;
   }
 
@@ -191,21 +197,21 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   private initTopicDropdown() {
     setTimeout(() => {
-      $('.ui.dropdown').dropdown({
+      $('#search-select-topic').dropdown({
         fullTextSearch: 'exact'
       });
-      $('.ui.dropdown').dropdown('set exactly', this.selectedTopicKey);
+      $('#search-select-topic').dropdown('set exactly', this.selectedTopicKey);
     }, 500);
   }
 
-  private initAttributeDropdown() {
-    setTimeout(() => {
-      $('.ui.dropdown2').dropdown({
-        fullTextSearch: 'exact'
-      });
-      $('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
-    }, 500);
-  }
+  // private initAttributeDropdown() {
+  //   setTimeout(() => {
+  //     $('.ui.dropdown2').dropdown({
+  //       fullTextSearch: 'exact'
+  //     });
+  //     $('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
+  //   }, 500);
+  // }
 
   private initIndicatorCoverages() {
     //cleanup
@@ -233,12 +239,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   onTopicChange() {
     const filter = this.topics[this.selectedTopicKey].filter;
-    // reset selected attribute
-    console.log("selectedAttributeKey", this.selectedAttributeKey);
-    if (this.selectedAttributeKey !== "") {
-      this.selectedAttributeKey = "";
-    }
-    console.log("selectedAttributeKeyNew", this.selectedAttributeKey);
     //update filter highlighting
     if (filter) {
       const highlightedHTML = Prism.highlight(filter, Prism.languages['ohsome-filter'], 'ohsome-filter');
@@ -246,6 +246,15 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     } else {
       this.renderer.setProperty(this.preElem.nativeElement, 'innerHTML', '');
     }
+
+    // reset selected attribute
+    //if selectedAttributeKey is empty or does not fit to the current topic,
+    // do use the first available attribute of the topic
+    console.log("selectedAttributeKey", this.selectedAttributeKey);
+    if (this.selectedAttributeKey === "" || !Object.keys(this.attributes[this.selectedTopicKey]).includes(this.selectedAttributeKey)) {
+      this.selectedAttributeKey = Object.keys(this.attributes[this.selectedTopicKey])[0] || '';
+    }
+    console.log("selectedAttributeKeyNew", this.selectedAttributeKey);
   }
 
   onIndicatorToggle(indicatorToggleEvent) {
