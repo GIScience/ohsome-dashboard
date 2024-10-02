@@ -13,7 +13,7 @@ export interface MetadataResponseJSON extends BaseResponseJSON {
 }
 
 interface MetadataResultJSON {
-  attributes: { [attributeKey: string]: RawAttributeMetadata },
+  attributes: Record<[topicKey: string], Record<[attributeKey:string], RawAttributeMetadata>>,
   topics: { [topicKey: string]: RawTopicMetadata },
   indicators: { [indicatorKey: string]: RawIndicatorMetadata },
   reports?: {[reportKey:string]: RawReportMetadata},
