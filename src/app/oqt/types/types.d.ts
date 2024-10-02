@@ -48,6 +48,14 @@ interface RawProjectMetadata {
 
 interface Indicator extends RawIndicatorMetadata {
   key: string;
+  //TODO add param information
+  /*availableParams: {
+    attribute-completeness--attributes: "list enriched with key"
+  }
+  params: {
+    attribute-completeness--attributes: ["selectedAttribute1","selectedAttribute2"]
+  }*/
+  //params: { [indicatorParameterKey: string]: any }
 }
 
 interface RawReportMetadata {
@@ -67,10 +75,11 @@ type Checkbox<T> = T & {
 
 
 type IndicatorResponseGeoJSON = BaseResponseJSON & Feature<Polygon | MultiPolygon, IndicatorProperties>;
-type IndicatorResponseJSON = BaseResponseJSON & {result: IndicatorProperties[]}
-type AttributeResponseJSON = BaseResponseJSON & {result: Map<string, OqtAttribute>}
+type IndicatorResponseJSON = BaseResponseJSON & { result: IndicatorProperties[] }
+type AttributeResponseJSON = BaseResponseJSON & { result: Map<string, OqtAttribute> }
 
-type IndicatorLabel =  'green' | 'yellow' | 'red' | 'undefined';
+type IndicatorLabel = 'green' | 'yellow' | 'red' | 'undefined';
+
 interface IndicatorProperties {
   metadata: { name: string; description: string; projects: string[]; qualityDimension: string },
   topic: { key: string; name: string; description: string; projects: string[] },
@@ -84,7 +93,6 @@ interface IndicatorProperties {
     figure: PlotlyDataLayoutConfig | null;
   }
 }
-
 
 
 export {
