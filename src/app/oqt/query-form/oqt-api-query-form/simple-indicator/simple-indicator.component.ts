@@ -18,7 +18,7 @@ declare const $;
 export class SimpleIndicatorComponent implements AfterContentInit {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
-  @Output() indicatorToggle: EventEmitter<any> = new EventEmitter<{indicator: Indicator, state: boolean}>();
+  @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
 
   ngAfterContentInit(): void {
     this.initAttributeDropdown();

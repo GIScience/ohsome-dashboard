@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import * as Plotly from 'plotly.js-dist-min';
-import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 
 @Component({
   selector: 'app-plotly-chart',
@@ -8,7 +7,7 @@ import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
   styleUrls: ['./plotly-chart.component.css']
 })
 export class PlotlyChartComponent implements AfterViewInit{
-@Input() plotlyDataLayoutConfig: PlotlyDataLayoutConfig;
+@Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;
 @ViewChild('chart', {static: false}) chartDiv: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit(): void {

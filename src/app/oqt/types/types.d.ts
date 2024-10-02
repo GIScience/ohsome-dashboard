@@ -1,5 +1,5 @@
 import {Feature, MultiPolygon, Polygon} from 'geojson';
-import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
+import * as Plotly from 'plotly.js-dist-min';
 import BaseResponseJSON from './BaseResponseJSON';
 
 /**
@@ -39,6 +39,7 @@ interface RawIndicatorMetadata {
 interface RawQualityDimensionMetadata {
   name: string;
   description: string;
+  source: string | null;
 }
 
 interface RawProjectMetadata {
@@ -65,7 +66,9 @@ interface RawReportMetadata {
 }
 
 interface RawAttributeMetadata {
-  [key: string]: any;
+  name: string,
+  description: string;
+  filter: string;
 }
 
 
@@ -76,7 +79,7 @@ type Checkbox<T> = T & {
 
 type IndicatorResponseGeoJSON = BaseResponseJSON & Feature<Polygon | MultiPolygon, IndicatorProperties>;
 type IndicatorResponseJSON = BaseResponseJSON & { result: IndicatorProperties[] }
-type AttributeResponseJSON = BaseResponseJSON & { result: Map<string, OqtAttribute> }
+type AttributeResponseJSON = BaseResponseJSON & { result: Record<string, Record<string, OqtAttribute>> }
 
 type IndicatorLabel = 'green' | 'yellow' | 'red' | 'undefined';
 
@@ -90,7 +93,7 @@ interface IndicatorProperties {
     value: number | null;
     label: IndicatorLabel;
     class: number | null;
-    figure: PlotlyDataLayoutConfig | null;
+    figure: Plotly.PlotlyDataLayoutConfig | null;
   }
 }
 
