@@ -5,7 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration=production",
+    "build:prod": "ng build --configuration=production",
+    "build:test": "ng build --configuration=test",
     "build-idai": "ng build --configuration=idai",
     "test": "ng test",
     "test-chrome": "ng test --browsers=Chrome",
