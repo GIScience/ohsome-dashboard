@@ -97,7 +97,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
     // init semantic-ui
     this.initTopicDropdown();
-    // this.initAttributeDropdown();
   }
 
   ngOnDestroy() {
@@ -204,15 +203,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       topicSelect.dropdown('set exactly', this.selectedTopicKey);
     }, 500);
   }
-
-  // private initAttributeDropdown() {
-  //   setTimeout(() => {
-  //     $('.ui.dropdown2').dropdown({
-  //       fullTextSearch: 'exact'
-  //     });
-  //     $('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
-  //   }, 500);
-  // }
 
   private initIndicatorCoverages() {
     //cleanup
