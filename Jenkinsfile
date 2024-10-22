@@ -40,7 +40,7 @@ pipeline {
     stage ('Build') {
       steps {
         nodejs('NodeJS 18') {
-          sh 'npm run build'
+          sh 'npm run build:prod'
         }
       }
       post {
