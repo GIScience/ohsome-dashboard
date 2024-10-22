@@ -21,7 +21,17 @@ export class SimpleIndicatorComponent implements AfterContentInit {
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
 
   ngAfterContentInit(): void {
+    // directly initialize the indicator search dropdown when it is visible during component initialization
     this.initAttributeDropdown();
+
+    // initialize the indicator search dropdown on toggle checkbox to true
+    this.indicatorToggle.subscribe(
+      ({indicator,state})=>{
+        if (state) {
+          this.initAttributeDropdown();
+        }
+      }
+    )
   }
 
   private initAttributeDropdown() {
@@ -32,7 +42,7 @@ export class SimpleIndicatorComponent implements AfterContentInit {
       //$('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
 
      // $('.ui.dropdown2').dropdown('set exactly', this.indicator.params[`${this.indicator.key}--attributes`]);
-    }, 500);
+    }, 100);
   }
 
 }

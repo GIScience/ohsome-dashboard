@@ -8,5 +8,11 @@
   width: 100%;
   white-space: pre-wrap;
   border: 1px solid lightgrey;
-  background-color: #f9f9f9
+  background-color: #f9f9f9;
+}
+
+/* Fix for unwanted input height settings inside .ui.toggle.checkbox input Rule of SemanticCSS */
+/* The problem occurs because we use a search dropdown inside the label of a SemanticCSS toggle-checkbox */
+:host ::ng-deep .ui.toggle.checkbox #search-select-attribute ~ input.search {
+  height: unset;
 }
