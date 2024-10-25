@@ -12,6 +12,24 @@
           <option *ngFor="let topic of topics | keyvalue; let i = index;"
                   [value]="topic.key">{{topic.value.name}}</option>
         </select>
+      </div>
+
+      <div class="ui basic segment">
+        <div class="ui items">
+          <div class="item">
+            <div class="content">
+              {{topics[selectedTopicKey].description}}
+            </div>
+          </div>
+          <div class="item">
+            <div class="content">
+              <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
+              of the topic:
+              <pre #topicFilter id="topicFilter" class="language-ohsome-filter"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- 2. Set of indicators -->
       <div class="ui divider"></div>
