@@ -12,32 +12,6 @@
           <option *ngFor="let topic of topics | keyvalue; let i = index;"
                   [value]="topic.key">{{topic.value.name}}</option>
         </select>
-<!--        <div class="field">-->
-<!--          <select class="ui search selection dropdown2" id="search-select2" name="attribute" [(ngModel)]="selectedAttributeKey">-->
-<!--            <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"-->
-<!--                    [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>-->
-
-<!--          </select>-->
-<!--        </div>-->
-            </div>
-
-
-      <div class="ui basic segment">
-        <div class="ui items">
-          <div class="item">
-            <div class="content">
-              {{topics[selectedTopicKey].description}}
-            </div>
-          </div>
-          <div class="item">
-            <div class="content">
-              <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
-              of the topic:
-              <pre #topicFilter id="topicFilter" class="language-ohsome-filter"></pre>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- 2. Set of indicators -->
       <div class="ui divider"></div>
@@ -52,29 +26,18 @@
           <div class="ui divided items">
             <!-- individual indicators start -->
             <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
-<!--              <div class="ui toggle checkbox" [ngClass]="(indicator.checked)? 'checked':''">-->
-<!--                <input type="checkbox" name="{{indicator.key}}" id="{{qualityDimension}}-{{indicator.key}}" attr.data-indicator-key="{{indicator.key}}"-->
-<!--                       [ngModel]="indicator.checked" (change)="onIndicatorToggle({indicator, state: indicator.checked = !indicator.checked })">-->
-<!--                <label for="{{indicator.key}}">-->
-<!--                  <div class="content">-->
-<!--                    <a class="header">{{indicator.name}}</a>-->
-<!--                    <div class="description">{{indicator.description}}</div>-->
-<!--                  </div>-->
-<!--                </label>-->
-<!--              </div>-->
               <app-simple-indicator
                 [indicator]="indicator"
                 [qualityDimension]="qualityDimension"
                 (indicatorToggle)="onIndicatorToggle($event)"
               >
                 <!-- conditional select field inside indicator  -->
-                @if (indicator.key === 'attribute-completeness' && indicator.checked){
+                @if (indicator.key ==='attribute-completeness' && indicator.checked){
                   <div class="field">
                     <h5 style="margin-top: 0.8rem">Check the topic "{{topics[selectedTopicKey].name}}" on having the following attribute:</h5>
                     <select class="ui search selection dropdown" id="search-select-attribute" name="{{indicator.key}}--attributes" [(ngModel)]="selectedAttributeKey">
                       <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
                               [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
-
                     </select>
                   </div>
                 }
