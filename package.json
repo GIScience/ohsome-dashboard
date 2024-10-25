@@ -9,6 +9,7 @@
     "build:test": "ng build --configuration=test",
     "build-idai": "ng build --configuration=idai",
     "test": "ng test",
+    "test:coverage": "ng test --code-coverage --watch=false",
     "test-chrome": "ng test --browsers=Chrome",
     "test-chromium": "ng test --browsers=Chromium",
     "test-chromium-headless": "ng test --browsers=ChromiumHeadless --watch=false",
