@@ -26,8 +26,8 @@ export class SimpleIndicatorComponent implements AfterContentInit {
 
     // initialize the indicator search dropdown on toggle checkbox to true
     this.indicatorToggle.subscribe(
-      ({indicator,state})=>{
-        if (state) {
+      (event)=>{
+        if (event.state) {
           this.initAttributeDropdown();
         }
       }

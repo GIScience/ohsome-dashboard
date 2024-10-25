@@ -44,4 +44,27 @@ describe('OqtApiServiceService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual('param=value');
   });
+
+  it('should perform a GET request to /metadata endpoint with project param', () => {
+    service.getMetadata().subscribe(() => {});
+    const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/metadata?project=${service.OQT_API_PROJECT}`);
+    expect(req.request.method).toEqual('GET');
+    expect(req.request.params.get("project")).toEqual(service.OQT_API_PROJECT);
+  });
+
+  it('should perform a GET request to /metadata/indicators/${indicatorKey}/coverage', () => {
+    const indicatorKey = "road-comparison";
+    const inverse = false;
+    service.getIndicatorCoverage(indicatorKey, inverse).subscribe(() => {
+    });
+    const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/metadata/indicators/${indicatorKey}/coverage?inverse=${inverse}`);
+    expect(req.request.method).toEqual('GET');
+  });
+
+  it('should perform a GET request to /metadata/attributes', () => {
+    service.getAttributes().subscribe(() => {
+    });
+    const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/metadata/attributes`);
+    expect(req.request.method).toEqual('GET');
+  });
 });

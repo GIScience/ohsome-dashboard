@@ -1,6 +1,7 @@
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import * as Plotly from 'plotly.js-dist-min';
 import BaseResponseJSON from './BaseResponseJSON';
+import {KeyValue} from '@angular/common';
 
 /**
  * topic as of oqt v0.14.2 /metadata
@@ -59,6 +60,10 @@ interface Indicator extends RawIndicatorMetadata {
   //params: { [indicatorParameterKey: string]: any }
 }
 
+// parameter information from the formValues
+type Params = { [paramName: string]: string | string[] | boolean } | null
+type IndicatorParams = KeyValue<string, { "params": Params }>;
+
 interface RawReportMetadata {
   name: string;
   description: string;
@@ -113,5 +118,7 @@ export {
   IndicatorLabel,
   IndicatorProperties,
   OqtAttribute,
-  AttributeResponseJSON
+  AttributeResponseJSON,
+  IndicatorParams,
+  Params
 };

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiService} from '../../oqt-api.service';
-import {IndicatorLabel, IndicatorResponseJSON} from '../../types/types';
+import {IndicatorLabel, IndicatorParams, IndicatorResponseJSON} from '../../types/types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import Utils from '../../../../utils';
@@ -16,15 +16,14 @@ import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
 export class IndicatorResultComponent implements OnInit {
 
   @Input() topicKey: string;
-  @Input() indicatorKey: string;
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
-  @Input() attributeKey: string;
+  @Input() indicator!: IndicatorParams;
 
   isLoading = true;
-
   plotlyDataLayoutConfig: PlotlyDataLayoutConfig | null | undefined;
   label: IndicatorLabel = 'undefined';
   indicatorResultDescription: string;
+
   error: ErrorResponseJSON | undefined = undefined;
 
   labelMap: { [K in IndicatorLabel]: string } = {
@@ -33,7 +32,6 @@ export class IndicatorResultComponent implements OnInit {
     red: 'low',
     'undefined': 'undefined'
   };
-
   // displayQualityLabel - displayed in the ribbon in the top left corner
   displayQualityLabel: string;
   // display the indicator name on top of all as header
@@ -52,29 +50,21 @@ export class IndicatorResultComponent implements OnInit {
   private getIndicatorResults() {
     const body: {
       topic: string;
-      // 'indicator-key': string;
-      attribute?: string;
+      attribute?: string | string[] | boolean;
       bpolys: FeatureCollection<Polygon | MultiPolygon>;
     } = {
       topic: this.topicKey,
-      // 'indicator-key': this.indicatorKey,
       bpolys: this.bpolys
     };
 
-    if (this.indicatorKey !== "attribute-completeness") {
-      delete body.attribute;
-    }
-    else if (this.attributeKey !== "") {
-      body.attribute = this.attributeKey;
+    // Hardcoded handling, should be made generic
+    if (this.indicator.key === "attribute-completeness") {
+      body.attribute = this.indicator.value['params']!['attributes'];
     }
     console.log(body)
-    if (this.indicatorKey == "attribute-completeness" && this.attributeKey == "") {
-      this.isLoading = false;
-      this.error = {apiVersion: '1.4.0', type: 'MissingParameterError', detail: [{msg: 'Attribute key is missing. Select an attribute to continue.'}]};
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
-    this.oqtApi.getIndicator(this.indicatorKey, body).subscribe({
+
+
+    this.oqtApi.getIndicator(this.indicator.key, body).subscribe({
       next: this.handleResponse.bind(this),
       error: (err) => {
         console.log(err);
@@ -100,9 +90,9 @@ export class IndicatorResultComponent implements OnInit {
     this.setChartData(rawPlotlyDataLayoutConfig);
     this.label = label;
 
-    if(this.indicatorKey === "attribute-completeness"){
+    if (this.indicator.key === "attribute-completeness") {
       //TODO attribute param should be included in IndicatorResult metadata
-      const attributeName = this.oqtApiMetadataProviderService.getAttributes().result[this.topicKey][this.attributeKey].name;
+      const attributeName = this.oqtApiMetadataProviderService.getAttributes().result[this.topicKey][(this.indicator.value['params']!['attributes'] as string)].name;
       this.indicatorName = `${metadata.name}: ${topic.name} having ${attributeName}`
     } else {
       this.indicatorName = metadata.name;
@@ -115,7 +105,7 @@ export class IndicatorResultComponent implements OnInit {
 
   public createDisplayQualityLabel(): string {
     const metaDataResult = this.oqtApiMetadataProviderService.getOqtApiMetadata().result;
-    const qualityDimensionKey = metaDataResult.indicators[this.indicatorKey]['qualityDimension'];
+    const qualityDimensionKey = metaDataResult.indicators[this.indicator.key]['qualityDimension'];
     const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name.toLowerCase();
     return `${this.labelMap[this.label]} ${lowerCaseQualityDimensionName}`;
   }

@@ -71,8 +71,7 @@
                 @if (indicator.key === 'attribute-completeness' && indicator.checked){
                   <div class="field">
                     <h5 style="margin-top: 0.8rem">Check the topic "{{topics[selectedTopicKey].name}}" on having the following attribute:</h5>
-                    <!-- TODO name="{{indicator.key}}--attributes"-->
-                    <select class="ui search selection dropdown" id="search-select-attribute" name="attribute" [(ngModel)]="selectedAttributeKey">
+                    <select class="ui search selection dropdown" id="search-select-attribute" name="{{indicator.key}}--attributes" [(ngModel)]="selectedAttributeKey">
                       <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
                               [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
 

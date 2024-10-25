@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SimpleIndicatorComponent} from './simple-indicator.component';
-import {FormsModule, NgForm} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {OqtModule} from '../../../oqt.module';
 
 describe('SimpleIndicatorComponent', () => {
