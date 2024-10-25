@@ -84,16 +84,18 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     const topicValue = this.hashParams.get('topic');
     this.selectedTopicKey = (topicValue && Object.keys(this.topics).includes(topicValue)) ? topicValue : Object.keys(this.topics)[0];
 
+    //set indicators
+    let indicatorValues = this.hashParams.get('indicators')?.split(',').filter((ele)=>ele.trim() !== '');
+    indicatorValues = (!indicatorValues || indicatorValues.length === 0)? this.defaultCheckedIndicators : indicatorValues;
+    indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
+
     // TODO set attribute should happen wheen indicators are initialized?
     // if we have multiple indicators we could have many selected keys so we need something hierarchical
     // or better store current params in indicator object? but might depend on topic
     // KEY:topic-indicator VALUE: KEY:paramName VALUE: paramValue
-    const attributeValue = this.hashParams.get('attribute');
+    const attributeValue = this.hashParams.get('attribute-completeness--attributes');
     this.selectedAttributeKey = (attributeValue && Object.keys(this.attributes[this.selectedTopicKey]).includes(attributeValue)) ? attributeValue : Object.keys(this.attributes[this.selectedTopicKey])[0];
 
-    //set indicators
-    const indicatorValues = this.hashParams.get('indicators')?.split(',') || this.defaultCheckedIndicators;
-    indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
 
     // init semantic-ui
     this.initTopicDropdown();
@@ -239,13 +241,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     }
 
     // reset selected attribute
-    //if selectedAttributeKey is empty or does not fit to the current topic,
+    // if selectedAttributeKey is empty or does not fit to the current topic,
     // do use the first available attribute of the topic
-    console.log("selectedAttributeKey", this.selectedAttributeKey);
     if (this.selectedAttributeKey === "" || !Object.keys(this.attributes[this.selectedTopicKey]).includes(this.selectedAttributeKey)) {
       this.selectedAttributeKey = Object.keys(this.attributes[this.selectedTopicKey])[0] || '';
     }
-    console.log("selectedAttributeKeyNew", this.selectedAttributeKey);
   }
 
   onIndicatorToggle(indicatorToggleEvent) {

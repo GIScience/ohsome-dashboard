@@ -11,16 +11,17 @@ import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 // import {indicatorResponseMock} from './result/indicator.response.mock';
 
 const OQT_API_ROOT_URL = environment.oqtApiRootUrl;
-let OQT_API_PROJECT: string;
 
 @Injectable({
   providedIn: 'root'
 })
 export class OqtApiService {
 
+  OQT_API_PROJECT: string;
+
   constructor(private http: HttpClient) {
     const project = null; //urlHashParamsProviderService.getHashURLSearchParams().get("project");
-    OQT_API_PROJECT = project || environment.oqtApiProject || 'core';
+    this.OQT_API_PROJECT = project || environment.oqtApiProject || 'core';
   }
 
   get(urlPath: string, queryParams = ''): Observable<BaseResponseJSON> {
@@ -31,7 +32,7 @@ export class OqtApiService {
       });
   }
 
-  post(urlPath: string, body?: any | null): Observable<any> {
+  post(urlPath: string, body?: any | null): Observable<BaseResponseJSON> {
     return this.http.post<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       body,
       {headers: new HttpHeaders({'Content-Type': 'application/json', 'accept': 'application/json'})});
@@ -39,7 +40,7 @@ export class OqtApiService {
 
   getMetadata(): Observable<MetadataResponseJSON> {
     // return of(oqtApiMetadataResponseMock);
-    return this.get('metadata', `project=${OQT_API_PROJECT}`) as Observable<MetadataResponseJSON>;
+    return this.get('metadata', `project=${this.OQT_API_PROJECT}`) as Observable<MetadataResponseJSON>;
   }
 
   getIndicator(indicatorKey, body): Observable<IndicatorResponseJSON> {

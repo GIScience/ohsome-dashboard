@@ -11,6 +11,7 @@ import {featureCollection, polygon} from '@turf/helpers';
 import Utils from '../../../utils';
 import {SafeUrl} from '@angular/platform-browser';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
+import {IndicatorParams, Params} from '../types/types'
 import Bpolys = OhsomeApi.v1.request.Bpolys;
 
 declare let $: any;
@@ -22,7 +23,7 @@ declare let $: any;
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  formValues: any;
+  formValues: { topic: string; [formFieldName: string]: any };
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
@@ -32,7 +33,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   isLoading = false;
 
-  indicatorList: string[];
+  indicatorList: IndicatorParams[]
+
   boundaries: FeatureCollection<Polygon | MultiPolygon>;
 
   permalink: SafeUrl;
@@ -50,18 +52,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.permalink = this.getPermalink();
 
-    //get indicators to be queried
-    const potentialIndicators = Object.keys(this.metadata.result.indicators);
-    const indicatorsToBeQueried: string[] = [];
-
-    // search for the indicators that have been checked in the form
-    potentialIndicators.forEach(potIndicator => {
-      if (this.formValues[potIndicator]) {
-        indicatorsToBeQueried.push(potIndicator);
-      }
-    });
-
-    this.indicatorList = indicatorsToBeQueried;
+    // associate params from formValues to their indicator and store them in a list to be distributed into distict indicator requests
+    this.indicatorList = this.createIndicatorListWithParams();
 
     const {bpolys, bboxes}: { topic: string, bpolys?: string, bboxes?: string, bcircles?: string } = this.formValues;
 
@@ -105,25 +97,25 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
         const unifiedFeature: Feature<Polygon | MultiPolygon> = features.reduce(
           (previousValue: Feature<Polygon | MultiPolygon>
-           , currentValue: Feature<Polygon | MultiPolygon>
-           , currentIndex) => {
-          if (currentIndex === 0) {
-            return currentValue;
-          }
+            , currentValue: Feature<Polygon | MultiPolygon>
+            , currentIndex) => {
+            if (currentIndex === 0) {
+              return currentValue;
+            }
 
-          const merged = union(previousValue, currentValue);
-          if (merged != undefined) {
-            merged.id = [previousValue.properties?.['name'], currentValue.properties?.['name']].join(' + ');
-            merged.properties = {};
-            merged.properties['id'] = merged.id;
-            merged.properties['name'] = merged.id;
-            return merged;
-          } else {
-            previousValue.id = previousValue.properties?.['name'];
-            previousValue.properties!['id'] = previousValue.id;
-            return previousValue;
-          }
-        }, features[0]);
+            const merged = union(previousValue, currentValue);
+            if (merged != undefined) {
+              merged.id = [previousValue.properties?.['name'], currentValue.properties?.['name']].join(' + ');
+              merged.properties = {};
+              merged.properties['id'] = merged.id;
+              merged.properties['name'] = merged.id;
+              return merged;
+            } else {
+              previousValue.id = previousValue.properties?.['name'];
+              previousValue.properties!['id'] = previousValue.id;
+              return previousValue;
+            }
+          }, features[0]);
 
         this.boundaries = featureCollection([unifiedFeature]);
       }
@@ -176,6 +168,36 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     $('#permalinkModal').modal('show');
     $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
+  }
+
+  createIndicatorListWithParams(): IndicatorParams[] {
+    //get indicators to be queried
+    const potentialIndicators = Object.keys(this.metadata.result.indicators);
+    const indicatorsToBeQueried: string[] = [];
+
+    // search for the indicators that have been checked in the form
+    potentialIndicators.forEach(potIndicator => {
+      if (this.formValues[potIndicator]) {
+        indicatorsToBeQueried.push(potIndicator);
+      }
+    });
+
+    return indicatorsToBeQueried.reduce<IndicatorParams[]>((current, indicator) => {
+
+      let params: Params = Object.entries<string | string[] | boolean>(this.formValues).filter(([key]) => {
+        return key.startsWith(`${indicator}--`);
+      }).map(([key, value]) => {
+        return {[key.replace(`${indicator}--`, '')]: value}
+      }).reduce((acc, param) => {
+        return {...acc, ...param};
+      }, {});
+
+      params = (Object.keys(params).length === 0) ? null : params;
+
+      current.push({"key": indicator, "value": {"params": params}});
+      return current;
+    }, []);
+
   }
 
   protected readonly Utils = Utils;

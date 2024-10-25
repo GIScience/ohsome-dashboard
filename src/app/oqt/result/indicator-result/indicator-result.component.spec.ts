@@ -21,8 +21,7 @@ describe('IndicatorResultComponent', () => {
     fixture = TestBed.createComponent(IndicatorResultComponent);
     component = fixture.componentInstance;
     component.topicKey = 'building-area';
-    component.indicatorKey = 'mapping-saturation';
-    component.attributeKey = ''
+    component.indicator = {key: 'mapping-saturation', value: {params: null}}
     component.bpolys = {
       'features': [{
         'bbox': [
@@ -113,7 +112,6 @@ describe('IndicatorResultComponent', () => {
 
     // allow usage of any to access private method
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    console.log("test", indicatorResponseMock);
     (component as any).handleResponse(indicatorResponseMock);
 
     expect(component.plotlyDataLayoutConfig).toBeDefined();
@@ -136,7 +134,7 @@ describe('IndicatorResultComponent', () => {
 
     // Assert the output
     const metadataMockResult = oqtApiMetadataResponseMock.result;
-    const qualityDimensionKey = metadataMockResult.indicators[component.indicatorKey]['qualityDimension'];
+    const qualityDimensionKey = metadataMockResult.indicators[component.indicator.key]['qualityDimension'];
     const labelQualifier = component.labelMap[component.label];
     const labelName = metadataMockResult.qualityDimensions[qualityDimensionKey].name.toLowerCase();
     expect(displayQualityLabel).toBe(`${labelQualifier} ${labelName}`);
