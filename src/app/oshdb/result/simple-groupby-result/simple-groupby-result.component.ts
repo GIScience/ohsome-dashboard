@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipItem, ChartTooltipOptions} from 'chart.js';
-import * as moment from 'moment';
+import moment from 'moment';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import Utils from '../../../../utils';
 import {computeGrowthRateCssClass, growthRate} from '../result.utils';

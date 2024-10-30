@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
 import {AtLeastOneCheckboxCheckedDirective} from './directives/validation/at-least-one-checkbox-checked.directive';
 import {PlotlyChartComponent} from './components/plotly-chart/plotly-chart.component';
 import {BoundarySelectInputComponent} from './components/boundary-select-input/boundary-select-input.component';
@@ -21,7 +20,6 @@ import {BoundaryInputComponent} from './components/boundary-input/boundary-input
   exports: [
     CommonModule,
     FormsModule,
-    HttpClientModule,
     AtLeastOneCheckboxCheckedDirective,
     PlotlyChartComponent,
     BoundarySelectInputComponent,

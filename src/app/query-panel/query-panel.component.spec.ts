@@ -6,7 +6,7 @@ import OhsomeApiMetadataProviderServiceMock from '../oshdb/ohsome-api-metadata-p
 import {OshdbModule} from '../oshdb/oshdb.module';
 import {SharedModule} from '../shared/shared.module';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtModule} from '../oqt/oqt.module';
 
 describe('QueryPanelComponent', () => {
@@ -15,17 +15,16 @@ describe('QueryPanelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserModule,
-        HttpClientModule,
+    declarations: [QueryPanelComponent],
+    imports: [BrowserModule,
         SharedModule,
         OshdbModule,
         OqtModule],
-      declarations: [QueryPanelComponent],
-      providers: [
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock}
-      ]
-    })
+    providers: [
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
       .compileComponents();
   }));
 

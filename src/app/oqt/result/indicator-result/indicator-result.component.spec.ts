@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {IndicatorResultComponent} from './indicator-result.component';
-import {HttpClientModule, HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {of, throwError} from 'rxjs';
 import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
 import {indicatorResponseMock} from '../indicator.response.mock';
@@ -13,9 +13,10 @@ describe('IndicatorResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IndicatorResultComponent],
-      imports: [HttpClientModule]
-    })
+    declarations: [IndicatorResultComponent],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(IndicatorResultComponent);

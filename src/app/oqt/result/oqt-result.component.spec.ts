@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtResultComponent} from './oqt-result.component';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../oqt.module';
@@ -14,12 +14,13 @@ describe('OqtResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [OqtResultComponent],
-      imports: [HttpClientModule, OqtModule],
-      providers: [
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock}
-      ]
-    })
+    declarations: [OqtResultComponent],
+    imports: [OqtModule],
+    providers: [
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(OqtResultComponent);

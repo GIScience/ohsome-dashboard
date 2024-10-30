@@ -1,8 +1,9 @@
 import {TestBed} from '@angular/core/testing';
 
 import {OhsomeApiService} from './ohsome-api.service';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {environment} from '../../environments/environment';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 let service: OhsomeApiService;
 let httpMock: HttpTestingController;
@@ -10,9 +11,9 @@ let httpMock: HttpTestingController;
 describe('OhsomeApiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [OhsomeApiService]
-    });
+    imports: [],
+    providers: [OhsomeApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     service = TestBed.inject(OhsomeApiService);
     httpMock = TestBed.inject(HttpTestingController);
