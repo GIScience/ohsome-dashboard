@@ -1,6 +1,6 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {AppComponent} from './app.component';
 
 import {OshdbModule} from './oshdb/oshdb.module';
@@ -14,59 +14,53 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    QueryPanelComponent,
-    ResultPanelComponent,
-    ResultListDirective,
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    SharedModule,
-    OshdbModule,
-    OqtModule
-  ],
-  exports: [
-    QueryPanelComponent,
-    ResultPanelComponent,
-    ResultListDirective
-  ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: urlHashParamsProviderFactory,
-      deps: [UrlHashParamsProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: ohsomeApiMetadataProviderFactory,
-      deps: [OhsomeApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: ohsomeApiAnnouncementProviderFactory,
-      deps: [OhsomeApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: oqtApiMetadataProviderFactory,
-      deps: [OqtApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: oqtApiAttributeProviderFactory,
-      deps: [OqtApiMetadataProviderService],
-      multi: true
-    },
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        QueryPanelComponent,
+        ResultPanelComponent,
+        ResultListDirective,
+    ],
+    exports: [
+        QueryPanelComponent,
+        ResultPanelComponent,
+        ResultListDirective
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        SharedModule,
+        OshdbModule,
+        OqtModule], providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: urlHashParamsProviderFactory,
+            deps: [UrlHashParamsProviderService],
+            multi: true
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: ohsomeApiMetadataProviderFactory,
+            deps: [OhsomeApiMetadataProviderService],
+            multi: true
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: ohsomeApiAnnouncementProviderFactory,
+            deps: [OhsomeApiMetadataProviderService],
+            multi: true
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: oqtApiMetadataProviderFactory,
+            deps: [OqtApiMetadataProviderService],
+            multi: true
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: oqtApiAttributeProviderFactory,
+            deps: [OqtApiMetadataProviderService],
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 }
 

@@ -2,6 +2,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ResultComponent} from './result.component';
 import {OshdbModule} from '../oshdb.module';
+import {OqtApiMetadataProviderService} from '../../oqt/oqt-api-metadata-provider.service';
+import OqtApiMetadataProviderServiceMock from '../../oqt/oqt-api-metadata-provider.service.mock';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {OhsomeApiMetadataProviderService} from '../ohsome-api-metadata-provider.service';
+import OhsomeApiMetadataProviderServiceMock from '../ohsome-api-metadata-provider.service.mock';
 
 describe('ResultComponent', () => {
   let component: ResultComponent;
@@ -18,6 +23,9 @@ describe('ResultComponent', () => {
       imports: [
         OshdbModule
       ],
+      providers:[
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())]
     })
     .compileComponents();
 
