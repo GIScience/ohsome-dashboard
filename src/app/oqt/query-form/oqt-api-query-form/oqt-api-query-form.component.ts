@@ -46,14 +46,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //            we want topics[selectedTopicKey].quality_dimension[qualityDimensionKey].indicators[index]
   private _selectedTopicKey: string;
 
-  //TODO remove and get from selectedTopic
-  private _selectedAttributeKey: string;
-
   // Topics
   public topics: Record<string, Topic> = {};
-
-  //Attributes
-  public attributes: Record<string, Record<string, OqtAttribute>>;
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
@@ -77,7 +71,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.indicators = this.getEnrichedIndicators();
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
-    this.attributes = this.oqtApiMetadataProviderService.getAttributes().result
 
     // fill form with hash or default values
     // set topic
@@ -88,19 +81,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     let indicatorValues = this.hashParams.get('indicators')?.split(',').filter((ele) => ele.trim() !== '');
     indicatorValues = (!indicatorValues || indicatorValues.length === 0) ? this.defaultCheckedIndicators : indicatorValues;
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
-
-    // TODO set attribute should happen wheen indicators are initialized?
-    // if we have multiple indicators we could have many selected keys so we need something hierarchical
-    // or better store current params in indicator object? but might depend on topic
-    // KEY:topic-indicator VALUE: KEY:paramName VALUE: paramValue
-    // TODO this is similar to the logic in onTopicChange -> maybe refactor to a common function
-    const attributeValue = this.hashParams.get('attribute-completeness--attributes');
-    if (attributeValue && Object.keys(this.attributes[this.selectedTopicKey]).includes(attributeValue)) {
-      this.selectedAttributeKey = attributeValue;
-    } else {
-      this.selectedAttributeKey = (this.attributes[this.selectedTopicKey]) ? Object.keys(this.attributes[this.selectedTopicKey])[0] : '';
-    }
-
 
     // init semantic-ui
     this.initTopicDropdown();
@@ -154,15 +134,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
           });
       });
     return enrichedTopics;
-  }
-
-  get selectedAttributeKey() {
-    return this._selectedAttributeKey;
-  }
-
-  set selectedAttributeKey(attributeKey: string) {
-    console.log('selected Attribute Key', attributeKey);
-    this._selectedAttributeKey = attributeKey;
   }
 
   get selectedTopicKey() {
@@ -244,21 +215,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     } else {
       this.renderer.setProperty(this.preElem.nativeElement, 'innerHTML', '');
     }
-
-    // sanitize the selected attribute
-    // this.selectedAttributeKey can be "", undefined or not available on topic
-
-    // has the topic attributes at all?
-    if (this.attributes[this.selectedTopicKey]) {
-      // yes, the topic has attributes but is set empty or attribute does not fit to the topic,
-      // then set the first available attribute of the current topic
-      if (this.selectedAttributeKey === "" || !Object.keys(this.attributes[this.selectedTopicKey]).includes(this.selectedAttributeKey)) {
-        this.selectedAttributeKey = Object.keys(this.attributes[this.selectedTopicKey])[0];
-      }
-    } else {
-      // the topic has no attributes, set it empty
-      this.selectedAttributeKey = '';
-    }
   }
 
   onIndicatorToggle(indicatorToggleEvent) {
@@ -266,22 +222,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
     //clear indicator coverages and re init
     this.initIndicatorCoverages();
-  }
-
-  getNameOfCurrentAttribute(pair: KeyValue<string, OqtAttribute>) {
-    return pair.value.name
-  }
-
-  getKeyOfCurrentAttribute(pair: KeyValue<string, OqtAttribute>) {
-    return pair.key
-  }
-
-  getEntriesForSelectedTopicKey(): Record<string, OqtAttribute> {
-    if (this.attributes[this.selectedTopicKey] !== undefined) {
-      return this.attributes[this.selectedTopicKey]
-    } else {
-      return {}
-    }
   }
 
 }

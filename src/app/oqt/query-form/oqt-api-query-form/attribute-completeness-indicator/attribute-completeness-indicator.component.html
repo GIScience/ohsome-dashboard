@@ -1,0 +1,19 @@
+<app-simple-indicator
+  [indicator]="indicator"
+  [qualityDimension]="qualityDimension"
+  (indicatorToggle)="indicatorToggle"
+>
+  @if (indicator.checked){
+    <div class="field">
+      <h5 style="margin-top: 0.8rem">Check the topic "{{topicName}}" on having the following attribute:</h5>
+      <select multiple=""
+              class="ui search selection dropdown"
+              id="search-select-attribute"
+              name="{{indicator.key}}--attributes"
+              [(ngModel)]="selectedAttributeKeys">
+        <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
+                [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
+      </select>
+    </div>
+  }
+</app-simple-indicator>
