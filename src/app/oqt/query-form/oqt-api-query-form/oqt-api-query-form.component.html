@@ -44,22 +44,39 @@
           <div class="ui divided items">
             <!-- individual indicators start -->
             <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
-              <app-simple-indicator
-                [indicator]="indicator"
-                [qualityDimension]="qualityDimension"
-                (indicatorToggle)="onIndicatorToggle($event)"
-              >
-                <!-- conditional select field inside indicator  -->
-                @if (indicator.key ==='attribute-completeness' && indicator.checked){
-                  <div class="field">
-                    <h5 style="margin-top: 0.8rem">Check the topic "{{topics[selectedTopicKey].name}}" on having the following attribute:</h5>
-                    <select class="ui search selection dropdown" id="search-select-attribute" name="{{indicator.key}}--attributes" [(ngModel)]="selectedAttributeKey">
-                      <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
-                              [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>
-                    </select>
-                  </div>
+              @switch (indicator.key){
+                @case ("attribute-completeness"){
+                  <app-attribute-completeness-indicator
+                    [indicator]="indicator"
+                    [qualityDimension]="qualityDimension"
+                    (indicatorToggle)="onIndicatorToggle($event)"
+
+                    [selectedTopicKey]="selectedTopicKey"
+                    [topicName]="topics[selectedTopicKey].name"
+                    [hashParams]="hashParams"
+                  >
+                  </app-attribute-completeness-indicator>
                 }
-              </app-simple-indicator>
+                @default {
+                  <app-simple-indicator
+                    [indicator]="indicator"
+                    [qualityDimension]="qualityDimension"
+                    (indicatorToggle)="onIndicatorToggle($event)"
+                  >
+                    <!-- conditional select field inside indicator  -->
+                    <!--                @if (indicator.key ==='attribute-completeness' && indicator.checked){-->
+                    <!--                  <div class="field">-->
+                    <!--                    <h5 style="margin-top: 0.8rem">Check the topic "{{topics[selectedTopicKey].name}}" on having the following attribute:</h5>-->
+                    <!--                    <select multiple="" class="ui search selection dropdown" id="search-select-attribute" name="{{indicator.key}}&#45;&#45;attributes" [(ngModel)]="selectedAttributeKey">-->
+                    <!--                      <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"-->
+                    <!--                              [value]="getKeyOfCurrentAttribute(entry)">{{getNameOfCurrentAttribute(entry)}}</option>-->
+                    <!--                    </select>-->
+                    <!--                  </div>-->
+                    <!--                }-->
+                  </app-simple-indicator>
+                }
+              }
+
             </div>
             <!-- individual indicators end -->
           </div>

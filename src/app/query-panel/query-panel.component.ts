@@ -140,6 +140,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   ngOnInit() {
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
+      console.log("INIT  QueryPanel permalinkparams", permalinkParams);
       this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     })
   }
@@ -253,7 +254,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       });
       permalinkParams.indicators = indicatorsToBeQueried.join(',');
       potentialIndicators.forEach(indicator => delete permalinkParams[indicator]);
+
+
+      // transform attribute-completeness--attributes
+      if (permalinkParams["attribute-completeness--attributes"]){
+        permalinkParams["attribute-completeness--attributes"] = permalinkParams["attribute-completeness--attributes"].join(',');
+      }
     }
+
+
 
     return permalinkParams;
   }
@@ -262,6 +271,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   onSubmit() {
     console.log('Form Value', this.form.value);
     const permalinkParams = this.getPermalinkParamsFromFormValues(this.form.value);
+    console.log("ONSUBMIT QueryPanel permalinkparams", permalinkParams);
     this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     this.dataService.pushFormValues(this.form.value, this._boundaryType);
   }
