@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Checkbox, Indicator} from '../../../types/types';
 import {ControlContainer, NgForm} from '@angular/forms';
 
@@ -12,5 +12,4 @@ export class SimpleIndicatorComponent {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
-
-}
+  }

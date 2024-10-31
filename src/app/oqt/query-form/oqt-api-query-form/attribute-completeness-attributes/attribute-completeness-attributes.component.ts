@@ -1,38 +1,28 @@
-import {
-  AfterContentInit,
-  Component, EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChange,
-  SimpleChanges
-} from '@angular/core';
-import {SimpleIndicatorComponent} from '../simple-indicator/simple-indicator.component';
+import {AfterContentInit, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
-import {AttributeResponseJSON, Indicator, OqtAttribute} from '../../../types/types';
+import {OqtAttribute} from '../../../types/types';
 import {KeyValue} from '@angular/common';
 
 declare const $;
 
 @Component({
-  selector: 'app-attribute-completeness-indicator',
-  templateUrl: './attribute-completeness-indicator.component.html',
-  styleUrl: './attribute-completeness-indicator.component.css',
+  selector: 'app-attribute-completeness-attributes',
+  templateUrl: './attribute-completeness-attributes.component.html',
+  styleUrl: './attribute-completeness-attributes.component.css',
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
-export class AttributeCompletenessIndicatorComponent extends SimpleIndicatorComponent /*implements OnInit, AfterContentInit, OnChanges*/ {
+export class AttributeCompletenessAttributesComponent implements OnInit, AfterContentInit, OnChanges {
   @Input() topicName!: string;
   @Input() selectedTopicKey!: string;
   @Input() hashParams!: URLSearchParams;
-  @Output() override indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
+  @Input() indicatorKey!: string;
+  @Input() indicatorChecked: boolean;
   private oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   protected attributes: Record<string, Record<string, OqtAttribute>>;
   protected selectedAttributeKeys: string[];
 
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
-    super();
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
   }
 
@@ -46,28 +36,16 @@ export class AttributeCompletenessIndicatorComponent extends SimpleIndicatorComp
    ngAfterContentInit(): void {
     // directly initialize the indicator search dropdown when it is visible during component initialization
     this.initAttributeDropdown();
-
-    // initialize the indicator search dropdown on toggle checkbox to true
-    this.indicatorToggle.subscribe(
-      (event)=>{
-        console.log("Attribute TOGGLE all");
-        if (event.state) {
-          console.log("Attribute TOGGLE true")
-          this.initAttributeDropdown();
-        }
-      }
-    )
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const topicChange: SimpleChange = changes['selectedTopicKey'];
-    if (topicChange && !topicChange.firstChange) {
 
+    if (topicChange && !topicChange.firstChange) {
       //sanitize attributes
       $('#search-select-attribute').dropdown('clear')
       this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
-      this.initAttributeDropdown()
-      //$('#search-select-attribute').dropdown('set exactly', this.selectedAttributeKeys);
+      this.initAttributeDropdown();
     }
   }
 
@@ -76,12 +54,6 @@ export class AttributeCompletenessIndicatorComponent extends SimpleIndicatorComp
       $('#search-select-attribute').dropdown({
         fullTextSearch: 'exact'
       });
-
-      // $('#search-select-attribute').dropdown('set exactly', ['maxspeed']);
-
-      // $('.ui.dropdown2').dropdown('set exactly', this.selectedAttributeKey);
-
-      // $('.ui.dropdown2').dropdown('set exactly', this.indicator.params[`${this.indicator.key}--attributes`]);
     }, 100);
   }
 

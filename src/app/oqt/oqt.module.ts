@@ -7,15 +7,15 @@ import {SharedModule} from '../shared/shared.module';
 import {OqtApiQueryFormComponent} from './query-form/oqt-api-query-form/oqt-api-query-form.component';
 import {SimpleIndicatorComponent} from './query-form/oqt-api-query-form/simple-indicator/simple-indicator.component';
 import {
-  AttributeCompletenessIndicatorComponent
-} from './query-form/oqt-api-query-form/attribute-completeness-indicator/attribute-completeness-indicator.component';
+  AttributeCompletenessAttributesComponent
+} from './query-form/oqt-api-query-form/attribute-completeness-attributes/attribute-completeness-attributes.component';
 
 
 @NgModule({
   declarations: [
     OqtApiQueryFormComponent,
     SimpleIndicatorComponent,
-    AttributeCompletenessIndicatorComponent,
+    AttributeCompletenessAttributesComponent,
     OqtResultComponent,
     IndicatorResultComponent,
   ],
@@ -29,7 +29,7 @@ import {
   exports: [
     OqtApiQueryFormComponent,
     SimpleIndicatorComponent,
-    AttributeCompletenessIndicatorComponent,
+    AttributeCompletenessAttributesComponent,
     OqtResultComponent
   ]
 })
