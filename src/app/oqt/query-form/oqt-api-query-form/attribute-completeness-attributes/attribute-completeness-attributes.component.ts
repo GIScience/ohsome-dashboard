@@ -74,7 +74,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   }
 
   private sanitizeAttributeKeys( attributeKeyCandidates: string[]) {
-    let attributeKeys:string[] = [];
+    let attributeKeys:string[];
 
     //  1. only keep attributes that are valid for the current topic
     attributeKeys = attributeKeyCandidates.filter((attributeKeyCandidate) => {

@@ -23,7 +23,7 @@ declare let $: any;
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  formValues: { topic: string; [formFieldName: string]: any };
+  formValues: { topic: string; [formFieldName: string]: string | string[] | boolean } ;
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
