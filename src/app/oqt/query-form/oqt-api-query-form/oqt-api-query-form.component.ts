@@ -12,10 +12,9 @@ import {
 } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
-import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic, OqtAttribute} from '../../types/types';
+import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
-import {KeyValue} from "@angular/common";
 
 declare const $, Prism;
 
