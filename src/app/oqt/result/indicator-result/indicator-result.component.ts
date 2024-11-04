@@ -80,7 +80,7 @@ export class IndicatorResultComponent implements OnInit {
   }
 
   private handleResponse(response: IndicatorResponseJSON) {
-    const {result, metadata, topic} = response.result[0];
+    const {result, metadata} = response.result[0];
     const {
       figure: rawPlotlyDataLayoutConfig,
       label,
@@ -89,14 +89,7 @@ export class IndicatorResultComponent implements OnInit {
 
     this.setChartData(rawPlotlyDataLayoutConfig);
     this.label = label;
-
-    if (this.indicator.key === "attribute-completeness") {
-      //TODO attribute param should be included in IndicatorResult metadata
-      const attributeName = this.oqtApiMetadataProviderService.getAttributes().result[this.topicKey][(this.indicator.value['params']!['attributes'] as string)].name;
-      this.indicatorName = `${metadata.name}: ${topic.name} having ${attributeName}`
-    } else {
-      this.indicatorName = metadata.name;
-    }
+    this.indicatorName = metadata.name;
 
     this.indicatorResultDescription = description;
 
