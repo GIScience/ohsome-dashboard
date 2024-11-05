@@ -50,7 +50,7 @@ export class IndicatorResultComponent implements OnInit {
   private getIndicatorResults() {
     const body: {
       topic: string;
-      attribute?: string | string[] | boolean;
+      attributes?: string[];
       bpolys: FeatureCollection<Polygon | MultiPolygon>;
     } = {
       topic: this.topicKey,
@@ -59,7 +59,7 @@ export class IndicatorResultComponent implements OnInit {
 
     // Hardcoded handling, should be made generic
     if (this.indicator.key === "attribute-completeness") {
-      body.attribute = this.indicator.value['params']!['attributes'];
+      body.attributes = this.indicator.value['params']!['attributes'] as string[];
     }
     console.log(body)
 
