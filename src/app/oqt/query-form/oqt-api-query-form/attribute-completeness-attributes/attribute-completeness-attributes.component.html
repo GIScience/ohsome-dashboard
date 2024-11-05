@@ -5,8 +5,8 @@
           id="search-select-attribute"
           name="{{indicatorKey}}--attributes"
           [(ngModel)]="selectedAttributeKeys">
-    <option *ngFor="let entry of getEntriesForSelectedTopicKey() | keyvalue;"
-            [value]="getKeyOfCurrentAttribute(entry)">{{ getNameOfCurrentAttribute(entry) }}
+    <option *ngFor="let entry of getAttributesByTopicKey(this.selectedTopicKey) | keyvalue;"
+            [value]="entry.key">{{ entry.value.name }}
     </option>
   </select>
 </div>
