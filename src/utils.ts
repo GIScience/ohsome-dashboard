@@ -3,6 +3,7 @@ import {environment} from './environments/environment';
 
 export default class Utils {
   static sanitizeLabel(label) {
+    if (label == undefined) { return ''}
     if (label.includes('-_-')) {
       label = label.split('-_-')[1];
     }
