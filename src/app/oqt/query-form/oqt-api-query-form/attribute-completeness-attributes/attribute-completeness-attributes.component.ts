@@ -54,7 +54,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     });
   }
 
-  getAttributeKeysFromUrlHashParams(hashParams): string[]{
+  getAttributeKeysFromUrlHashParams(hashParams: URLSearchParams): string[]{
 
     // 1. extract the attributes from URL
     //  might be null, empty or a single string
@@ -94,7 +94,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     return (!!this.attributes[topicKey] && Object.keys(this.attributes[topicKey]).length > 0);
   }
 
-  getDefaultAttributeKey(topicKey): string {
+  getDefaultAttributeKey(topicKey: string): string {
     return (this.topicHasAttributes(topicKey))? Object.keys(this.attributes[topicKey])[0] : '';
   }
 
