@@ -15,4 +15,5 @@
 /* The problem occurs because we use a search dropdown inside the label of a SemanticCSS toggle-checkbox */
 :host ::ng-deep .ui.toggle.checkbox #search-select-attribute ~ input.search {
   height: unset;
+  border-radius: unset;
 }
