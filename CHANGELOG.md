@@ -1,10 +1,16 @@
 Changelog
 =========
 
-## current main
- 
-* support parameterization of the attribute completeness indicator via simple (topic-dependent) dropdown box
+## current
+* feat: (oqapi, attribute-completeness): Allow selection of multiple attributes ([#47])
 
+[#47]: https://github.com/GIScience/ohsome-dashboard/issues/47
+
+## v1.3.1
+* fix: accidentially deleted too much code during cleanup at commit b755d545
+
+## v1.3.0 
+* support parameterization of the attribute completeness indicator via simple (topic-dependent) dropdown box
 
 ## v1.2.0
 * Choose query start date automatically based on end date and period ([PR #33])
