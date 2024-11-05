@@ -8,7 +8,6 @@ declare const $;
 @Component({
   selector: 'app-attribute-completeness-attributes',
   templateUrl: './attribute-completeness-attributes.component.html',
-  styleUrl: './attribute-completeness-attributes.component.css',
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, AfterContentInit, OnChanges {
