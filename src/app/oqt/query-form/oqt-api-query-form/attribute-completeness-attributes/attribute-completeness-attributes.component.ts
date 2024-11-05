@@ -2,7 +2,6 @@ import {AfterContentInit, Component, Input, OnChanges, OnInit, SimpleChange, Sim
 import {ControlContainer, NgForm} from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute} from '../../../types/types';
-import {KeyValue} from '@angular/common';
 
 declare const $;
 
@@ -18,9 +17,9 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   @Input() hashParams!: URLSearchParams;
   @Input() indicatorKey!: string;
   @Input() indicatorChecked: boolean;
-  private oqtApiMetadataProviderService: OqtApiMetadataProviderService;
-  protected attributes: Record<string, Record<string, OqtAttribute>>;
-  protected selectedAttributeKeys: string[];
+  oqtApiMetadataProviderService: OqtApiMetadataProviderService;
+  attributes: Record<string, Record<string, OqtAttribute>>;
+  selectedAttributeKeys: string[];
 
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
@@ -43,18 +42,16 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
 
     if (topicChange && !topicChange.firstChange) {
       //sanitize attributes
-      $('#search-select-attribute').dropdown('clear')
+      $('#search-select-attribute').dropdown('clear');
       this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
       this.initAttributeDropdown();
     }
   }
 
   initAttributeDropdown() {
-    setTimeout(() => {
-      $('#search-select-attribute').dropdown({
-        fullTextSearch: 'exact'
-      });
-    }, 100);
+    $('#search-select-attribute').dropdown({
+      fullTextSearch: 'exact'
+    });
   }
 
   getAttributeKeysFromUrlHashParams(hashParams): string[]{
@@ -73,7 +70,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     return this.sanitizeAttributeKeys(attributesFromUrl);
   }
 
-  private sanitizeAttributeKeys( attributeKeyCandidates: string[]) {
+  sanitizeAttributeKeys( attributeKeyCandidates: string[]) {
     let attributeKeys:string[];
 
     //  1. only keep attributes that are valid for the current topic
@@ -101,19 +98,9 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     return (this.topicHasAttributes(topicKey))? Object.keys(this.attributes[topicKey])[0] : '';
   }
 
-
-  /// TODO now we always have a current AttributeList
-  getNameOfCurrentAttribute(pair: KeyValue<string, OqtAttribute>) {
-    return pair.value.name
-  }
-
-  getKeyOfCurrentAttribute(pair: KeyValue<string, OqtAttribute>) {
-    return pair.key
-  }
-
-  getEntriesForSelectedTopicKey(): Record<string, OqtAttribute> {
-    if (this.attributes[this.selectedTopicKey] !== undefined) {
-      return this.attributes[this.selectedTopicKey]
+  getAttributesByTopicKey(topicKey: string): Record<string, OqtAttribute> {
+    if (this.topicHasAttributes(topicKey)) {
+      return this.attributes[topicKey]
     } else {
       return {}
     }
