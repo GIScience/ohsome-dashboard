@@ -29,9 +29,11 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
 
     //extract and sanitize selectedAttributeKeys
     this.selectedAttributeKeys = this.getAttributeKeysFromUrlHashParams(this.hashParams);
+
+
   }
 
-   ngAfterContentInit(): void {
+  ngAfterContentInit(): void {
     // directly initialize the indicator search dropdown when it is visible during component initialization
     this.initAttributeDropdown();
   }
@@ -53,7 +55,30 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     });
   }
 
-  getAttributeKeysFromUrlHashParams(hashParams: URLSearchParams): string[]{
+  showAttributeDescription(event) {
+    // don't trigger modal if user clicks on close icon (X), only when directly clicked in the attribute label
+    if (event.target != event.currentTarget) {
+      return;
+    }
+
+    const attributeKey = event.data["attributeKey"] as string;
+    const attribute = this.attributes[this.selectedTopicKey][attributeKey];
+
+    // set content for the modal window with attribute metadata
+    $('#attribute-description #title')
+      .html(`<span class="ui circular label">${this.topicName}</span><br>${attribute.name}`);
+    $('#attribute-description #description')
+      .html(attribute.description);
+    $('#attribute-description #filter')
+      .html(attribute.filter);
+
+    $('#attribute-description').modal({
+      inverted: true,
+      duration: 200,
+    }).modal('show');
+  }
+
+  getAttributeKeysFromUrlHashParams(hashParams: URLSearchParams): string[] {
 
     // 1. extract the attributes from URL
     //  might be null, empty or a single string
@@ -69,8 +94,8 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     return this.sanitizeAttributeKeys(attributesFromUrl);
   }
 
-  sanitizeAttributeKeys( attributeKeyCandidates: string[]) {
-    let attributeKeys:string[];
+  sanitizeAttributeKeys(attributeKeyCandidates: string[]) {
+    let attributeKeys: string[];
 
     //  1. only keep attributes that are valid for the current topic
     attributeKeys = attributeKeyCandidates.filter((attributeKeyCandidate) => {
@@ -94,7 +119,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   }
 
   getDefaultAttributeKey(topicKey: string): string {
-    return (this.topicHasAttributes(topicKey))? Object.keys(this.attributes[topicKey])[0] : '';
+    return (this.topicHasAttributes(topicKey)) ? Object.keys(this.attributes[topicKey])[0] : '';
   }
 
   getAttributesByTopicKey(topicKey: string): Record<string, OqtAttribute> {

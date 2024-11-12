@@ -11,9 +11,8 @@
   background-color: #f9f9f9;
 }
 
-/* Fix for unwanted input height settings inside .ui.toggle.checkbox input Rule of SemanticCSS */
-/* The problem occurs because we use a search dropdown inside the label of a SemanticCSS toggle-checkbox */
-:host ::ng-deep .ui.toggle.checkbox #search-select-attribute ~ input.search {
+/* Fix for unwanted input height and border-radius settings from other SemanticCSS rules */
+:host ::ng-deep #search-select-attribute ~ input.search {
   height: unset;
   border-radius: unset;
 }
