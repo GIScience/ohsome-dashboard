@@ -51,7 +51,28 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
 
   initAttributeDropdown() {
     $('#search-select-attribute').dropdown({
-      fullTextSearch: 'exact'
+      fullTextSearch: 'exact',
+      clearable: true,
+      // custom attribute labels for selected items with mouse events
+      onLabelCreate: (value: string, text: string) => {
+        console.log("onLabelCreate", value, text);
+
+        const match = value.match(/:\s+'(.*)'$/);
+        const attributeKey = match ? match[1] : '';
+        const attributeFilter = this.attributes[this.selectedTopicKey][attributeKey].filter;
+
+        return $(`<a class="ui label">${text}<i class="delete icon"></i></a>`)
+          .attr('data-value', value)
+          // click for modal with detailed attribute description
+          .on('click', {attributeKey}, this.showAttributeDescription.bind(this))
+          // hover for small popup with filter definition
+          .popup({
+              content: attributeFilter,
+              variation: 'inverted'
+            }
+          )
+          ;
+      }
     });
   }
 
