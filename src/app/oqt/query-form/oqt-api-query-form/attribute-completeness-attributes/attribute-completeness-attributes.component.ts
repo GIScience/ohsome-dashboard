@@ -55,8 +55,6 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
       clearable: true,
       // custom attribute labels for selected items with mouse events
       onLabelCreate: (value: string, text: string) => {
-        console.log("onLabelCreate", value, text);
-
         const match = value.match(/:\s+'(.*)'$/);
         const attributeKey = match ? match[1] : '';
         const attributeFilter = this.attributes[this.selectedTopicKey][attributeKey].filter;
@@ -64,7 +62,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
         return $(`<a class="ui label">${text}<i class="delete icon"></i></a>`)
           .attr('data-value', value)
           // click for modal with detailed attribute description
-          .on('click', {attributeKey}, this.showAttributeDescription.bind(this))
+          .on('click', {attributeKey}, this.showAttributeDetails.bind(this))
           // hover for small popup with filter definition
           .popup({
               content: attributeFilter,
@@ -76,7 +74,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     });
   }
 
-  showAttributeDescription(event) {
+  showAttributeDetails(event) {
     // don't trigger modal if user clicks on close icon (X), only when directly clicked in the attribute label
     if (event.target != event.currentTarget) {
       return;
@@ -86,14 +84,14 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     const attribute = this.attributes[this.selectedTopicKey][attributeKey];
 
     // set content for the modal window with attribute metadata
-    $('#attribute-description #title')
+    $('#attribute-details #title')
       .html(`<span class="ui circular label">${this.topicName}</span><br>${attribute.name}`);
-    $('#attribute-description #description')
-      .html(attribute.description);
-    $('#attribute-description #filter')
+    // $('#attribute-details #description')
+    //   .html(attribute.description);
+    $('#attribute-details #filter')
       .html(attribute.filter);
 
-    $('#attribute-description').modal({
+    $('#attribute-details').modal({
       inverted: true,
       duration: 200,
     }).modal('show');

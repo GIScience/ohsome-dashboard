@@ -172,7 +172,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "Semantic-UI-2.2.13/dist/semantic.css",
+              "node_modules/semantic-ui-calendar/dist/calendar.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
+              "prism/prism-core.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -181,7 +186,8 @@
               "node_modules/moment/moment.js",
               "node_modules/chart.js/dist/Chart.js"
               ,"prism/prism-core.js"
-            ]
+            ],
+            "karmaConfig": "karma.conf.js"
           }
         },
         "lint": {
