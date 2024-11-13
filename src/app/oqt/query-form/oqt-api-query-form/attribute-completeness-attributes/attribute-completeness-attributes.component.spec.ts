@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {AttributeCompletenessAttributesComponent} from './attribute-completeness-attributes.component';
 import {OqtModule} from '../../../oqt.module';
@@ -109,7 +109,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     const testCases = [
       {
         description: 'Get default attribute key for topic that has attributes',
-        topicKey : 'building-count',
+        topicKey: 'building-count',
         expected: 'height',
       },
       {
@@ -138,7 +138,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         topicKey: 'topic-that-does-not-have-attributes',
         expected: {},
       }
-  ];
+    ];
 
     testCases.forEach((testCase) => {
       it(testCase.description, () => {
@@ -147,4 +147,74 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       })
     })
   })
+
+  describe('showAttributeDetails(event)', () => {
+
+    beforeEach(async () => {
+      //clean the DOM
+      const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
+      if (dimmmer) {
+        document.body.removeChild(dimmmer);
+      }
+    })
+
+    // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
+    // rather then openig the details we only want to remove the attribute from the selected list
+    // on the other hand if you directly click on the label we want to open the attribute details modal window
+
+    const testCases = [
+      {
+        description: "User clicked on the 'x' to remove selected item",
+        event: {
+          target: 'close icon',
+          currentTarget: 'anchor element representing the selected attribute label',
+          data: {attributeKey: 'name'}
+        },
+        //expect DOM element not to be there
+        expected: {
+          element: {
+            shouldExist: false
+          }
+        }
+      },
+      {
+        description: "User clicked directly on the label to open the attribute details",
+        event: {
+          target: 'anchor element representing the selected attribute label',
+          currentTarget: 'anchor element representing the selected attribute label',
+          data: {attributeKey: 'name'}
+        },
+        //DOM element should be there and having the class visible
+        expected: {
+          element: {
+            shouldExist: true,
+            shouldHaveClass: 'visible'
+          }
+        }
+      },
+    ];
+
+    testCases.forEach((testCase) => {
+      it(testCase.description, fakeAsync(() => {
+
+        component.showAttributeDetails(testCase.event);
+
+        // wait for the css transition to be finished before checking the final DOM elements state
+        tick(1000)
+
+        // check for the dimmer to exist (will be created by semantic-ui modal('show')
+        const element = document.querySelector('body > div.ui.dimmer.modals')
+
+        if (testCase.expected.element.shouldExist) {
+          expect(element).toBeDefined();
+          if (testCase.expected.element.shouldHaveClass) {
+            expect(element).toHaveClass('visible');
+          }
+        } else {
+          expect(element).toBeNull();
+        }
+      }))
+    })
+  })
+
 });
