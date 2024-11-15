@@ -35,7 +35,6 @@ export class OhsomeApiMetadataProviderService {
         retry({count: 2, delay: 2000, resetOnSuccess: true}),
         tap((response) => {
           // add custom logic here
-          console.log(response);
           if (MetadataResponse.isMetadataResponseJSON(response)) {
             this.ohsomeMetadataResponse = new MetadataResponse(response);
             this.ohsomeApiAvailable = true;

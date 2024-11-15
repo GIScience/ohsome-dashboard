@@ -11,7 +11,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
-import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
@@ -60,9 +59,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private cdRef: ChangeDetectorRef) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
     this.renderer = renderer;
-
-    // prepare syntax highlighting for ohsome-filter
-    Prism.languages['ohsome-filter'] = PRISM_LANGUAGE_OHSOME_FILTER;
   }
 
   ngOnInit(): void {

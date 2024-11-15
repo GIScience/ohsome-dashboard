@@ -6,8 +6,9 @@ import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
-import {SimpleChange} from '@angular/core';
+import {APP_INITIALIZER, SimpleChange} from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
+import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
 
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
@@ -19,6 +20,11 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       providers: [
         NgForm,
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
+        {
+          provide: APP_INITIALIZER,
+          useFactory: preparePrismToRenderOhsomeFilterLangauge,
+          multi: true
+        },
         provideHttpClient(withInterceptorsFromDi())
       ]
     })

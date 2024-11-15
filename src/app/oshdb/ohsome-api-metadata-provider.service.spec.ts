@@ -5,6 +5,7 @@ import {OhsomeApiService} from './ohsome-api.service';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {of, throwError} from 'rxjs';
 import {ohsomeApiMetadataResponse} from './ohsome-api-metadata.response.mock';
+import {HttpErrorResponse} from '@angular/common/http';
 
 describe('OhsomeApiMetadataProviderService', () => {
   let service: OhsomeApiMetadataProviderService;
@@ -82,9 +83,11 @@ describe('OhsomeApiMetadataProviderService', () => {
     ohsomeApiServiceSpy.getOhsomeApiAnnouncement.and.returnValue(
       throwError(
         () => {
-          const error = new Error('Internal Server Error');
-          error['status'] = 500;
-          return error;
+          return new HttpErrorResponse({
+            status: 500,
+            statusText: 'Internal Server Error',
+            error: 'Test error'
+          });
         }
       )
     );
