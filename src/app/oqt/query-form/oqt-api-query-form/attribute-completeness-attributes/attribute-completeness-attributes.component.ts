@@ -1,9 +1,18 @@
-import {AfterContentInit, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {
+  AfterContentInit,
+  Component, ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute} from '../../../types/types';
 
-declare const $;
+declare const $, Prism;
 
 @Component({
   selector: 'app-attribute-completeness-attributes',
@@ -16,6 +25,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   @Input() hashParams!: URLSearchParams;
   @Input() indicatorKey!: string;
   @Input() indicatorChecked: boolean;
+  @ViewChild('attributeFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
   oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
@@ -83,17 +93,25 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     const attributeKey = event.data["attributeKey"] as string;
     const attribute = this.attributes[this.selectedTopicKey][attributeKey];
 
+    const highlightedHTML = Prism.highlight(attribute.filter, Prism.languages['ohsome-filter'], 'ohsome-filter');
+
     // set content for the modal window with attribute metadata
     $('#attribute-details #title')
       .html(`<span class="ui circular label">${this.topicName}</span><br>${attribute.name}`);
     // $('#attribute-details #description')
     //   .html(attribute.description);
-    $('#attribute-details #filter')
-      .html(attribute.filter);
+    $('#attribute-details #attributeFilter')
+      .html(highlightedHTML);
+    //.html(attribute.filter);
 
     $('#attribute-details').modal({
       inverted: true,
       duration: 200,
+      // white background will be attached to <body>
+      context: 'body',
+      // dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
+      // dimmer-DIV in <body> aswell
+      detachable: false
     }).modal('show');
   }
 

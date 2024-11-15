@@ -159,7 +159,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     })
 
     // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
-    // rather then openig the details we only want to remove the attribute from the selected list
+    // rather than opening the details we only want to remove the attribute from the selected list
     // on the other hand if you directly click on the label we want to open the attribute details modal window
 
     const testCases = [
