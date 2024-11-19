@@ -23,7 +23,7 @@ declare let $: any;
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  formValues: { topic: string; [formFieldName: string]: string | string[] | boolean } ;
+  formValues: { topic: string; [formFieldName: string]: string | string[] | boolean };
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
@@ -103,7 +103,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
               return currentValue;
             }
 
-            const merged = union(previousValue, currentValue);
+            const merged = union(featureCollection([previousValue, currentValue]));
             if (merged != undefined) {
               merged.id = [previousValue.properties?.['name'], currentValue.properties?.['name']].join(' + ');
               merged.properties = {};
@@ -138,7 +138,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
         return currentValue;
       }
 
-      const merged = union(previousValue, currentValue);
+      const merged = union(featureCollection([previousValue, currentValue]));
       if (merged) {
         merged.id = [previousValue.id || '', currentValue.id || ''].join(' + ');
         if (merged.properties == undefined) {
