@@ -156,12 +156,19 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   describe('showAttributeDetails(event)', () => {
 
-    beforeEach(async () => {
-      //clean the DOM
+    function cleanTheDOM(){
       const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
       if (dimmmer) {
         document.body.removeChild(dimmmer);
       }
+    }
+
+    beforeEach(async () => {
+     cleanTheDOM()
+    })
+
+    afterEach(async () => {
+      cleanTheDOM()
     })
 
     // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
