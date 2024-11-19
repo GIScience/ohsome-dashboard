@@ -183,7 +183,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         L.circle([bcircle.lat, bcircle.lng], {
           radius: bcircle.radius,
           bubblingMouseEvents: false
-        } as L.PathOptions).addTo(this.bcircleLayersGroup)
+        } as L.CircleOptions).addTo(this.bcircleLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
           .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
