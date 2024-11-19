@@ -4,6 +4,7 @@ Changelog
 ## current
 * feat: (oqapi, attribute-completeness): Allow selection of multiple attributes ([#47])
 * updated to angular v18
+* compatible with api.quality.ohsome.org (OQAPI) >= v1.7.0
 
 [#47]: https://github.com/GIScience/ohsome-dashboard/issues/47
 
