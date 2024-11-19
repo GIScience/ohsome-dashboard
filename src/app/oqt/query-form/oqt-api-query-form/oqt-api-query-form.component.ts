@@ -87,16 +87,12 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.changeIndicatorCoverages.emit([]);
   }
 
-  //TODO add param info to indicators see types.d.ts
   getEnrichedIndicators(): Record<string, Checkbox<Indicator>> {
     const enrichedIndicators = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result.indicators) as Record<string, Checkbox<Indicator>>;
     // initialise all indicator checkbox objects as unchecked except the default checked ones (see ngOnInit)
     Object.keys(enrichedIndicators).forEach(indicatorKey => {
       enrichedIndicators[indicatorKey].checked = false;
       enrichedIndicators[indicatorKey].key = indicatorKey;
-      // TODO we want to be able to store multiple params per topic-indicator combination
-      //enrichedIndicators[indicatorKey].params = {};
-
     });
 
     return enrichedIndicators;

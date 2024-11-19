@@ -50,14 +50,6 @@ interface RawProjectMetadata {
 
 interface Indicator extends RawIndicatorMetadata {
   key: string;
-  //TODO add param information
-  /*availableParams: {
-    attribute-completeness--attributes: "list enriched with key"
-  }
-  params: {
-    attribute-completeness--attributes: ["selectedAttribute1","selectedAttribute2"]
-  }*/
-  //params: { [indicatorParameterKey: string]: any }
 }
 
 // parameter information from the formValues
