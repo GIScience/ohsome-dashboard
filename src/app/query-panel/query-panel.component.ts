@@ -7,12 +7,12 @@ import centroid from '@turf/centroid';
 import {getCoord} from '@turf/invariant';
 
 import {OhsomeApiMetadataProviderService} from '../oshdb/ohsome-api-metadata-provider.service';
-import {Feature, Polygon} from 'geojson';
+import {Feature, Polygon, GeoJsonProperties} from 'geojson';
 import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
-import {feature, Properties} from '@turf/helpers';
+import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
@@ -20,9 +20,6 @@ import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.se
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
-
-
-declare let $: any;
 
 @Component({
   selector: 'app-query-panel',
@@ -75,6 +72,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     // Code is not necessary for global dataset
     if (environment.mapCenterFromPoly && typeof this.maskPoly === 'object') {
+      console.log('>>>>>>>>>>>>>MASKPOLY')
       const _envelope: Feature<Polygon> = envelope(this.maskPoly);
       const _center = centroid(_envelope);
       const _coord = getCoord(_center);
@@ -169,10 +167,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     return boundaryType;
   }
 
-  get getFormAsString() {
-    return JSON.stringify(this.form.value, null, 2);
-  }
-
   get boundaryType(): BoundaryType {
     return this._boundaryType;
   }
@@ -205,11 +199,11 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       return [];
     }
 
-    const selectedPropertyvalues: Properties[] = [];
+    const selectedPropertyvalues: GeoJsonProperties[] = [];
 
     try {
       const geoJson = JSON.parse(this.form.controls['bpolys'].value);
-      propEach(geoJson, (properties, featureIndex) => {
+      propEach(geoJson, (properties) => {
         if (properties) {
           if (propertyName in properties) {
             selectedPropertyvalues.push(properties[propertyName]);
