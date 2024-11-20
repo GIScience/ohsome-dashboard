@@ -14,6 +14,10 @@ describe('OqtResultComponent', () => {
   let fixture: ComponentFixture<OqtResultComponent>;
 
   beforeEach(async () => {
+    const testContainer = document.createElement('div');
+    testContainer.id = 'test-container';
+    document.body.appendChild(testContainer);
+
     await TestBed.configureTestingModule({
       declarations: [OqtResultComponent],
       imports: [OqtModule],
@@ -25,6 +29,7 @@ describe('OqtResultComponent', () => {
       .compileComponents();
 
     fixture = TestBed.createComponent(OqtResultComponent);
+    document.getElementById('test-container')!.appendChild(fixture.nativeElement);
     component = fixture.componentInstance;
     component.formValues = {
       'topic': "building-count",
@@ -35,6 +40,11 @@ describe('OqtResultComponent', () => {
       'bboxes': "8.6252588,49.3819766,8.7295724,49.4364995"
     }
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    document.getElementById('test-container')?.remove();
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

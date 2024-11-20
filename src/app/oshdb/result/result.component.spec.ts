@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ResultComponent} from './result.component';
 import {OshdbModule} from '../oshdb.module';
@@ -15,26 +15,34 @@ describe('ResultComponent', () => {
     'types': ['node']
   }
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ResultComponent ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ResultComponent],
       imports: [
         OshdbModule
       ],
-      providers:[
-        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+      providers: [
+        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
         provideHttpClient(withInterceptorsFromDi())]
     })
-    .compileComponents();
+      .compileComponents();
 
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ResultComponent);
+
     component = fixture.componentInstance;
     component.formValues = formValuesMock;
     component.boundaryType = 'bpoly';
     fixture.detectChanges();
+
+    const testContainer = document.createElement('div');
+    testContainer.id = 'test-container';
+    testContainer.appendChild(fixture.nativeElement);
+    document.body.appendChild(testContainer);
+  });
+
+  afterEach(() => {
+    document.getElementById('test-container')?.remove();
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
