@@ -28,3 +28,13 @@
   margin: 0 0.5rem !important;
   text-transform: none !important;
 }
+
+app-indicator-result {
+  display: flex;
+  flex-grow: 1;
+}
+
+.indicator-container {
+  display: flex !important;
+  min-height: 100px;
+}

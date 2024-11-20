@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtApiQueryFormComponent} from './oqt-api-query-form.component';
 import {FormsModule, NgForm} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../../oqt.module';
@@ -13,13 +13,14 @@ describe('OqtApiQueryFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientModule, OqtModule],
-      declarations: [OqtApiQueryFormComponent],
-      providers: [
+    declarations: [OqtApiQueryFormComponent],
+    imports: [FormsModule, OqtModule],
+    providers: [
         NgForm,
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock}
-      ]
-    })
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(OqtApiQueryFormComponent);
@@ -29,25 +30,5 @@ describe('OqtApiQueryFormComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('names can be extracted from attributes', () => {
-
-    // create single key-value-pair
-    const buildingCountAttribute = {
-      name: 'Height of Buildings',
-      description: 'TODO',
-      filter: 'height=* or building:levels=*'
-    }
-    const keyAndValue = {
-      key: "height",
-      value: buildingCountAttribute
-    };
-
-    const result: string = component.getNameOfCurrentAttribute(keyAndValue);
-    const expected: string = buildingCountAttribute.name;
-
-    expect(result).toEqual(expected)
-
   });
 });

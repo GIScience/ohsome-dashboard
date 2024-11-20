@@ -7,12 +7,12 @@ import centroid from '@turf/centroid';
 import {getCoord} from '@turf/invariant';
 
 import {OhsomeApiMetadataProviderService} from '../oshdb/ohsome-api-metadata-provider.service';
-import {Feature, Polygon} from 'geojson';
+import {Feature, Polygon, GeoJsonProperties} from 'geojson';
 import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
-import {feature, Properties} from '@turf/helpers';
+import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
@@ -20,9 +20,6 @@ import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.se
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
-
-
-declare let $: any;
 
 @Component({
   selector: 'app-query-panel',
@@ -140,6 +137,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   ngOnInit() {
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
+      console.log("INIT  QueryPanel permalinkparams", permalinkParams);
       this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     })
   }
@@ -166,10 +164,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       boundaryType = 'admin';
     }
     return boundaryType;
-  }
-
-  get getFormAsString() {
-    return JSON.stringify(this.form.value, null, 2);
   }
 
   get boundaryType(): BoundaryType {
@@ -204,11 +198,11 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       return [];
     }
 
-    const selectedPropertyvalues: Properties[] = [];
+    const selectedPropertyvalues: GeoJsonProperties[] = [];
 
     try {
       const geoJson = JSON.parse(this.form.controls['bpolys'].value);
-      propEach(geoJson, (properties, featureIndex) => {
+      propEach(geoJson, (properties) => {
         if (properties) {
           if (propertyName in properties) {
             selectedPropertyvalues.push(properties[propertyName]);
@@ -253,7 +247,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       });
       permalinkParams.indicators = indicatorsToBeQueried.join(',');
       potentialIndicators.forEach(indicator => delete permalinkParams[indicator]);
+
+
+      // transform attribute-completeness--attributes
+      if (permalinkParams["attribute-completeness--attributes"]){
+        permalinkParams["attribute-completeness--attributes"] = permalinkParams["attribute-completeness--attributes"].join(',');
+      }
     }
+
+
 
     return permalinkParams;
   }
@@ -262,6 +264,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   onSubmit() {
     console.log('Form Value', this.form.value);
     const permalinkParams = this.getPermalinkParamsFromFormValues(this.form.value);
+    console.log("ONSUBMIT QueryPanel permalinkparams", permalinkParams);
     this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     this.dataService.pushFormValues(this.form.value, this._boundaryType);
   }

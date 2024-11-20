@@ -11,11 +11,13 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist",
+            "outputPath": {
+              "base": "dist",
+              "browser": ""
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -30,23 +32,24 @@
               "node_modules/semantic-ui-calendar/dist/calendar.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "prism/prism-core.css"
+              "node_modules/prismjs/themes/prism.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "Semantic-UI-2.2.13/dist/semantic.js",
               "node_modules/semantic-ui-calendar/dist/calendar.js",
-              "node_modules/moment/moment.js",
               "node_modules/chart.js/dist/Chart.js",
-              "prism/prism-core.js"
+              "node_modules/prismjs/components/prism-core.js"
             ],
             "allowedCommonJsDependencies": [
               "leaflet",
               "moment",
               "@giscience/ohsome-js-utils",
               "chart.js",
-              "plotly.js-dist-min"
-            ]
+              "plotly.js-dist-min",
+              "reproject"
+            ],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -63,8 +66,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -98,8 +99,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -126,8 +125,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -136,9 +133,7 @@
               ]
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -177,16 +172,21 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "Semantic-UI-2.2.13/dist/semantic.css",
+              "node_modules/semantic-ui-calendar/dist/calendar.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
+              "node_modules/prismjs/themes/prism.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "Semantic-UI-2.2.13/dist/semantic.js",
               "node_modules/semantic-ui-calendar/dist/calendar.js",
-              "node_modules/moment/moment.js",
-              "node_modules/chart.js/dist/Chart.js"
-              ,"prism/prism-core.js"
-            ]
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/prismjs/components/prism-core.js"
+            ],
+            "karmaConfig": "karma.conf.js"
           }
         },
         "lint": {

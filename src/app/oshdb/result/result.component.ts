@@ -5,7 +5,7 @@ import {ViewportScroller} from '@angular/common';
 import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipOptions} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
-import * as moment from 'moment';
+import moment from 'moment';
 import Utils from '../../../utils';
 import {OhsomeApiMetadataProviderService} from '../../oshdb/ohsome-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';

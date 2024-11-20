@@ -1,12 +1,11 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit} from '@angular/core';
 import {ViewportScroller} from '@angular/common';
-import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
+import {Feature, FeatureCollection, MultiPolygon, Polygon, BBox} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {default as union} from '@turf/union';
 import {default as bbox2geojson} from '@turf/bbox-polygon';
-import {BBox2d} from '@turf/helpers/dist/js/lib/geojson';
 import {featureCollection, polygon} from '@turf/helpers';
 import Utils from '../../../utils';
 import {SafeUrl} from '@angular/platform-browser';
@@ -23,7 +22,7 @@ declare let $: any;
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  formValues: { topic: string; [formFieldName: string]: any };
+  formValues: { topic: string; [formFieldName: string]: string | string[] | boolean };
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
@@ -61,7 +60,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
       const bboxesInstance = new OhsomeApi.v1.request.Bboxes().parse(bboxes);
       const features: Feature<Polygon, { id: string }>[] = bboxesInstance.boundaries.map((bbox, index) => {
         const id = (bbox.id) ? String(bbox.id) : `box ${index + 1}`;
-        const coords: BBox2d = bbox.geometry.split(',').map(Number) as BBox2d;
+        const coords: BBox = bbox.geometry.split(',').map(Number) as BBox;
         return bbox2geojson(coords, {properties: {id: id}, id: id}) as unknown as Feature<Polygon, { id: string }>;
       });
 
@@ -103,7 +102,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
               return currentValue;
             }
 
-            const merged = union(previousValue, currentValue);
+            const merged = union(featureCollection([previousValue, currentValue]));
             if (merged != undefined) {
               merged.id = [previousValue.properties?.['name'], currentValue.properties?.['name']].join(' + ');
               merged.properties = {};
@@ -138,7 +137,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
         return currentValue;
       }
 
-      const merged = union(previousValue, currentValue);
+      const merged = union(featureCollection([previousValue, currentValue]));
       if (merged) {
         merged.id = [previousValue.id || '', currentValue.id || ''].join(' + ');
         if (merged.properties == undefined) {
@@ -164,7 +163,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     return '#' + this.urlHashParamsProviderService.getHashURLSearchParams().toString();
   }
 
-  showPermalink(event): void {
+  showPermalink(event: MouseEvent): void {
     event.preventDefault();
     $('#permalinkModal').modal('show');
     $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;

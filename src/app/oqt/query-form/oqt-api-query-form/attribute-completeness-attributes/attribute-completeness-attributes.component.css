@@ -1,0 +1,7 @@
+::ng-deep i.icon.delete::before {
+  padding: 5px 11px 5px 5px;
+}
+
+::ng-deep .selection .label {
+  padding-right: 0 !important;
+}

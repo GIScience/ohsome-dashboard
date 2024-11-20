@@ -1,14 +1,179 @@
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
 import {AttributeResponseJSON} from "./types/types";
+
+// produced with https://api.quality.ohsome.org/v1/metadata/attributes?project=all
 export const oqtAttributesResponseMock: AttributeResponseJSON = {
-  "apiVersion": "1.4.0",
-  "attribution": {
-    "url": "https://github.com/GIScience/ohsome-quality-api/blob/main/COPYRIGHTS.md"
-  },
+  "apiVersion": "1.6.1",
+  "attribution": {"url": "https://github.com/GIScience/ohsome-quality-api/blob/main/COPYRIGHTS.md"},
   "result": {
     "building-count": {
       "height": {"filter": "height=* or building:levels=*", "name": "Height of Buildings", "description": "TODO"},
-      "house_number": {"filter": "addr:housenumber=*", "name": "House Number", "description": "TODO"},
+      "house-number": {"filter": "addr:housenumber=*", "name": "House Number", "description": "TODO"},
+      "address-street": {"filter": "addr:street=*", "name": "Street Address", "description": "TODO"},
+      "address-city": {"filter": "addr:city=*", "name": "City Address", "description": "TODO"},
+      "address-postcode": {"filter": "addr:postcode=*", "name": "Postcode Address", "description": "TODO"},
+      "address-country": {"filter": "addr:country=*", "name": "Country Address", "description": "TODO"},
+      "address-state": {"filter": "addr:state=*", "name": "State Address", "description": "TODO"},
+      "address-suburb": {"filter": "addr:suburb=*", "name": "Suburb Address", "description": "TODO"},
+      "address-district": {"filter": "addr:district=*", "name": "District Address", "description": "TODO"},
+      "address-housenumber": {"filter": "addr:housenumber=*", "name": "House Number Address", "description": "TODO"},
+      "building-levels": {"filter": "building:levels=*", "name": "Levels of Buildings", "description": "TODO"},
+      "roof-shape": {"filter": "roof:shape=*", "name": "Shape of Roofs", "description": "TODO"},
+      "roof-levels": {"filter": "roof:levels=*", "name": "Levels of Roofs", "description": "TODO"},
+      "building-material": {"filter": "building:material=*", "name": "Material of Buildings", "description": "TODO"},
+      "roof-material": {"filter": "roof:material=*", "name": "Material of Roofs", "description": "TODO"},
+      "roof-colour": {"filter": "roof:colour=*", "name": "Colour of Roofs", "description": "TODO"},
+      "building-colour": {"filter": "building:colour=*", "name": "Colour of Buildings", "description": "TODO"}
+    },
+    "bus-stops": {
+      "public-transport-platform": {
+        "filter": "public_transport=platform",
+        "name": "Public transport platform",
+        "description": "TODO"
+      },
+      "public-transport-stop-area": {
+        "filter": "public_transport=stop_area",
+        "name": "Bus stop area",
+        "description": "TODO"
+      }
+    },
+    "clinics": {
+      "healthcare-birthing-centre": {
+        "filter": "healthcare=birthing_centre",
+        "name": "Birthing centre",
+        "description": "TODO"
+      },
+      "healthcare-blood-donation": {
+        "filter": "healthcare=blood_donation",
+        "name": "Blood donation",
+        "description": "TODO"
+      },
+      "healthcare-rehabilitation": {
+        "filter": "healthcare=rehabilitation",
+        "name": "Rehabilitation",
+        "description": "TODO"
+      },
+      "healthcare-vaccination-centre": {
+        "filter": "healthcare=vaccination_centre",
+        "name": "Vaccination centre",
+        "description": "TODO"
+      }
+    },
+    "fitness-centres": {
+      "sport-fitness": {"filter": "sport=fitness", "name": "Fitness", "description": "TODO"},
+      "sport-swimming": {"filter": "sport=swimming", "name": "Swimming", "description": "TODO"},
+      "sport-weightlifting": {"filter": "sport=weightlifting", "name": "Weightlifting", "description": "TODO"}
+    },
+    "forests": {
+      "access-private": {"filter": "access=private", "name": "Private Access", "description": "TODO"},
+      "access-official": {"filter": "access=official", "name": "Official Access", "description": "TODO"},
+      "access-forestry": {"filter": "access=forestry", "name": "Forestry", "description": "TODO"},
+      "highway-track": {"filter": "highway=track", "name": "Track", "description": "TODO"},
+      "boundary-forest": {"filter": "boundary=forest", "name": "Forest boundary", "description": "TODO"}
+    },
+    "kindergarten": {
+      "leisure-playground": {
+        "filter": "leisure=playground",
+        "name": "Playground",
+        "description": "TODO"
+      }
+    },
+    "marketplaces": {
+      "craft-bakery": {"filter": "craft=bakery", "name": "Bakery", "description": "TODO"},
+      "craft-handicraft": {"filter": "craft=handicraft", "name": "Handicraft", "description": "TODO"},
+      "craft-leather": {"filter": "craft=leather", "name": "Leather craft", "description": "TODO"},
+      "craft-shoemaker": {"filter": "craft=shoemaker", "name": "Shoemaker", "description": "TODO"},
+      "craft-winery": {"filter": "craft=winery", "name": "Winery", "description": "TODO"}
+    },
+    "parks": {
+      "landuse-commercial": {
+        "filter": "landuse=commercial",
+        "name": "Commercial landuse",
+        "description": "TODO"
+      },
+      "leisure-dog-park": {"filter": "leisure=dog_park", "name": "Dog park", "description": "TODO"},
+      "tourism-theme-park": {"filter": "tourism=theme_park", "name": "Theme park", "description": "TODO"},
+      "landuse-greenfield": {"filter": "landuse=greenfield", "name": "Greenfield", "description": "TODO"},
+      "leisure-playground": {"filter": "leisure=playground", "name": "Playground", "description": "TODO"}
+    },
+    "schools": {"leisure-playground": {"filter": "leisure=playground", "name": "Playground", "description": "TODO"}},
+    "subway-stations": {
+      "railway-subway": {"filter": "railway=subway", "name": "Subway", "description": "TODO"},
+      "tunnel-yes": {"filter": "tunnel=yes", "name": "Tunnel", "description": "TODO"},
+      "railway-subway-entrance": {
+        "filter": "railway=subway_entrance",
+        "name": "Subway entrance",
+        "description": "TODO"
+      },
+      "route-subway": {"filter": "route=subway", "name": "Subway route", "description": "TODO"},
+      "public-transport-stop-area": {
+        "filter": "public_transport=stop_area",
+        "name": "Subway stop area",
+        "description": "TODO"
+      },
+      "public-transport-platform": {
+        "filter": "public_transport=platform",
+        "name": "Public transport platform",
+        "description": "TODO"
+      }
+    },
+    "supermarkets": {
+      "shop-convenience": {
+        "filter": "shop=convenience",
+        "name": "Convenience store",
+        "description": "TODO"
+      },
+      "shop-beverages": {"filter": "shop=beverages", "name": "Beverages", "description": "TODO"},
+      "amenity-bicycle-parking": {
+        "filter": "amenity=bicycle_parking",
+        "name": "Bicycle Parking",
+        "description": "TODO"
+      },
+      "amenity-parking": {"filter": "amenity=parking", "name": "Parking", "description": "TODO"},
+      "amenity-parking-entrance": {
+        "filter": "amenity=parking_entrance",
+        "name": "Parking entrance",
+        "description": "TODO"
+      }
+    },
+    "tram-stops": {
+      "public-transport-stop-area": {
+        "filter": "public_transport=stop_area",
+        "name": "Tram stop area",
+        "description": "TODO"
+      },
+      "public-transport-platform": {
+        "filter": "public_transport=platform",
+        "name": "Public transport platform",
+        "description": "TODO"
+      }
+    },
+    "clc-leaf-type": {
+      "leaf-type": {
+        "filter": "leaf_type in (broadleaved, needleleaved, mixed)",
+        "name": "Type of Leaves",
+        "description": "TODO"
+      }
+    },
+    "roads": {
+      "name": {"filter": "name=*", "name": "Road Name", "description": "TODO"},
+      "sidewalk": {"filter": "footway:sidewalk=*", "name": "Sidewalk", "description": "TODO"},
+      "crossing": {"filter": "footway:crossing = *", "name": "Crossing", "description": "TODO"},
+      "cycleway-lane": {"filter": "cycleway:lane=*", "name": "Cycleway Lane", "description": "TODO"},
+      "cycleway-share-busway": {
+        "filter": "cycleway:share_busway=*",
+        "name": "Cycleway Share Busway",
+        "description": "TODO"
+      },
+      "parking": {
+        "filter": "parking:left=* or parking:right=* or parking:both=*",
+        "name": "Parking",
+        "description": "TODO"
+      },
+      "maxspeed": {"filter": "maxspeed=*", "name": "Maxspeed", "description": "TODO"},
+      "oneway": {"filter": "oneway=*", "name": "Oneway", "description": "TODO"},
+      "surface": {"filter": "surface=*", "name": "Surface", "description": "TODO"},
+      "highway-speed-camera": {"filter": "highway:speed_camera=*", "name": "Speed Camera", "description": "TODO"}
     }
   }
 };

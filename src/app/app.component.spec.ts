@@ -9,7 +9,7 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {SharedModule} from './shared/shared.module';
 import {OqtModule} from './oqt/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from './oqt/oqt-api-metadata-provider.service.mock';
 
@@ -17,24 +17,22 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         AppComponent,
         QueryPanelComponent,
         ResultPanelComponent,
         ResultListDirective,
-      ],
-      imports: [
-        BrowserModule,
-        HttpClientModule,
+    ],
+    imports: [BrowserModule,
         SharedModule,
         OshdbModule,
-        OqtModule
-      ],
-      providers: [
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock}
-      ]
-    }).compileComponents();
+        OqtModule],
+    providers: [
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
   });
 
   it('should create the app', () => {
