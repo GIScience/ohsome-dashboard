@@ -72,7 +72,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     // Code is not necessary for global dataset
     if (environment.mapCenterFromPoly && typeof this.maskPoly === 'object') {
-      console.log('>>>>>>>>>>>>>MASKPOLY')
       const _envelope: Feature<Polygon> = envelope(this.maskPoly);
       const _center = centroid(_envelope);
       const _coord = getCoord(_center);
