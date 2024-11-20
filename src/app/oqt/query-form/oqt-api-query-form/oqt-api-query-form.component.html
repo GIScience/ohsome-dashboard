@@ -46,13 +46,13 @@
           <div class="ui divided items">
             <!-- individual indicators start -->
             <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
-              @switch (indicator.key) {
-                @case ("attribute-completeness") {
-                  <app-simple-indicator
-                    [indicator]="indicator"
-                    [qualityDimension]="qualityDimension"
-                    (indicatorToggle)="onIndicatorToggle($event)"
-                  >
+              <app-simple-indicator
+                [indicator]="indicator"
+                [qualityDimension]="qualityDimension"
+                (indicatorToggle)="onIndicatorToggle($event)"
+              >
+                @switch (indicator.key) {
+                  @case ("attribute-completeness") {
                     @if (indicator.checked) {
                       <app-attribute-completeness-attributes
                         [selectedTopicKey]="selectedTopicKey"
@@ -62,18 +62,9 @@
                         [indicatorChecked]="indicator.checked"
                       ></app-attribute-completeness-attributes>
                     }
-                  </app-simple-indicator>
+                  }
                 }
-                @default {
-                  <app-simple-indicator
-                    [indicator]="indicator"
-                    [qualityDimension]="qualityDimension"
-                    (indicatorToggle)="onIndicatorToggle($event)"
-                  >
-                  </app-simple-indicator>
-                }
-              }
-
+              </app-simple-indicator>
             </div>
             <!-- individual indicators end -->
           </div>
