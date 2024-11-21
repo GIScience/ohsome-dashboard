@@ -48,3 +48,7 @@ Thumbs.db
 
 # nx cache
 /.nx/cache/
+
+# used for test deployment (see scripts)
+/temp-test-repo
+/scripts
