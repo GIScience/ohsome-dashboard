@@ -5,3 +5,17 @@
 ::ng-deep .selection .label {
   padding-right: 0 !important;
 }
+
+.editable-attributes {
+  display: flex;
+  align-items: flex-start;
+}
+
+.editable-attributes > div.field {
+  flex: 1 1 auto;
+}
+
+.editable-attributes > button {
+  flex: 0 0 auto;
+  margin-left: 1rem;
+}
