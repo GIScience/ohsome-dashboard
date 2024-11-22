@@ -168,4 +168,15 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     }
   }
 
+  showAttributeFilterEditDialog() {
+    $('#attributes-editor').modal({
+      inverted: true,
+      duration: 200,
+      // white background will be attached to <body>
+      context: 'body',
+      // dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
+      // dimmer-DIV in <body> aswell
+      detachable: false
+    }).modal('show');
+  }
 }

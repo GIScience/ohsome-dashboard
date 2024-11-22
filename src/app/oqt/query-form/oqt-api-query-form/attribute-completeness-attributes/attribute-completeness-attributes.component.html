@@ -12,7 +12,11 @@
       </option>
     </select>
   </div>
-  <button type="button" class="ui blue icon button" data-tooltip="View and edit attributes filter." data-inverted>
+  <button type="button" class="ui blue icon button"
+          data-tooltip="View and edit attributes filter."
+          data-inverted
+          (click)="showAttributeFilterEditDialog()"
+  >
     <i class="edit icon"></i>
   </button>
 </div>
@@ -34,5 +38,12 @@
         <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter">Filter text will be set automatically</code></pre>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="attributes-editor" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    <div>Attributes Editor</div>
   </div>
 </div>
