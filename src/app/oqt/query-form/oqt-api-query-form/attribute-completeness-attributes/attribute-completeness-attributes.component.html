@@ -1,14 +1,20 @@
-<div class="field">
-  <h5 style="margin-top: 0.8rem">Check the topic "{{ topicName }}" on having the following attribute(s):</h5>
-  <select multiple required
-          class="ui search selection dropdown"
-          id="search-select-attribute"
-          name="{{indicatorKey}}--attributes"
-          [(ngModel)]="selectedAttributeKeys">
-    <option *ngFor="let entry of getAttributesByTopicKey(this.selectedTopicKey) | keyvalue;"
-            [value]="entry.key">{{ entry.value.name }}
-    </option>
-  </select>
+<h5 style="margin-top: 0.8rem">Check the topic "{{ topicName }}" on having the following attribute(s):</h5>
+
+<div class="editable-attributes">
+  <div class="field">
+    <select multiple required
+            class="ui search selection dropdown"
+            id="search-select-attribute"
+            name="{{indicatorKey}}--attributes"
+            [(ngModel)]="selectedAttributeKeys">
+      <option *ngFor="let entry of getAttributesByTopicKey(this.selectedTopicKey) | keyvalue;"
+              [value]="entry.key">{{ entry.value.name }}
+      </option>
+    </select>
+  </div>
+  <button type="button" class="ui blue icon button" data-tooltip="View and edit attributes filter." data-inverted>
+    <i class="edit icon"></i>
+  </button>
 </div>
 
 <!-- modal window to display detailed attribute information-->
@@ -19,10 +25,10 @@
   </div>
   <div class="content">
     <div class="ui three column divided grid">
-<!--      <div class="column">-->
-<!--        <h4 class="ui header">Description:</h4>-->
-<!--        <div id="description">Description text will be set automatically</div>-->
-<!--      </div>-->
+      <!--      <div class="column">-->
+      <!--        <h4 class="ui header">Description:</h4>-->
+      <!--        <div id="description">Description text will be set automatically</div>-->
+      <!--      </div>-->
       <div class="column">
         <h4 class="ui header">ohsome Filter definition:</h4>
         <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter">Filter text will be set automatically</code></pre>
