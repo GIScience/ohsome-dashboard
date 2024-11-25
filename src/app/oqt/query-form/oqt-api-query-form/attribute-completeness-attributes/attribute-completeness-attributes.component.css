@@ -6,6 +6,7 @@
   padding-right: 0 !important;
 }
 
+/* dropdown search with pre defined attributes + EDIT button*/
 .editable-attributes {
   display: flex;
   align-items: flex-start;
@@ -19,3 +20,4 @@
   flex: 0 0 auto;
   margin-left: 1rem;
 }
+

@@ -42,8 +42,23 @@
 </div>
 
 <div id="attributes-editor" class="ui modal">
-  <i class="close icon"></i>
   <div class="header">
-    <div>Attributes Editor</div>
+    <h1 class="ui header">View and Edit your Attribute Filter</h1>
+  </div>
+  <div class="scrolling content">
+    <div class="required field">
+      <label for="customTitle">Title</label>
+      <input id="customTitle" class="ui header" type="text" value="My custom title" required>
+    </div>
+    <div class="required field">
+      <label>Attribute Filter</label>
+      <app-prism-editor [value]="combinedAttributeFilters"></app-prism-editor>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui blue left floated basic button"><i class="checkmark icon"></i>Validate</div>
+    <div class="ui blue left floated basic button"><i class="save icon"></i>Save in Browser Cache</div>
+    <div class="ui green approve button">OK</div>
+    <div class="ui red cancel button">Cancel</div>
   </div>
 </div>
