@@ -9,6 +9,7 @@ import {SimpleIndicatorComponent} from './query-form/oqt-api-query-form/simple-i
 import {
   AttributeCompletenessAttributesComponent
 } from './query-form/oqt-api-query-form/attribute-completeness-attributes/attribute-completeness-attributes.component';
+import {PrismEditorComponent} from '../shared/components/prism-editor/prism-editor.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {
   ],
   imports: [
     SharedModule,
+    PrismEditorComponent,
   ],
   providers: [
     OqtApiMetadataProviderService,

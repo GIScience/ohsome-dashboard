@@ -30,6 +30,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
+  combinedAttributeFilters: string;
 
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
@@ -168,7 +169,49 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     }
   }
 
+  /**
+   * Return the filter string of an attribute if the topic-attribute combination is defined otherwise return empty string
+   */
+  getFilter(topicKey: string, attributeKey: string): string | undefined {
+    return this.attributes[topicKey]?.[attributeKey]?.filter;
+  }
+
+  combineSelectedAttributeFilters(): string {
+
+    // get a valid attributeFilter list
+    // can have 0..n filter elements
+    let attributeFilterList: string[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
+      const filter = this.getFilter(this.selectedTopicKey, attributeKey);
+      return filter != undefined ? [filter] : [];
+    });
+
+    switch (attributeFilterList.length) {
+      case 0: {
+        return '';
+      }
+      case 1: {
+        return attributeFilterList[0];
+      }
+      default: {
+        return concatFilters();
+      }
+    }
+
+    // surround filters with brackets and concat them with ' and ' and add pretty linebreaks
+    function concatFilters() {
+      return attributeFilterList.map((attributeFilter) => {
+        return `(
+  ${attributeFilter}
+)`;
+      }).join(' and ');
+    }
+  }
+
   showAttributeFilterEditDialog() {
+
+    // compute the current attributeFilter as a AND-combination of the selected attributes
+    this.combinedAttributeFilters = this.combineSelectedAttributeFilters();
+
     $('#attributes-editor').modal({
       inverted: true,
       duration: 200,
@@ -178,5 +221,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
       // dimmer-DIV in <body> aswell
       detachable: false
     }).modal('show');
+
+
   }
 }

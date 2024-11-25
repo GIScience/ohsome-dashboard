@@ -28,8 +28,9 @@ editor;
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('CHANGES PRISM', changes);
-    if (changes['value'] && !changes['value'].isFirstChange()) {}
-    this.editor.setOptions({value: changes['value'].currentValue});
+    if (changes['value'] && !changes['value'].firstChange) {
+      this.editor.setOptions({value: changes['value'].currentValue});
+    }
   }
 
 }

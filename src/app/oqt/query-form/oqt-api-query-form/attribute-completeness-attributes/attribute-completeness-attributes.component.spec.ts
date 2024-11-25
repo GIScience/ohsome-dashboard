@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {AttributeCompletenessAttributesComponent} from './attribute-completeness-attributes.component';
 import {OqtModule} from '../../../oqt.module';
@@ -9,6 +9,9 @@ import {NgForm} from '@angular/forms';
 import {APP_INITIALIZER, SimpleChange} from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
 import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
+import {OqtAttribute} from '../../../types/types';
+import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
+import {By} from '@angular/platform-browser';
 
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
@@ -16,7 +19,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OqtModule],
+      imports: [OqtModule, PrismEditorComponent],
       providers: [
         NgForm,
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
@@ -156,7 +159,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   describe('showAttributeDetails(event)', () => {
 
-    function cleanTheDOM(){
+    function cleanTheDOM() {
       const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
       if (dimmmer) {
         document.body.removeChild(dimmmer);
@@ -164,7 +167,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     }
 
     beforeEach(async () => {
-     cleanTheDOM()
+      cleanTheDOM()
     })
 
     afterEach(async () => {
@@ -183,10 +186,11 @@ describe('AttributeCompletenessIndicatorComponent', () => {
           currentTarget: 'anchor element representing the selected attribute label',
           data: {attributeKey: 'name'}
         },
-        //expect DOM element not to be there
+        //DOM element should be there and NOT having the class visible
         expected: {
           element: {
-            shouldExist: false
+            shouldExist: true,
+            shouldNotHaveClass: 'visible'
           }
         }
       },
@@ -208,26 +212,197 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     ];
 
     testCases.forEach((testCase) => {
-      it(testCase.description, fakeAsync(() => {
+      it(testCase.description, async () => {
 
         component.showAttributeDetails(testCase.event);
 
         // wait for the css transition to be finished before checking the final DOM elements state
-        tick(1000)
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         // check for the dimmer to exist (will be created by semantic-ui modal('show')
-        const element = document.querySelector('body > div.ui.dimmer.modals')
+        // const element = document.querySelector('body > div.ui.dimmer.modals')
+        const modalContentElement = fixture.nativeElement.querySelector('div#attribute-details');
 
         if (testCase.expected.element.shouldExist) {
-          expect(element).toBeDefined();
+          expect(modalContentElement).toBeDefined();
           if (testCase.expected.element.shouldHaveClass) {
-            expect(element).toHaveClass('visible');
+            expect(modalContentElement).toHaveClass('visible');
           }
-        } else {
-          expect(element).toBeNull();
+          if (testCase.expected.element.shouldNotHaveClass){
+            expect(modalContentElement).not.toHaveClass('visible');
+          }
         }
-      }))
+      })
     })
   })
+
+  describe('getFilter()', () => {
+    const testAttributes: Record<string, Record<string, OqtAttribute>> = {
+      topic1: {
+        attributeKey1: {
+          name: 'Attribute 1',
+          description: 'This is attribute one.',
+          filter: 'attr=one'
+        },
+        attributeKey2: {
+          name: 'Attribute 2',
+          description: 'This is attribute two.',
+          filter: 'attr=two'
+        },
+      }
+    }
+
+    const testCases = [
+      {
+        description: "should return the filter, when topic HAS attributes and attribute IS available",
+        topicKey: 'topic1',
+        attributeKey: 'attributeKey1',
+        expected: 'attr=one'
+      },
+      {
+        description: "should return undefined, when topic HAS attributes but attribute IS NOT available",
+        topicKey: 'topic1',
+        attributeKey: 'nonAvailableAttrKey',
+        expected: undefined
+      },
+      {
+        description: "should return undefined, when topic HAS NO attributes",
+        topicKey: 'topicWhichHasNoAttributes',
+        attributeKey: '',
+        expected: undefined
+      },
+    ];
+
+    testCases.forEach((testCase) => {
+      it(testCase.description, () => {
+
+        component.attributes = testAttributes;
+
+        const result = component.getFilter(testCase.topicKey, testCase.attributeKey);
+
+        expect(result).toEqual(testCase.expected);
+
+      })
+    })
+  })
+
+  describe('combineSelectedAttributeFilters()', () => {
+    const testAttributes: Record<string, Record<string, OqtAttribute>> = {
+      topic1: {
+        attributeKey1: {
+          name: 'Attribute 1',
+          description: 'This is attribute one.',
+          filter: 'attr=one'
+        },
+        attributeKey2: {
+          name: 'Attribute 2',
+          description: 'This is attribute two.',
+          filter: 'attr=two'
+        },
+      }
+    }
+
+    const testCases = [
+      {
+        description: 'no filters selected',
+        selectedTopicKey: 'topic1',
+        selectedAttributeKeys: [],
+        expected: '',
+      },
+      {
+        description: 'one valid filter',
+        selectedTopicKey: 'topic1',
+        selectedAttributeKeys: ['attributeKey1'],
+        expected: 'attr=one',
+      },
+      {
+        description: 'multiple valid filters',
+        selectedTopicKey: 'topic1',
+        selectedAttributeKeys: ['attributeKey1', 'attributeKey2'],
+        expected: `(
+  attr=one
+) and (
+  attr=two
+)`,
+      },
+      {
+        description: 'one invalid filter',
+        selectedTopicKey: 'topic1',
+        selectedAttributeKeys: ['invalidKey'],
+        expected: '',
+      },
+      {
+        description: 'mix of valid and invalid filters',
+        selectedTopicKey: 'topic1',
+        selectedAttributeKeys: ['attributeKey1', 'invalidKey', 'attributeKey2'],
+        expected: `(
+  attr=one
+) and (
+  attr=two
+)`,
+      },
+    ];
+
+    testCases.forEach((testCase) => {
+      it(testCase.description, () => {
+        component.attributes = testAttributes;
+        component.selectedTopicKey = testCase.selectedTopicKey;
+        component.selectedAttributeKeys = testCase.selectedAttributeKeys;
+
+        const result = component.combineSelectedAttributeFilters();
+        console.log(result, testCase.expected)
+        expect(result).toEqual(testCase.expected);
+      })
+    })
+
+  });
+
+  describe('showAttributeFilterEditDialog()', () => {
+    const testAttributes: Record<string, Record<string, OqtAttribute>> = {
+      topic1: {
+        attributeKey1: {
+          name: 'Attribute 1',
+          description: 'This is attribute one.',
+          filter: 'attr=one'
+        },
+      }
+    };
+
+    function cleanTheDOM() {
+      const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
+      if (dimmmer) {
+        document.body.removeChild(dimmmer);
+      }
+    }
+
+    beforeEach(async () => {
+      cleanTheDOM()
+    })
+
+    afterEach(async () => {
+      cleanTheDOM()
+    })
+
+    it('should exist and be visible with filter value', async () => {
+      // Arrange
+      component.attributes = testAttributes;
+      component.selectedTopicKey = 'topic1';
+      component.selectedAttributeKeys = ['attributeKey1'];
+      component.showAttributeFilterEditDialog();
+      fixture.detectChanges();
+
+      // Wait for CSS transition to complete (simulate delay using a real Promise)
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Check if the modal element exists and editor has the filter value
+      const contentElement = fixture.nativeElement.querySelector('div#attributes-editor');
+      const prismEditorDebugElement = fixture.debugElement.query(By.directive(PrismEditorComponent));
+      const prismEditorComponentInstance = prismEditorDebugElement.componentInstance as PrismEditorComponent;
+
+      expect(contentElement).toBeDefined();
+      expect(contentElement).toHaveClass('visible');
+      expect(prismEditorComponentInstance.value).toBe('attr=one');
+    });
+  });
 
 });
