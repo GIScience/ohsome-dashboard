@@ -21,13 +21,11 @@ editor;
       {
         language:'ohsome-filter',
         theme: 'prism',
-      },
-      ()=> console.log('PRISM READY', this.editor),
+      }
     )
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('CHANGES PRISM', changes);
     if (changes['value'] && !changes['value'].firstChange) {
       this.editor.setOptions({value: changes['value'].currentValue});
     }

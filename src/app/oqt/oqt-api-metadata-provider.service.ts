@@ -24,6 +24,13 @@ export class OqtApiMetadataProviderService {
     return this.oqtAttributes;
   }
 
+  /**
+   * Return the filter string of an attribute if the topic-attribute combination is defined otherwise return empty string
+   */
+  getAttributeFilter(topicKey: string, attributeKey: string): string | undefined {
+    return this.oqtAttributes.result[topicKey]?.[attributeKey]?.filter;
+  }
+
   loadOqtApiMetadata() {
     return this.oqtApi.getMetadata()
       .pipe(
