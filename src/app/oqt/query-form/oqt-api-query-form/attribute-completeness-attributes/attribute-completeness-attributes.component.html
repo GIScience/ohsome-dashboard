@@ -1,6 +1,7 @@
 <h5 style="margin-top: 0.8rem">Check the topic "{{ topicName }}" on having the following attribute(s):</h5>
 
 <div class="editable-attributes">
+  @if (! useCustomFilter()){
   <div class="field">
     <select multiple required
             class="ui search selection dropdown"
@@ -12,6 +13,12 @@
       </option>
     </select>
   </div>
+  } @else {
+    <div>Custom Filter</div>
+    <input type="text" id="attribute-title" name="{{indicatorKey}}--attribute-title" [value]="customFilterTitle">
+    <input type="text" id="attribute-filter" name="{{indicatorKey}}--attribute-filter" [value]="customFilterDefinition">
+    <button type="button" class="ui red icon button" (click)="useCustomFilter.set(false)"><i class="close icon"></i></button>
+  }
   <button type="button" class="ui blue icon button"
           data-tooltip="View and edit attributes filter."
           data-inverted
@@ -41,6 +48,7 @@
   </div>
 </div>
 
+<div id="attributes-editor-dimmer"></div>
 <div id="attributes-editor" class="ui modal">
   <div class="header">
     <h1 class="ui header">View and Edit your Attribute Filter</h1>
@@ -58,7 +66,13 @@
   <div class="actions">
     <div class="ui blue left floated basic button"><i class="checkmark icon"></i>Validate</div>
     <div class="ui blue left floated basic button"><i class="save icon"></i>Save in Browser Cache</div>
-    <div class="ui green approve button">OK</div>
+    <div
+      class="ui green approve button"
+      (click)="setCustomFilter({
+        title: 'abc',
+        definition: 'filterdef'
+      })"
+    >OK</div>
     <div class="ui red cancel button">Cancel</div>
   </div>
 </div>

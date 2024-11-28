@@ -1,9 +1,9 @@
 import {
   AfterContentInit,
   Component, ElementRef,
-  Input,
+  Input, NgZone,
   OnChanges,
-  OnInit,
+  OnInit, signal,
   SimpleChange,
   SimpleChanges,
   ViewChild
@@ -27,12 +27,17 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   @Input() indicatorKey!: string;
   @Input() indicatorChecked: boolean;
   @ViewChild('attributeFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
+
   oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
-  combinedAttributeFilters: string;
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
+  combinedAttributeFilters: string;
+  useCustomFilter  = signal(false);
+  customFilterTitle: string = '';
+  customFilterDefinition: string = '';
+
+  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, private ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
   }
 
@@ -212,16 +217,27 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     // compute the current attributeFilter as a AND-combination of the selected attributes
     this.combinedAttributeFilters = this.combineSelectedAttributeFilters();
 
-    $('#attributes-editor').modal({
-      inverted: true,
-      duration: 200,
-      // white background will be attached to <body>
-      context: 'body',
-      // dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
-      // dimmer-DIV in <body> aswell
-      detachable: false
-    }).modal('show');
-
-
+    this.ngZone.runOutsideAngular(() => {
+      $('#attributes-editor').modal({
+        inverted: true,
+        duration: 200,
+        dimmerSettings: {
+          useCSS: true
+        },
+        // observeChanges: true,
+        // white background will be set on the 'context'-Element
+        context: 'div#attributes-editor-dimmer',
+        // context: 'body',
+        // detachable: 'true' will move the modal-element inside the context element dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
+        detachable: true
+      }).modal('show');
+    });
   }
+
+  setCustomFilter(options: { title: string, definition: string }) {
+    this.useCustomFilter.set(true);
+    this.customFilterTitle = options.title;
+    this.customFilterDefinition = options.definition;
+  }
+
 }
