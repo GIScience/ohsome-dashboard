@@ -15,14 +15,14 @@ module.exports = function (config) {
     ],
     files: [
       "src/styles.css",
-      "Semantic-UI-2.2.13/dist/semantic.css",
+      "Semantic-UI-2.5.0/dist/semantic.css",
       "node_modules/semantic-ui-calendar/dist/calendar.css",
       "node_modules/leaflet/dist/leaflet.css",
       "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
       "node_modules/prismjs/themes/prism.css",
       "node_modules/prismjs/components/prism-core.js",
       "node_modules/jquery/dist/jquery.js",
-      "Semantic-UI-2.2.13/dist/semantic.js",
+      "Semantic-UI-2.5.0/dist/semantic.js",
     ],
     client: {
       jasmine: {
