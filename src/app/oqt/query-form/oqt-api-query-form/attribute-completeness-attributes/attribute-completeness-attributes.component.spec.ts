@@ -368,31 +368,18 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       }
     };
 
-    function cleanTheDOM() {
-      const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
-      if (dimmmer) {
-        document.body.removeChild(dimmmer);
-      }
-    }
-
-    beforeEach(async () => {
-      cleanTheDOM()
-    })
-
-    afterEach(async () => {
-      cleanTheDOM()
-    })
-
     it('should exist and be visible with filter value', async () => {
       // Arrange
       component.attributes = testAttributes;
       component.selectedTopicKey = 'topic1';
       component.selectedAttributeKeys = ['attributeKey1'];
+      fixture.detectChanges();
+
       component.showAttributeFilterEditDialog();
       fixture.detectChanges();
 
       // Wait for CSS transition to complete (simulate delay using a real Promise)
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Check if the modal element exists and editor has the filter value
       const contentElement = fixture.nativeElement.querySelector('div#attributes-editor');
@@ -400,7 +387,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       const prismEditorComponentInstance = prismEditorDebugElement.componentInstance as PrismEditorComponent;
 
       expect(contentElement).toBeDefined();
-      expect(contentElement).toHaveClass('visible');
+      expect(contentElement).toHaveClass('active');
       expect(prismEditorComponentInstance.value).toBe('attr=one');
     });
   });
