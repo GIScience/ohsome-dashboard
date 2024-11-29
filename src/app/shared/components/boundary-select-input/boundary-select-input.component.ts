@@ -1,4 +1,4 @@
-import {Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LayerOptions, LeafletEvent} from 'leaflet';
@@ -54,11 +54,13 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
 
   public map: L.Map;
 
-  constructor(private elRef: ElementRef) {
+  constructor(private elRef: ElementRef, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
-    this.initMap();
+    this.ngZone.runOutsideAngular(() => {
+      this.initMap();
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
