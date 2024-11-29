@@ -10,7 +10,7 @@ import {AttributeResponseJSON } from './types/types';
 })
 export class OqtApiMetadataProviderService {
   private oqtMetadataResponse: MetadataResponseJSON;
-  private oqtAttributes: AttributeResponseJSON;
+  oqtAttributes: AttributeResponseJSON;
   public oqtApiAvailable = false;
 
   constructor(private oqtApi: OqtApiService) {
