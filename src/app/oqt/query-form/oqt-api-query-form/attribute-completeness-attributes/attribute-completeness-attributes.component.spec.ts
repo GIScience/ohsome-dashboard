@@ -12,6 +12,7 @@ import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
 import {OqtAttribute} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {By} from '@angular/platform-browser';
+import oqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
 
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
@@ -51,7 +52,6 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   it('should sanitize the attribute list when the topic changes', () => {
     spyOn(component, 'sanitizeAttributeKeys').and.callThrough();
-    spyOn(component, 'initAttributeDropdown');
 
     // switch from topic roads to building-count
     component.selectedTopicKey = "building-count";
@@ -62,7 +62,6 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     expect(component.sanitizeAttributeKeys).toHaveBeenCalled();
     expect(component.selectedAttributeKeys).toEqual([component.getDefaultAttributeKey(component.selectedTopicKey)]);
-    expect(component.initAttributeDropdown).toHaveBeenCalled();
   });
 
   describe('getAttributeKeysFromUrlHashParams(hashParams)', () => {
@@ -159,20 +158,20 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   describe('showAttributeDetails(event)', () => {
 
-    function cleanTheDOM() {
-      const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
-      if (dimmmer) {
-        document.body.removeChild(dimmmer);
-      }
-    }
-
-    beforeEach(async () => {
-      cleanTheDOM()
-    })
-
-    afterEach(async () => {
-      cleanTheDOM()
-    })
+    // function cleanTheDOM() {
+    //   const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
+    //   if (dimmmer) {
+    //     document.body.removeChild(dimmmer);
+    //   }
+    // }
+    //
+    // beforeEach(async () => {
+    //   cleanTheDOM()
+    // })
+    //
+    // afterEach(async () => {
+    //   cleanTheDOM()
+    // })
 
     // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
     // rather than opening the details we only want to remove the attribute from the selected list
@@ -228,7 +227,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
           if (testCase.expected.element.shouldHaveClass) {
             expect(modalContentElement).toHaveClass('visible');
           }
-          if (testCase.expected.element.shouldNotHaveClass){
+          if (testCase.expected.element.shouldNotHaveClass) {
             expect(modalContentElement).not.toHaveClass('visible');
           }
         }
@@ -236,89 +235,28 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     })
   })
 
-  describe('getFilter()', () => {
-    const testAttributes: Record<string, Record<string, OqtAttribute>> = {
-      topic1: {
-        attributeKey1: {
-          name: 'Attribute 1',
-          description: 'This is attribute one.',
-          filter: 'attr=one'
-        },
-        attributeKey2: {
-          name: 'Attribute 2',
-          description: 'This is attribute two.',
-          filter: 'attr=two'
-        },
-      }
-    }
-
-    const testCases = [
-      {
-        description: "should return the filter, when topic HAS attributes and attribute IS available",
-        topicKey: 'topic1',
-        attributeKey: 'attributeKey1',
-        expected: 'attr=one'
-      },
-      {
-        description: "should return undefined, when topic HAS attributes but attribute IS NOT available",
-        topicKey: 'topic1',
-        attributeKey: 'nonAvailableAttrKey',
-        expected: undefined
-      },
-      {
-        description: "should return undefined, when topic HAS NO attributes",
-        topicKey: 'topicWhichHasNoAttributes',
-        attributeKey: '',
-        expected: undefined
-      },
-    ];
-
-    testCases.forEach((testCase) => {
-      it(testCase.description, () => {
-
-        component.attributes = testAttributes;
-
-        const result = component.getFilter(testCase.topicKey, testCase.attributeKey);
-
-        expect(result).toEqual(testCase.expected);
-
-      })
-    })
-  })
-
   describe('combineSelectedAttributeFilters()', () => {
-    const testAttributes: Record<string, Record<string, OqtAttribute>> = {
-      topic1: {
-        attributeKey1: {
-          name: 'Attribute 1',
-          description: 'This is attribute one.',
-          filter: 'attr=one'
-        },
-        attributeKey2: {
-          name: 'Attribute 2',
-          description: 'This is attribute two.',
-          filter: 'attr=two'
-        },
-      }
-    }
 
     const testCases = [
       {
         description: 'no filters selected',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: [],
+        filterValues: [undefined],
         expected: '',
       },
       {
         description: 'one valid filter',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1'],
+        filterValues: ['attr=one'],
         expected: 'attr=one',
       },
       {
         description: 'multiple valid filters',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1', 'attributeKey2'],
+        filterValues: ['attr=one', 'attr=two'],
         expected: `(
   attr=one
 ) and (
@@ -329,12 +267,14 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         description: 'one invalid filter',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['invalidKey'],
+        filterValues: [undefined],
         expected: '',
       },
       {
         description: 'mix of valid and invalid filters',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1', 'invalidKey', 'attributeKey2'],
+        filterValues: ['attr=one', undefined, 'attr=two'],
         expected: `(
   attr=one
 ) and (
@@ -344,14 +284,21 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     ];
 
     testCases.forEach((testCase) => {
-      it(testCase.description, () => {
-        component.attributes = testAttributes;
+      it(testCase.description, async () => {
+
+        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
+
         component.selectedTopicKey = testCase.selectedTopicKey;
         component.selectedAttributeKeys = testCase.selectedAttributeKeys;
+        fixture.detectChanges()
+        await fixture.whenRenderingDone()
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const result = component.combineSelectedAttributeFilters();
-        console.log(result, testCase.expected)
-        expect(result).toEqual(testCase.expected);
+        component.ngZone.runOutsideAngular(() => {
+          const result = component.combineSelectedAttributeFilters();
+          console.log(result, testCase.expected)
+          expect(result).toEqual(testCase.expected);
+        })
       })
     })
 
@@ -369,6 +316,9 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     };
 
     it('should exist and be visible with filter value', async () => {
+
+      spyOn(component, 'combineSelectedAttributeFilters').and.returnValue(testAttributes['topic1']['attributeKey1'].filter);
+
       // Arrange
       component.attributes = testAttributes;
       component.selectedTopicKey = 'topic1';
