@@ -1,23 +1,21 @@
 <h5 style="margin-top: 0.8rem">Check the topic "{{ topicName }}" on having the following attribute(s):</h5>
 
 <div class="editable-attributes">
-  @if (! useCustomFilter()){
-  <div class="field">
-    <select multiple required
-            class="ui search selection dropdown"
-            id="search-select-attribute"
-            name="{{indicatorKey}}--attributes"
-            [(ngModel)]="selectedAttributeKeys">
-      <option *ngFor="let entry of getAttributesByTopicKey(this.selectedTopicKey) | keyvalue;"
-              [value]="entry.key">{{ entry.value.name }}
-      </option>
-    </select>
-  </div>
+  @if (!useCustomFilter()) {
+    <div class="field">
+      <app-sui-multi-select-search-dropdown required
+        id="search-select-attribute"
+        name="{{indicatorKey}}--attributes"
+        [(ngModel)]="selectedAttributeKeys"
+        [options]="attributesDropdownOptions"
+        [selectOptions]="getAttributesByTopicKey(this.selectedTopicKey) | keyvalue"></app-sui-multi-select-search-dropdown>
+    </div>
   } @else {
     <div>Custom Filter</div>
-    <input type="text" id="attribute-title" name="{{indicatorKey}}--attribute-title" [value]="customFilterTitle">
-    <input type="text" id="attribute-filter" name="{{indicatorKey}}--attribute-filter" [value]="customFilterDefinition">
-    <button type="button" class="ui red icon button" (click)="useCustomFilter.set(false)"><i class="close icon"></i></button>
+    <input type="hidden" id="attribute-title" name="{{indicatorKey}}--attribute-title" [(ngModel)]="customFilterTitle">
+    <input type="hidden" id="attribute-filter" name="{{indicatorKey}}--attribute-filter" [(ngModel)]="customFilterDefinition">
+    <button type="button" class="ui red icon button" (click)="useCustomFilter.set(false)"><i class="close icon"></i>
+    </button>
   }
   <button type="button" class="ui blue icon button"
           data-tooltip="View and edit attributes filter."
@@ -29,6 +27,7 @@
 </div>
 
 <!-- modal window to display detailed attribute information-->
+<div id="attributes-details-dimmer"></div>
 <div id="attribute-details" class="ui modal">
   <i class="close icon"></i>
   <div class="header">
@@ -72,7 +71,8 @@
         title: 'abc',
         definition: 'filterdef'
       })"
-    >OK</div>
+    >OK
+    </div>
     <div class="ui red cancel button">Cancel</div>
   </div>
 </div>

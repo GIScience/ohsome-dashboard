@@ -1,9 +1,11 @@
 import {
-  AfterContentInit,
-  Component, ElementRef,
-  Input, NgZone,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
   OnChanges,
-  OnInit, signal,
+  OnInit,
+  signal,
   SimpleChange,
   SimpleChanges,
   ViewChild
@@ -20,7 +22,7 @@ declare const $, Prism;
   styleUrl: './attribute-completeness-attributes.component.css',
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
-export class AttributeCompletenessAttributesComponent implements OnInit, AfterContentInit, OnChanges {
+export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
   @Input() topicName!: string;
   @Input() selectedTopicKey!: string;
   @Input() hashParams!: URLSearchParams;
@@ -37,7 +39,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
   customFilterTitle: string = '';
   customFilterDefinition: string = '';
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, private ngZone: NgZone) {
+  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, public ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
   }
 
@@ -47,48 +49,36 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     //extract and sanitize selectedAttributeKeys
     this.selectedAttributeKeys = this.getAttributeKeysFromUrlHashParams(this.hashParams);
 
-
-  }
-
-  ngAfterContentInit(): void {
-    // directly initialize the indicator search dropdown when it is visible during component initialization
-    this.initAttributeDropdown();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const topicChange: SimpleChange = changes['selectedTopicKey'];
 
     if (topicChange && !topicChange.firstChange) {
-      //sanitize attributes
-      $('#search-select-attribute').dropdown('clear');
       this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
-      this.initAttributeDropdown();
     }
   }
 
-  initAttributeDropdown() {
-    $('#search-select-attribute').dropdown({
-      fullTextSearch: 'exact',
-      clearable: true,
-      // custom attribute labels for selected items with mouse events
-      onLabelCreate: (value: string, text: string) => {
-        const match = value.match(/:\s+'(.*)'$/);
-        const attributeKey = match ? match[1] : '';
-        const attributeFilter = this.attributes[this.selectedTopicKey][attributeKey].filter;
+  onLabelCreate(attributeKey: string, text: string){
+    const attributeFilter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopicKey, attributeKey);
 
-        return $(`<a class="ui label">${text}<i class="delete icon"></i></a>`)
-          .attr('data-value', value)
-          // click for modal with detailed attribute description
-          .on('click', {attributeKey}, this.showAttributeDetails.bind(this))
-          // hover for small popup with filter definition
-          .popup({
-              content: attributeFilter,
-              variation: 'inverted'
-            }
-          )
-          ;
-      }
-    });
+    return $(`<a class="ui label">${text}<i class="delete icon"></i></a>`)
+      .attr('data-value', attributeKey)
+      // click for modal with detailed attribute description
+      .on('click', {attributeKey}, this.showAttributeDetails.bind(this))
+      // hover for small popup with filter definition
+      .popup({
+          content: attributeFilter,
+          variation: 'inverted'
+        }
+      );
+}
+
+  attributesDropdownOptions = {
+    fullTextSearch: 'exact',
+    clearable: true,
+    // custom attribute labels for selected items with mouse events
+    onLabelCreate: this.onLabelCreate.bind(this),
   }
 
   showAttributeDetails(event) {
@@ -96,6 +86,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     if (event.target != event.currentTarget) {
       return;
     }
+
 
     const attributeKey = event.data["attributeKey"] as string;
     const attribute = this.attributes[this.selectedTopicKey][attributeKey];
@@ -109,16 +100,14 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     //   .html(attribute.description);
     $('#attribute-details #attributeFilter')
       .html(highlightedHTML);
-    //.html(attribute.filter);
 
     $('#attribute-details').modal({
       inverted: true,
       duration: 200,
-      // white background will be attached to <body>
-      context: 'body',
-      // dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
-      // dimmer-DIV in <body> aswell
-      detachable: false
+      // white background will be attached to context
+      context: 'div#attributes-details-dimmer',
+      // modal DOM Element will be moved into context
+      detachable: true
     }).modal('show');
   }
 
@@ -207,7 +196,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
 
   showAttributeFilterEditDialog() {
 
-    // compute the current attributeFilter as a AND-combination of the selected attributes
+    // compute the current attributeFilter as an AND-combination of the selected attributes
     this.combinedAttributeFilters = this.combineSelectedAttributeFilters();
 
     this.ngZone.runOutsideAngular(() => {

@@ -1,9 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Output,
@@ -56,7 +56,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // current quality dimensions to display based on the selected topic
   public currentQualityDimensions: Set<string> = new Set();
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private cdRef: ChangeDetectorRef) {
+  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
     this.renderer = renderer;
   }
@@ -78,7 +78,9 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
 
     // init semantic-ui
-    this.initTopicDropdown();
+    this.ngZone.runOutsideAngular(() => {
+      this.initTopicDropdown();
+    })
   }
 
   ngOnDestroy() {
