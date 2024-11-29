@@ -8,6 +8,7 @@ const OqtApiMetadataProviderServiceMock = createSpyObj(
     'loadOqtApiMetadata',
     'getOqtApiMetadata',
     'getAttributes',
+    'getAttributeFilter',
   ]);
 
 OqtApiMetadataProviderServiceMock.loadOqtApiMetadata.and.returnValue(of(oqtApiMetadataResponseMock))

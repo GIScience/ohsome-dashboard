@@ -174,19 +174,12 @@ export class AttributeCompletenessAttributesComponent implements OnInit, AfterCo
     }
   }
 
-  /**
-   * Return the filter string of an attribute if the topic-attribute combination is defined otherwise return empty string
-   */
-  getFilter(topicKey: string, attributeKey: string): string | undefined {
-    return this.attributes[topicKey]?.[attributeKey]?.filter;
-  }
-
   combineSelectedAttributeFilters(): string {
 
     // get a valid attributeFilter list
-    // can have 0..n filter elements
-    let attributeFilterList: string[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
-      const filter = this.getFilter(this.selectedTopicKey, attributeKey);
+    // can have 0...n filter elements
+    const attributeFilterList: string[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
+      const filter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopicKey, attributeKey);
       return filter != undefined ? [filter] : [];
     });
 
