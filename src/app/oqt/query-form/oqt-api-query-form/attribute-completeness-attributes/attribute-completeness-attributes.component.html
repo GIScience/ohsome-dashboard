@@ -22,7 +22,7 @@
     <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
       <div #customAttributeLabelElement class="ui blue basic label">
         <div>{{ customFilterTitle() }}</div>
-        <div><i (click)="useCustomFilterMode.set(false)" (keydown.enter)="useCustomFilterMode.set(false)" tabindex="0"
+        <div><i (click)="useCustomFilterMode.set(false)" (keydown.enter)="triggerClick($event)"  tabindex="0"
                 class="delete icon"></i></div>
       </div>
     </div>
@@ -122,11 +122,11 @@
     <div
       class="ui green approve button"
       (click)="useCustomFilterMode.set(true)"
-      (keydown.enter)="useCustomFilterMode.set(true)"
+      (keydown.enter)="triggerClick($event)"
       tabindex="0"
       role="button"
     >OK
     </div>
-    <div class="ui red cancel button" tabindex="0" role="button">Cancel</div>
+    <div class="ui red cancel button" tabindex="0" role="button" (keydown.enter)="triggerClick($event)">Cancel</div>
   </div>
 </div>

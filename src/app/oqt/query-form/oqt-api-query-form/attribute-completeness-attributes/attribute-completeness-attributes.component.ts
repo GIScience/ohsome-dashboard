@@ -273,4 +273,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     this.customFilterTitle.set(($event.target as HTMLInputElement).value);
   }
 
+  triggerClick(event: Event) {
+    $(event.target).trigger('click')
+  }
 }
