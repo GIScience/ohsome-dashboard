@@ -114,7 +114,6 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   }
 
   updateDropdown(value: string[]) {
-    console.log('update dropdown', value, this.value);
     this.ngZone.runOutsideAngular(() => {
       $(this.dropdown.nativeElement).dropdown('clear');
       setTimeout(() => {
