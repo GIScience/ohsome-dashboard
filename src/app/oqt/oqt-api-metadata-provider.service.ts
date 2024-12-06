@@ -25,6 +25,20 @@ export class OqtApiMetadataProviderService {
   }
 
   /**
+   * Return the name string of an attribute if the topic-attribute combination is defined otherwise return empty string
+   */
+  getAttributeName(topicKey: string, attributeKey: string): string | undefined {
+    return this.oqtAttributes.result[topicKey]?.[attributeKey]?.name;
+  }
+
+  /**
+   * Return the attribute string of an attribute if the topic-attribute combination is defined otherwise return empty string
+   */
+  getAttributeDescription(topicKey: string, attributeKey: string): string | undefined {
+    return this.oqtAttributes.result[topicKey]?.[attributeKey]?.description;
+  }
+
+  /**
    * Return the filter string of an attribute if the topic-attribute combination is defined otherwise return empty string
    */
   getAttributeFilter(topicKey: string, attributeKey: string): string | undefined {

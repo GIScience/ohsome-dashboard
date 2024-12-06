@@ -1,13 +1,16 @@
 import createSpyObj = jasmine.createSpyObj;
 import {of} from 'rxjs';
 import {oqtApiMetadataResponseMock, oqtAttributesResponseMock} from './oqt-api-metadata.response.mock';
+import {OqtApiMetadataProviderService} from './oqt-api-metadata-provider.service';
 
-const OqtApiMetadataProviderServiceMock = createSpyObj(
+const OqtApiMetadataProviderServiceMock: jasmine.SpyObj<OqtApiMetadataProviderService> = createSpyObj(
   'MetadataProviderService',
   [
     'loadOqtApiMetadata',
     'getOqtApiMetadata',
     'getAttributes',
+    'getAttributeName',
+    'getAttributeDescription',
     'getAttributeFilter',
   ]);
 
