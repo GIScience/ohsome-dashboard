@@ -22,6 +22,9 @@ module.exports = function (config) {
       "node_modules/prismjs/components/prism-core.js",
       "node_modules/jquery/dist/jquery.js",
       "Semantic-UI-2.5.0/dist/semantic.js",
+      { pattern: 'Semantic-UI-2.5.0/dist/themes/default/assets/**/*.ttf', watched: false, included: false, served: true },
+      { pattern: 'Semantic-UI-2.5.0/dist/themes/default/assets/**/*.woff', watched: false, included: false, served: true },
+      { pattern: 'Semantic-UI-2.5.0/dist/themes/default/assets/**/*.woff2', watched: false, included: false, served: true },
     ],
     client: {
       jasmine: {

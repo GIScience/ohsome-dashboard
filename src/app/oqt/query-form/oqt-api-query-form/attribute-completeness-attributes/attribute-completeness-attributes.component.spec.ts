@@ -256,43 +256,53 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: [],
         filterValues: [undefined],
-        expected: '',
+        expectedFilter: '',
+        nameValues: [undefined],
+        expectedName: '',
       },
       {
         description: 'one valid filter',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1'],
         filterValues: ['attr=one'],
-        expected: 'attr=one',
+        expectedFilter: 'attr=one',
+        nameValues: ['Attribute One'],
+        expectedName: 'Attribute One',
       },
       {
         description: 'multiple valid filters',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1', 'attributeKey2'],
         filterValues: ['attr=one', 'attr=two'],
-        expected: `(
+        expectedFilter: `(
   attr=one
 ) and (
   attr=two
 )`,
+        nameValues: ['Attribute One', 'Attribute Two'],
+        expectedName: 'Attribute One and Attribute Two',
       },
       {
         description: 'one invalid filter',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['invalidKey'],
         filterValues: [undefined],
-        expected: '',
+        expectedFilter: '',
+        nameValues: [undefined],
+        expectedName: '',
       },
       {
         description: 'mix of valid and invalid filters',
         selectedTopicKey: 'topic1',
         selectedAttributeKeys: ['attributeKey1', 'invalidKey', 'attributeKey2'],
         filterValues: ['attr=one', undefined, 'attr=two'],
-        expected: `(
+        expectedFilter: `(
   attr=one
 ) and (
   attr=two
 )`,
+        nameValues: ['Attribute One', undefined, 'Attribute Two'],
+        expectedName: 'Attribute One and Attribute Two',
       },
     ];
 
@@ -300,7 +310,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       it(testCase.description, async () => {
 
         (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
-        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeName.and.returnValue(testCase.selectedTopicKey);
+        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeName.and.returnValues(...testCase.nameValues);
 
         component.selectedTopic = topics[testCase.selectedTopicKey];
         component.selectedAttributeKeys = testCase.selectedAttributeKeys;
@@ -310,9 +320,9 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
         component.ngZone.runOutsideAngular(() => {
           const result = component.combineSelectedAttributes();
-          //TODO test combined names
-          console.log(result.combinedFilters, testCase.expected)
-          expect(result.combinedFilters).toEqual(testCase.expected);
+
+          expect(result.combinedNames).toEqual(testCase.expectedName);
+          expect(result.combinedFilters).toEqual(testCase.expectedFilter);
         })
       })
     })
