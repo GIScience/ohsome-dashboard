@@ -46,4 +46,8 @@ export default class Utils {
     multiplePeriod.subtract(p);
     return moment(time).subtract(multiplePeriod).toISOString();
   }
+
+  static async wait(ms:number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }

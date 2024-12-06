@@ -16,3 +16,15 @@ html {
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'stix_two_math_regular';
+  src: url("assets/fonts/STIXTwoMath-Regular.woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+math {
+  font-family: stix_two_math_regular, latin_modern_mono_light_c10Rg, serif;
+  font-weight: bold;
+}

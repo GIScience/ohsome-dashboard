@@ -10,9 +10,3 @@
   border: 1px solid lightgrey;
   background-color: #f9f9f9;
 }
-
-/* Fix for unwanted input height and border-radius settings from other SemanticCSS rules */
-:host ::ng-deep #search-select-attribute ~ input.search {
-  height: unset;
-  border-radius: unset;
-}

@@ -1,9 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   Output,
@@ -56,7 +56,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // current quality dimensions to display based on the selected topic
   public currentQualityDimensions: Set<string> = new Set();
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private cdRef: ChangeDetectorRef) {
+  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private readonly ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
     this.renderer = renderer;
   }
@@ -78,7 +78,9 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
 
     // init semantic-ui
-    this.initTopicDropdown();
+    this.ngZone.runOutsideAngular(() => {
+      this.initTopicDropdown();
+    })
   }
 
   ngOnDestroy() {
@@ -104,7 +106,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     Object.keys(enrichedTopics)
       .forEach(topicKey => {
         const topic = enrichedTopics[topicKey] as Topic;
-        // add new property
+        // add new properties
+        topic.key = topicKey;
         topic.qualityDimensions = {};
         topic.indicators
           .forEach(topicIndicatorKey => {
@@ -184,7 +187,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       // only add coverage for indicators that are checked and available for the current selected topic
       if (this.indicators[indicatorKey].checked && this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)) {
         console.log("initIndicatorCoverages", indicatorKey);
-        this.addIndicatorCoverage(indicatorKey);
+        void this.addIndicatorCoverage(indicatorKey);
       }
     });
   }

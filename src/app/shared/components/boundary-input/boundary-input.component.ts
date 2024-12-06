@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
@@ -91,18 +91,16 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   public map: L.Map;
 
-  constructor(private elRef: ElementRef) {
-    console.log('constructor', this.options);
+  constructor(private elRef: ElementRef, private readonly ngZone: NgZone) {
   }
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit');
-    this.initMap(this.interactionType);
+    this.ngZone.runOutsideAngular(() => {
+      this.initMap(this.interactionType);
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("MAPCHANGE")
-    // // this.options = changes["options"].currentValue as BoundaryInputComponentOptions
     const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
     console.log("userLayers", userLayers)
     this.addOrUpdateUserDefinedLayers(userLayers);
@@ -111,15 +109,14 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   // ControlValueAccesor methods
   // write value to this component (map)
   writeValue(val: string): void {
-    console.log('CVA::writeValue');
     this.value = val || '';
   }
 
   propagateChange = (_: any) => {
     console.log('propagateChange', _);
   };
-  // register a callback that is expected to be triggered every time the value changes from the map
 
+  // register a callback that is expected to be triggered every time the value changes from the map
   registerOnChange(fn: any): void {
     console.log('registerOnChange', fn);
     this.propagateChange = fn;
@@ -136,19 +133,16 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   @Input() disabled = false;
 
   get value(): string {
-    console.log('GET: value');
     return this._value;
   }
 
   set value(val: string) {
-    console.log('SET: value', val);
     this._value = val;
     this.updateMapFromValue(val);
   }
 
   // @param value is a text representation of a boundary value (bboxes=... or bcircles=... or bpolys=...
   private updateMapFromValue(value) {
-    console.log('Map <- Value');
 
     // remove all layer and add them again
     this.listenToRemove(false);
@@ -163,7 +157,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     if (this.interactionType == 'bbox') {
       const bboxes = new OhsomeApiRequest.Bboxes().parse(value);
       bboxes.boundaries.forEach(bbox => {
-        console.log('updateMapFromValue::bbox', bbox.toString());
         const geom = bbox.geometry;
         const coords = geom.split(',').map(coord => parseFloat(coord));
         const bounds = [[coords[1], coords[0]], [coords[3], coords[2]]];
@@ -233,9 +226,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     const _value: string[] = [];
 
     this.bboxLayersGroup.eachLayer((layer) => {
-      console.log('VALUE <- MAP: # bbox in group', layer);
       if (layer instanceof L.Rectangle) {
-        console.log('RECTANGLE');
         _value.push(layer.getBounds().toBBoxString()
           .split(',')
           .map(coord => parseFloat(parseFloat(coord).toFixed(7)))
@@ -258,7 +249,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         while (latLngs[0] instanceof Array) {
           latLngs = latLngs[0] as L.LatLng[] | L.LatLng[][];
         }
-        console.log('flat latlngs', latLngs);
         // flatten array, flip coords and duplicate last point
         let coords: number[] = [];
         latLngs = latLngs as L.LatLng[];
@@ -270,7 +260,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         coords.push(coords[1]);
 
         coords = coords.map((coord) => parseFloat(coord.toFixed(7)));
-        console.log('bpoly coords', coords);
 
         _value.push(coords.join(','));
 
@@ -284,7 +273,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     //theMap
     const mapDiv = this.elRef.nativeElement.querySelector('#boundaryMap');
 
-    console.log('initMap', this.options);
     this.map = L.map(mapDiv, {
       maxBounds: this.options.maxBounds,
       minZoom: this.options.minZoom,
@@ -356,7 +344,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         }
       }
       //update components value
-      console.log('pm:create', e);
       this.updateValueFromMap();
     }, this);
 
@@ -395,7 +382,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   }
 
   onPmRemove(e) {
-    console.log('onPmRemove', e);
     const layer = e.layer as Layer;
     if (layer instanceof L.Rectangle) {
       this.bboxLayersGroup.removeLayer(<Layer>layer);

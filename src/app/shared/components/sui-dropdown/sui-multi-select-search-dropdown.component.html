@@ -1,0 +1,12 @@
+<select multiple
+        [required]="required()"
+        class="ui fluid search selection dropdown"
+        id="search-select-attribute"
+        #dropdown
+>
+<!--  name="{{indicatorKey}}--attributes"
+        [(ngModel)]="selectedAttributeKeys"-->
+  <option *ngFor="let entry of selectOptions;"
+          [value]="entry.key">{{ entry.value.name }}
+  </option>
+</select>

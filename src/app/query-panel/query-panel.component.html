@@ -9,10 +9,10 @@
     <div class="ui top attached tabular menu" [ngClass]="window.innerWidth <= 440? 'icon labeled': ''">
       <a class="item" data-tab="tab-ohsome-api"
          [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''"
-         (click)="setWhichApi('ohsomeApi')"><i class="chart bar outline icon"></i>OSM History Stats</a>
+         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i>OSM History Stats</a>
       <a class="item" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''"
-         (click)="setWhichApi('oqtApi')"><i class="cogs icon"></i>OSM Quality Analyses</a>
+         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0" ><i class="cogs icon"></i>OSM Quality Analyses</a>
     </div>
     <!-- tab content -->
     <!--    OSM STATS-->
