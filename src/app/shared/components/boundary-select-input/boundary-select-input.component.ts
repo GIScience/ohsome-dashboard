@@ -54,7 +54,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
 
   public map: L.Map;
 
-  constructor(private elRef: ElementRef, private ngZone: NgZone) {
+  constructor(private elRef: ElementRef, private readonly ngZone: NgZone) {
   }
 
   ngOnInit(): void {

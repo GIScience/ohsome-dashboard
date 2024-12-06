@@ -11,13 +11,19 @@
                                             [selectOptions]="getAttributesByTopicKey(this.selectedTopic.key) | keyvalue"></app-sui-multi-select-search-dropdown>
     </div>
   } @else {
-    <input type="hidden" id="attribute-title" name="{{indicatorKey}}--attribute-title" [ngModel]="customFilterTitle()">
-    <input type="hidden" id="attribute-filter" name="{{indicatorKey}}--attribute-filter"
-           [ngModel]="customFilterDefinition()">
+    <input type="hidden" id="attribute-title"
+           name="{{indicatorKey}}--attribute-title"
+           [ngModel]="customFilterTitle()"
+           required>
+    <input type="hidden" id="attribute-filter"
+           name="{{indicatorKey}}--attribute-filter"
+           [ngModel]="customFilterDefinition()"
+           required>
     <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
       <div #customAttributeLabelElement class="ui blue basic label">
         <div>{{ customFilterTitle() }}</div>
-        <div><i (click)="useCustomFilterMode.set(false)" class="delete icon"></i></div>
+        <div><i (click)="useCustomFilterMode.set(false)" (keydown.enter)="useCustomFilterMode.set(false)" tabindex="0"
+                class="delete icon"></i></div>
       </div>
     </div>
   }
@@ -58,19 +64,20 @@
   </div>
   <div class="scrolling content">
     Here you can specify your own attribute filter, in case we do not have an appropriate predefined attribute
-      available.
+    available.
     <div class="ui accordion">
       <div class="title"><i class="dropdown icon"></i>more...</div>
       <div class="content">
         <p>The attribute-completeness indicator calculates the percentage of features that match both the
           Topic-Filter and the Attribute-Filter, compared to all features that match only the Topic-Filter.</p>
         <div class="field">
-          <label>Topic Filter</label>
-          <app-prism-editor
-            [value]="selectedTopic.filter"
-            [readonly]="true"
-          >
-          </app-prism-editor>
+          <label>Topic Filter
+            <app-prism-editor
+              [value]="selectedTopic.filter"
+              [readonly]="true"
+            >
+            </app-prism-editor>
+          </label>
         </div>
         <p style="text-align: center">
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -80,8 +87,10 @@
             </msub>
             <mo>=</mo>
             <mfrac>
-              <mi>{{selectedTopic.aggregationType}} of "{{selectedTopic.name}}" (Topic Filter)</mi>
-              <mi>{{selectedTopic.aggregationType}} of "{{selectedTopic.name}}" (Topic Filter) matching the Attribute Filter</mi>
+              <mi>{{ selectedTopic.aggregationType }} of "{{ selectedTopic.name }}" (Topic Filter)</mi>
+              <mi>{{ selectedTopic.aggregationType }} of "{{ selectedTopic.name }}" (Topic Filter) matching the
+                Attribute Filter
+              </mi>
             </mfrac>
             <mo>&#xd7;</mo>
             <mn>100</mn>
@@ -92,16 +101,18 @@
     </div>
     <br>
 
-    <div class="required field">
+    <div class="field">
       <label for="customTitle">Attribute Title</label>
       <input id="customTitle" class="ui header" type="text" [value]="customFilterTitle()"
              (change)="setCustomFilerTitle($event)" required>
     </div>
-    <div class="required field">
-      <label>Attribute Filter (<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">How does this work?</a>)</label>
-      <app-prism-editor id="customAttributeFilter" [value]="customFilterDefinition()"
-                        (valueChange)="customFilterDefinition.set($event)">
-      </app-prism-editor>
+    <div class="field">
+      <label>Attribute Filter (<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">How does this
+        work?</a>)
+        <app-prism-editor id="customAttributeFilter" [value]="customFilterDefinition()"
+                          (valueChange)="customFilterDefinition.set($event)">
+        </app-prism-editor>
+      </label>
     </div>
   </div>
   <div class="actions">
@@ -111,8 +122,11 @@
     <div
       class="ui green approve button"
       (click)="useCustomFilterMode.set(true)"
+      (keydown.enter)="useCustomFilterMode.set(true)"
+      tabindex="0"
+      role="button"
     >OK
     </div>
-    <div class="ui red cancel button">Cancel</div>
+    <div class="ui red cancel button" tabindex="0" role="button">Cancel</div>
   </div>
 </div>

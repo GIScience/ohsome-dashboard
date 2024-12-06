@@ -18,7 +18,6 @@ import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-fi
   standalone: true,
   imports: [],
   templateUrl: './prism-editor.component.html',
-  styleUrl: './prism-editor.component.css'
 })
 export class PrismEditorComponent implements OnInit, OnChanges {
   @Input() value: string;

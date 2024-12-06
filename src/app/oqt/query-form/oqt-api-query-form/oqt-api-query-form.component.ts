@@ -56,7 +56,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // current quality dimensions to display based on the selected topic
   public currentQualityDimensions: Set<string> = new Set();
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private ngZone: NgZone) {
+  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private readonly ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
     this.renderer = renderer;
   }
@@ -187,7 +187,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       // only add coverage for indicators that are checked and available for the current selected topic
       if (this.indicators[indicatorKey].checked && this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)) {
         console.log("initIndicatorCoverages", indicatorKey);
-        this.addIndicatorCoverage(indicatorKey);
+        void this.addIndicatorCoverage(indicatorKey);
       }
     });
   }

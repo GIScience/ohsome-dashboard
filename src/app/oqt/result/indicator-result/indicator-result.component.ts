@@ -68,7 +68,9 @@ export class IndicatorResultComponent implements OnInit {
           }
         }).join('')
 
-        return body[paramName] = value;
+        body[paramName] = value;
+
+        return body;
 
       })
     }
