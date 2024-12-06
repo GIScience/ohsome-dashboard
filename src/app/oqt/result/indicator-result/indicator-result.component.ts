@@ -44,25 +44,43 @@ export class IndicatorResultComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getIndicatorResults();
+    // add additional request parameters from attributes that have attributeParams like attribite-completeness
+    const body = this.prepareRequestBody();
+    this.getIndicatorResults(body);
   }
 
-  private getIndicatorResults() {
-    const body: {
-      topic: string;
-      attributes?: string[];
-      bpolys: FeatureCollection<Polygon | MultiPolygon>;
-    } = {
+  private prepareRequestBody() {
+    const body = {
       topic: this.topicKey,
-      bpolys: this.bpolys
-    };
-
-    // Hardcoded handling, should be made generic
-    if (this.indicator.key === "attribute-completeness") {
-      body.attributes = this.indicator.value['params']!['attributes'] as string[];
+      bpolys: this.bpolys,
     }
-    console.log(body)
 
+
+    if (this.indicator.value.params) {
+      Object.entries(this.indicator.value.params).forEach(([key, value]) => {
+
+        // convert parameterNames from kebab-case to lower camelCase, eg: attribute-title to attrbuteTitle
+        const paramName: string = key.split('-').map((part, index) => {
+          if (index === 0) {
+            return part;
+          } else {
+            return part.charAt(0).toUpperCase() + part.slice(1)
+          }
+        }).join('')
+
+        return body[paramName] = value;
+
+      })
+    }
+
+    return body;
+  }
+
+  private getIndicatorResults(body: {
+    topic: string;
+    bpolys: FeatureCollection<Polygon | MultiPolygon>;
+    [otherIndicatorParams: string]: any;
+  }) {
 
     this.oqtApi.getIndicator(this.indicator.key, body).subscribe({
       next: this.handleResponse.bind(this),
@@ -96,13 +114,13 @@ export class IndicatorResultComponent implements OnInit {
     this.displayQualityLabel = this.createDisplayQualityLabel();
   }
 
+
   public createDisplayQualityLabel(): string {
     const metaDataResult = this.oqtApiMetadataProviderService.getOqtApiMetadata().result;
     const qualityDimensionKey = metaDataResult.indicators[this.indicator.key]['qualityDimension'];
     const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name.toLowerCase();
     return `${this.labelMap[this.label]} ${lowerCaseQualityDimensionName}`;
   }
-
 
   private setChartData(rawPlotlyDataLayoutConfig: PlotlyDataLayoutConfig | null) {
 
@@ -125,5 +143,4 @@ export class IndicatorResultComponent implements OnInit {
 
     this.plotlyDataLayoutConfig = rawPlotlyDataLayoutConfig;
   }
-
 }
