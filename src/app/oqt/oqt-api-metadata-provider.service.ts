@@ -9,7 +9,7 @@ import {AttributeResponseJSON } from './types/types';
   providedIn: 'root'
 })
 export class OqtApiMetadataProviderService {
-  private oqtMetadataResponse: MetadataResponseJSON;
+  oqtMetadataResponse: MetadataResponseJSON;
   oqtAttributes: AttributeResponseJSON;
   public oqtApiAvailable = false;
 
@@ -51,7 +51,6 @@ export class OqtApiMetadataProviderService {
         retry(3),
         tap(
           response => {
-            console.log(response);
             // check if response contains a result
             if ('result' in response) {
               this.oqtMetadataResponse = response;
@@ -85,7 +84,6 @@ export class OqtApiMetadataProviderService {
         retry(3),
         tap(
           response => {
-            console.log(response);
             // check if response contains a result
             if ('result' in response) {
               this.oqtAttributes = response;
@@ -112,12 +110,11 @@ export class OqtApiMetadataProviderService {
       );
     }
 
-  private cachedData: Record<string, Promise<Userlayer>> = {}; // Initialize the cache as empty
+  cachedData: Record<string, Promise<Userlayer>> = {}; // Initialize the cache as empty
   async getIndicatorCoverage(indicatorKey: string): Promise<Userlayer> {
 
     if (!(indicatorKey in this.cachedData)) {
       // Start a new download only if no download is in progress
-      this.cachedData[indicatorKey] = (async () => {
         try {
           const coverageGeoJSON = await firstValueFrom(this.oqtApi.getIndicatorCoverage(indicatorKey,true));
           // fill cache
@@ -133,7 +130,6 @@ export class OqtApiMetadataProviderService {
           console.error('Error downloading file:', error);
           throw error;
         }
-      })();
     }
 
     // Return the cached data
