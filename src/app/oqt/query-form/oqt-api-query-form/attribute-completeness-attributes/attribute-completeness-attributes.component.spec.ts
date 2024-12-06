@@ -9,7 +9,7 @@ import {NgForm} from '@angular/forms';
 import {APP_INITIALIZER, SimpleChange} from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
 import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
-import {OqtAttribute} from '../../../types/types';
+import {OqtAttribute, RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {By} from '@angular/platform-browser';
 import oqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
@@ -17,6 +17,14 @@ import oqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provide
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
   let fixture: ComponentFixture<AttributeCompletenessAttributesComponent>;
+  const roadsTopic: RawTopicMetadata = oqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["roads"];
+  const enrichedRoadsTopic: Topic = {...roadsTopic, key: 'roads'};
+  const buildingCountTopic: RawTopicMetadata = oqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["building-count"];
+  const enrichedBuildingCountTopic: Topic = {...buildingCountTopic, key: 'building-count'};
+  const enrichedTopicsMock = {
+    roads: enrichedRoadsTopic,
+    'building-count': enrichedBuildingCountTopic,
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -36,12 +44,10 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     fixture = TestBed.createComponent(AttributeCompletenessAttributesComponent);
     component = fixture.componentInstance;
-    component.selectedTopicKey = "roads";
-    component.topicName = "Roads";
+    component.selectedTopic = enrichedRoadsTopic;
     component.indicatorKey = "attribute-completeness";
     component.hashParams = new URLSearchParams("attribute-completeness--attributes=name");
     component.selectedAttributeKeys = ['name'];
-    component.indicatorChecked = true;
     component.attributes = component.oqtApiMetadataProviderService.getAttributes().result;
     fixture.detectChanges();
   });
@@ -53,15 +59,16 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   it('should sanitize the attribute list when the topic changes', () => {
     spyOn(component, 'sanitizeAttributeKeys').and.callThrough();
 
+
     // switch from topic roads to building-count
-    component.selectedTopicKey = "building-count";
+    component.selectedTopic = enrichedBuildingCountTopic;
     component.ngOnChanges({
-      selectedTopicKey: new SimpleChange('roads', component.selectedTopicKey, false)
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
     });
     fixture.detectChanges();
 
     expect(component.sanitizeAttributeKeys).toHaveBeenCalled();
-    expect(component.selectedAttributeKeys).toEqual([component.getDefaultAttributeKey(component.selectedTopicKey)]);
+    expect(component.selectedAttributeKeys).toEqual([component.getDefaultAttributeKey(component.selectedTopic.key)]);
   });
 
   describe('getAttributeKeysFromUrlHashParams(hashParams)', () => {
@@ -106,7 +113,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     hashParamsCases.forEach((hashParamsCase) => {
       it(hashParamsCase.description, () => {
-        component.selectedTopicKey = hashParamsCase.topicKey;
+        component.selectedTopic = enrichedTopicsMock[hashParamsCase.topicKey];
         const result = component.getAttributeKeysFromUrlHashParams(hashParamsCase.hashParams);
         expect(result).toEqual(hashParamsCase.expected);
       })
@@ -235,7 +242,13 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     })
   })
 
-  describe('combineSelectedAttributeFilters()', () => {
+  describe('combineSelectedAttributes()', () => {
+
+    const topics = {
+      topic1: {
+        key: 'topic1',
+      }
+    }
 
     const testCases = [
       {
@@ -287,17 +300,19 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       it(testCase.description, async () => {
 
         (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
+        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeName.and.returnValue(testCase.selectedTopicKey);
 
-        component.selectedTopicKey = testCase.selectedTopicKey;
+        component.selectedTopic = topics[testCase.selectedTopicKey];
         component.selectedAttributeKeys = testCase.selectedAttributeKeys;
         fixture.detectChanges()
-        await fixture.whenRenderingDone()
+        // await fixture.whenRenderingDone()
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         component.ngZone.runOutsideAngular(() => {
-          const result = component.combineSelectedAttributeFilters();
-          console.log(result, testCase.expected)
-          expect(result).toEqual(testCase.expected);
+          const result = component.combineSelectedAttributes();
+          //TODO test combined names
+          console.log(result.combinedFilters, testCase.expected)
+          expect(result.combinedFilters).toEqual(testCase.expected);
         })
       })
     })
@@ -317,11 +332,25 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should exist and be visible with filter value', async () => {
 
-      spyOn(component, 'combineSelectedAttributeFilters').and.returnValue(testAttributes['topic1']['attributeKey1'].filter);
+      const combineSelectedAttributesReturnValue = {
+        combinedNames: testAttributes['topic1']['attributeKey1'].name,
+        combinedFilters: testAttributes['topic1']['attributeKey1'].filter
+      }
+      spyOn(component, 'combineSelectedAttributes').and.returnValue(combineSelectedAttributesReturnValue);
 
       // Arrange
       component.attributes = testAttributes;
-      component.selectedTopicKey = 'topic1';
+      component.selectedTopic = {
+        key: 'topic1',
+        name: 'Topic One',
+        filter: 'topic=one',
+        aggregationType: 'count',
+        description: 'This is test topic 1',
+        endpoint: '',
+        indicators: ['minimal'],
+        projects: ['core'],
+        source: null,
+      };
       component.selectedAttributeKeys = ['attributeKey1'];
       fixture.detectChanges();
 
@@ -333,7 +362,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
       // Check if the modal element exists and editor has the filter value
       const contentElement = fixture.nativeElement.querySelector('div#attributes-editor');
-      const prismEditorDebugElement = fixture.debugElement.query(By.directive(PrismEditorComponent));
+      const prismEditorDebugElement = fixture.debugElement.query(By.css('app-prism-editor#customAttributeFilter'));
       const prismEditorComponentInstance = prismEditorDebugElement.componentInstance as PrismEditorComponent;
 
       expect(contentElement).toBeDefined();
