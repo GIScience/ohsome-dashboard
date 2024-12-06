@@ -290,4 +290,5 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   protected readonly window = window;
   protected readonly Object = Object;
+  protected readonly JSON = JSON;
 }

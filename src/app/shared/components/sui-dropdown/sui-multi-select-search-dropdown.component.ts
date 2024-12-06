@@ -20,7 +20,6 @@ declare const $;
     NgForOf
   ],
   templateUrl: './sui-multi-select-search-dropdown.component.html',
-  styleUrl: './sui-multi-select-search-dropdown.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -42,7 +41,7 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   @Input() selectOptions!: Array<KeyValue<string, OqtAttribute>>;
   required = signal(false);
 
-  constructor(private ngZone: NgZone) {
+  constructor(private readonly ngZone: NgZone) {
   }
 
   // selectedAttributeKeys
@@ -98,13 +97,13 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
 
   initDropdown(): void {
 
-    const options: object = Object.assign({
-      onChange: (value: string[]) => {
-        if (value != undefined) {
-          this.onChange(value);
+    const options: object = {...this.options,...{
+        onChange: (value: string[]) => {
+          if (value != undefined) {
+            this.onChange(value);
+          }
         }
-      }
-    }, this.options);
+      }};
 
     this.ngZone.runOutsideAngular(() => {
       $(this.dropdown.nativeElement)
@@ -117,7 +116,6 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
     this.ngZone.runOutsideAngular(() => {
       $(this.dropdown.nativeElement).dropdown('clear');
       setTimeout(() => {
-        // $(this.dropdown.nativeElement).dropdown('clear');
         $(this.dropdown.nativeElement).dropdown('set exactly', value);
       })
     })

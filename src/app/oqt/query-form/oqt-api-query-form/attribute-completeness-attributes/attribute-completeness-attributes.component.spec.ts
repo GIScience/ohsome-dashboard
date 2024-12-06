@@ -1,5 +1,4 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {AttributeCompletenessAttributesComponent} from './attribute-completeness-attributes.component';
 import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
@@ -12,14 +11,14 @@ import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
 import {OqtAttribute, RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {By} from '@angular/platform-browser';
-import oqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
+import Utils from '../../../../../utils';
 
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
   let fixture: ComponentFixture<AttributeCompletenessAttributesComponent>;
-  const roadsTopic: RawTopicMetadata = oqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["roads"];
+  const roadsTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["roads"];
   const enrichedRoadsTopic: Topic = {...roadsTopic, key: 'roads'};
-  const buildingCountTopic: RawTopicMetadata = oqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["building-count"];
+  const buildingCountTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["building-count"];
   const enrichedBuildingCountTopic: Topic = {...buildingCountTopic, key: 'building-count'};
   const enrichedTopicsMock = {
     roads: enrichedRoadsTopic,
@@ -165,21 +164,6 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   describe('showAttributeDetails(event)', () => {
 
-    // function cleanTheDOM() {
-    //   const dimmmer = document.querySelector('body > div.ui.dimmer.modals');
-    //   if (dimmmer) {
-    //     document.body.removeChild(dimmmer);
-    //   }
-    // }
-    //
-    // beforeEach(async () => {
-    //   cleanTheDOM()
-    // })
-    //
-    // afterEach(async () => {
-    //   cleanTheDOM()
-    // })
-
     // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
     // rather than opening the details we only want to remove the attribute from the selected list
     // on the other hand if you directly click on the label we want to open the attribute details modal window
@@ -223,7 +207,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         component.showAttributeDetails(testCase.event);
 
         // wait for the css transition to be finished before checking the final DOM elements state
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await Utils.wait(500);
 
         // check for the dimmer to exist (will be created by semantic-ui modal('show')
         // const element = document.querySelector('body > div.ui.dimmer.modals')
@@ -309,14 +293,14 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     testCases.forEach((testCase) => {
       it(testCase.description, async () => {
 
-        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
-        (component.oqtApiMetadataProviderService as typeof oqtApiMetadataProviderServiceMock).getAttributeName.and.returnValues(...testCase.nameValues);
+        (component.oqtApiMetadataProviderService as typeof OqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
+        (component.oqtApiMetadataProviderService as typeof OqtApiMetadataProviderServiceMock).getAttributeName.and.returnValues(...testCase.nameValues);
 
         component.selectedTopic = topics[testCase.selectedTopicKey];
         component.selectedAttributeKeys = testCase.selectedAttributeKeys;
         fixture.detectChanges()
-        // await fixture.whenRenderingDone()
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        await Utils.wait(1000);
 
         component.ngZone.runOutsideAngular(() => {
           const result = component.combineSelectedAttributes();
@@ -368,7 +352,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       fixture.detectChanges();
 
       // Wait for CSS transition to complete (simulate delay using a real Promise)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await Utils.wait(1000);
 
       // Check if the modal element exists and editor has the filter value
       const contentElement = fixture.nativeElement.querySelector('div#attributes-editor');
