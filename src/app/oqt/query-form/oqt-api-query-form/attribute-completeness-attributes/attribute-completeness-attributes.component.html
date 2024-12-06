@@ -15,8 +15,9 @@
     <input type="hidden" id="attribute-filter" name="{{indicatorKey}}--attribute-filter"
            [ngModel]="customFilterDefinition()">
     <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
-      <div #customAttributeLabelElement class="ui blue basic label">{{ customFilterTitle() }}<i
-        (click)="useCustomFilterMode.set(false)" class="delete icon"></i>
+      <div #customAttributeLabelElement class="ui blue basic label">
+        <div>{{ customFilterTitle() }}</div>
+        <div><i (click)="useCustomFilterMode.set(false)" class="delete icon"></i></div>
       </div>
     </div>
   }
