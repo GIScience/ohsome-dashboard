@@ -1,5 +1,15 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {basicEditor} from 'prism-code-editor/setups';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {basicEditor, SetupOptions,} from 'prism-code-editor/setups';
 import {languages} from 'prism-code-editor/prism';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
 
@@ -11,18 +21,32 @@ import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-fi
   styleUrl: './prism-editor.component.css'
 })
 export class PrismEditorComponent implements OnInit, OnChanges {
-@Input() value: string;
-editor;
+  @Input() value: string;
+  @Input() readonly: boolean = false
+  @Output() valueChange = new EventEmitter<string>();
+  @ViewChild('prismEditorElement', {static: true}) prismEditorElement: ElementRef<HTMLDivElement>;
+  editor;
+
 
   ngOnInit(): void {
+    // default options for prism editor with ohsome-filter language
     languages['ohsome-filter'] = PRISM_LANGUAGE_OHSOME_FILTER;
-    this.editor = basicEditor(
-      '#prism-editor',
-      {
-        language:'ohsome-filter',
-        theme: 'prism',
+    const setupOptions: SetupOptions = {
+      theme: 'prism',
+      value: this.value,
+      language: 'ohsome-filter',
+      onUpdate: (value) => {
+        this.valueChange.emit(value);
       }
-    )
+    };
+
+    if (this.readonly) {
+      // readonly does not need event handler
+      delete setupOptions.onUpdate;
+      setupOptions.readOnly = true;
+    }
+
+    this.editor = basicEditor(this.prismEditorElement.nativeElement, setupOptions);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
