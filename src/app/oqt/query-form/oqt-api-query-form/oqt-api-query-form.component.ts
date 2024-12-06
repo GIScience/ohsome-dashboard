@@ -106,7 +106,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     Object.keys(enrichedTopics)
       .forEach(topicKey => {
         const topic = enrichedTopics[topicKey] as Topic;
-        // add new property
+        // add new properties
+        topic.key = topicKey;
         topic.qualityDimensions = {};
         topic.indicators
           .forEach(topicIndicatorKey => {
