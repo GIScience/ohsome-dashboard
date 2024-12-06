@@ -55,6 +55,17 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize with user defined attribute', () => {
+    component.hashParams = new URLSearchParams("attribute-completeness--attribute-title=Test%20Title&attribute-completeness--attribute-filter=userfilter%3Dtest");
+    fixture.detectChanges();
+
+    component.ngOnInit();
+
+    expect(component.customFilterTitle()).toBe('Test Title');
+    expect(component.customFilterDefinition()).toBe('userfilter=test');
+
+  });
+
   it('should sanitize the attribute list when the topic changes', () => {
     spyOn(component, 'sanitizeAttributeKeys').and.callThrough();
 
