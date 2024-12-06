@@ -1,5 +1,6 @@
 import {
   Component,
+  effect,
   ElementRef,
   Input,
   NgZone,
@@ -8,11 +9,13 @@ import {
   signal,
   SimpleChange,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  viewChild
 } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
-import {OqtAttribute} from '../../../types/types';
+import {OqtAttribute, Topic} from '../../../types/types';
+
 
 declare const $, Prism;
 
@@ -23,44 +26,67 @@ declare const $, Prism;
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
-  @Input() topicName!: string;
-  @Input() selectedTopicKey!: string;
+  @Input({required: true}) selectedTopic!: Topic;
   @Input() hashParams!: URLSearchParams;
-  @Input() indicatorKey!: string;
-  @Input() indicatorChecked: boolean;
+  @Input({required: true}) indicatorKey!: string;
+
   @ViewChild('attributeFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
+
+  customAttributeLabelElement = viewChild<ElementRef<HTMLDivElement>>('customAttributeLabelElement')
 
   oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
 
   combinedAttributeFilters: string;
-  useCustomFilter  = signal(false);
-  customFilterTitle: string = '';
-  customFilterDefinition: string = '';
+
+  // used to define wether to display dropdown with predefined attributes (false) or display the  user defined custom attribute
+  useCustomFilterMode = signal(false);
+  customFilterTitle = signal<string>('');
+  customFilterDefinition = signal<string>('');
 
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, public ngZone: NgZone) {
     this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
+
+    // update popup content whenever the signal customFilterDefinition changes
+    effect(() => {
+      $(this.customAttributeLabelElement()?.nativeElement).popup({
+        content: this.customFilterDefinition(),
+        variation: 'inverted'
+      })
+    });
   }
 
   ngOnInit(): void {
+
     this.attributes = this.oqtApiMetadataProviderService.getAttributes().result;
+
+    // determine useCustomFilterMode
+    this.useCustomFilterMode.set(this.hasCustomFilterModeParams());
 
     //extract and sanitize selectedAttributeKeys
     this.selectedAttributeKeys = this.getAttributeKeysFromUrlHashParams(this.hashParams);
 
+    //extract customFilter
+    if (this.useCustomFilterMode()) {
+      this.customFilterTitle.set(this.hashParams.get('attribute-completeness--attribute-title') ?? '');
+      this.customFilterDefinition.set(this.hashParams.get('attribute-completeness--attribute-filter') ?? '');
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const topicChange: SimpleChange = changes['selectedTopicKey'];
+
+    const topicChange: SimpleChange = changes['selectedTopic'];
 
     if (topicChange && !topicChange.firstChange) {
       this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
+      this.useCustomFilterMode.set(false);
     }
   }
 
-  onLabelCreate(attributeKey: string, text: string){
-    const attributeFilter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopicKey, attributeKey);
+  onLabelCreate(attributeKey: string, text: string) {
+    const attributeFilter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopic.key, attributeKey);
 
     return $(`<a class="ui label">${text}<i class="delete icon"></i></a>`)
       .attr('data-value', attributeKey)
@@ -72,7 +98,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
           variation: 'inverted'
         }
       );
-}
+  }
 
   attributesDropdownOptions = {
     fullTextSearch: 'exact',
@@ -80,6 +106,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     // custom attribute labels for selected items with mouse events
     onLabelCreate: this.onLabelCreate.bind(this),
   }
+
 
   showAttributeDetails(event) {
     // don't trigger modal if user clicks on close icon (X), only when directly clicked in the attribute label
@@ -89,13 +116,13 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
 
     const attributeKey = event.data["attributeKey"] as string;
-    const attribute = this.attributes[this.selectedTopicKey][attributeKey];
+    const attribute = this.attributes[this.selectedTopic.key][attributeKey];
 
     const highlightedHTML = Prism.highlight(attribute.filter, Prism.languages['ohsome-filter'], 'ohsome-filter');
 
     // set content for the modal window with attribute metadata
     $('#attribute-details #title')
-      .html(`<span class="ui circular label">${this.topicName}</span><br>${attribute.name}`);
+      .html(`<span class="ui circular label">${this.selectedTopic.name}</span><br>${attribute.name}`);
     // $('#attribute-details #description')
     //   .html(attribute.description);
     $('#attribute-details #attributeFilter')
@@ -111,6 +138,11 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     }).modal('show');
   }
 
+  hasCustomFilterModeParams(): boolean {
+    return this.hashParams.has('attribute-completeness--attribute-title') &&
+      this.hashParams.has('attribute-completeness--attribute-filter');
+  }
+
   getAttributeKeysFromUrlHashParams(hashParams: URLSearchParams): string[] {
 
     // 1. extract the attributes from URL
@@ -121,7 +153,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     // 2.undefined should return the defaultAttributeKey
     // this can happen when the URL specifies indicator=attribute-completeness but NOT attribute-completeness-attributes
     if (attributesFromUrl == undefined) {
-      return [this.getDefaultAttributeKey(this.selectedTopicKey)];
+      return [this.getDefaultAttributeKey(this.selectedTopic.key)];
     }
     // 3. convert to an array with one or more elements, an element can only be an empty string if there is no defaultAttribute
     return this.sanitizeAttributeKeys(attributesFromUrl);
@@ -132,13 +164,13 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
     //  1. only keep attributes that are valid for the current topic
     attributeKeys = attributeKeyCandidates.filter((attributeKeyCandidate) => {
-      return this.isValidAttributeKey(this.selectedTopicKey, attributeKeyCandidate);
+      return this.isValidAttributeKey(this.selectedTopic.key, attributeKeyCandidate);
     });
 
     // 2. set default
     //  if after the conversion only an empty array exists set the first available attribute for the topic
     if (attributeKeys.length === 0) {
-      attributeKeys = [this.getDefaultAttributeKey(this.selectedTopicKey)];
+      attributeKeys = [this.getDefaultAttributeKey(this.selectedTopic.key)];
     }
     return attributeKeys;
   }
@@ -163,32 +195,45 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     }
   }
 
-  combineSelectedAttributeFilters(): string {
+  combineSelectedAttributes(): { combinedNames: string, combinedFilters: string } {
 
     // get a valid attributeFilter list
     // can have 0...n filter elements
-    const attributeFilterList: string[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
-      const filter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopicKey, attributeKey);
-      return filter != undefined ? [filter] : [];
+    const attributeList: {
+      combinedNames: string,
+      combinedFilters: string
+    }[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
+      const filter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopic.key, attributeKey);
+      const name = this.oqtApiMetadataProviderService.getAttributeName(this.selectedTopic.key, attributeKey);
+      return name != undefined && filter != undefined ? [{combinedNames: name, combinedFilters: filter}] : [];
     });
 
-    switch (attributeFilterList.length) {
+    switch (attributeList.length) {
       case 0: {
-        return '';
+        return {combinedNames: '', combinedFilters: ''};
       }
       case 1: {
-        return attributeFilterList[0];
+        return attributeList[0];
       }
       default: {
-        return concatFilters();
+        return {combinedNames: concatNames(), combinedFilters: concatFilters()};
       }
+    }
+
+    function concatNames(): string {
+      const allButLastAttributes = attributeList.slice(0, -1);
+      const lastAttribute = attributeList[attributeList.length - 1];
+      return allButLastAttributes.map(combinedAttribute => {
+        return combinedAttribute.combinedNames
+      }).join(', ') + ' and ' + lastAttribute.combinedNames;
+
     }
 
     // surround filters with brackets and concat them with ' and ' and add pretty linebreaks
     function concatFilters() {
-      return attributeFilterList.map((attributeFilter) => {
+      return attributeList.map((combinedAttribute) => {
         return `(
-  ${attributeFilter}
+  ${combinedAttribute.combinedFilters}
 )`;
       }).join(' and ');
     }
@@ -197,7 +242,11 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   showAttributeFilterEditDialog() {
 
     // compute the current attributeFilter as an AND-combination of the selected attributes
-    this.combinedAttributeFilters = this.combineSelectedAttributeFilters();
+    if (!this.useCustomFilterMode()) {
+      const {combinedNames, combinedFilters} = this.combineSelectedAttributes();
+      this.customFilterTitle.set(combinedNames)
+      this.customFilterDefinition.set(combinedFilters);
+    }
 
     this.ngZone.runOutsideAngular(() => {
       $('#attributes-editor').modal({
@@ -214,12 +263,14 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
         detachable: true
       }).modal('show');
     });
+
+    $('.ui.accordion')
+      .accordion()
+    ;
   }
 
-  setCustomFilter(options: { title: string, definition: string }) {
-    this.useCustomFilter.set(true);
-    this.customFilterTitle = options.title;
-    this.customFilterDefinition = options.definition;
+  setCustomFilerTitle($event: Event) {
+    this.customFilterTitle.set(($event.target as HTMLInputElement).value);
   }
 
 }
