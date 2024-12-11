@@ -50,7 +50,8 @@ Thumbs.db
 /.nx/cache/
 
 # folder related to deployment
-/scripts/
+.prod.env
+.test.env
 /temp-test-repo/
 /temp-prod-repo/
 
