@@ -55,11 +55,9 @@
                   @case ("attribute-completeness") {
                     @if (indicator.checked) {
                       <app-attribute-completeness-attributes
-                        [selectedTopicKey]="selectedTopicKey"
-                        [topicName]="topics[selectedTopicKey].name"
+                        [selectedTopic]="topics[selectedTopicKey]"
                         [hashParams]="hashParams"
                         [indicatorKey]="indicator.key"
-                        [indicatorChecked]="indicator.checked"
                       ></app-attribute-completeness-attributes>
                     }
                   }

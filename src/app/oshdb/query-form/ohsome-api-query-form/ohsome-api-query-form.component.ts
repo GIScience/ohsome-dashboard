@@ -20,9 +20,9 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   public start;
   public end;
   public period = 'P1M';
-  public maxDate: any;
-  public minDate: any;
-  public time: any;
+  public maxDate: string;
+  public minDate: string;
+  public time: string;
 
   viewUpdateTime: boolean = Utils.loadEnv('viewUpdateTime', false);
 

@@ -40,11 +40,11 @@ describe('OqtApiServiceService', () => {
   })
 
   it('should perform a POST request to ohsome quality api', () => {
-    service.post('test', 'param=value').subscribe(() => {
+    service.post('test', {param:'value'}).subscribe(() => {
     });
     const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/test`);
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual('param=value');
+    expect(req.request.body).toEqual({param:'value'});
   });
 
   it('should perform a GET request to /metadata endpoint with project param', () => {

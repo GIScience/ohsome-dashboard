@@ -2,6 +2,40 @@
   padding: 5px 11px 5px 5px;
 }
 
-::ng-deep .selection .label {
+::ng-deep .editable-attributes .label {
   padding-right: 0 !important;
 }
+
+/* dropdown search with pre defined attributes + EDIT button*/
+.editable-attributes {
+  display: flex;
+  align-items: flex-start;
+}
+
+.editable-attributes > div.field {
+  flex: 1 1 auto;
+}
+
+.editable-attributes > button {
+  flex: 0 0 auto;
+  margin-left: 1rem;
+}
+
+.editable-attributes #custom-filter-wrapper-element{
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  border-radius: 0.28571429rem;
+  padding: 0.22619048em 0 0.22619048em 0.35714286em;
+  & .label {
+    line-height: 1;
+    padding: 5px 0.785714em 5px 0.785714em;
+    margin: 0.14285714rem 0.28571429rem 0.14285714rem 0;
+    display: flex !important;
+    width: fit-content;
+    & div i.icon.delete {
+      padding-right: 20px;
+    }
+  }
+}
+
+
+

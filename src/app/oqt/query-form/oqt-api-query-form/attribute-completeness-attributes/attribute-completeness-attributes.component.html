@@ -1,17 +1,43 @@
-<div class="field">
-  <h5 style="margin-top: 0.8rem">Check the topic "{{ topicName }}" on having the following attribute(s):</h5>
-  <select multiple required
-          class="ui search selection dropdown"
-          id="search-select-attribute"
-          name="{{indicatorKey}}--attributes"
-          [(ngModel)]="selectedAttributeKeys">
-    <option *ngFor="let entry of getAttributesByTopicKey(this.selectedTopicKey) | keyvalue;"
-            [value]="entry.key">{{ entry.value.name }}
-    </option>
-  </select>
+<h5 style="margin-top: 0.8rem">Check the topic "{{ selectedTopic.name }}" on having the following attribute(s):</h5>
+
+<div class="editable-attributes">
+  @if (!useCustomFilterMode()) {
+    <div class="field">
+      <app-sui-multi-select-search-dropdown required
+                                            id="search-select-attribute"
+                                            name="{{indicatorKey}}--attributes"
+                                            [(ngModel)]="selectedAttributeKeys"
+                                            [options]="attributesDropdownOptions"
+                                            [selectOptions]="getAttributesByTopicKey(this.selectedTopic.key) | keyvalue"></app-sui-multi-select-search-dropdown>
+    </div>
+  } @else {
+    <input type="hidden" id="attribute-title"
+           name="{{indicatorKey}}--attribute-title"
+           [ngModel]="customFilterTitle()"
+           required>
+    <input type="hidden" id="attribute-filter"
+           name="{{indicatorKey}}--attribute-filter"
+           [ngModel]="customFilterDefinition()"
+           required>
+    <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
+      <div #customAttributeLabelElement class="ui blue basic label">
+        <div>{{ customFilterTitle() }}</div>
+        <div><i (click)="useCustomFilterMode.set(false)" (keydown.enter)="triggerClick($event)"  tabindex="0"
+                class="delete icon"></i></div>
+      </div>
+    </div>
+  }
+  <button type="button" class="ui blue icon button"
+          data-tooltip="View and edit attributes filter."
+          data-inverted
+          (click)="showAttributeFilterEditDialog()"
+  >
+    <i class="edit icon"></i>
+  </button>
 </div>
 
 <!-- modal window to display detailed attribute information-->
+<div id="attributes-details-dimmer"></div>
 <div id="attribute-details" class="ui modal">
   <i class="close icon"></i>
   <div class="header">
@@ -19,14 +45,88 @@
   </div>
   <div class="content">
     <div class="ui three column divided grid">
-<!--      <div class="column">-->
-<!--        <h4 class="ui header">Description:</h4>-->
-<!--        <div id="description">Description text will be set automatically</div>-->
-<!--      </div>-->
+      <!--      <div class="column">-->
+      <!--        <h4 class="ui header">Description:</h4>-->
+      <!--        <div id="description">Description text will be set automatically</div>-->
+      <!--      </div>-->
       <div class="column">
         <h4 class="ui header">ohsome Filter definition:</h4>
         <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter">Filter text will be set automatically</code></pre>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="attributes-editor-dimmer"></div>
+<div id="attributes-editor" class="ui modal">
+  <div class="header">
+    <h1 class="ui header">View and Edit your Attribute Filter</h1>
+  </div>
+  <div class="scrolling content">
+    Here you can specify your own attribute filter, in case we do not have an appropriate predefined attribute
+    available.
+    <div class="ui accordion">
+      <div class="title"><i class="dropdown icon"></i>more...</div>
+      <div class="content">
+        <p>The attribute-completeness indicator calculates the percentage of features that match both the
+          Topic-Filter and the Attribute-Filter, compared to all features that match only the Topic-Filter.</p>
+        <div class="field">
+          <label>Topic Filter
+            <app-prism-editor
+              [value]="selectedTopic.filter"
+              [readonly]="true"
+            >
+            </app-prism-editor>
+          </label>
+        </div>
+        <p style="text-align: center">
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <msub>
+              <mi>attributeCompleteness</mi>
+              <mi>percent</mi>
+            </msub>
+            <mo>=</mo>
+            <mfrac>
+              <mi>{{ selectedTopic.aggregationType }} of "{{ selectedTopic.name }}" (Topic Filter) matching the
+                Attribute Filter
+              </mi>
+              <mi>{{ selectedTopic.aggregationType }} of "{{ selectedTopic.name }}" (Topic Filter)</mi>
+            </mfrac>
+            <mo>&#xd7;</mo>
+            <mn>100</mn>
+          </math>
+        </p>
+
+      </div>
+    </div>
+    <br>
+
+    <div class="field">
+      <label for="customTitle">Attribute Title</label>
+      <input id="customTitle" class="ui header" type="text" [value]="customFilterTitle()"
+             (change)="setCustomFilerTitle($event)" required>
+    </div>
+    <div class="field">
+      <label>Attribute Filter (<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">How does this
+        work?</a>)
+        <app-prism-editor id="customAttributeFilter" [value]="customFilterDefinition()"
+                          (valueChange)="customFilterDefinition.set($event)">
+        </app-prism-editor>
+      </label>
+    </div>
+  </div>
+  <div class="actions">
+    <!-- these functions will be implemented later-->
+    <!--    <div class="ui blue left floated basic button"><i class="checkmark icon"></i>Validate</div>-->
+    <!--    <div class="ui blue left floated basic button"><i class="save icon"></i>Save in Browser Cache</div>-->
+    <div
+      class="ui green approve button"
+      (click)="useCustomFilterMode.set(true)"
+      (keydown.enter)="triggerClick($event)"
+      tabindex="0"
+      role="button"
+    >OK
+    </div>
+    <div class="ui red cancel button" tabindex="0" role="button" (keydown.enter)="triggerClick($event)">Cancel</div>
   </div>
 </div>

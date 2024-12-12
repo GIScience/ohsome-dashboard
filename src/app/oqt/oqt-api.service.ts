@@ -32,7 +32,7 @@ export class OqtApiService {
       });
   }
 
-  post(urlPath: string, body?: any | null): Observable<BaseResponseJSON> {
+  post(urlPath: string, body?: object | null): Observable<BaseResponseJSON> {
     return this.http.post<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       body,
       {headers: new HttpHeaders({'Content-Type': 'application/json', 'accept': 'application/json'})});

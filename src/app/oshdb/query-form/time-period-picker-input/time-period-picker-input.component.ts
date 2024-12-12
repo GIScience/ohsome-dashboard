@@ -60,7 +60,7 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
 
   }
 
-  @Input() options = {minDate: null, maxDate: null};
+  @Input() options = {minDate: '', maxDate: ''};
 
   private _value = '//'; // the start/end/period string
 
