@@ -2,7 +2,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# PLEASE SET THE CORRECT DETAILS in .env.test BEFORE RUNNING THE SCRIPT
+# PLEASE SET THE CORRECT DETAILS in .prod.env BEFORE RUNNING THE SCRIPT
 
 # solution to load .env from https://gist.github.com/mihow/9c7f559807069a03e302605691f85572?permalink_comment_id=3898844#gistcomment-3898844
 # Get the directory of the current script
@@ -83,8 +83,8 @@ fi
 GIT_ROOT_PATH=$(git rev-parse --show-toplevel)
 DIST_PATH="$GIT_ROOT_PATH/dist"
 #TARGET_REPO="ssh://git@gitlab.heigit.org:2022/giscience/big-data/ohsome/apps/dashboard-built-client.git"
-TEMP_TEST_REPO_PATH="$GIT_ROOT_PATH/temp-prod-repo"
-TARGET_PATH="${TEMP_TEST_REPO_PATH}${TARGET_REPO_FOLDER:+/$TARGET_REPO_FOLDER}"
+TEMP_PROD_REPO_PATH="$GIT_ROOT_PATH/temp-prod-repo"
+TARGET_PATH="${TEMP_PROD_REPO_PATH}${TARGET_REPO_FOLDER:+/$TARGET_REPO_FOLDER}"
 
 prompt_user "Is this the repo where the built dashboard should be pushed to?
 Target repository: $TARGET_REPO"
@@ -93,17 +93,17 @@ Target repository: $TARGET_REPO"
 echo "Prepare local target repository..."
 # Navigate to the Git root directory
 cd "$GIT_ROOT_PATH"
-if [ -d "$TEMP_TEST_REPO_PATH" ]; then
+if [ -d "$TEMP_PROD_REPO_PATH" ]; then
     echo "Temporary PROD repository already exists locally. Pulling latest changes..."
     echo
-    cd "$TEMP_TEST_REPO_PATH"
+    cd "$TEMP_PROD_REPO_PATH"
     git switch main
     git pull
     cd "$GIT_ROOT_PATH"
 else
     echo "Temporary PROD repository does not exist locally. Cloning repository..."
     echo
-    git clone "$TARGET_REPO" "$TEMP_TEST_REPO_PATH"
+    git clone "$TARGET_REPO" "$TEMP_PROD_REPO_PATH"
 fi
 
 # Build the project
@@ -126,8 +126,8 @@ cp -R "$DIST_PATH"/* "$TARGET_PATH/"
 
 # Commit and push changes to the PROD repository
 prompt_user "Freshly built PROD version of ${DASHBOARD_VERSION} is ready to be pushed into local Git Repo. Continue?"
-echo "Committing and pushing updates to the test repository..."
-cd "$TEMP_TEST_REPO_PATH"
+echo "Committing and pushing updates to the PROD repository..."
+cd "$TEMP_PROD_REPO_PATH"
 git add .
 git commit -m "Update dashboard-built-client with ${DASHBOARD_VERSION}"
 git push

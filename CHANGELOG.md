@@ -2,10 +2,12 @@ Changelog
 =========
 
 ## current
+* build: add deployment scripts for TEST and PROD deployment ([#54]) 
 * feat: (oqapi, attribute-completeness): Allow definition of custom attributes ([#50])
 * upgrade to Semantic-UI 2.5.0
 * compatible with api.quality.ohsome.org (OQAPI) >= v1.8.0
 
+[#54]: https://github.com/GIScience/ohsome-dashboard/issues/54
 [#50]: https://github.com/GIScience/ohsome-dashboard/issues/50
 
 ## v1.4.0

@@ -2,7 +2,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# PLEASE SET THE CORRECT DETAILS in .env.test BEFORE RUNNING THE SCRIPT
+# PLEASE SET THE CORRECT DETAILS in .test.env BEFORE RUNNING THE SCRIPT
 
 # solution to load .env from https://gist.github.com/mihow/9c7f559807069a03e302605691f85572?permalink_comment_id=3898844#gistcomment-3898844
 # Get the directory of the current script
