@@ -2,6 +2,8 @@ Changelog
 =========
 
 ## current
+
+## v1.5.0
 * build: add deployment scripts for TEST and PROD deployment ([#54]) 
 * feat: (oqapi, attribute-completeness): Allow definition of custom attributes ([#50])
 * upgrade to Semantic-UI 2.5.0
