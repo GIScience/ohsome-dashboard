@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
-import {Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
+import {LatLngBounds, Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import mask from '@turf/mask';
@@ -45,7 +45,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   set options(newOptions) {
     this._options = {...this._options, ...newOptions};
   }
-
 
 
   private defaultOptions: BoundaryInputComponentOptions = {
@@ -106,6 +105,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     this.addOrUpdateUserDefinedLayers(userLayers);
 
   }
+
   // ControlValueAccesor methods
   // write value to this component (map)
   writeValue(val: string): void {
@@ -153,6 +153,8 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
     this.listenToRemove(true);
 
+    // collect bound for automatic zoom here while parsing inputs
+    let commonBounds: LatLngBounds | null = null;
 
     if (this.interactionType == 'bbox') {
       const bboxes = new OhsomeApiRequest.Bboxes().parse(value);
@@ -160,7 +162,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         const geom = bbox.geometry;
         const coords = geom.split(',').map(coord => parseFloat(coord));
         const bounds = [[coords[1], coords[0]], [coords[3], coords[2]]];
-        L.rectangle(bounds as L.LatLngBoundsExpression, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bboxLayersGroup)
+        const rect = L.rectangle(bounds as L.LatLngBoundsExpression, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bboxLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
           .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
@@ -168,12 +170,13 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
+        commonBounds = (commonBounds) ? commonBounds.extend(rect.getBounds()) : rect.getBounds();
       });
     } else if (this.interactionType == 'bcircle') {
       const bcircles = new OhsomeApiRequest.Bcircles().parse(value);
       bcircles.boundaries.forEach(bcircle => {
         console.log('updateMapFromValue::bcircle', bcircle.geometry, bcircle.lng, bcircle.lat, bcircle.radius);
-        L.circle([bcircle.lat, bcircle.lng], {
+        const cirle = L.circle([bcircle.lat, bcircle.lng], {
           radius: bcircle.radius,
           bubblingMouseEvents: false
         } as L.CircleOptions).addTo(this.bcircleLayersGroup)
@@ -184,6 +187,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
+        commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : cirle.getBounds();
       });
     } else /*if (this.options.type == "bpoly")*/ {
       const bpolys = new OhsomeApiRequest.Bpolys().parse(value);
@@ -197,7 +201,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         for (let i = 0; i < lastCoordIndex; i = i + 2) {
           latLngs.push(L.latLng(coords[i + 1], coords[i]));
         }
-        L.polygon(latLngs, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bpolyLayersGroup)
+        const polygon = L.polygon(latLngs, {bubblingMouseEvents: false} as L.PathOptions).addTo(this.bpolyLayersGroup)
           .on('pm:edit', this.updateValueFromMap, this)
           .on('click', () => {
             if (!this.map.pm.globalRemovalModeEnabled()) {
@@ -205,7 +209,13 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
+        commonBounds = (commonBounds) ? commonBounds.extend(polygon.getBounds()) : polygon.getBounds();
       });
+    }
+
+    // trigger auto zoom to features
+    if (commonBounds != null) {
+      this.map.flyToBounds(commonBounds, {padding: [20, 20]});
     }
 
     // reregister recreated layers if removal mode or edit mode is on
@@ -292,12 +302,12 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
         // if extent is whole planet or bigger don't add the maskLayer
         if (area(maskedPoly) > 0) {
-        const maskLayer = L.geoJSON(maskedPoly, {
+          const maskLayer = L.geoJSON(maskedPoly, {
             // pmIgnore: true,
-          interactive: false,
-          style: {color: '#000', stroke: false}
+            interactive: false,
+            style: {color: '#000', stroke: false}
           } as LayerOptions);
-        maskLayer.addTo(this.map);
+          maskLayer.addTo(this.map);
         }
       } catch (e) {
         throw new Error('Could not create maskLayer from: ' + JSON.stringify(this.options.maskPoly));
@@ -305,7 +315,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     }
 
     //add user defined GeoJSON layers
-    if (this.options.userDefinedPolygonLayers){
+    if (this.options.userDefinedPolygonLayers) {
       try {
 
         this.addOrUpdateUserDefinedLayers(this.options.userDefinedPolygonLayers);
