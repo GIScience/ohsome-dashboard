@@ -2,6 +2,8 @@ Changelog
 =========
 
 ## current
+## v1.5.2
+* fix: auto-zoombox accidentally extended user defined bbox geometry
 
 ## v1.5.1
 * feat: add automatic zoom to features for bbox, circle and free polygon selections like for boundaries ([#61])

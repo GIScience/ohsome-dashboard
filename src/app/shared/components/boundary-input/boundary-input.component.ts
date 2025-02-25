@@ -82,6 +82,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     drawText: false,
     cutPolygon: false, // adds button to cut a hole in a polygon
     editMode: true, // edit mode can be enabled on individual features by click and disabled by clickout on map
+    dragMode: false,
     removalMode: true,
     rotateMode: false
   };
@@ -170,7 +171,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
-        commonBounds = (commonBounds) ? commonBounds.extend(rect.getBounds()) : rect.getBounds();
+        commonBounds = (commonBounds) ? commonBounds.extend(rect.getBounds()) : new LatLngBounds(rect.getBounds().getSouthEast(), rect.getBounds().getNorthWest());
       });
     } else if (this.interactionType == 'bcircle') {
       const bcircles = new OhsomeApiRequest.Bcircles().parse(value);
@@ -187,7 +188,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
-        commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : cirle.getBounds();
+        commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : new LatLngBounds(cirle.getBounds().getSouthEast(), cirle.getBounds().getNorthWest());
       });
     } else /*if (this.options.type == "bpoly")*/ {
       const bpolys = new OhsomeApiRequest.Bpolys().parse(value);
@@ -209,7 +210,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
             }
           })
         ;
-        commonBounds = (commonBounds) ? commonBounds.extend(polygon.getBounds()) : polygon.getBounds();
+        commonBounds = (commonBounds) ? commonBounds.extend(polygon.getBounds()) : new LatLngBounds(polygon.getBounds().getSouthEast(), polygon.getBounds().getNorthWest());
       });
     }
 
