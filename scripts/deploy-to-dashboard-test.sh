@@ -68,14 +68,14 @@ echo "Prepare local target repository..."
 # Navigate to the Git root directory
 cd "$GIT_ROOT_PATH"
 if [ -d "$TEMP_TEST_REPO_PATH" ]; then
-    echo "Temporary PROD repository already exists locally. Pulling latest changes..."
+    echo "Temporary TEST repository already exists locally. Pulling latest changes..."
     echo
     cd "$TEMP_TEST_REPO_PATH"
     git switch master
     git pull
     cd "$GIT_ROOT_PATH"
 else
-    echo "Temporary PROD repository does not exist locally. Cloning repository..."
+    echo "Temporary TEST repository does not exist locally. Cloning repository..."
     echo
     git clone "$TARGET_REPO" "$TEMP_TEST_REPO_PATH"
 fi
