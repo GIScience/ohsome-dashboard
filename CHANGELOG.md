@@ -3,6 +3,11 @@ Changelog
 
 ## current
 
+## v1.5.1
+* feat: add automatic zoom to features for bbox, circle and free polygon selections like for boundaries ([#61])
+
+[#61]: https://github.com/GIScience/ohsome-dashboard/issues/61
+
 ## v1.5.0
 * build: add deployment scripts for TEST and PROD deployment ([#54]) 
 * feat: (oqapi, attribute-completeness): Allow definition of custom attributes ([#50])
