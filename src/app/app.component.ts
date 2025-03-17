@@ -11,6 +11,7 @@ export class AppComponent implements AfterViewInit{
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
   public announcement: string;
+  public currentYear: string = new Date().getFullYear().toString();
   protected readonly window = window;
 
   constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService) {
