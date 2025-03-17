@@ -42,6 +42,7 @@ export const indicatorResponseMock: IndicatorResponseJSON = {
     },
     'id': -2967179,
     'iso': null,
+    'display_name': 'Verwaltungsverband Philippsburg',
     'name': 'Verwaltungsverband Philippsburg',
     'name_en': null,
     'local_name': 'Verwaltungsverband Philippsburg',

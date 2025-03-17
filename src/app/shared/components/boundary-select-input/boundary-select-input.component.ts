@@ -203,7 +203,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
           const jsonval = selectionLayer.toGeoJSON();
           if (jsonval.type !== 'GeometryCollection' && jsonval.type !== 'Feature') {
             jsonval.features.forEach(function (feature) {
-              feature['id'] += '-_-' + feature['properties']['name'].replace(/ /g, '__');
+              feature['id'] += '-_-' + feature['properties']['display_name'].replace(/ /g, '__');
             });
           }
           newValue = JSON.stringify(jsonval);

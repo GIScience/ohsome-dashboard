@@ -24,7 +24,7 @@ export class OsmBoundaryProviderService {
     const url = `${OHSOME_BOUNDARY_WFS_URL}&CQL_FILTER="id" IN (${idList})`;
     return this.http.get<FeatureCollection>(url).pipe(map(featureCollection => {
       featureCollection.features.forEach( (feature, index)=> {
-        feature['id'] += '-_-' + (feature.properties?.['name'] || `area${index}`).replace(/ /g, '__');
+        feature['id'] += '-_-' + (feature.properties?.['display_name'] || `area${index}`).replace(/ /g, '__');
       });
       return JSON.stringify(featureCollection)
     }));

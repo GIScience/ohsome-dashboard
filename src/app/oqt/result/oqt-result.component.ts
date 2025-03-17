@@ -104,13 +104,13 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
             const merged = union(featureCollection([previousValue, currentValue]));
             if (merged != undefined) {
-              merged.id = [previousValue.properties?.['name'], currentValue.properties?.['name']].join(' + ');
+              merged.id = [previousValue.properties?.['display_name'], currentValue.properties?.['display_name']].join(' + ');
               merged.properties = {};
               merged.properties['id'] = merged.id;
-              merged.properties['name'] = merged.id;
+              merged.properties['display_name'] = merged.id;
               return merged;
             } else {
-              previousValue.id = previousValue.properties?.['name'];
+              previousValue.id = previousValue.properties?.['display_name'];
               previousValue.properties!['id'] = previousValue.id;
               return previousValue;
             }

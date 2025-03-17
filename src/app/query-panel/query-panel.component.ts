@@ -187,7 +187,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   get selectedNames(): string[] {
     if (this.form.controls['bpolys'] && this.boundaryType === 'admin') {
-      this._selectedNames = this.getSelectedPropertyValues('name').map(String);
+      this._selectedNames = this.getSelectedPropertyValues('display_name').map(String);
       return this._selectedNames;
     }
     return [];
