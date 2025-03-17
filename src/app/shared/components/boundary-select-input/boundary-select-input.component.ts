@@ -4,6 +4,7 @@ import * as L from 'leaflet';
 import {LayerOptions, LeafletEvent} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
 import {wmsSelect} from './Leaflet.TileLayer.WmsSelect';
+import {environment} from '../../../../environments/environment';
 import mask from '@turf/mask';
 import area from '@turf/area';
 
@@ -188,9 +189,9 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     type LeafletSelectEvent = LeafletEvent & { selectionLayer: L.GeoJSON };
 
     // add select WMS layer
-    this.boundaryLayer = wmsSelect('https://maps.heigit.org/ohsome/service/wms', {
+    this.boundaryLayer = wmsSelect(environment.ohsomeBoundaryWMSUrl, {
       noWrap: true,
-      layers: 'ohsome:admin_world_water',
+      layers: environment.ohsomeBoundaryWMSLayer,
       transparent: true,
       format: 'image/png',
       attribution: 'Downloaded from <a href="https://osm-boundaries.com" >OSM Boundaries Map</a>'
