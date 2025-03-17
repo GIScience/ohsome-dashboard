@@ -2,6 +2,12 @@ Changelog
 =========
 
 ## current
+
+## v1.5.3
+* feat: make copyright date in footer dynamic
+* feat: add WMS URL and Layer as configurable variable
+* fix: use display_name instead of name as textual identifier for features (new osm_boundaries table)
+
 ## v1.5.2
 * fix: auto-zoombox accidentally extended user defined bbox geometry
 
