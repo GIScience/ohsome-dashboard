@@ -194,6 +194,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
       layers: environment.ohsomeBoundaryWMSLayer,
       transparent: true,
       format: 'image/png',
+      version: '1.3.0',
       attribution: 'Downloaded from <a href="https://osm-boundaries.com" >OSM Boundaries Map</a>'
     }).addTo(this.map)
       .on('select', (e: LeafletEvent) => {
@@ -201,7 +202,7 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
         let newValue = '';
         const selectionLayer: L.GeoJSON = evt.selectionLayer;
         if (selectionLayer.getLayers().length != 0) {
-          const jsonval = selectionLayer.toGeoJSON();
+          const jsonval = selectionLayer.toGeoJSON(false);
           if (jsonval.type !== 'GeometryCollection' && jsonval.type !== 'Feature') {
             jsonval.features.forEach(function (feature) {
               feature['id'] += '-_-' + feature['properties']['display_name'].replace(/ /g, '__');
