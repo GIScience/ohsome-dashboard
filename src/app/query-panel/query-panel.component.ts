@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -60,7 +60,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     public ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
     public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
     private urlHashParamsProviderService: UrlHashParamsProviderService,
-    private osmBoundaryProviderService: OsmBoundaryProviderService
+    private osmBoundaryProviderService: OsmBoundaryProviderService,
+    private ref: ChangeDetectorRef
   ) {
 
     const spatialExtent = this.ohsomeApiMetadataProviderService
@@ -139,6 +140,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
       console.log("INIT  QueryPanel permalinkparams", permalinkParams);
       this.urlHashParamsProviderService.updateHashParams(permalinkParams);
+      //needed to update selected name labels when areas are unselected in the map
+      this.ref.markForCheck();
     })
   }
 
