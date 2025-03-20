@@ -3,6 +3,12 @@ Changelog
 
 ## current
 
+## v1.5.4
+* fix: selected area name labels below map are not properly updated when areas are unselected in the map
+* fix: geojson boundary input with thin geometries #63
+
+[#63]: https://github.com/GIScience/ohsome-dashboard/issues/63
+
 ## v1.5.3
 * feat: make copyright date in footer dynamic
 * feat: add WMS URL and Layer as configurable variable
