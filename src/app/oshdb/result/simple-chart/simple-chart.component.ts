@@ -4,9 +4,10 @@ import {Chart} from 'chart.js';
 declare let $: any;
 
 @Component({
-  selector: 'app-simple-chart',
-  templateUrl: './simple-chart.component.html',
-  styleUrls: ['./simple-chart.component.css']
+    selector: 'app-simple-chart',
+    templateUrl: './simple-chart.component.html',
+    styleUrls: ['./simple-chart.component.css'],
+    standalone: false
 })
 export class SimpleChartComponent implements AfterViewInit {
   public chart: any;

@@ -7,10 +7,11 @@ import {OhsomeApiMetadataProviderService} from '../../ohsome-api-metadata-provid
 declare let $: any;
 
 @Component({
-  selector: 'app-ohsome-api-query-form',
-  templateUrl: './ohsome-api-query-form.component.html',
-  styleUrls: ['./ohsome-api-query-form.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
+    selector: 'app-ohsome-api-query-form',
+    templateUrl: './ohsome-api-query-form.component.html',
+    styleUrls: ['./ohsome-api-query-form.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 
 export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {

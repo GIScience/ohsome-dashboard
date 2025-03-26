@@ -16,9 +16,10 @@ import Bpolys = OhsomeApi.v1.request.Bpolys;
 declare let $: any;
 
 @Component({
-  selector: 'app-oqt-result',
-  templateUrl: './oqt-result.component.html',
-  styleUrls: ['./oqt-result.component.css']
+    selector: 'app-oqt-result',
+    templateUrl: './oqt-result.component.html',
+    styleUrls: ['./oqt-result.component.css'],
+    standalone: false
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();

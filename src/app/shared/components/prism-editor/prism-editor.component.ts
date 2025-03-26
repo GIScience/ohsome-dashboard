@@ -14,10 +14,9 @@ import {languages} from 'prism-code-editor/prism';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-filter';
 
 @Component({
-  selector: 'app-prism-editor',
-  standalone: true,
-  imports: [],
-  templateUrl: './prism-editor.component.html',
+    selector: 'app-prism-editor',
+    imports: [],
+    templateUrl: './prism-editor.component.html'
 })
 export class PrismEditorComponent implements OnInit, OnChanges {
   @Input() value: string;

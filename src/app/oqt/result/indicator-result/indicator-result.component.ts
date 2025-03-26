@@ -9,9 +9,10 @@ import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
 
 
 @Component({
-  selector: 'app-indicator-result',
-  templateUrl: './indicator-result.component.html',
-  styleUrls: ['./indicator-result.component.css']
+    selector: 'app-indicator-result',
+    templateUrl: './indicator-result.component.html',
+    styleUrls: ['./indicator-result.component.css'],
+    standalone: false
 })
 export class IndicatorResultComponent implements OnInit {
 

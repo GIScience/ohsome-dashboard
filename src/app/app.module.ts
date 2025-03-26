@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {AppComponent} from './app.component';
@@ -36,41 +36,30 @@ declare const Prism;
     OshdbModule,
     OqtModule],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: urlHashParamsProviderFactory,
-      deps: [UrlHashParamsProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: ohsomeApiMetadataProviderFactory,
-      deps: [OhsomeApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: ohsomeApiAnnouncementProviderFactory,
-      deps: [OhsomeApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: oqtApiMetadataProviderFactory,
-      deps: [OqtApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: oqtApiAttributeProviderFactory,
-      deps: [OqtApiMetadataProviderService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: preparePrismToRenderOhsomeFilterLangauge,
-      multi: true
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (ohsomeApiMetadataProviderFactory)(inject(OhsomeApiMetadataProviderService));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (ohsomeApiAnnouncementProviderFactory)(inject(OhsomeApiMetadataProviderService));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (oqtApiMetadataProviderFactory)(inject(OqtApiMetadataProviderService));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (oqtApiAttributeProviderFactory)(inject(OqtApiMetadataProviderService));
+        return initializerFn();
+      }),
+    provideAppInitializer(() => {
+        const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
+        return initializerFn();
+      }),
     provideHttpClient(withInterceptorsFromDi()),
   ]
 })

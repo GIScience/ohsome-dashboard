@@ -4,9 +4,10 @@ import {computeGrowthRateCssClass, growthRate, percentFormatter} from '../result
 import {ChartData} from 'chart.js';
 
 @Component({
-  selector: 'app-simple-result',
-  templateUrl: './simple-result.component.html',
-  styleUrls: ['./simple-result.component.css']
+    selector: 'app-simple-result',
+    templateUrl: './simple-result.component.html',
+    styleUrls: ['./simple-result.component.css'],
+    standalone: false
 })
 export class SimpleResultComponent implements OnInit {
   public moment = moment;

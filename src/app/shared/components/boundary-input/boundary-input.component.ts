@@ -10,16 +10,17 @@ import OhsomeApiRequest = OhsomeApi.v1.request;
 import area from '@turf/area';
 
 @Component({
-  selector: 'app-boundary-input',
-  templateUrl: './boundary-input.component.html',
-  styleUrls: ['./boundary-input.component.css'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BoundaryInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-boundary-input',
+    templateUrl: './boundary-input.component.html',
+    styleUrls: ['./boundary-input.component.css'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BoundaryInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 
 export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {

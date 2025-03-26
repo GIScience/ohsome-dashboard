@@ -11,16 +11,17 @@ import area from '@turf/area';
 import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
 
 @Component({
-  selector: 'app-boundary-select-input',
-  templateUrl: './boundary-select-input.component.html',
-  styleUrls: ['./boundary-select-input.component.css'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BoundarySelectInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-boundary-select-input',
+    templateUrl: './boundary-select-input.component.html',
+    styleUrls: ['./boundary-select-input.component.css'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BoundarySelectInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 
 export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit, OnChanges {

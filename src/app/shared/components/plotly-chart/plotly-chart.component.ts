@@ -2,9 +2,10 @@ import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/c
 import * as Plotly from 'plotly.js-dist-min';
 
 @Component({
-  selector: 'app-plotly-chart',
-  templateUrl: './plotly-chart.component.html',
-  styleUrls: ['./plotly-chart.component.css']
+    selector: 'app-plotly-chart',
+    templateUrl: './plotly-chart.component.html',
+    styleUrls: ['./plotly-chart.component.css'],
+    standalone: false
 })
 export class PlotlyChartComponent implements AfterViewInit{
 @Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;

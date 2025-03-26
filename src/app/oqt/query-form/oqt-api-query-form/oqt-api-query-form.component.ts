@@ -18,10 +18,11 @@ import {Userlayer} from '../../../shared/shared-types';
 declare const $, Prism;
 
 @Component({
-  selector: 'app-oqt-api-query-form',
-  templateUrl: './oqt-api-query-form.component.html',
-  styleUrls: ['./oqt-api-query-form.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
+    selector: 'app-oqt-api-query-form',
+    templateUrl: './oqt-api-query-form.component.html',
+    styleUrls: ['./oqt-api-query-form.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 

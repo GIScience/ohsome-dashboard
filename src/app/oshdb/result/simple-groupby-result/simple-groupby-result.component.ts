@@ -9,9 +9,10 @@ import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 
 
 @Component({
-  selector: 'app-simple-groupby-type-result',
-  templateUrl: './simple-groupby-result.component.html',
-  styleUrls: ['./simple-groupby-result.component.css']
+    selector: 'app-simple-groupby-type-result',
+    templateUrl: './simple-groupby-result.component.html',
+    styleUrls: ['./simple-groupby-result.component.css'],
+    standalone: false
 })
 export class SimpleGroupbyResultComponent implements OnInit {
 

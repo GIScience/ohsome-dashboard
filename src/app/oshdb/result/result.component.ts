@@ -20,9 +20,10 @@ import {RequiredAndDefined} from '../../shared/shared-types';
 declare let $: any;
 
 @Component({
-  selector: 'app-result',
-  templateUrl: './result.component.html',
-  styleUrls: ['./result.component.css'],
+    selector: 'app-result',
+    templateUrl: './result.component.html',
+    styleUrls: ['./result.component.css'],
+    standalone: false
 })
 export class ResultComponent implements OnInit, AfterViewInit {
 

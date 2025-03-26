@@ -22,9 +22,10 @@ import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
 
 @Component({
-  selector: 'app-query-panel',
-  templateUrl: './query-panel.component.html',
-  styleUrls: ['./query-panel.component.css'],
+    selector: 'app-query-panel',
+    templateUrl: './query-panel.component.html',
+    styleUrls: ['./query-panel.component.css'],
+    standalone: false
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
 

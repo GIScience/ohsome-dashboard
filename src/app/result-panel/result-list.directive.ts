@@ -4,7 +4,8 @@ import {DataService} from '../singelton-services/data.service';
 import {OqtResultComponent} from '../oqt/result/oqt-result.component';
 
 @Directive({
-  selector: '[appResultList]'
+    selector: '[appResultList]',
+    standalone: false
 })
 export class ResultListDirective implements OnInit {
   private resultItem: ComponentRef<ResultComponent>;

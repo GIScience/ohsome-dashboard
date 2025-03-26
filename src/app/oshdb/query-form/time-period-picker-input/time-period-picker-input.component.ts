@@ -11,16 +11,17 @@ import Utils from '../../../../utils';
 declare let $: any;
 
 @Component({
-  selector: 'app-time-period-picker-input',
-  templateUrl: './time-period-picker-input.component.html',
-  styleUrls: ['./time-period-picker-input.component.css'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TimePeriodPickerInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-time-period-picker-input',
+    templateUrl: './time-period-picker-input.component.html',
+    styleUrls: ['./time-period-picker-input.component.css'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TimePeriodPickerInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 
 export class TimePeriodPickerInputComponent implements ControlValueAccessor, AfterViewInit {

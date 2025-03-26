@@ -2,8 +2,9 @@ import {Directive} from '@angular/core';
 import {FormGroup, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
 
 @Directive({
-  selector: '[appAtLeastOneOqtIndicatorCheckboxChecked]',
-  providers: [{provide: NG_VALIDATORS, useExisting: AtLeastOneCheckboxCheckedDirective, multi: true}]
+    selector: '[appAtLeastOneOqtIndicatorCheckboxChecked]',
+    providers: [{ provide: NG_VALIDATORS, useExisting: AtLeastOneCheckboxCheckedDirective, multi: true }],
+    standalone: false
 })
 export class AtLeastOneCheckboxCheckedDirective implements Validator {
 
