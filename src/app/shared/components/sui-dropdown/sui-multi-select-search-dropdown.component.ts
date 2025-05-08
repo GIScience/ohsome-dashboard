@@ -37,7 +37,7 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   @ViewChild("dropdown", {static: false}) dropdown: ElementRef;
   // see https://semantic-ui.com/modules/dropdown.html#/settings for properties that you can set in options
   @Input() options: object = {};
-  @Input() selectOptions!: Array<KeyValue<string, OqtAttribute>>;
+  @Input() selectOptions!: Array<KeyValue<string, {name:string}>>;
   required = signal(false);
 
   constructor(private readonly ngZone: NgZone) {
