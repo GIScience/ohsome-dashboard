@@ -61,6 +61,15 @@
                       ></app-attribute-completeness-attributes>
                     }
                   }
+                  @case ("land-cover-thematic-accuracy") {
+                    @if (indicator.checked) {
+                      <app-attribute-completeness-attributes
+                        [selectedTopic]="topics[selectedTopicKey]"
+                        [hashParams]="hashParams"
+                        [indicatorKey]="indicator.key"
+                      ></app-attribute-completeness-attributes>
+                    }
+                  }
                 }
               </app-simple-indicator>
             </div>
