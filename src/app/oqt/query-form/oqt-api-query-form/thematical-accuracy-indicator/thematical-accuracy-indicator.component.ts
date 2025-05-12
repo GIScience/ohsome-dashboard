@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnInit,
 } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 
@@ -13,10 +14,11 @@ import { ControlContainer, NgForm } from '@angular/forms';
 
   standalone: false,
 })
-export class ThematicalAccuracyIndicatorComponent {
+export class ThematicalAccuracyIndicatorComponent implements OnInit {
   @Input({required: true}) indicatorKey!: string;
   @Input() selectOptions!: { label: string; value: number }[];
-  selectedCorineClassIds: string | null = null;
+  @Input() hashParams!: URLSearchParams;
+  selectedCorineClassIds: string  = "";
 
   corineClassMap = {
     "11": {name: "Artificial areas: Urban fabric"},
@@ -37,8 +39,32 @@ export class ThematicalAccuracyIndicatorComponent {
   };
 
 
+
   corineClassDropdownOptions = {
     fullTextSearch: 'exact',
     clearable: true,
   };
+
+  getCorineClassFromUrlHashParams(hashParams: URLSearchParams): string {
+
+    console.log("hashParams", hashParams);
+
+    // 1. extract the corine class from URL
+    const corineClassFromUrl: string | null = hashParams.get('land-cover-thematic-accuracy--corine_class');
+
+    // 2.undefined should return an empty string
+    if (corineClassFromUrl == null) {
+      return "";
+    }
+    // 3. if the corine class is not in the map, return an empty string
+    if (!Object.keys(this.corineClassMap).includes(corineClassFromUrl)) {
+      return "";
+    }
+
+    return corineClassFromUrl;
+  }
+  ngOnInit() {
+    this.selectedCorineClassIds = this.getCorineClassFromUrlHashParams(this.hashParams);
+
+  }
 }
