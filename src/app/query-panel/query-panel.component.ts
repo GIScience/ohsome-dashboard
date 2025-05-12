@@ -257,8 +257,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       if (permalinkParams["attribute-completeness--attributes"]){
         permalinkParams["attribute-completeness--attributes"] = permalinkParams["attribute-completeness--attributes"].join(',');
       }
-    }
 
+      // transform land-cover-thematic-accuracy--corine_class
+      if (permalinkParams["land-cover-thematic-accuracy--corine_class"]){
+        permalinkParams["land-cover-thematic-accuracy--corine_class"] = permalinkParams["land-cover-thematic-accuracy--corine_class"];
+      }
+    }
 
 
     return permalinkParams;
