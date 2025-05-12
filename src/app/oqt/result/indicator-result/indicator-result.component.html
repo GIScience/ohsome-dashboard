@@ -4,7 +4,7 @@
   <ng-container *ngIf="!isLoading && !error">
     <div class="ui {{label}} ribbon label">{{displayQualityLabel}}</div>
     <h3 class="ui center aligned header">{{indicatorName}}</h3>
-    <div class="ui basic center aligned segment">{{indicatorResultDescription}}</div>
+    <div [innerHTML]="indicatorResultDescription" class="ui basic center aligned segment"></div>
     <app-plotly-chart *ngIf="plotlyDataLayoutConfig" [plotlyDataLayoutConfig]="plotlyDataLayoutConfig"></app-plotly-chart>
   </ng-container>
 
