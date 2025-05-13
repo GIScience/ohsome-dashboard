@@ -19,22 +19,30 @@ export class ThematicalAccuracyIndicatorComponent implements OnInit {
   @Input() hashParams!: URLSearchParams;
   selectedCorineClassIds: string  = "";
 
-  corineClassMap = {
-    "11": {name: "Artificial areas: Urban fabric"},
-    "12": {name: "Artificial areas: Industrial, commercial and transport units"},
-    "13": {name: "Artificial areas: Mine, dump and construction sites"},
-    "14": {name: "Artificial areas: Artificial non-agricultural vegetated areas"},
-    "21": {name: "Agricultural areas: Arable land"},
-    "22": {name: "Agricultural areas: Permanent crops"},
-    "23": {name: "Agricultural areas: Pastures"},
-    "24": {name: "Agricultural areas: Heterogeneous agricultural areas"},
-    "31": {name: "Forest and semi-natural areas: Forest"},
-    "32": {name: "Forest and semi-natural areas: Shrubs and/or herbaceous vegetation associations"},
-    "33": {name: "Forest and semi-natural areas: Open spaces with little or no vegetation"},
-    "41": {name: "Wetlands: Inland wetlands"},
-    "42": {name: "Wetlands: Coastal wetlands"},
-    "51": {name: "Water bodies: Inland waters"},
-    "52": {name: "Water bodies: Marine waters"},
+  corineClassMapLevel1 = {
+    "1": {name: "Artificial surfaces"},
+    "2": {name: "Agricultural areas"},
+    "3": {name: "Forest and semi-natural areas"},
+    "4": {name: "Wetlands"},
+    "5": {name: "Water bodies"},
+  }
+
+  corineClassMapLevel2 = {
+    "11": {name: "Urban fabric", class: 1},
+    "12": {name: "Industrial, commercial and transport units", class: 1},
+    "13": {name: "Mine, dump and construction sites", class: 1},
+    "14": {name: "Artificial non-agricultural vegetated areas", class: 1},
+    "21": {name: "Arable land", class: 2},
+    "22": {name: "Permanent crops", class: 2},
+    "23": {name: "Pastures", class: 2},
+    "24": {name: "Heterogeneous agricultural areas", class: 2},
+    "31": {name: "Forest", class: 3},
+    "32": {name: "Shrubs and/or herbaceous vegetation associations", class: 3},
+    "33": {name: "Open spaces with little or no vegetation", class: 3},
+    "41": {name: "Inland wetlands", class: 4},
+    "42": {name: "Coastal wetlands", class: 4},
+    "51": {name: "Inland waters", class: 5},
+    "52": {name: "Marine waters", class: 5},
   };
 
 
@@ -56,7 +64,7 @@ export class ThematicalAccuracyIndicatorComponent implements OnInit {
       return "";
     }
     // 3. if the corine class is not in the map, return an empty string
-    if (!Object.keys(this.corineClassMap).includes(corineClassFromUrl)) {
+    if (!Object.keys(this.corineClassMapLevel2).includes(corineClassFromUrl)) {
       return "";
     }
 
