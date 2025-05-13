@@ -9,7 +9,6 @@ import { ControlContainer, NgForm } from '@angular/forms';
 @Component({
   selector: 'app-thematical-accuracy-indicator',
   templateUrl: './thematical-accuracy-indicator.component.html',
-  styleUrls: ['./thematical-accuracy-indicator.component.css'],
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 
   standalone: false,

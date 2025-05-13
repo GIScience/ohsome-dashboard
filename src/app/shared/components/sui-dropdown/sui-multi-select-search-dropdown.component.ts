@@ -7,7 +7,6 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import {KeyValue, NgForOf} from '@angular/common';
-import {OqtAttribute} from '../../../oqt/types/types';
 
 
 declare const $;

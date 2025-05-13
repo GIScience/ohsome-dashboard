@@ -7,19 +7,12 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
 import { provideAppInitializer } from '@angular/core';
 import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
-import {RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 
 
 describe('ThematicalAccuracyIndicatorComponent', () => {
   let component: ThematicalAccuracyIndicatorComponent;
   let fixture: ComponentFixture<ThematicalAccuracyIndicatorComponent>;
-  const lulcTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["lulc"];
-  const enrichedLulcTopic: Topic = {...lulcTopic, key: 'roads'};
-  const enrichedTopicsMock = {
-    lulc: enrichedLulcTopic,
-
-  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
