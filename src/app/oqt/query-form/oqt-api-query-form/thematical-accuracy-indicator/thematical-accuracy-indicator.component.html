@@ -2,11 +2,10 @@
 
 <div class="field">
   <app-sui-multi-select-search-dropdown
-                                        id="search-select-corine-class"
-                                        name="{{indicatorKey}}--corine_class"
+                                        id="search-select-corine-land-cover-class"
+                                        name="{{indicatorKey}}--corine_land_cover_class"
                                         [(ngModel)]="selectedCorineClassIds"
-                                        [options]="corineClassDropdownOptions"
-                                        [selectOptions]="this.corineClassMapLevel2 | keyvalue">
-
+                                        [options]="corineLandCoverClassDropdownOptions"
+                                        [selectOptions]="this.corineLandCoverClassMapLevel2 | keyvalue">
   </app-sui-multi-select-search-dropdown>
 </div>

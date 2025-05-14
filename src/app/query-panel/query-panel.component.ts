@@ -259,6 +259,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       }
     }
 
+
+
     return permalinkParams;
   }
 

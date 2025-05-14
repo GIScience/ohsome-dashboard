@@ -19,7 +19,7 @@ export class ThematicalAccuracyIndicatorComponent implements OnInit {
   @Input() hashParams!: URLSearchParams;
   selectedCorineClassIds: string  = "";
 
-  corineClassMapLevel1 = {
+  corineLandCoverClassMapLevel1 = {
     "1": {name: "Artificial surfaces"},
     "2": {name: "Agricultural areas"},
     "3": {name: "Forest and semi-natural areas"},
@@ -27,7 +27,7 @@ export class ThematicalAccuracyIndicatorComponent implements OnInit {
     "5": {name: "Water bodies"},
   }
 
-  corineClassMapLevel2 = {
+  corineLandCoverClassMapLevel2 = {
     "11": {name: "Urban fabric", class: 1},
     "12": {name: "Industrial, commercial and transport units", class: 1},
     "13": {name: "Mine, dump and construction sites", class: 1},
@@ -47,31 +47,31 @@ export class ThematicalAccuracyIndicatorComponent implements OnInit {
 
 
 
-  corineClassDropdownOptions = {
+  corineLandCoverClassDropdownOptions = {
     fullTextSearch: 'exact',
     clearable: true,
   };
 
-  getCorineClassFromUrlHashParams(hashParams: URLSearchParams): string {
+  getCorineLandCoverClassFromUrlHashParams(hashParams: URLSearchParams): string {
 
     console.log("hashParams", hashParams);
 
-    // 1. extract the corine class from URL
-    const corineClassFromUrl: string | null = hashParams.get('land-cover-thematic-accuracy--corine_class');
+    // 1. extract the corine land cover class from URL
+    const corineLandCoverClassFromUrl: string | null = hashParams.get('land-cover-thematic-accuracy--corine_land_cover_class');
 
     // 2.undefined should return an empty string
-    if (corineClassFromUrl == null) {
+    if (corineLandCoverClassFromUrl == null) {
       return "";
     }
     // 3. if the corine class is not in the map, return an empty string
-    if (!Object.keys(this.corineClassMapLevel2).includes(corineClassFromUrl)) {
+    if (!Object.keys(this.corineLandCoverClassMapLevel2).includes(corineLandCoverClassFromUrl)) {
       return "";
     }
 
-    return corineClassFromUrl;
+    return corineLandCoverClassFromUrl;
   }
   ngOnInit() {
-    this.selectedCorineClassIds = this.getCorineClassFromUrlHashParams(this.hashParams);
+    this.selectedCorineClassIds = this.getCorineLandCoverClassFromUrlHashParams(this.hashParams);
 
   }
 }

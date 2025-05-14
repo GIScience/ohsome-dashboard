@@ -32,7 +32,7 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
     fixture = TestBed.createComponent(ThematicalAccuracyIndicatorComponent);
     component = fixture.componentInstance;
     component.indicatorKey = "land-cover-thematic-accuracy";
-    component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--corine_class=11");
+    component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--corine_land_cover_class=11");
     component.selectedCorineClassIds = '11';
     fixture.detectChanges();
   });
@@ -45,21 +45,21 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
   describe('getCorineClassFromUrlHashParams(hashParams)', () => {
     const hashParamsCases = [
       {
-        description: 'Valid corine class',
+        description: 'Valid corine land cover class',
         topicKey: 'lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_class=11'),
+        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class=11'),
         expected: '11'
       },
       {
-        description: 'Invalid corine class',
+        description: 'Invalid corine land cover class',
         topicKey: 'lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_class=19'),
+        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class=19'),
         expected: ''
       },
       {
-        description: 'No corine class selected',
+        description: 'No corine land cover class selected',
         topicKey: 'building-lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_class='),
+        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class='),
         expected: ''
       }
     ];
