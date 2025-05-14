@@ -7,37 +7,37 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import {KeyValue, NgForOf} from '@angular/common';
-import {OqtAttribute} from '../../../oqt/types/types';
 
 
 declare const $;
 
 @Component({
-    selector: 'app-sui-multi-select-search-dropdown',
-    imports: [
-        ReactiveFormsModule,
-        NgForOf
-    ],
-    templateUrl: './sui-multi-select-search-dropdown.component.html',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
-            multi: true
-        },
-        {
-            provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
-            multi: true
-        }
-    ]
+  selector: 'app-sui-multi-select-search-dropdown',
+  imports: [
+    ReactiveFormsModule,
+    NgForOf
+  ],
+  templateUrl: './sui-multi-select-search-dropdown.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
+      multi: true
+    }
+  ]
 })
 export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccessor, AfterViewInit {
 
   @ViewChild("dropdown", {static: false}) dropdown: ElementRef;
   // see https://semantic-ui.com/modules/dropdown.html#/settings for properties that you can set in options
   @Input() options: object = {};
-  @Input() selectOptions!: Array<KeyValue<string, OqtAttribute>>;
+  @Input() selectOptions!: Array<KeyValue<string, {name:string}>>;
+  @Input() multiple: boolean = false;
   required = signal(false);
 
   constructor(private readonly ngZone: NgZone) {

@@ -4,6 +4,7 @@
   @if (!useCustomFilterMode()) {
     <div class="field">
       <app-sui-multi-select-search-dropdown required
+                                            [multiple]="true"
                                             id="search-select-attribute"
                                             name="{{indicatorKey}}--attributes"
                                             [(ngModel)]="selectedAttributeKeys"
