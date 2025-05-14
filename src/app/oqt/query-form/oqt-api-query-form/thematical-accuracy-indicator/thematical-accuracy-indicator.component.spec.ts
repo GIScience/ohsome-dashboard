@@ -42,7 +42,7 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
   });
 
 
-  describe('getCorineClassFromUrlHashParams(hashParams)', () => {
+  describe('getCorineLandCoverClassFromUrlHashParams', () => {
     const hashParamsCases = [
       {
         description: 'Valid corine land cover class',
@@ -66,7 +66,7 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
 
     hashParamsCases.forEach((hashParamsCase) => {
       it(hashParamsCase.description, () => {
-        const result = component.getCorineClassFromUrlHashParams(hashParamsCase.hashParams);
+        const result = component.getCorineLandCoverClassFromUrlHashParams(hashParamsCase.hashParams);
         expect(result).toEqual(hashParamsCase.expected);
       })
     })
