@@ -3,11 +3,17 @@ Changelog
 
 ## current
 
+## 1.6.0
+
+* fix: use EPSG:3857 for GetFeatureInfo Requests
 * feat: render oqapi indicator description as HTML #17b5393
 * feat: render oqapi result description as HTML #6733a66
 * feat: add land cover class select field for thematic accuracy land cover indicator #65 
 
 [#65]: https://github.com/GIScience/ohsome-dashboard/issues/65
+
+## v1.5.5
+* upgrade dependencies
 
 ## v1.5.4
 * fix: selected area name labels below map are not properly updated when areas are unselected in the map
