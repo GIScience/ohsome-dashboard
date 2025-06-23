@@ -91,7 +91,7 @@ class WmsSelect extends L.TileLayer.WMS {
 
   getFeatureInfo(evt) {
     // Make an AJAX request to the server and hope for the best
-    const url = this.getFeatureInfoUrl(evt.latlng);
+    const url = this.getFeatureInfoUrl(evt);
 
     const request = new Request(url);
 
@@ -107,13 +107,9 @@ class WmsSelect extends L.TileLayer.WMS {
         }
       })
       .then((responseJson) => {
-        // console.log('2nd fulfilled');
-
-        // const geoJSON4326 = reproject.toWgs84(responseJson, "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
-        const geoJSON4326 = responseJson;
+        const geoJSON4326 = reproject.toWgs84(responseJson, "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
         const newFeatures = geoJSON4326.features;
         const currentFeatures = this.selectionLayer.getLayers() as any[];
-
 
         let foundNewFeatures = false;
 
@@ -145,14 +141,12 @@ class WmsSelect extends L.TileLayer.WMS {
       })
   }
 
-  getFeatureInfoUrl(latlng) {
+  getFeatureInfoUrl(evt) {
     // Construct a GetFeatureInfo request URL given a point
-    const point = this._map.latLngToContainerPoint(latlng),
+    const point = evt.containerPoint,
       size = this._map.getSize(),
-      // lowerLeft = CRS.EPSG3857.project(this._map.getBounds().getSouthWest()),
-      // upperRight = CRS.EPSG3857.project(this._map.getBounds().getNorthEast()),
-      lowerLeft = this._map.getBounds().getSouthWest(),
-      upperRight = this._map.getBounds().getNorthEast(),
+      lowerLeft = CRS.EPSG3857.project(this._map.getBounds().getSouthWest()),
+      upperRight = CRS.EPSG3857.project(this._map.getBounds().getNorthEast()),
       params = {
         request: 'GetFeatureInfo',
         service: 'WMS',
@@ -160,8 +154,7 @@ class WmsSelect extends L.TileLayer.WMS {
         transparent: this.wmsParams.transparent,
         version: this.wmsParams.version,
         format: this.wmsParams.format,
-        // bbox: [lowerLeft.x, lowerLeft.y, upperRight.x, upperRight.y].join(','),        // getBounds().toBBoxString(),
-        bbox: [lowerLeft.lng, lowerLeft.lat, upperRight.lng, upperRight.lat].join(','),        // getBounds().toBBoxString(),
+        bbox: [lowerLeft.x, lowerLeft.y, upperRight.x, upperRight.y].join(','),
         height: size.y,
         width: size.x,
         layers: this.wmsParams.layers,
@@ -173,10 +166,7 @@ class WmsSelect extends L.TileLayer.WMS {
 
     params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x);
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
-    params[params.version === '1.3.0' ? 'crs' : 'srs'] = 'EPSG:4326'; //'EPSG:3857', // 'EPSG:4326',
-    params['bbox'] = params.version === '1.3.0' ?
-      [lowerLeft.lat, lowerLeft.lng, upperRight.lat, upperRight.lng].join(',')
-      : [lowerLeft.lng, lowerLeft.lat, upperRight.lng, upperRight.lat].join(',');
+    params[params.version === '1.3.0' ? 'crs' : 'srs'] = 'EPSG:3857';
     console.log("GETFEATTURE_XY", Math.round(point.x), Math.round(point.y));
     console.log(L.Util.getParamString(params, this._url, true));
     return this._url + L.Util.getParamString(params, this._url, true);
