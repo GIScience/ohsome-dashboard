@@ -3,7 +3,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { corineLandCoverClassMapLevel2 } from './themtical-accuracy-indicator.constants';
+import { corineLandCoverClassMapLevel2 } from './thematical-accuracy-indicator.constants';
 import { ControlContainer, NgForm } from '@angular/forms';
 
 
