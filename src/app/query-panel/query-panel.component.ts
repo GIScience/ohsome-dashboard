@@ -292,6 +292,20 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   }
 
+  onRemoveAllBoundaries(): void {
+    if (this.mapInput && 'removeAllBoundaries' in this.mapInput) {
+      this.mapInput.removeAllBoundaries();
+    }
+
+    if (this.boundaryType === 'admin') {
+      this.adminBoundaries = '';
+    }
+
+    this.form.controls['bboxes']?.setValue('');
+    this.form.controls['bcircles']?.setValue('');
+    this.form.controls['bpolys']?.setValue('');
+  }
+
   protected readonly window = window;
   protected readonly Object = Object;
   protected readonly JSON = JSON;
