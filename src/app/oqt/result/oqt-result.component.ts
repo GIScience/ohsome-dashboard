@@ -12,6 +12,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import {IndicatorParams, Params} from '../types/types'
 import Bpolys = OhsomeApi.v1.request.Bpolys;
+import { corineLandCoverClassMapLevel2 } from '../query-form/oqt-api-query-form/thematical-accuracy-indicator/themtical-accuracy-indicator.constants';
 
 declare let $: any;
 
@@ -38,6 +39,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   boundaries: FeatureCollection<Polygon | MultiPolygon>;
 
   permalink: SafeUrl;
+
+  corineLandCoverClassMapLevel2 = corineLandCoverClassMapLevel2;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -198,6 +201,13 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
       return current;
     }, []);
 
+  }
+
+  getSelectedCorineLabel(): string | null {
+    const key = String(this.formValues?.['land-cover-thematic-accuracy--corine_land_cover_class']);
+    return key && this.corineLandCoverClassMapLevel2[key]
+      ? this.corineLandCoverClassMapLevel2[key].name
+      : null;
   }
 
   protected readonly Utils = Utils;

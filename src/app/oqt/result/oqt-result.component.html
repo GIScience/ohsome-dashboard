@@ -9,6 +9,15 @@
       <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
         {{metadata.result.topics[formValues.topic].name}}
       </span>
+      <span
+        *ngIf="formValues['land-cover-thematic-accuracy'] === true && getSelectedCorineLabel()"
+        class="ui circular label attribute"
+        [title]="getSelectedCorineLabel()"
+            >
+        {{ getSelectedCorineLabel() }}
+      </span>
+
+
     </div>
     <div id="boundaryLabelsItem" class="ui item">
       <i class="circle outline icon" title="selected areas"></i>
