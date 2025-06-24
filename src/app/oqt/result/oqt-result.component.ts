@@ -12,7 +12,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import {IndicatorParams, Params} from '../types/types'
 import Bpolys = OhsomeApi.v1.request.Bpolys;
-import { corineLandCoverClassMapLevel2 } from '../query-form/oqt-api-query-form/thematical-accuracy-indicator/themtical-accuracy-indicator.constants';
+import { corineLandCoverClassMapLevel2 } from '../query-form/oqt-api-query-form/thematical-accuracy-indicator/thematical-accuracy-indicator.constants';
 
 declare let $: any;
 
