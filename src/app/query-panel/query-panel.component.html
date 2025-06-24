@@ -95,24 +95,53 @@
 
     <div *ngIf="boundaryType === 'admin'" class="field">
       <label>Selected areas</label>
+
       <div class="selected-names ui blue labels">
         <ng-container *ngFor="let selected of selectedNames; let i = index">
-          <a [attr.data-feature-index]="i" (click)="removeAdminBoundary($event)"
-             class="ui label">{{ selected }} <i class="delete icon"></i></a>
+          <a [attr.data-feature-index]="i" (click)="removeAdminBoundary($event)" class="ui label">
+            {{ selected }} <i class="delete icon"></i>
+          </a>
         </ng-container>
+        <button
+          *ngIf="selectedNames && selectedNames.length > 0"
+          type="button"
+          class="ui tiny red icon button"
+          (click)="onRemoveAllBoundaries()"
+          title="Remove all"
+        >
+          <i class="close icon"></i>
+        </button>
       </div>
     </div>
+
     <div *ngIf="boundaryType === 'bbox'" class="field">
       <label for="bboxes">Bounding Box</label>
-      <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
+      <div class="ui action input">
+        <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
+        <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear" [disabled]="!bboxes.trim()">
+          <i class="close icon"></i>
+        </button>
+      </div>
     </div>
+
     <div *ngIf="boundaryType === 'bcircle'" class="field">
       <label for="bcircles">Bounding Circle</label>
-      <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
+      <div class="ui action input">
+        <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
+        <button type="button" class="ui tiny red icon button" (click)="bcircles = ''" title="Clear" [disabled]="!bcircles.trim()">
+          <i class="close icon"></i>
+        </button>
+      </div>
     </div>
+
     <div *ngIf="boundaryType === 'bpoly'" class="field">
       <label for="bpolys">Bounding Polygon</label>
-      <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
+      <div class="ui action input">
+        <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
+        <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear" [disabled]="!bpolys.trim()">
+          <i class="close icon"></i>
+        </button>
+      </div>
     </div>
 
   </div>

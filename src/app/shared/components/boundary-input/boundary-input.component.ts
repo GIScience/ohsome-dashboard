@@ -449,6 +449,13 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   }
 
+  removeAllBoundaries(): void {
+    this.bboxLayersGroup.clearLayers();
+    this.bcircleLayersGroup.clearLayers();
+    this.bpolyLayersGroup.clearLayers();
+
+    this.updateValueFromMap();
+  }
 }
 
 export interface PmOptions extends L.LayerOptions {
