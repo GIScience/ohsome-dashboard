@@ -7,6 +7,9 @@ import {CRS} from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import * as reproject from 'reproject';
 import {GeoJsonObject} from 'geojson';
+import {toWgs84} from '@turf/projection';
+import truncate from "@turf/truncate";
+import bbox from "@turf/bbox";
 
 interface WmsSelectOptions {
   primaryKeyProperty: string
@@ -107,13 +110,20 @@ class WmsSelect extends L.TileLayer.WMS {
         }
       })
       .then((responseJson) => {
-        const geoJSON4326 = reproject.toWgs84(responseJson, "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
-        const newFeatures = geoJSON4326.features;
+        // reproject response to WGS84
+        toWgs84(responseJson, {mutate: true});
+        // truncate coordinates to mitigate rounding errors
+        truncate(responseJson, {precision: 7, mutate: true});
+        // recalculate bbox for reprojected coordinates
+        responseJson.bbox = bbox(responseJson, {recompute: true});
+
         const currentFeatures = this.selectionLayer.getLayers() as any[];
 
         let foundNewFeatures = false;
 
-        newFeatures.forEach(newFeature => {
+        responseJson.features.forEach(newFeature => {
+          // recalculate bbox for reprojected coordinates
+          newFeature.bbox = bbox(newFeature, {recompute: true});
 
           //new Feature already exists? do nothing else add to map
           let foundSameFeature = false;

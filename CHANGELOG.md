@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+* fix: use turf to reproject and truncate boundary coordinates
+
 ## 1.6.0
 
 * fix: use EPSG:3857 for GetFeatureInfo Requests
