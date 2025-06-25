@@ -5,7 +5,6 @@
 import * as L from 'leaflet';
 import {CRS} from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import * as reproject from 'reproject';
 import {GeoJsonObject} from 'geojson';
 import {toWgs84} from '@turf/projection';
 import truncate from "@turf/truncate";

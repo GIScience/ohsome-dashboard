@@ -49,7 +49,6 @@
     "plotly.js-dist-min": "^2.35.3",
     "prism-code-editor": "^3.4.0",
     "prismjs": "^1.30.0",
-    "reproject": "^1.2.7",
     "rxjs": "^7.8.2",
     "semantic-ui-calendar": "^0.0.8",
     "tslib": "^2.5.0"

@@ -46,8 +46,7 @@
               "moment",
               "@giscience/ohsome-js-utils",
               "chart.js",
-              "plotly.js-dist-min",
-              "reproject"
+              "plotly.js-dist-min"
             ],
             "browser": "src/main.ts"
           },
