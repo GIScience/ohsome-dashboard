@@ -38,6 +38,8 @@
     "@turf/invariant": "^7.2.0",
     "@turf/mask": "7.2.0",
     "@turf/meta": "^7.2.0",
+    "@turf/projection": "^7.2.0",
+    "@turf/truncate": "^7.2.0",
     "@turf/union": "^7.2.0",
     "chart.js": "^2.7.1",
     "jquery": "^3.7.1",
