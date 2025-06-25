@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+## 1.6.1
+
 * fix: use turf to reproject and truncate boundary coordinates
 
 ## 1.6.0
