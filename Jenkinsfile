@@ -26,7 +26,7 @@ pipeline {
           echo env.BUILD_NUMBER
           echo env.TAG_NAME
         }
-        nodejs('NodeJS 18') {
+        nodejs('NodeJS 22') {
           sh 'npm install'
         }
       }
