@@ -12,7 +12,7 @@
 </div>
 <div id="announcement" *ngIf="hasAnnouncement" class="ui bottom fixed one item menu">
   <div class="ui item red message">
-    <i class="medium close icon"></i>
+    <i class="close icon" (click)="hasAnnouncement=false"></i>
     <div class="header" [innerHTML]="announcement">
     </div>
   </div>
