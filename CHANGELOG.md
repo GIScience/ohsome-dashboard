@@ -3,6 +3,11 @@ Changelog
 
 ## current
 
+## 1.7.1
+
+* chore: upgrade dependencies (angular 19 -> 20)
+* fix: import of package.json version
+
 ## 1.7.0
 
 * feat: Add version information to the footer (frontend and backends) #48
