@@ -1,6 +1,6 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
 declare let $;
 
@@ -16,7 +16,7 @@ export class AppComponent implements AfterViewInit{
   public announcement: string;
   public currentYear: string = new Date().getFullYear().toString();
   protected readonly window = window;
-  protected readonly frontendVersion: string = version;
+  protected readonly frontendVersion: string = packageJson.version;
   protected readonly ohsomeApiVersion: string;
   protected readonly oqtApiVersion: string;
 
