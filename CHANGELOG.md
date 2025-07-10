@@ -3,9 +3,13 @@ Changelog
 
 ## current
 
-## 1.6.1
+## 1.7.0
 
+* feat: Add version information to the footer (frontend and backends) #48
+* fix: close icon on maintenance banner not showing #64
 * fix: use turf to reproject and truncate boundary coordinates
+* feat: show name of clc in indicator result panel
+* feat: add a button to remove all selected areas
 
 ## 1.6.0
 
