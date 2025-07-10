@@ -39,7 +39,7 @@ pipeline {
 
     stage ('Build') {
       steps {
-        nodejs('NodeJS 18') {
+        nodejs('NodeJS 22') {
           sh 'npm run build:prod'
         }
       }
@@ -52,7 +52,7 @@ pipeline {
 
     stage ('Test') {
       steps {
-        nodejs('NodeJS 18') {
+        nodejs('NodeJS 22') {
           sh 'ng test --karma-config karma-jenkins.conf.js --code-coverage'
         }
       }
@@ -77,7 +77,7 @@ pipeline {
             } else {
               SONAR_CLI_PARAMETER += "-Dsonar.branch.name=${env.BRANCH_NAME}"
             }
-            nodejs('NodeJS 18') {
+            nodejs('NodeJS 22') {
               sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
             }
           }
