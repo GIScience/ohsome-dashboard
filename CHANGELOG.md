@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## current
+* build: fix Jenkins build pipeline (e.g. use node 22, fix karma test command)
 
 ## 1.7.1
 
