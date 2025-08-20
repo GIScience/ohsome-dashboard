@@ -56,7 +56,7 @@ export class IndicatorResultComponent implements OnInit {
     const body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
-      ohsomdb: this.urlHashParamsService.getHashURLSearchParams().get('ohsomedb')
+      ohsomedb: this.urlHashParamsService.getHashURLSearchParams().get('ohsomedb')
     }
 
 
