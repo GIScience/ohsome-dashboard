@@ -6,6 +6,7 @@ import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import Utils from '../../../../utils';
 import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
+import {UrlHashParamsProviderService} from '../../../singelton-services/url-hash-params-provider.service';
 
 
 @Component({
@@ -41,7 +42,8 @@ export class IndicatorResultComponent implements OnInit {
   constructor(
     private oqtApi: OqtApiService,
     private oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+    private urlHashParamsService: UrlHashParamsProviderService) {
   }
 
   ngOnInit(): void {
@@ -54,6 +56,7 @@ export class IndicatorResultComponent implements OnInit {
     const body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
+      ohsomdb: this.urlHashParamsService.getHashURLSearchParams().get('ohsomedb')
     }
 
 

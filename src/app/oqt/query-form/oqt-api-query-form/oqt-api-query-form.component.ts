@@ -18,11 +18,11 @@ import {Userlayer} from '../../../shared/shared-types';
 declare const $, Prism;
 
 @Component({
-    selector: 'app-oqt-api-query-form',
-    templateUrl: './oqt-api-query-form.component.html',
-    styleUrls: ['./oqt-api-query-form.component.css'],
-    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    standalone: false
+  selector: 'app-oqt-api-query-form',
+  templateUrl: './oqt-api-query-form.component.html',
+  styleUrls: ['./oqt-api-query-form.component.css'],
+  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
+  standalone: false
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
@@ -35,6 +35,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('topicFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
 
+  public ohsomedb: string;
 
   // For the ui we need
 
@@ -67,6 +68,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.indicators = this.getEnrichedIndicators();
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
+
+    this.ohsomedb = this.hashParams.get('ohsomedb') ?? 'false';
 
     // fill form with hash or default values
     // set topic
