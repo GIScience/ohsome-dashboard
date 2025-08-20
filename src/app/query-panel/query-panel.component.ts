@@ -54,6 +54,9 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   private _selectedNames: string[] = [];
 
   public activeBackend: 'ohsomeApi' | 'oqtApi' = 'ohsomeApi';
+
+  public ohsomedb: string;
+
   private formChangesSubscription: Subscription;
 
   constructor(
@@ -88,6 +91,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     // settings from hash: activate the right query panel
     const backendValue = this.hashParams.get('backend');
     this.activeBackend = (backendValue === 'ohsomeApi' || backendValue === 'oqtApi') ? backendValue : 'ohsomeApi';
+
+    this.ohsomedb = String(this.hashParams.get('ohsomedb') === "true");
+    console.log('>>>>>>>>>>>>>ohsomedb query panel const', this.ohsomedb)
+
     // settings from hash: map setttings for ohsomeApi AND oqtApi
     this.bboxes = Utils.getFromParamsOrDefault(this.hashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
     this.bcircles = Utils.getFromParamsOrDefault(this.hashParams, 'bcircles', Utils.loadEnv('bcircles', this.bcircles));
