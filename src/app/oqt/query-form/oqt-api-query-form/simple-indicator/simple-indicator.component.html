@@ -8,4 +8,13 @@
     </div>
   </label>
 </div>
+<div *ngIf="indicator.key === 'currentness'">
+  <legend>Do you want to make computation faster, but limit yourself to areas in Germany?</legend>
+  <label
+    ><input type="radio" id="ohsomedb-feature-flag-enabled" name="ohsomedb" [(ngModel)]="ohsomedb" value="false" checked="checked"/> No, make sure it works globally.</label>
+  <br>
+  <label
+    ><input type="radio" id="ohsomedb-feature-flag-disabled" name="ohsomedb" [(ngModel)]="ohsomedb" value="true" /> Yes, make it faster.</label
+  >
+</div>
 <ng-content></ng-content>

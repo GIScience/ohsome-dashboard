@@ -13,4 +13,5 @@ export class SimpleIndicatorComponent {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
+  @Input() ohsomedb: boolean = false;
   }
