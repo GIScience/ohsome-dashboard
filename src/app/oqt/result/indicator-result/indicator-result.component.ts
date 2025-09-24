@@ -19,6 +19,7 @@ export class IndicatorResultComponent implements OnInit {
 
   @Input() topicKey: string;
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
+  @Input() ohsomedb: boolean;
   @Input() indicator!: IndicatorParams;
 
   isLoading = true;
@@ -56,7 +57,7 @@ export class IndicatorResultComponent implements OnInit {
     const body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
-      ohsomedb: this.urlHashParamsService.getHashURLSearchParams().get('ohsomedb')
+      ohsomedb: this.ohsomedb
     }
 
 
