@@ -62,6 +62,7 @@
     "@angular/build": "^20.1.0",
     "@angular/cli": "^20.1.0",
     "@angular/compiler-cli": "^20.1.0",
+    "@angular/localize": "^20.1.0",
     "@types/chart.js": "^2.9.39",
     "@types/geojson": "7946.0.14",
     "@types/jasmine": "~4.3.6",
