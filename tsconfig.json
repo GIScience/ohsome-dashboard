@@ -23,7 +23,7 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": [
-      "ES2022",
+      "ES2024",
       "dom"
     ],
     "typeRoots": ["node_modules/@types"]
