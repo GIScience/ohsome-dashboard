@@ -1,5 +1,12 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {ColumnDefinition, FormatModule, FrozenColumnsModule, Tabulator} from 'tabulator-tables';
+import {AfterViewInit, Component, inject, NgZone, ViewEncapsulation} from '@angular/core';
+import {
+  ColumnDefinition, EditModule,
+  FilterModule,
+  FormatModule,
+  FrozenColumnsModule,
+  SortModule,
+  Tabulator
+} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator_semanticui.min.css';
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../oqt/types/MetadataResponseJSON';
@@ -10,10 +17,13 @@ declare let $;
   selector: 'app-welcome',
   imports: [],
   templateUrl: './welcome.component.html',
-  styleUrl: './welcome.component.css'
+  styleUrl: './welcome.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class WelcomeComponent implements AfterViewInit {
   private readonly oqtApiMetadata: MetadataResponseJSON;
+
+  private readonly ngZone = inject(NgZone);
 
   constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
     this.oqtApiMetadata = oqtApiMetadataProviderService.getOqtApiMetadata();
@@ -30,18 +40,29 @@ export class WelcomeComponent implements AfterViewInit {
     }).modal('show');
 
     // initialize tabs
-    $('.tabular.menu .item').tab();
+    Tabulator.registerModule([FormatModule, FrozenColumnsModule, SortModule, FilterModule, EditModule]);
 
-    Tabulator.registerModule([FormatModule, FrozenColumnsModule]);
-    const table = new Tabulator("#topicTable", {
-      minHeight: 200,
-      maxHeight: "100%",
-      renderVertical:"basic",
-      columns: [{title: "", field: "topic", frozen: true}, ...this.createColumnDefinitions()],
-      data: this.createData()
+    $('.tabular.menu .item').tab({
+      onVisible: (tabPath) => {
+        if (tabPath === "second") {
+          this.createTopicIndicatorMatrix();
+          setTimeout(()=>{
+            document.querySelector<HTMLInputElement>("div[tabulator-field='topic'] input[type='search']")?.focus();
+          }, 300)
+        }
+      }
     });
+  }
 
-    this.createData();
+  createTopicIndicatorMatrix() {
+    this.ngZone.runOutsideAngular(() => {
+      const table = new Tabulator("#topicTable", {
+        minHeight: 200,
+        renderVertical: "basic",
+        columns: [{title: "", field: "topic", frozen: true, headerSort: false, headerFilter: 'input', headerFilterFunc: "like"}, ...this.createColumnDefinitions()],
+        data: this.createData()
+      });
+    });
   }
 
   createColumnDefinitions(): ColumnDefinition[] {
@@ -70,6 +91,8 @@ export class WelcomeComponent implements AfterViewInit {
             allowTruthy: true,
           },
           hozAlign: "center",
+          headerSortStartingDir: "desc",
+          headerSortTristate: true
         }
       });
       return columnGroup;
@@ -88,6 +111,9 @@ export class WelcomeComponent implements AfterViewInit {
           return {...previousValue, [currentValue]: true}
         }, {})
       }
+    }).sort((topicRowA, topicRowB) => {
+      //order topic by name
+      return topicRowA.topic.localeCompare(topicRowB.topic)
     })
 
   }

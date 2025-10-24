@@ -1,6 +1,21 @@
-@media only screen and (min-width: 1920px) {
-  .ui.large.modal {
-    width: auto;
-    max-width: 1900px;
+  .ui.custom-large.modal {
+  width: auto;
+  max-width: calc(100% - 2rem);
+}
+
+.ui.modal .scrolling.content {
+  max-height: calc(100vh - 10rem);
+  overflow: auto;
+}
+
+#topicTable .tabulator-header-filter>input[type="search"] {
+  color: rgba(0, 0, 0, 0.95);
+  border-color: rgba(34, 36, 38, 0.15);
+  border-radius: 0.28571429rem;
+  border-width: 1px;
+  border-style: solid;
+  &:is(:focus, :focus-visible, :hover) {
+    border-color: #85B7D9;
+    border-width: 1px;
   }
 }

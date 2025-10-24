@@ -3,6 +3,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* prevent background from scrolling when modal is open*/
+body:has(.ui.modal.active) {
+  overflow: hidden;
+}
+
 @font-face {
   font-family: 'latin_modern_mono_light_c10Rg';
   src: url("assets/fonts/lmmonoltcond10-regular-webfont.woff");

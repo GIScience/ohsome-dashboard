@@ -32,7 +32,7 @@ export class AppComponent implements AfterViewInit {
     this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
     this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata().apiVersion ?? '';
-    this.showWelcomeScreen = urlHashParamsProviderService.getHashURLSearchParams().size === 0;
+    this.showWelcomeScreen = true; //urlHashParamsProviderService.getHashURLSearchParams().size === 0;
   }
 
   ngAfterViewInit(): void {
