@@ -14,6 +14,7 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../prism-language-ohsome-filter';
+import {WelcomeComponent} from './welcome/welcome.component';
 
 declare const Prism;
 
@@ -22,7 +23,7 @@ declare const Prism;
     AppComponent,
     QueryPanelComponent,
     ResultPanelComponent,
-    ResultListDirective,
+    ResultListDirective
   ],
   exports: [
     QueryPanelComponent,
@@ -34,7 +35,9 @@ declare const Prism;
     BrowserModule,
     SharedModule,
     OshdbModule,
-    OqtModule],
+    OqtModule,
+    WelcomeComponent
+  ],
   providers: [
     provideAppInitializer(() => {
         const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));

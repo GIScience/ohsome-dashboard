@@ -2,15 +2,18 @@ import {AfterViewInit, Component} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
+import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
+
+
 declare let $;
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  standalone: false
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent implements AfterViewInit {
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
   public announcement: string;
@@ -19,17 +22,21 @@ export class AppComponent implements AfterViewInit{
   protected readonly frontendVersion: string = packageJson.version;
   protected readonly ohsomeApiVersion: string;
   protected readonly oqtApiVersion: string;
+  protected readonly showWelcomeScreen: boolean;
 
 
-  constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService, oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
+  constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
+              oqtApiMetadataProviderService: OqtApiMetadataProviderService,
+              urlHashParamsProviderService: UrlHashParamsProviderService) {
     this.hasAnnouncement = ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
     this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
     this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata().apiVersion ?? '';
+    this.showWelcomeScreen = urlHashParamsProviderService.getHashURLSearchParams().size === 0;
   }
 
   ngAfterViewInit(): void {
-    this.handleAnnouncementClose()
+    this.handleAnnouncementClose();
   }
 
   private handleAnnouncementClose() {
