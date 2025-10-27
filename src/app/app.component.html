@@ -5,6 +5,14 @@
       <span style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
     </a>
     <div id="header-message-item" class="header item" i18n>Easy access to OSM History and Quality Analyses</div>
+    <div class="ui simple dropdown item">
+      Language
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="item" (click)="switchLanguage('de')">Deutsch</div>
+        <div class="item" (click)="switchLanguage('en')">English</div>
+      </div>
+    </div>
     <div class="right link item"><a href="https://heigit.org" target="_blank">
       <img class="ui image" src="assets/images/HeiGIT_Logo_only.svg" alt="HeiGIT Logo">
     </a></div>
