@@ -1,4 +1,4 @@
-<h4 class="ui header"><i class="clock icon"></i>Time Interval</h4>
+<h4 class="ui header"><i class="clock icon" i18n></i>Time Interval</h4>
 <div class="bottom attached three fields">
     <div class="field" id="startfield">
         <label>Start</label>
@@ -30,13 +30,13 @@
         </select>
     </div>
 </div>
-<div class="ui warning message" [class.visible]="(start > end) || periodCheck(start, end, period)">
+<div class="ui warning message" [class.visible]="(start > end) || periodCheck(start, end, period)" i18n>
     <div class="header">
         Be aware of these warnings!
     </div>
     Ignoring these may lead to unexpected results.
     <ul class="list">
-        <li *ngIf="start > end">End time must not be lower than start time.</li>
-        <li *ngIf="periodCheck(start, end, period)">Period is too small for this large timerange.</li>
+        <li *ngIf="start > end" i18n>End time must not be lower than start time.</li>
+        <li *ngIf="periodCheck(start, end, period)" i18n>Period is too small for this large timerange.</li>
     </ul>
 </div>

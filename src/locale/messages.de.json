@@ -1,0 +1,24 @@
+{
+  "locale": "de",
+  "translations": {
+    "3726075913805172689": "Einfacher Zugang zu OSM-Historie und Qualitätsanalysen",
+    "4806513497858020797": "Datenquellen",
+    "6348798750356954435": " Analysiere OSM-Daten © {$START_LINK}OpenStreetMap contributors.{$CLOSE_LINK}{$LINE_BREAK} Base map from OpenStreetMap and OpenStreetMap Foundation.{$LINE_BREAK}",
+    "8872695720522874880": " Die “{$START_LINK}ohsome{$CLOSE_LINK}” OpenStreetMap History Analyzer Plattform und {$START_LINK_1}ohsome quality analyst{$CLOSE_LINK} basiert auf Technologien entwickelt von {$START_LINK_2}HeiGIT{$CLOSE_LINK}. ",
+    "7077625027650635056": " Der Quellcode dieses Dashboards ist open-source (GPL-3.0) und {$START_LINK}verfügbar auf GitHub{$CLOSE_LINK}. ",
+    "7504095942715276947": "OSM Qualitätsanalysen zur Verfügung gestellt von:",
+    "7922989125096435449": "Kontakt",
+    "973067067648670560": "Untersuche das Topic \"{$INTERPOLATION}\" ob es folgende Attribut(e) hat:",
+    "8995426950565392965": "Zeige und bearbeite die Attributfilter",
+    "6029461601943644800": " Hier können eigene Attributfilter erstellen werden, falls wir kein passendes vordefiniertes Attribut bereitstellen. {$START_TAG_DIV_3}{$START_TAG_DIV}{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}more...{$CLOSE_TAG_DIV}{$START_TAG_DIV_2}{$START_PARAGRAPH}Der Attribute-Completeness-Indikator berechnet die Prozentzahl der Features, die sowohl mit dem Topic-Filter als auch dem Attribut-Filter übereinstimmen gegenüber allen Features, die nur mit dem Topic-Filter übereinstimmen.{$CLOSE_PARAGRAPH}{$START_TAG_DIV_1}{$START_TAG_LABEL}Topic Filter {$START_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}{$START_PARAGRAPH_1}{$START_TAG__MATH_MATH}{$START_TAG__MATH_MSUB}{$START_TAG__MATH_MI}attributeCompleteness{$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}percent{$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MSUB}{$START_TAG__MATH_MO}={$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MFRAC}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Topic Filter) matching the Attribute Filter {$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Topic Filter){$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MFRAC}{$START_TAG__MATH_MO}×{$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MN}100{$CLOSE_TAG__MATH_MN}{$CLOSE_TAG__MATH_MATH}{$CLOSE_PARAGRAPH}{$CLOSE_TAG_DIV}{$CLOSE_TAG_DIV}{$LINE_BREAK}{$START_TAG_DIV_1}{$START_TAG_LABEL_1}Attribute Title{$CLOSE_TAG_LABEL}{$TAG_INPUT}{$CLOSE_TAG_DIV}{$START_TAG_DIV_1}{$START_TAG_LABEL}Attribute Filter ({$START_LINK}How does this work?{$CLOSE_LINK}) {$START_TAG_APP_PRISM_EDITOR_1}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}",
+    "7528496571345475618": "{$START_LINK}ohsome filter{$CLOSE_LINK} Definition des Topics: {$START_TAG_PRE}{$CLOSE_TAG_PRE}",
+    "3849220132321290397": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Qualitätsindikatoren",
+    "4960734757433808567": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Entschuldigung, momentan stehen keine Indikatoren für dieses Topic bereit. ",
+    "7080561725715293976": "Möchten Sie die Berechnung beschleunigen, aber dafür das Gebiet auf Deutschland reduzieren?",
+    "2602835501461271174": "{$TAG_INPUT} Nein, es soll global laufen.",
+    "597289046662202707": "{$TAG_INPUT} Ja, es soll schneller laufen.",
+    "3550122436687078050": "Wähle eine spezifische Land-Cover-Klasse aus, um diese zu untersuchen. Leer lassen, um für alle Klassen zu berechnen:",
+    "754215953265325135": "Entschuldigung, die Anfrage konnte nicht bearbeitet werden!",
+    "9194764722440659378": "OSM-Qualitätsanalysen"
+  }
+}
