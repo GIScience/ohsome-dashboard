@@ -5,7 +5,12 @@
   "projects": {
     "dashboard": {
       "i18n": {
-        "sourceLocale": "en"
+        "sourceLocale": "en",
+        "locales": {
+          "de": {
+            "translation": "src/locale/messages.de.json"
+          }
+        }
       },
       "projectType": "application",
       "schematics": {},
@@ -16,6 +21,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "localize": true,
             "outputPath": {
               "base": "dist",
               "browser": ""
