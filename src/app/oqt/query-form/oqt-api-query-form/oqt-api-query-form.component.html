@@ -5,7 +5,11 @@
     <div class="column">
       <!-- TODO: maybe feature-toggle with project (only show non-core projects explicitly)? -->
       <!-- 1. Topic or AOI-->
-      <h4 class="ui header"><i class="filter icon"></i>Topic</h4>
+      <h4 id="topicHeading" class="ui header"><i class="filter icon"></i>Topic</h4>
+      <button type="button" id="searchTopicBtn" class="ui right floated basic button">
+        <i class="icon search"></i>
+        Search Topic Catalog
+      </button>
       <div class="field">
         <select class="ui search selection dropdown" id="search-select-topic" name="topic"
                 [(ngModel)]="selectedTopicKey"

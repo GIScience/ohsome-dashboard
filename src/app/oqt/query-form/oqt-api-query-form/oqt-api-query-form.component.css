@@ -10,3 +10,14 @@
   border: 1px solid lightgrey;
   background-color: #f9f9f9;
 }
+
+#topicHeading {
+  float: left;
+  padding-top: 0.5rem;
+}
+
+#searchTopicBtn {
+  float: right;
+  padding: 0.5rem 1.5rem 0.5rem;
+  background-color: white;
+}
