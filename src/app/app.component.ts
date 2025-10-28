@@ -1,8 +1,9 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, computed, inject, signal} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
+import {StateService} from './singelton-services/state.service';
 
 
 declare let $;
@@ -22,7 +23,8 @@ export class AppComponent implements AfterViewInit {
   protected readonly frontendVersion: string = packageJson.version;
   protected readonly ohsomeApiVersion: string;
   protected readonly oqtApiVersion: string;
-  protected readonly showWelcomeScreen: boolean;
+
+  protected stateService = inject(StateService);
 
 
   constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
@@ -32,7 +34,7 @@ export class AppComponent implements AfterViewInit {
     this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
     this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata().apiVersion ?? '';
-    this.showWelcomeScreen = true; //urlHashParamsProviderService.getHashURLSearchParams().size === 0;
+    this.stateService.updatePartialState({showWelcomeScreen: urlHashParamsProviderService.getHashURLSearchParams().size === 0})
   }
 
   ngAfterViewInit(): void {
@@ -41,7 +43,7 @@ export class AppComponent implements AfterViewInit {
 
   private handleAnnouncementClose() {
     $('#announcement .message .close')
-      .on('click', function() {
+      .on('click', function () {
         $('#announcement')
           .transition('fade')
         ;

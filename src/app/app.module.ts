@@ -1,6 +1,6 @@
 import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {AppComponent} from './app.component';
 
 import {OshdbModule} from './oshdb/oshdb.module';
@@ -63,7 +63,7 @@ declare const Prism;
         const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
         return initializerFn();
       }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
   ]
 })
 export class AppModule {

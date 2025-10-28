@@ -9,11 +9,13 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {SharedModule} from './shared/shared.module';
 import {OqtModule} from './oqt/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from './oqt/oqt-api-metadata-provider.service.mock';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from './singelton-services/url-hash-params-provider.service.mock';
+import {WelcomeComponent} from './welcome/welcome.component';
+import {StateService} from './singelton-services/state.service';
 
 describe('AppComponent', () => {
 
@@ -26,15 +28,19 @@ describe('AppComponent', () => {
         ResultPanelComponent,
         ResultListDirective,
       ],
-      imports: [BrowserModule,
+      imports: [
+        BrowserModule,
         SharedModule,
         OshdbModule,
-        OqtModule],
+        OqtModule,
+        WelcomeComponent
+      ],
       providers: [
         {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
         {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
-        provideHttpClient(withInterceptorsFromDi())
+        {provide: StateService},
+        provideHttpClient(withInterceptorsFromDi(), withFetch())
       ]
     }).compileComponents();
   });
@@ -55,7 +61,7 @@ describe('AppComponent', () => {
       UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams());
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.componentInstance;
-      expect((app as any).showWelcomeScreen).toBeTrue();
+      expect((app as any).stateService.appState().showWelcomeScreen).toBeTrue();
     }
   );
 
@@ -63,7 +69,7 @@ describe('AppComponent', () => {
       UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams({backend: "ohsomeApi"}));
       const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.componentInstance;
-      expect((app as any).showWelcomeScreen).toBeFalse();
+      expect((app as any).stateService.appState().showWelcomeScreen).toBeFalse();
     }
   );
 });
