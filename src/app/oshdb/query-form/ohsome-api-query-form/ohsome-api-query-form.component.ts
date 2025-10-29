@@ -39,15 +39,15 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   public selectedFilter: string;
 
   // Measure
-  public measureOptions: string[] = ['count', 'length', 'area', 'perimeter'];
+  public measureOptions: string[] = [$localize`count`, $localize`length`, $localize`area`, $localize`perimeter`];
   public measure: string;
 
   // GroupBy
   public groupByOptions: { value: string, label: string }[] = [
-    {value: 'type', label: 'OSM type'},
-    {value: 'boundary', label: 'boundary'},
-    {value: 'tag', label: 'tag'},
-    {value: 'key', label: 'key'}
+    {value: 'type', label: $localize`OSM type`},
+    {value: 'boundary', label: $localize`boundary`},
+    {value: 'tag', label: $localize`tag`},
+    {value: 'key', label: $localize`key`}
   ];
   public groupBy: string;
   public groupByKeys: string;
@@ -89,7 +89,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       : environment.selectedValue;
     this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
     this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0]);
-    this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
+    this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', $localize`none`);
     this.groupByKeys = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKeys', '');
     this.groupByKey = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKey', '');
     this.groupByValues = Utils.getFromParamsOrDefault(this.hashParams, 'groupByValues', '');

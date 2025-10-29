@@ -91,7 +91,7 @@ geometry:polygon
   <!-- measure -->
   <div class="row">
     <div class="column">
-      <h4 class="ui header"><i class="expand icon"></i>Measure</h4>
+      <h4 class="ui header" i18n><i class="expand icon"></i>Measure</h4>
       <div class="four inline fields">
         <div *ngFor="let option of measureOptions" class="field">
           <div class="ui radio checkbox">
@@ -115,7 +115,7 @@ geometry:polygon
   <div class="ui divider"></div>
   <div class="row">
     <div class="column">
-      <h4 class="ui header"><i class="list icon" i18n></i>Group Results By ...</h4>
+      <h4 class="ui header" i18n><i class="list icon"></i>Group Results By ...</h4>
       <div class="one inline fields">
         <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="'none'" (change)="fireResize()"
                                                     [(ngModel)]="groupBy" checked><label>none</label></div>
@@ -129,15 +129,15 @@ geometry:polygon
       </div>
       <div class="two fields">
         <div *ngIf="groupBy === 'key'" class="sixteen wide field">
-          <label><i class="key icon" i18n></i>Grouping Keys</label>
+          <label i18n><i class="key icon"></i>Grouping Keys</label>
           <input type="text" name="groupByKeys" [(ngModel)]="groupByKeys" class="" required>
         </div>
         <div *ngIf="groupBy === 'tag'" class="eight wide field">
-          <label><i class="key icon" i18n></i>Grouping Key</label>
+          <label i18n><i class="key icon"></i>Grouping Key</label>
           <input type="text" name="groupByKey" [(ngModel)]="groupByKey" class="" required>
         </div>
         <div *ngIf="groupBy === 'tag'" class="eight wide field">
-          <label><i class="info icon" i18n></i>Grouping Values</label>
+          <label i18n><i class="info icon"></i>Grouping Values</label>
           <input type="text" name="groupByValues" [(ngModel)]="groupByValues" class="">
         </div>
       </div>

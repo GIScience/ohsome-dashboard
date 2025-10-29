@@ -11,11 +11,27 @@ export class PlotlyChartComponent implements AfterViewInit{
 @Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;
 @ViewChild('chart', {static: false}) chartDiv: ElementRef<HTMLDivElement>;
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     if (!this.plotlyDataLayoutConfig) return;
+    const locale = localStorage.getItem('locale') || 'en';
+
+    if (locale && locale !== 'en') {
+      try {
+        const localeModule = await import(
+          `plotly.js-locales/${locale}`
+          );
+        (Plotly as any).register(localeModule);
+      } catch (err) {
+        console.warn(`Locale ${locale} not found, falling back to 'en'`, err);
+      }
+    }
 
     const {data, layout, config} = this.plotlyDataLayoutConfig;
 
-    Plotly.newPlot(this.chartDiv.nativeElement,data, layout, config);
+    const plotConfig = { ...(config || {}), locale: locale};
+
+    console.log(locale);
+
+    Plotly.newPlot(this.chartDiv.nativeElement,data, layout, plotConfig);
   }
 }

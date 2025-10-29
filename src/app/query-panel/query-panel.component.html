@@ -94,7 +94,7 @@
                         [(ngModel)]="bpolys" required></app-boundary-input>
 
     <div *ngIf="boundaryType === 'admin'" class="field">
-      <label>Selected areas</label>
+      <label i18n>Selected areas</label>
 
       <div class="selected-names ui blue labels">
         <ng-container *ngFor="let selected of selectedNames; let i = index">
@@ -149,7 +149,7 @@
   <!--row 2-->
   <div class="row">
     <div class="sixteen wide column">
-      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button"><i class="play icon"></i>Run
+      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n><i class="play icon"></i>Run
         Query
       </button>
     </div>
