@@ -8,16 +8,16 @@
     <!-- tab header -->
     <div class="ui top attached tabular menu" [ngClass]="window.innerWidth <= 440? 'icon labeled': ''">
       <a class="item" data-tab="tab-ohsome-api"
-         [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''"
+         [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''"
          (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i>OSM History Stats</a>
       <a class="item" data-tab="tab-oqt-api"
-         [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''"
+         [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''"
          (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0" ><i class="cogs icon"></i>OSM Quality Analyses</a>
     </div>
     <!-- tab content -->
     <!--    OSM STATS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-ohsome-api"
-         [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''">
+         [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''">
       @if (activeBackend === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
         <app-ohsome-api-query-form [hashParams]=hashParams></app-ohsome-api-query-form>
       }
@@ -37,9 +37,9 @@
     </div>
     <!--    OSM ANALYSIS-->
     <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
-         [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''">
+         [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''">
       <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable"
-                              [hashParams]=hashParams
+
                               (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
       <!-- Error message -->
       <div *ngIf="activeBackend==='oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)"

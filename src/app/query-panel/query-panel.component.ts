@@ -1,4 +1,13 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -7,7 +16,7 @@ import centroid from '@turf/centroid';
 import {getCoord} from '@turf/invariant';
 
 import {OhsomeApiMetadataProviderService} from '../oshdb/ohsome-api-metadata-provider.service';
-import {Feature, Polygon, GeoJsonProperties} from 'geojson';
+import {Feature, GeoJsonProperties, Polygon} from 'geojson';
 import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
@@ -22,10 +31,10 @@ import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
 
 @Component({
-    selector: 'app-query-panel',
-    templateUrl: './query-panel.component.html',
-    styleUrls: ['./query-panel.component.css'],
-    standalone: false
+  selector: 'app-query-panel',
+  templateUrl: './query-panel.component.html',
+  styleUrls: ['./query-panel.component.css'],
+  standalone: false
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
 
@@ -34,7 +43,9 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   @ViewChild('bsi', {static: false})
   mapInput: BoundarySelectInputComponent | BoundaryInputComponent;
 
-  public hashParams: URLSearchParams;
+  // settings from hash
+  hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
+  public readonly hashParams: URLSearchParams;
 
   // default map settings
   public maskPoly;
@@ -56,6 +67,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   public activeBackend: 'ohsomeApi' | 'oqtApi' = 'ohsomeApi';
   private formChangesSubscription: Subscription;
 
+
   constructor(
     private dataService: DataService,
     public ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
@@ -64,6 +76,13 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     private osmBoundaryProviderService: OsmBoundaryProviderService,
     private ref: ChangeDetectorRef
   ) {
+
+    // react on updates in the URLHashParamsProviderService
+    effect(() => {
+      const hp = this.hashParamsSignal();
+      this.setWhichApi(hp.get('backend'));
+    });
+
 
     const spatialExtent = this.ohsomeApiMetadataProviderService
         .getOhsomeMetadataResponse()
@@ -82,10 +101,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     //precedence: hashParams over environment over default
 
-    // settings from hash
-    this.hashParams = urlHashParamsProviderService.getHashURLSearchParams();
+    // settings from URL hashparams
+    this.hashParams = this.hashParamsSignal();
 
-    // settings from hash: activate the right query panel
+    // settings from URL hashparams: activate the correct query panel (ohsome or quality API)
     const backendValue = this.hashParams.get('backend');
     this.activeBackend = (backendValue === 'ohsomeApi' || backendValue === 'oqtApi') ? backendValue : 'ohsomeApi';
     // settings from hash: map setttings for ohsomeApi AND oqtApi
@@ -119,7 +138,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
           }
         }
       });
-  }
+
+  } // constructor end
 
   onChangeIndicatorCoverages($event: Userlayer[]) {
     console.log("Got changes from OQT Panel")
@@ -137,12 +157,11 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   }
 
   ngOnInit() {
+    // runs on every form change
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
+      console.log("FORM CHANGE SUBSCRIPTION");
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
-      console.log("INIT  QueryPanel permalinkparams", permalinkParams);
       this.urlHashParamsProviderService.updateHashParams(permalinkParams);
-      //needed to update selected name labels when areas are unselected in the map
-      this.ref.markForCheck();
     })
   }
 
@@ -254,11 +273,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
 
       // transform attribute-completeness--attributes
-      if (permalinkParams["attribute-completeness--attributes"]){
+      if (permalinkParams["attribute-completeness--attributes"]) {
         permalinkParams["attribute-completeness--attributes"] = permalinkParams["attribute-completeness--attributes"].join(',');
       }
     }
-
 
 
     return permalinkParams;
@@ -269,12 +287,11 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     console.log('Form Value', this.form.value);
     const permalinkParams = this.getPermalinkParamsFromFormValues(this.form.value);
     console.log("ONSUBMIT QueryPanel permalinkparams", permalinkParams);
-    this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     this.dataService.pushFormValues(this.form.value, this._boundaryType);
   }
 
-  setWhichApi(activeApi: 'ohsomeApi' | 'oqtApi') {
-    this.activeBackend = activeApi;
+  setWhichApi(activeApi: string | null): void {
+    this.activeBackend = (activeApi === 'ohsomeApi' || activeApi === 'oqtApi')? activeApi : 'ohsomeApi';
     if (activeApi === 'oqtApi' && this.boundaryType === 'bcircle') {
       this.boundaryType = 'admin';
     }
