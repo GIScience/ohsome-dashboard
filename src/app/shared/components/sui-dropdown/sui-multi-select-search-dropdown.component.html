@@ -5,9 +5,10 @@
         id="search-select-attribute"
         #dropdown
 >
-<!--  name="{{indicatorKey}}--attributes"
-        [(ngModel)]="selectedAttributeKeys"-->
-  <option *ngFor="let entry of selectOptions;"
-          [value]="entry.key">{{ entry.value.name }}
-  </option>
+  @for (entry of selectOptions; track entry.key) {
+    <option [value]="entry.key">{{ entry.value.name }}</option>
+  }
+<!--  <option *ngFor="let entry of selectOptions;"-->
+<!--          [value]="entry.key">{{ entry.value.name }}-->
+<!--  </option>-->
 </select>

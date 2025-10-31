@@ -50,4 +50,20 @@ export default class Utils {
   static async wait(ms:number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  /**
+   * Equality check for 2 sting arrays.
+   * - Duplicates are ignored
+   * - Order does not matter
+   */
+  static arraysEqualUnordered(a: string[], b: string[]): boolean {
+    if (a.length !== b.length) return false;
+    const setA = new Set(a);
+    const setB = new Set(b);
+    if (setA.size !== setB.size) return false;
+    for (const item of setA) {
+      if (!setB.has(item)) return false;
+    }
+    return true;
+  }
 }
