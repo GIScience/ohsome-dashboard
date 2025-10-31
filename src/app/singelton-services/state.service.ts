@@ -9,9 +9,7 @@ export class StateService {
   };
 
   // Private signal to hold the current state
-  private _appState = signal<StateParams>(
-    this.initialState
-  );
+  private _appState = signal<StateParams>(this.initialState);
 
   // Public readonly signal for components to read
   public readonly appState = this._appState.asReadonly();
