@@ -1,13 +1,4 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  computed,
-  effect,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -44,7 +35,9 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   mapInput: BoundarySelectInputComponent | BoundaryInputComponent;
 
   // settings from hash
-  hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
+  backendParamSignal = computed(() => {
+    return this.urlHashParamsProviderService.currentHashParams().get('backend') ?? 'ohsomeApi';
+  });
   public readonly hashParams: URLSearchParams;
 
   // default map settings
@@ -74,13 +67,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
     private urlHashParamsProviderService: UrlHashParamsProviderService,
     private osmBoundaryProviderService: OsmBoundaryProviderService,
-    private ref: ChangeDetectorRef
   ) {
 
     // react on updates in the URLHashParamsProviderService
     effect(() => {
-      const hp = this.hashParamsSignal();
-      this.setWhichApi(hp.get('backend'));
+      const newBackend = this.backendParamSignal();
+      this.setWhichApi(newBackend);
     });
 
 
@@ -102,7 +94,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     //precedence: hashParams over environment over default
 
     // settings from URL hashparams
-    this.hashParams = this.hashParamsSignal();
+    this.hashParams = this.urlHashParamsProviderService.getHashURLSearchParams();
 
     // settings from URL hashparams: activate the correct query panel (ohsome or quality API)
     const backendValue = this.hashParams.get('backend');
@@ -142,8 +134,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   } // constructor end
 
   onChangeIndicatorCoverages($event: Userlayer[]) {
-    console.log("Got changes from OQT Panel")
-    console.log($event)
+
     //show additional data on the maps (e.g. coverage of comparison data in OSMAnalysis tab for specific indicators)
     /*
     1. listen to Output from oqt-panel indicator (activated indicator having GeoJSON coverage geom)
@@ -153,13 +144,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     // Note: changing a single property of an @Input Object doesn't trigger change detection, so updating the whole
     // mapOptions Object is necessary
-    this.mapOptions = {...this.mapOptions, userDefinedPolygonLayers: $event}
+    this.mapOptions = {...this.mapOptions, userDefinedPolygonLayers: $event};
   }
 
   ngOnInit() {
     // runs on every form change
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
-      console.log("FORM CHANGE SUBSCRIPTION");
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
       this.urlHashParamsProviderService.updateHashParams(permalinkParams);
     })
