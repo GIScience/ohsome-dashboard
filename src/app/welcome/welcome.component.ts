@@ -8,10 +8,13 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
-  ColumnDefinition, EditModule,
+  ColumnDefinition,
+  EditModule,
   FilterModule,
   FormatModule,
   FrozenColumnsModule,
+  InteractionModule,
+  SelectRowModule,
   SortModule,
   Tabulator
 } from 'tabulator-tables';
@@ -55,15 +58,6 @@ export class WelcomeComponent {
       welcomeElementJq = $(this.welcomeElement.nativeElement);
       tabMenuElements= welcomeElementJq.find('.tabular.menu .item');
 
-  ngAfterViewInit(): void {
-    $('#welcome').modal({
-      inverted: true,
-      duration: 200,
-      // white background will be attached to context
-      context: 'div#welcome-dimmer',
-      // modal DOM Element will be moved into context
-      detachable: true
-    }).modal('show');
 
       //initialize modal
       welcomeElementJq.modal({
@@ -120,67 +114,91 @@ export class WelcomeComponent {
     })
   }
 
-  createTopicIndicatorMatrix() {
-    this.ngZone.runOutsideAngular(() => {
-      const table = new Tabulator("#topicTable", {
-        minHeight: 200,
-        renderVertical: "basic",
-        columns: [{title: "", field: "topic", frozen: true, headerSort: false, headerFilter: 'input', headerFilterFunc: "like"}, ...this.createColumnDefinitions()],
-        data: this.createData()
+    createTopicIndicatorMatrix() {
+      console.log("this.tabContentElementsHeight", this.tabContentElementsHeight)
+      this.ngZone.runOutsideAngular(() => {
+        const table = new Tabulator("#topicTable", {
+          height: this.tabContentElementsHeight,
+          renderVertical: "basic",
+          selectableRows: "highlight",
+          columns: [{
+            title: "Topic", frozen: true, columns: [{
+              title: "",
+              field: "topic",
+              headerSort: false,
+              headerFilter: 'input',
+              headerFilterFunc: "like",
+            }]
+          }, ...this.createColumnDefinitions()],
+          data: this.createData()
+        });
+
+        table.on("rowClick", (e, row)=>{
+          const d = row.getData();
+          const currentBackend = this.urlHashParamsService.getHashURLSearchParams().get('backend');
+          if (currentBackend === 'oqtApi') {
+            this.urlHashParamsService.updatePartialHashParams({backend: 'oqtApi', topic: d['id']});
+          } else {
+            this.urlHashParamsService.updateHashParams({backend: 'oqtApi', topic: d['id']});
+          }
+          $('#welcome').modal('hide');
+        });
+
       });
-    });
-  }
 
-  createColumnDefinitions(): ColumnDefinition[] {
-    const qualityDimensions = this.oqtApiMetadata.result.qualityDimensions;
-    const indicators = this.oqtApiMetadata.result.indicators;
+    }
 
-    const dimensionGroups = Object.groupBy(
-      Object.entries(indicators).map(([key, value]) => {
-        return {key, ...value}
-      }),
-      ({qualityDimension}) => {
-        return qualityDimension;
+    createColumnDefinitions(): ColumnDefinition[] {
+      const qualityDimensions = this.oqtApiMetadata.result.qualityDimensions;
+      const indicators = this.oqtApiMetadata.result.indicators;
+
+      const dimensionGroups = Object.groupBy(
+        Object.entries(indicators).map(([key, value]) => {
+          return {key, ...value}
+        }),
+        ({qualityDimension}) => {
+          return qualityDimension;
+        });
+
+      console.log(dimensionGroups);
+
+      const columnsDefintions = Object.entries(dimensionGroups).map(([qualityDimensionKey, indicatorObjList]) => {
+        const columnGroup: ColumnDefinition = {title: qualityDimensions[qualityDimensionKey].name};
+        columnGroup.columns = indicatorObjList?.map((indicatorObj): ColumnDefinition => {
+          return {
+            title: indicatorObj.name,
+            field: indicatorObj.key,
+            formatter: "tickCross",
+            formatterParams: {
+              allowEmpty: false,
+              allowTruthy: true,
+            },
+            hozAlign: "center",
+            headerSortStartingDir: "desc",
+            headerSortTristate: true
+          }
+        });
+        return columnGroup;
       });
 
-    console.log(dimensionGroups);
+      console.log(columnsDefintions);
+      return columnsDefintions;
+    }
 
-    const columnsDefintions = Object.entries(dimensionGroups).map(([qualityDimensionKey, indicatorObjList]) => {
-      const columnGroup: ColumnDefinition = {title: qualityDimensions[qualityDimensionKey].name};
-      columnGroup.columns = indicatorObjList?.map((indicatorObj): ColumnDefinition => {
+    createData() {
+      const topics = this.oqtApiMetadata.result.topics;
+
+      return Object.entries(topics).map(([topicKey, topicObj]) => {
         return {
-          title: indicatorObj.name,
-          field: indicatorObj.key,
-          formatter: "tickCross",
-          formatterParams: {
-            allowEmpty: false,
-            allowTruthy: true,
-          },
-          hozAlign: "center",
-          headerSortStartingDir: "desc",
-          headerSortTristate: true
+          id: topicKey, topic: topicObj.name, ...topicObj.indicators.reduce((previousValue, currentValue) => {
+            return {...previousValue, [currentValue]: true}
+          }, {})
         }
-      });
-      return columnGroup;
-    });
+      }).sort((topicRowA, topicRowB) => {
+        //order topic by name
+        return topicRowA.topic.localeCompare(topicRowB.topic)
+      })
 
-    console.log(columnsDefintions);
-    return columnsDefintions;
-  }
+    }
 
-  createData() {
-    const topics = this.oqtApiMetadata.result.topics;
-
-    return Object.entries(topics).map(([topicKey, topicObj]) => {
-      return {
-        id: topicKey, topic: topicObj.name, ...topicObj.indicators.reduce((previousValue, currentValue) => {
-          return {...previousValue, [currentValue]: true}
-        }, {})
-      }
-    }).sort((topicRowA, topicRowB) => {
-      //order topic by name
-      return topicRowA.topic.localeCompare(topicRowB.topic)
-    })
-
-  }
 }
