@@ -1,4 +1,12 @@
-import {AfterViewInit, Component, inject, NgZone, ViewEncapsulation} from '@angular/core';
+import {
+  afterNextRender,
+  afterRenderEffect,
+  Component,
+  inject,
+  NgZone,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {
   ColumnDefinition, EditModule,
   FilterModule,
@@ -10,6 +18,8 @@ import {
 import 'tabulator-tables/dist/css/tabulator_semanticui.min.css';
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../oqt/types/MetadataResponseJSON';
+import {StateService} from '../singelton-services/state.service';
+import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 
 declare let $;
 
@@ -20,14 +30,30 @@ declare let $;
   styleUrl: './welcome.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class WelcomeComponent implements AfterViewInit {
-  private readonly oqtApiMetadata: MetadataResponseJSON;
+export class WelcomeComponent {
 
   private readonly ngZone = inject(NgZone);
+  protected stateService = inject(StateService);
+  protected urlHashParamsService = inject(UrlHashParamsProviderService);
+  protected oqtApiMetadataProviderService= inject(OqtApiMetadataProviderService);
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
-    this.oqtApiMetadata = oqtApiMetadataProviderService.getOqtApiMetadata();
-  }
+  private readonly oqtApiMetadata: MetadataResponseJSON = this.oqtApiMetadataProviderService.getOqtApiMetadata();
+  private tabContentElementsHeight: any;
+
+  @ViewChild('welcome') welcomeElement;
+
+
+  constructor() {
+
+    let welcomeElementJq;
+    let tabMenuElements;
+
+
+    // runs once like AfterViewInit
+    afterNextRender(()=>{
+
+      welcomeElementJq = $(this.welcomeElement.nativeElement);
+      tabMenuElements= welcomeElementJq.find('.tabular.menu .item');
 
   ngAfterViewInit(): void {
     $('#welcome').modal({
@@ -39,19 +65,59 @@ export class WelcomeComponent implements AfterViewInit {
       detachable: true
     }).modal('show');
 
-    // initialize tabs
-    Tabulator.registerModule([FormatModule, FrozenColumnsModule, SortModule, FilterModule, EditModule]);
-
-    $('.tabular.menu .item').tab({
-      onVisible: (tabPath) => {
-        if (tabPath === "second") {
-          this.createTopicIndicatorMatrix();
-          setTimeout(()=>{
-            document.querySelector<HTMLInputElement>("div[tabulator-field='topic'] input[type='search']")?.focus();
-          }, 300)
+      //initialize modal
+      welcomeElementJq.modal({
+        inverted: true,
+        duration: 200,
+        // white background will be attached to context
+        context: 'div#welcome-dimmer',
+        // modal DOM Element will be moved into context
+        detachable: true,
+        onHidden: () => {
+          this.stateService.updatePartialState({showWelcomeScreen: false});
+        },
+        onVisible: () => {
+          tabMenuElements.tab("change tab", this.stateService.appState().welcomeTab);
         }
+      });
+
+      // initialize tabs
+      Tabulator.registerModule([FormatModule, FrozenColumnsModule, SortModule, FilterModule, EditModule, SelectRowModule, InteractionModule]);
+
+      tabMenuElements.tab({
+        onVisible: (tabPath) => {
+          this.stateService.updatePartialState({welcomeTab: tabPath});
+          if (tabPath === "topicCatalog") {
+            this.tabContentElementsHeight = $('#welcome .tab.segment.active').height() - 30;
+            this.createTopicIndicatorMatrix();
+            setTimeout(() => {
+              document.querySelector<HTMLInputElement>("#welcome div[tabulator-field='topic'] input[type='search']")?.focus();
+            })
+          }
+        }
+      });
+    })
+
+    // runs every time a signal changes
+    afterRenderEffect({
+     mixedReadWrite: ()=>{
+
+       //signal that trigger this function
+       const showWelcomeScreen = this.stateService.appState().showWelcomeScreen;
+
+
+        if (showWelcomeScreen) {
+          welcomeElementJq.modal('show');
+        } else {
+          welcomeElementJq.modal('hide');
+        }
+
+
+
+
+
       }
-    });
+    })
   }
 
   createTopicIndicatorMatrix() {

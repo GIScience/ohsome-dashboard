@@ -1,11 +1,17 @@
 import {effect, Injectable, signal} from '@angular/core';
 
+interface StateParams {
+  showWelcomeScreen: boolean;
+  welcomeTab: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
   private initialState: StateParams = {
     showWelcomeScreen: false,
+    welcomeTab: 'intro'
   };
 
   // Private signal to hold the current state
@@ -27,8 +33,4 @@ export class StateService {
     }));
   }
 
-}
-
-interface StateParams {
-  showWelcomeScreen: boolean;
 }
