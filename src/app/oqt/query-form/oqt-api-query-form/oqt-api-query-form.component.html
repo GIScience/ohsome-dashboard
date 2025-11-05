@@ -56,7 +56,7 @@
               <app-simple-indicator
                 [indicator]="indicator"
                 [qualityDimension]="qualityDimension"
-                (indicatorToggle)="onIndicatorToggle($event)"
+                (indicatorToggle)="onIndicatorToggle()"
               >
                 @switch (indicator.key) {
                   @case ("attribute-completeness") {
