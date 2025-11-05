@@ -1,7 +1,4 @@
 #welcome.modal {
-  /*display: flex !important;*/
-  /*flex-direction: column;*/
-  /*align-items: stretch;*/
   position: absolute;
   bottom: 1.5rem;
   top: 2.5rem;
@@ -75,30 +72,34 @@
   color: inherit;
 }
 
-/*.scrolling.content*/
-/*.ui.modal .content {*/
-/*  max-height: calc(100vh - 10rem);*/
-/*  overflow: auto;*/
-/*}*/
+/* Topic Catalog */
 
-#topicTable .tabulator-header-filter > input[type="search"] {
-  color: rgba(0, 0, 0, 0.95);
-  border-color: rgba(34, 36, 38, 0.15);
-  border-radius: 0.28571429rem;
-  border-width: 1px;
-  border-style: solid;
+#topicTable {
+  height: calc(100% - 2.5rem);
+  margin-bottom: 0;
 
-  &:is(:focus, :focus-visible, :hover) {
-    border-color: #85B7D9;
+  .tabulator-header-filter > input[type="search"] {
+    color: rgba(0, 0, 0, 0.95);
+    border-color: rgba(34, 36, 38, 0.15);
+    border-radius: 0.28571429rem;
     border-width: 1px;
+    border-style: solid;
+
+    &:is(:focus, :focus-visible, :hover) {
+      border-color: #85B7D9;
+      border-width: 1px;
+    }
   }
-}
 
-#topicTable .tabulator-cell[tabulator-field="topic"] {
-  font-weight: bold;
-  background-color: #f9fafb;
-}
+  .tabulator-row {
 
-#topicTable .tabulator-row:hover .tabulator-cell[tabulator-field="topic"] {
-  background-color: #e0e0e0;
+    &:hover .tabulator-cell[tabulator-field="topic"] {
+      background-color: #e0e0e0;
+    }
+
+    .tabulator-cell[tabulator-field="topic"] {
+      font-weight: bold;
+      background-color: #f9fafb;
+    }
+  }
 }

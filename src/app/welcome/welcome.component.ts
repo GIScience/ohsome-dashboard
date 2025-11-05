@@ -1,7 +1,7 @@
 import {
   afterNextRender,
   afterRenderEffect,
-  Component,
+  Component, computed,
   inject,
   NgZone,
   ViewChild,
@@ -45,6 +45,8 @@ export class WelcomeComponent {
 
   @ViewChild('welcome') welcomeElement;
 
+  showWelcomeScreenSignal = computed(()=> this.stateService.appState().showWelcomeScreen);
+  welcomeTabSignal = computed(()=> this.stateService.appState().welcomeTab);
 
   constructor() {
 
@@ -68,9 +70,6 @@ export class WelcomeComponent {
         detachable: true,
         onHidden: () => {
           this.stateService.updatePartialState({showWelcomeScreen: false});
-        },
-        onVisible: () => {
-          tabMenuElements.tab("change tab", this.stateService.appState().welcomeTab);
         }
       });
 
@@ -81,7 +80,7 @@ export class WelcomeComponent {
         onVisible: (tabPath) => {
           this.stateService.updatePartialState({welcomeTab: tabPath});
           if (tabPath === "topicCatalog") {
-            this.tabContentElementsHeight = $('#welcome .tab.segment.active').height() - 30;
+            this.tabContentElementsHeight = $('#welcome #topicTable').height();
             this.createTopicIndicatorMatrix();
             setTimeout(() => {
               document.querySelector<HTMLInputElement>("#welcome div[tabulator-field='topic'] input[type='search']")?.focus();
@@ -94,19 +93,25 @@ export class WelcomeComponent {
     // runs every time a signal changes
     afterRenderEffect({
       mixedReadWrite: () => {
-
         //signal that trigger this function
-        const showWelcomeScreen = this.stateService.appState().showWelcomeScreen;
-
+        const showWelcomeScreen = this.showWelcomeScreenSignal();
 
         if (showWelcomeScreen) {
           welcomeElementJq.modal('show');
         } else {
           welcomeElementJq.modal('hide');
         }
+      }
+    })
 
-        $(this.welcomeElement.nativeElement).find('.tabular.menu .item')
-          .tab("change tab", this.stateService.appState().welcomeTab);
+    afterRenderEffect({
+      mixedReadWrite: () => {
+        const welcomeTab = this.welcomeTabSignal();
+        setTimeout(()=>{
+          $(this.welcomeElement.nativeElement).find('.tabular.menu .item')
+            .tab("change tab", welcomeTab);
+          }, 250
+        )
       }
     })
   }

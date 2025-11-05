@@ -6,7 +6,7 @@
       <!-- TODO: maybe feature-toggle with project (only show non-core projects explicitly)? -->
       <!-- 1. Topic or AOI-->
       <h4 id="topicHeading" class="ui header"><i class="filter icon"></i>Topic</h4>
-      <button type="button" id="searchTopicBtn" class="ui right floated basic button"
+      <button type="button" id="searchTopicBtn" class="ui right floated basic button" tabindex="0"
               (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})">
         <i class="icon search"></i>
         Search Topic Catalog
