@@ -98,3 +98,7 @@
   font-weight: bold;
   background-color: #f9fafb;
 }
+
+#topicTable .tabulator-row:hover .tabulator-cell[tabulator-field="topic"] {
+  background-color: #e0e0e0;
+}
