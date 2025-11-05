@@ -24,7 +24,8 @@
     "useDefineForClassFields": false,
     "lib": [
       "ES2024",
-      "dom"
+      "dom",
+      "dom.iterable"
     ],
     "typeRoots": ["node_modules/@types"]
   },

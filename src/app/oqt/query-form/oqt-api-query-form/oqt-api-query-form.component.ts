@@ -204,11 +204,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   }
 
-  onIndicatorToggle(indicatorToggleEvent) {
-    console.log("indicatorToggleEvent", indicatorToggleEvent)
-
-    //clear indicator coverages and re init
-    // setTimeout(()=>{this.updateIndicatorCoverages()},1000)
+  onIndicatorToggle() {
     this.updateIndicatorCoverages();
   }
 

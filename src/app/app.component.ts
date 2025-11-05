@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, inject, signal} from '@angular/core';
+import {AfterViewInit, Component, inject} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
@@ -33,8 +33,8 @@ export class AppComponent implements AfterViewInit {
     this.hasAnnouncement = ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
     this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
-    this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata().apiVersion ?? '';
-    this.stateService.updatePartialState({showWelcomeScreen: urlHashParamsProviderService.getHashURLSearchParams().size === 0})
+    this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
+    this.stateService.updatePartialState({showWelcomeScreen: urlHashParamsProviderService.getHashURLSearchParams().size === 0});
   }
 
   ngAfterViewInit(): void {
