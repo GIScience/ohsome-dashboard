@@ -32,7 +32,7 @@ export default class Utils {
     }
   }
 
-  // helper function which calculates a matching start date for a given end date and peridod
+  // helper function which calculates a matching start date for a given end date and period
   // such that: start + n*period ~= end
   static calculateStartDateFromEndAndPeriod(endDate: string, period: string, minDate: string | undefined | null): string {
     if (!minDate) return '';
