@@ -113,7 +113,7 @@ export class OqtApiMetadataProviderService {
   cachedData: Record<string, Promise<Userlayer>> = {};
   async getIndicatorCoverage(indicatorKey: string): Promise<Userlayer> {
     // Return cached or in-progress promise immediately
-    if (!this.cachedData[indicatorKey]) {
+    if ( this.cachedData[indicatorKey] === undefined ) {
       // Start the download and store the in-progress Promise
       this.cachedData[indicatorKey] = (async () => {
         try {
