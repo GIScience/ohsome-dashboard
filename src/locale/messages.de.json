@@ -6,7 +6,6 @@
     "4806513497858020797": "Datenquellen",
     "1726363342938046830": "Über uns",
     "6348798750356954435": " Analysiere OSM-Daten © {$START_LINK}OpenStreetMap contributors.{$CLOSE_LINK}{$LINE_BREAK} Basiskarte von OpenStreetMap und OpenStreetMap Foundation.{$LINE_BREAK}",
-    "8872695720522874880": " Die “{$START_LINK}ohsome{$CLOSE_LINK}” OpenStreetMap History Analyzer Plattform und {$START_LINK_1}ohsome quality analyst{$CLOSE_LINK} basieren auf Technologien entwickelt von {$START_LINK_2}HeiGIT{$CLOSE_LINK}. ",
     "7077625027650635056": " Der Quellcode dieses Dashboards ist open-source (GPL-3.0) und {$START_LINK}verfügbar auf GitHub{$CLOSE_LINK}. ",
     "7504095942715276947": "OSM Qualitätsanalysen zur Verfügung gestellt von:",
     "7922989125096435449": "Kontakt",
@@ -65,6 +64,8 @@
     "7897565236366850950": "niedrige",
     "4191249048851292136": "undefiniert",
     "8322706363855640616": "OSM-Zeitreihen basierend auf ohsome API",
-    "4926560909163306317": "ohsome-Filterdefinition:"
+    "4926560909163306317": "ohsome-Filterdefinition:",
+    "2234662147349211082": "Die “ohsome” OpenStreetMap History Analyzer Platform basiert auf Technologie {$START_LINK}entwickelt am HeiGIT{$CLOSE_LINK}. ",
+    "7902946145724751406": "Datenanalysen zur Verfügung gestellt von:"
   }
 }
