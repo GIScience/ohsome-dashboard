@@ -51,7 +51,8 @@
     "prismjs": "^1.30.0",
     "rxjs": "^7.8.2",
     "semantic-ui-calendar": "^0.0.8",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.0",
+    "zone.js": "^0.15.1"
   },
   "devDependencies": {
     "@angular-eslint/builder": "20.1.1",
@@ -62,6 +63,7 @@
     "@angular/build": "^20.1.0",
     "@angular/cli": "^20.1.0",
     "@angular/compiler-cli": "^20.1.0",
+    "@angular/localize": "^20.1.0",
     "@types/chart.js": "^2.9.39",
     "@types/geojson": "7946.0.14",
     "@types/jasmine": "~4.3.6",

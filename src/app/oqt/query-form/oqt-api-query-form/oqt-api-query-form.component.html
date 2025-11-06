@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="item">
-            <div class="content">
+            <div class="content" i18n>
               <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
               of the topic:
               <pre #topicFilter id="topicFilter" class="language-ohsome-filter"></pre>
@@ -35,14 +35,14 @@
 
       <!-- 2. Set of indicators -->
       <div class="ui divider"></div>
-      <h4 class="ui header"><i class="chart line icon"></i>Quality Indicators</h4>
+      <h4 class="ui header" i18n><i class="chart line icon"></i>Quality Indicators</h4>
       <!-- display all indicators_ always -->
       <!-- disable unavailable indicators_ (sort by availability?) -->
 
       <!-- grouping indicators with ngModelGroup="indicators" does not work properly. Work around -> handle flat indicators in result   -->
       <div *ngFor="let qualityDimension of currentQualityDimensions;" id="indicatorGroup">
         <div class="ui secondary segment">
-          <div class="ui small header">{{ qualityDimensions[qualityDimension].name }}</div>
+          <div class="ui small header">{{ qualityDimensions[qualityDimension].name.toUpperCase() }}</div>
           <div class="ui divided items">
             <!-- individual indicators start -->
             <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
@@ -78,7 +78,7 @@
       </div>
 
       <!-- Warning if a topic exists, but none of its indicators_ is available -->
-      <div *ngIf="currentQualityDimensions.size === 0" class="ui small negative icon message">
+      <div *ngIf="currentQualityDimensions.size === 0" class="ui small negative icon message" i18n>
         <i class="minus circle icon"></i>Sorry, currently no indicators are available for this topic.
       </div>
 

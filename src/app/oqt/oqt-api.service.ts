@@ -28,14 +28,16 @@ export class OqtApiService {
     return this.http.get<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       {
         params: new HttpParams({fromString: queryParams}),
-        responseType: 'json'
+        responseType: 'json',
+        headers: new HttpHeaders({'Accept-Language': localStorage.getItem('locale') || 'en'})
       });
   }
 
   post(urlPath: string, body?: object | null): Observable<BaseResponseJSON> {
     return this.http.post<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       body,
-      {headers: new HttpHeaders({'Content-Type': 'application/json', 'accept': 'application/json'})});
+      {headers: new HttpHeaders({'Content-Type': 'application/json', 'accept': 'application/json',
+          'Accept-Language': localStorage.getItem('locale') || 'en'})});
   }
 
   getMetadata(): Observable<MetadataResponseJSON> {

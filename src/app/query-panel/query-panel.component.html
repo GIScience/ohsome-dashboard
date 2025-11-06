@@ -9,10 +9,10 @@
     <div class="ui top attached tabular menu" [ngClass]="window.innerWidth <= 440? 'icon labeled': ''">
       <a class="item" data-tab="tab-ohsome-api"
          [ngClass]="activeBackend === 'ohsomeApi' ? ' active' : ''"
-         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i>OSM History Stats</a>
+         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i>{{ $localize`OSM History Stats` }}</a>
       <a class="item" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? ' active' : ''"
-         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0" ><i class="cogs icon"></i>OSM Quality Analyses</a>
+         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0"><i class="cogs icon"></i>{{ $localize`OSM Quality Analyses` }}</a>
     </div>
     <!-- tab content -->
     <!--    OSM STATS-->
@@ -25,11 +25,11 @@
         <div class="ui one column grid">
           <div class="row">
             <div class="column">
-              <h4 class="ui header"><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome API</h4>
-              <p>Sorry.</p>
-              <p>This service is temporarily unavailable.</p>
-              <p>Please try again later.</p>
-              <p>Thanks for your patience.</p>
+              <h4 class="ui header" i18n><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome API</h4>
+              <p i18n>Sorry.</p>
+              <p i18n>This service is temporarily unavailable.</p>
+              <p i18n>Please try again later.</p>
+              <p i18n>Thanks for your patience.</p>
             </div>
           </div>
         </div>
@@ -46,11 +46,11 @@
            class="ui one column grid">
         <div class="row">
           <div class="column">
-            <h4 class="ui header"><i class="exclamation triangle icon"></i>ohsome quality analyst</h4>
-            <p>Sorry.</p>
-            <p>This service is temporarily unavailable.</p>
-            <p>Please try again later.</p>
-            <p>Thanks for your patience.</p>
+            <h4 class="ui header"><i class="exclamation triangle icon"i18n></i>ohsome quality analyst</h4>
+            <p i18n>Sorry.</p>
+            <p i18n>This service is temporarily unavailable.</p>
+            <p i18n>Please try again later.</p>
+            <p i18n>Thanks for your patience.</p>
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@
 
   <!--column 2-->
   <div id="col2" class="eight wide tablet ten wide computer column">
-    <h4 class="ui header">Area of interest</h4>
+    <h4 class="ui header" i18n>Area of interest</h4>
 
     <div id="boundaryTypeButtons" class="ui top attached buttons leaflet-pm-toolbar">
       <button type="button" class="ui button" title="Select admin boundaries"
@@ -94,7 +94,7 @@
                         [(ngModel)]="bpolys" required></app-boundary-input>
 
     <div *ngIf="boundaryType === 'admin'" class="field">
-      <label>Selected areas</label>
+      <label i18n>Selected areas</label>
 
       <div class="selected-names ui blue labels">
         <ng-container *ngFor="let selected of selectedNames; let i = index">
@@ -115,7 +115,7 @@
     </div>
 
     <div *ngIf="boundaryType === 'bbox'" class="field">
-      <label for="bboxes">Bounding Box</label>
+      <label for="bboxes" i18n>Bounding Box</label>
       <div class="ui action input">
         <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
         <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear" [disabled]="!bboxes.trim()">
@@ -125,7 +125,7 @@
     </div>
 
     <div *ngIf="boundaryType === 'bcircle'" class="field">
-      <label for="bcircles">Bounding Circle</label>
+      <label for="bcircles" i18n>Bounding Circle</label>
       <div class="ui action input">
         <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
         <button type="button" class="ui tiny red icon button" (click)="bcircles = ''" title="Clear" [disabled]="!bcircles.trim()">
@@ -135,7 +135,7 @@
     </div>
 
     <div *ngIf="boundaryType === 'bpoly'" class="field">
-      <label for="bpolys">Bounding Polygon</label>
+      <label for="bpolys" i18n>Bounding Polygon</label>
       <div class="ui action input">
         <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
         <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear" [disabled]="!bpolys.trim()">
@@ -149,7 +149,7 @@
   <!--row 2-->
   <div class="row">
     <div class="sixteen wide column">
-      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button"><i class="play icon"></i>Run
+      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n><i class="play icon"></i>Run
         Query
       </button>
     </div>

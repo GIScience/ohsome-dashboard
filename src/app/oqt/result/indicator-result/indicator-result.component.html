@@ -13,7 +13,7 @@
   <div *ngIf="error" class="ui icon error message">
     <i class="exclamation triangle icon"></i>
     <div class="content">
-      <h3 class="header">Sorry, we were unable to process your query!</h3>
+      <h3 class="header" i18n>Sorry, we were unable to process your query!</h3>
       <h4>{{error.type}}</h4>
       <div *ngFor="let detail of error.detail">{{detail.msg}}</div>
     </div>

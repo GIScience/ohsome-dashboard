@@ -30,10 +30,10 @@ export class IndicatorResultComponent implements OnInit {
   error: ErrorResponseJSON | undefined = undefined;
 
   labelMap: { [K in IndicatorLabel]: string } = {
-    green: 'high',
-    yellow: 'medium',
-    red: 'low',
-    'undefined': 'undefined'
+    green: $localize`high`,
+    yellow: $localize`medium`,
+    red: $localize`low`,
+    'undefined': $localize`undefined`
   };
   // displayQualityLabel - displayed in the ribbon in the top left corner
   displayQualityLabel: string;
@@ -125,7 +125,7 @@ export class IndicatorResultComponent implements OnInit {
   public createDisplayQualityLabel(): string {
     const metaDataResult = this.oqtApiMetadataProviderService.getOqtApiMetadata().result;
     const qualityDimensionKey = metaDataResult.indicators[this.indicator.key]['qualityDimension'];
-    const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name.toLowerCase();
+    const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name;
     return `${this.labelMap[this.label]} ${lowerCaseQualityDimensionName}`;
   }
 
