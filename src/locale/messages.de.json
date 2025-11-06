@@ -35,7 +35,7 @@
     "1241348629231510663": "Ende",
     "1507949699959470925": "Periode",
     "578310613509901199": "{$START_TAG_DIV} Achtung auf folgende Warnungen! {$CLOSE_TAG_DIV} Ignorieren kann zu unerwarteten Ergebnissen führen. {$START_UNORDERED_LIST}{$START_LIST_ITEM}Endzeit darf nicht kleiner als Startzeit sein.{$CLOSE_LIST_ITEM}{$START_LIST_ITEM_1}Zeitraum ist für diesen großen Zeitraum zu klein.{$CLOSE_LIST_ITEM}{$CLOSE_UNORDERED_LIST}",
-    "285878653461163955": "OSM-Geschichtsstatistiken",
+    "285878653461163955": "OSM-Zeitreihen",
     "1043661202631246216": "Entschuldigung.",
     "3242616403007802983": "Dieser Dienst ist vorübergehend nicht verfügbar.",
     "8947585964755853889": "Bitte versuchen Sie es später erneut.",
@@ -59,6 +59,12 @@
     "572632584496667717": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Abfrage starten ",
     "3914422493239764083": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT} Ergebnisprotokoll {$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}",
     "7502005988482888830": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Ergebnisse werden hier angezeigt!",
-    "3658652108107924329": "Ausgewählte Gebiete"
+    "3658652108107924329": "Ausgewählte Gebiete",
+    "2602838849414645735": "hohe",
+    "4688460977394283086": "mittelmäßige",
+    "7897565236366850950": "niedrige",
+    "4191249048851292136": "undefiniert",
+    "8322706363855640616": "OSM-Zeitreihen basierend auf ohsome API",
+    "4926560909163306317": "ohsome-Filterdefinition:"
   }
 }

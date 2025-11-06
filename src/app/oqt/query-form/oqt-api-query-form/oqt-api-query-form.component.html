@@ -42,7 +42,7 @@
       <!-- grouping indicators with ngModelGroup="indicators" does not work properly. Work around -> handle flat indicators in result   -->
       <div *ngFor="let qualityDimension of currentQualityDimensions;" id="indicatorGroup">
         <div class="ui secondary segment">
-          <div class="ui small header">{{ qualityDimensions[qualityDimension].name }}</div>
+          <div class="ui small header">{{ qualityDimensions[qualityDimension].name.toUpperCase() }}</div>
           <div class="ui divided items">
             <!-- individual indicators start -->
             <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
