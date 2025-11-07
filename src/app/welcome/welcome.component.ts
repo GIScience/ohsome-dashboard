@@ -1,9 +1,9 @@
 import {
   afterNextRender,
   afterRenderEffect,
-  Component, computed,
+  Component,
+  computed,
   inject,
-  NgZone,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -14,6 +14,7 @@ import {
   FormatModule,
   FrozenColumnsModule,
   InteractionModule,
+  RowComponent,
   SelectRowModule,
   SortModule,
   Tabulator
@@ -35,18 +36,17 @@ declare let $;
 })
 export class WelcomeComponent {
 
-  private readonly ngZone = inject(NgZone);
-  protected stateService = inject(StateService);
+  stateService = inject(StateService);
   protected urlHashParamsService = inject(UrlHashParamsProviderService);
   protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
   private readonly oqtApiMetadata: MetadataResponseJSON = this.oqtApiMetadataProviderService.getOqtApiMetadata();
   private tabContentElementsHeight: any;
+  topicIndicatorMatrix: Tabulator;
 
   @ViewChild('welcome') welcomeElement;
-
-  showWelcomeScreenSignal = computed(()=> this.stateService.appState().showWelcomeScreen);
-  welcomeTabSignal = computed(()=> this.stateService.appState().welcomeTab);
+  showWelcomeScreenSignal = computed(() => this.stateService.appState().showWelcomeScreen);
+  welcomeTabSignal = computed(() => this.stateService.appState().welcomeTab);
 
   constructor() {
 
@@ -81,7 +81,7 @@ export class WelcomeComponent {
           this.stateService.updatePartialState({welcomeTab: tabPath});
           if (tabPath === "topicCatalog") {
             this.tabContentElementsHeight = $('#welcome #topicTable').height();
-            this.createTopicIndicatorMatrix();
+            this.topicIndicatorMatrix = this.createTopicIndicatorMatrix();
             setTimeout(() => {
               document.querySelector<HTMLInputElement>("#welcome div[tabulator-field='topic'] input[type='search']")?.focus();
             })
@@ -107,9 +107,9 @@ export class WelcomeComponent {
     afterRenderEffect({
       mixedReadWrite: () => {
         const welcomeTab = this.welcomeTabSignal();
-        setTimeout(()=>{
-          $(this.welcomeElement.nativeElement).find('.tabular.menu .item')
-            .tab("change tab", welcomeTab);
+        setTimeout(() => {
+            $(this.welcomeElement.nativeElement).find('.tabular.menu .item')
+              .tab("change tab", welcomeTab);
           }, 250
         )
       }
@@ -118,7 +118,7 @@ export class WelcomeComponent {
 
   createTopicIndicatorMatrix() {
 
-    this.ngZone.runOutsideAngular(() => {
+    // this.ngZone.runOutsideAngular(() => {
       const table = new Tabulator("#topicTable", {
         height: this.tabContentElementsHeight,
         renderVertical: "basic",
@@ -136,20 +136,24 @@ export class WelcomeComponent {
         data: this.createData()
       });
 
-      table.on("rowClick", (e, row) => {
-        const d = row.getData();
-        const currentBackend = this.urlHashParamsService.getHashURLSearchParams().get('backend');
-        if (currentBackend === 'oqtApi') {
-          this.urlHashParamsService.updatePartialHashParams({backend: 'oqtApi', topic: d['id']});
-        } else {
-          this.urlHashParamsService.updateHashParams({backend: 'oqtApi', topic: d['id']});
-        }
-        $('#welcome').modal('hide');
-      });
+      table.on("rowClick", this.onTopicCatalogRowClick);
+      return table;
+    // });
 
-    });
 
   }
+
+  onTopicCatalogRowClick = (e: UIEvent, row: RowComponent) => {
+    const d = row.getData();
+    const currentBackend = this.urlHashParamsService.getHashURLSearchParams().get('backend');
+    if (currentBackend === 'oqtApi') {
+      this.urlHashParamsService.updateHashParams({backend: 'oqtApi', topic: d['id']});
+    } else {
+      this.urlHashParamsService.setHashParams({backend: 'oqtApi', topic: d['id']});
+    }
+    $('#welcome').modal('hide');
+  };
+
 
   createColumnDefinitions(): ColumnDefinition[] {
     const qualityDimensions = this.oqtApiMetadata.result.qualityDimensions;

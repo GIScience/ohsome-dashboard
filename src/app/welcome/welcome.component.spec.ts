@@ -8,6 +8,8 @@ import {oqtApiMetadataResponseMock} from '../oqt/oqt-api-metadata.response.mock'
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from '../singelton-services/url-hash-params-provider.service.mock';
 import Utils from '../../utils';
+import {Tabulator} from 'tabulator-tables';
+import {StateService} from '../singelton-services/state.service';
 
 declare const $: any;
 
@@ -24,7 +26,8 @@ describe('WelcomeComponent', () => {
         provideHttpClient(withInterceptorsFromDi()),
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
         {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
-      ]
+        {provide: StateService},
+      ],
     })
     .compileComponents();
 
@@ -76,17 +79,15 @@ describe('WelcomeComponent', () => {
   });
 
   describe('createTopicIndicatorMatrix', () => {
-    it('should initialize Tabulator and attach rowClick handler', async () => {
-      component['tabContentElementsHeight'] = 200;
-      component.createTopicIndicatorMatrix();
+    it('should initialize Tabulator', async () => {
 
-      // wait for the DOM to be updated
-      await Utils.wait(1000);
+      // after component creation switch to tab 'topicCatalog'
+      component.stateService.updatePartialState({welcomeTab: 'topicCatalog'});
 
-      const tabulatorElement = document.querySelector<HTMLDivElement>('#topicTable')!;
+      await Utils.wait(2000);
 
-      // instantiation of Tabulator adds class to element
-      expect(tabulatorElement.classList.contains('tabulator')).toBeTrue()
+      expect(component.topicIndicatorMatrix).toBeInstanceOf(Tabulator);
+
     });
   });
 
