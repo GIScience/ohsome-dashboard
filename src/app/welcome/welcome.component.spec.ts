@@ -73,7 +73,7 @@ describe('WelcomeComponent', () => {
       spyOn($.fn, 'modal');
 
       component.linkTo('oqtApi');
-      expect(UrlHashParamsProviderServiceMock.updateHashParams).toHaveBeenCalledWith({ backend: 'oqtApi' });
+      expect(UrlHashParamsProviderServiceMock.setHashParams).toHaveBeenCalledWith({ backend: 'oqtApi' });
       expect($('#welcome').modal).toHaveBeenCalledWith('hide');
     });
   });

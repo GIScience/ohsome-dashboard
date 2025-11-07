@@ -5,7 +5,9 @@ const UrlHashParamsProviderServiceMock = createSpyObj(
   [
     "updateHashParamsStoreFromUrl",
     "getHashURLSearchParams",
-    "updateHashParams"
+    "setHashParams",
+    "updateHashParams",
+    "updateHashParam"
   ]
 );
 
