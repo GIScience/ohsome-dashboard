@@ -19,20 +19,31 @@ export class UrlHashParamsProviderService {
     return this._currentHashParams();
   }
 
-  updateHashParams(paramsObject){
+  /**
+   * Replaces all current params by the new ones
+   * @param paramsObject
+   */
+  setHashParams(paramsObject){
     this._currentHashParams.update(()=> new URLSearchParams(paramsObject));
     window.location.hash = this._currentHashParams().toString();
   }
 
-  updatePartialHashParams(paramsObject){
+  /** Update only the specified params and keep all others
+   * @param paramsObject
+   */
+  updateHashParams(paramsObject){
     const currentParams = Object.fromEntries(this._currentHashParams().entries());
     this._currentHashParams.update(()=> new URLSearchParams({...currentParams, ...paramsObject}));
     window.location.hash = this._currentHashParams().toString();
   }
 
+  /** Update only the specified param and keep all others
+   * @param key
+   * @param value
+   */
   updateHashParam(key:string, value:string) {
     const currentParams = Object.fromEntries(this._currentHashParams().entries());
-    this._currentHashParams.update(()=> new URLSearchParams({...currentParams, key: value}));
+    this._currentHashParams.update(()=> new URLSearchParams({...currentParams, [key]: value}));
     window.location.hash = this._currentHashParams().toString();
   }
 

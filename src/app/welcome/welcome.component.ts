@@ -205,7 +205,7 @@ export class WelcomeComponent {
   }
 
   linkTo(backend: 'ohsomeApi' | 'oqtApi') {
-    this.urlHashParamsService.updateHashParams({backend: backend});
+    this.urlHashParamsService.setHashParams({backend: backend});
     $('#welcome').modal('hide');
   }
 }

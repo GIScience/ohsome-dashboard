@@ -151,7 +151,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     // runs on every form change
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
-      this.urlHashParamsProviderService.updateHashParams(permalinkParams);
+      this.urlHashParamsProviderService.setHashParams(permalinkParams);
     })
   }
 
