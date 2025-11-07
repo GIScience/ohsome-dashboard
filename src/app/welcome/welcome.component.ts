@@ -117,7 +117,7 @@ export class WelcomeComponent {
   }
 
   createTopicIndicatorMatrix() {
-    console.log("this.tabContentElementsHeight", this.tabContentElementsHeight)
+
     this.ngZone.runOutsideAngular(() => {
       const table = new Tabulator("#topicTable", {
         height: this.tabContentElementsHeight,

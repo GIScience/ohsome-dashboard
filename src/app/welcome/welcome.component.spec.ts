@@ -1,12 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WelcomeComponent } from './welcome.component';
+import {WelcomeComponent} from './welcome.component';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../oqt/oqt-api-metadata-provider.service.mock';
 import {oqtApiMetadataResponseMock} from '../oqt/oqt-api-metadata.response.mock';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from '../singelton-services/url-hash-params-provider.service.mock';
+import Utils from '../../utils';
 
 declare const $: any;
 
@@ -16,23 +17,6 @@ describe('WelcomeComponent', () => {
 
 
   beforeEach(async () => {
-    // global mock
-// declare const window: any;
-// --- Create jquery mock with modal and tab and other methods ---
-//     const modalSpy = jasmine.createSpy('modal');
-//     const tabSpy = jasmine.createSpy('tab');
-//     const findSpy = jasmine.createSpy('find').and.returnValue({ tab: tabSpy });
-//     const heightSpy = jasmine.createSpy('height').and.returnValue(100);
-//
-//     const jquerySpy = jasmine.createSpy('$').and.callFake((selector?: string) => {
-//       return {
-//         modal: modalSpy,
-//         find: findSpy,
-//         tab: tabSpy,
-//         height: heightSpy
-//       };
-//     });
-    // (window as any).$ = jquerySpy;
 
     await TestBed.configureTestingModule({
       imports: [WelcomeComponent],
@@ -88,6 +72,21 @@ describe('WelcomeComponent', () => {
       component.linkTo('oqtApi');
       expect(UrlHashParamsProviderServiceMock.updateHashParams).toHaveBeenCalledWith({ backend: 'oqtApi' });
       expect($('#welcome').modal).toHaveBeenCalledWith('hide');
+    });
+  });
+
+  describe('createTopicIndicatorMatrix', () => {
+    it('should initialize Tabulator and attach rowClick handler', async () => {
+      component['tabContentElementsHeight'] = 200;
+      component.createTopicIndicatorMatrix();
+
+      // wait for the DOM to be updated
+      await Utils.wait(1000);
+
+      const tabulatorElement = document.querySelector<HTMLDivElement>('#topicTable')!;
+
+      // instantiation of Tabulator adds class to element
+      expect(tabulatorElement.classList.contains('tabulator')).toBeTrue()
     });
   });
 
