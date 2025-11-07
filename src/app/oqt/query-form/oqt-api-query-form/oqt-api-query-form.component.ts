@@ -146,7 +146,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     // 3. Add all dimension to a Set to ensure uniqueness
     // 4. assign new Set to bound variable currentQualityDimensions in one go
     const tempCurrentQualityDimensions: Set<string> = new Set();
-    // this.currentQualityDimensions.clear();
 
     this.topics[topicKey].indicators
       .flatMap((indicatorKey: string) => [this.indicators[indicatorKey]?.['qualityDimension']] as Array<string | undefined>)
@@ -192,15 +191,20 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     // get a list of checked indicators
     // request coverages for all checked indicators
     // emit each separately whenever a coverage is loaded
-    Object.keys(this.indicators)
+
+    const checkedIndicators = Object.keys(this.indicators)
       .filter(indicatorKey =>
         this.indicators[indicatorKey].checked &&
         this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)
-      ).forEach( async (indicatorKey) => {
+      );
+
+    for (const indicatorKey of checkedIndicators) {
+      (async ()=>{
         const maskedUserLayer = await this.oqtApiMetadataProviderService.getIndicatorCoverage(indicatorKey);
         this.indicatorCoverages.push(maskedUserLayer);
         this.changeIndicatorCoverages.emit(this.indicatorCoverages);
-    })
+      })();
+    }
 
   }
 
