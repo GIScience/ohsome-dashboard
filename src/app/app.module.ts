@@ -15,6 +15,7 @@ import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../prism-language-ohsome-filter';
 import {WelcomeComponent} from './welcome/welcome.component';
+import { loadTranslations } from '@angular/localize';
 
 declare const Prism;
 
@@ -39,6 +40,7 @@ declare const Prism;
     WelcomeComponent
   ],
   providers: [
+    provideAppInitializer(translationsInitializerFactory()),
     provideAppInitializer(() => {
         const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
         return initializerFn();
@@ -100,4 +102,19 @@ export function oqtApiAttributeProviderFactory(provider: OqtApiMetadataProviderS
 
 export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
   return () => provider.updateHashParamsStoreFromUrl()
+}
+
+export function translationsInitializerFactory() {
+  return async () => {
+    const locale = localStorage.getItem('locale') || 'en';
+    try {
+      const translationsModule = await import(`../locale/messages.${locale}.json`);
+      const translations = translationsModule.default.translations || translationsModule.default;
+
+      loadTranslations(translations);
+      console.log(`Loaded translations for locale: ${locale}`);
+    } catch (err) {
+      console.warn(`Could not load translation file for locale: ${locale}`, err);
+    }
+  };
 }

@@ -6,6 +6,7 @@ import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import Utils from '../../../../utils';
 import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
+import {UrlHashParamsProviderService} from '../../../singelton-services/url-hash-params-provider.service';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class IndicatorResultComponent implements OnInit {
 
   @Input() topicKey: string;
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
+  @Input() ohsomedb: boolean;
   @Input() indicator!: IndicatorParams;
 
   isLoading = true;
@@ -28,10 +30,10 @@ export class IndicatorResultComponent implements OnInit {
   error: ErrorResponseJSON | undefined = undefined;
 
   labelMap: { [K in IndicatorLabel]: string } = {
-    green: 'high',
-    yellow: 'medium',
-    red: 'low',
-    'undefined': 'undefined'
+    green: $localize`high`,
+    yellow: $localize`medium`,
+    red: $localize`low`,
+    'undefined': $localize`undefined`
   };
   // displayQualityLabel - displayed in the ribbon in the top left corner
   displayQualityLabel: string;
@@ -41,7 +43,8 @@ export class IndicatorResultComponent implements OnInit {
   constructor(
     private oqtApi: OqtApiService,
     private oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+    private urlHashParamsService: UrlHashParamsProviderService) {
   }
 
   ngOnInit(): void {
@@ -54,6 +57,7 @@ export class IndicatorResultComponent implements OnInit {
     const body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
+      ohsomedb: this.ohsomedb
     }
 
 
@@ -121,7 +125,7 @@ export class IndicatorResultComponent implements OnInit {
   public createDisplayQualityLabel(): string {
     const metaDataResult = this.oqtApiMetadataProviderService.getOqtApiMetadata().result;
     const qualityDimensionKey = metaDataResult.indicators[this.indicator.key]['qualityDimension'];
-    const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name.toLowerCase();
+    const lowerCaseQualityDimensionName = metaDataResult['qualityDimensions'][qualityDimensionKey].name;
     return `${this.labelMap[this.label]} ${lowerCaseQualityDimensionName}`;
   }
 

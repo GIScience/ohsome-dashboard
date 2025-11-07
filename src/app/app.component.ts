@@ -50,4 +50,9 @@ export class AppComponent implements AfterViewInit {
       })
     ;
   }
+
+  switchLanguage(selectedLanguage: string): void {
+    localStorage.setItem('locale', selectedLanguage)
+    location.reload()
+  }
 }
