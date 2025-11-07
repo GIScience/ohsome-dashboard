@@ -104,13 +104,13 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
           // - values did not change
           // - in single selection mode: empty field not allows
           let shouldFire = !this.suppressChange  && value != undefined;
-          if (!this.multiple){
-            value = value as string;
-            shouldFire = shouldFire && value.trim() !== '' && this.value != value;
-          } else {
+          if (this.multiple){
             value = value as string[];
             this.value = this.value as string[];
-            shouldFire = shouldFire && !Utils.arraysEqualUnordered(this.value, value)
+            shouldFire = shouldFire && !Utils.arraysEqualUnordered(this.value, value);
+          } else {
+            value = value as string;
+            shouldFire = shouldFire && value.trim() !== '' && this.value != value;
           }
 
           if (shouldFire) {

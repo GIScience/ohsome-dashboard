@@ -7,22 +7,22 @@ describe('UrlHashParamsProviderService', () => {
   let originalHash: string;
 
   beforeEach(() => {
-    originalHash = window.location.hash; // save before test
+    originalHash = globalThis.location.hash; // save before test
     TestBed.configureTestingModule({});
     service = TestBed.inject(UrlHashParamsProviderService);
-    window.location.hash = ''; // clean start
+    globalThis.location.hash = ''; // clean start
   });
 
   afterEach(() => {
-    window.location.hash = originalHash; // restore
+    globalThis.location.hash = originalHash; // restore
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update internal signal based on window.location.hash', () => {
-    window.location.hash = 'foo=bar&baz=qux';
+  it('should update internal signal based on globalThis.location.hash', () => {
+    globalThis.location.hash = 'foo=bar&baz=qux';
 
     service.updateHashParamsStoreFromUrl();
 
@@ -32,15 +32,15 @@ describe('UrlHashParamsProviderService', () => {
   });
 
   it('should return URLSearchParams, updating from URL if needed', () => {
-    window.location.hash = 'alpha=beta';
+    globalThis.location.hash = 'alpha=beta';
 
     const params = service.getHashURLSearchParams();
 
     expect(params.get('alpha')).toBe('beta');
   });
 
-  it('should completely exchange params: update currentHashParams signal and window.location.hash', () => {
-    window.location.hash = 'alpha=beta';
+  it('should completely exchange params: update currentHashParams signal and globalThis.location.hash', () => {
+    globalThis.location.hash = 'alpha=beta';
     service.updateHashParamsStoreFromUrl();
 
     service.setHashParams({ foo: 'bar', baz: 'qux' });
@@ -50,9 +50,9 @@ describe('UrlHashParamsProviderService', () => {
     expect(params.get('baz')).toBe('qux');
     expect(params.get('alpha')).toBeNull();
 
-    expect(window.location.hash).toContain('foo=bar');
-    expect(window.location.hash).toContain('baz=qux');
-    expect(window.location.hash).not.toContain('alpha=beta');
+    expect(globalThis.location.hash).toContain('foo=bar');
+    expect(globalThis.location.hash).toContain('baz=qux');
+    expect(globalThis.location.hash).not.toContain('alpha=beta');
   });
 
   it('should merge new params into existing ones', () => {
