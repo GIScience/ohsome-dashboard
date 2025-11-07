@@ -82,6 +82,10 @@ describe('Utils', () => {
       expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'c'])).toBeFalse();
     });
 
+    it('should return false for different arrays length', () => {
+      expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'b', 'c'])).toBeFalse();
+    });
+
     it('should ignore duplicates', () => {
       expect(Utils.arraysEqualUnordered(['a', 'a', 'b'], ['b', 'a'])).toBeTrue();
     });
