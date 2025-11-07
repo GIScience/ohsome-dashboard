@@ -32,7 +32,7 @@ export default class Utils {
     }
   }
 
-  // helper function which calculates a matching start date for a given end date and period
+  // helper function which calculates a matching start date for a given end date and peri od
   // such that: start + n*period ~= end
   static calculateStartDateFromEndAndPeriod(endDate: string, period: string, minDate: string | undefined | null): string {
     if (!minDate) return '';
@@ -57,7 +57,6 @@ export default class Utils {
    * - Order does not matter
    */
   static arraysEqualUnordered(a: string[], b: string[]): boolean {
-    if (a.length !== b.length) return false;
     const setA = new Set(a);
     const setB = new Set(b);
     if (setA.size !== setB.size) return false;
