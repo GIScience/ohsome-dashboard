@@ -158,8 +158,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    $('.ui.dropdown').dropdown();
-    console.log(this.divId);
+    $('app-result .ui.dropdown').dropdown();
     this.viewportScroller.scrollToAnchor(this.divId);
   }
 
