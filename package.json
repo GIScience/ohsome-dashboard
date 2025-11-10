@@ -51,6 +51,7 @@
     "prismjs": "^1.30.0",
     "rxjs": "^7.8.2",
     "semantic-ui-calendar": "^0.0.8",
+    "tabulator-tables": "^6.3.1",
     "tslib": "^2.5.0",
     "zone.js": "^0.15.1"
   },
@@ -71,6 +72,7 @@
     "@types/node": "~18.14.1",
     "@types/plotly.js-dist-min": "^2.3.4",
     "@types/prismjs": "^1.26.5",
+    "@types/tabulator-tables": "^6.3.0",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",

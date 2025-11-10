@@ -1,6 +1,6 @@
 import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {AppComponent} from './app.component';
 
 import {OshdbModule} from './oshdb/oshdb.module';
@@ -14,6 +14,7 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../prism-language-ohsome-filter';
+import {WelcomeComponent} from './welcome/welcome.component';
 import { loadTranslations } from '@angular/localize';
 
 declare const Prism;
@@ -23,7 +24,7 @@ declare const Prism;
     AppComponent,
     QueryPanelComponent,
     ResultPanelComponent,
-    ResultListDirective,
+    ResultListDirective
   ],
   exports: [
     QueryPanelComponent,
@@ -35,7 +36,9 @@ declare const Prism;
     BrowserModule,
     SharedModule,
     OshdbModule,
-    OqtModule],
+    OqtModule,
+    WelcomeComponent
+  ],
   providers: [
     provideAppInitializer(translationsInitializerFactory()),
     provideAppInitializer(() => {
@@ -62,7 +65,7 @@ declare const Prism;
         const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
         return initializerFn();
       }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
   ]
 })
 export class AppModule {

@@ -6,7 +6,8 @@ import {
   ReactiveFormsModule,
   ValidationErrors
 } from '@angular/forms';
-import {KeyValue, NgForOf} from '@angular/common';
+import {KeyValue} from '@angular/common';
+import Utils from '../../../../utils';
 
 
 declare const $;
@@ -14,8 +15,7 @@ declare const $;
 @Component({
   selector: 'app-sui-multi-select-search-dropdown',
   imports: [
-    ReactiveFormsModule,
-    NgForOf
+    ReactiveFormsModule
   ],
   templateUrl: './sui-multi-select-search-dropdown.component.html',
   providers: [
@@ -39,12 +39,14 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   @Input() selectOptions!: Array<KeyValue<string, {name:string}>>;
   @Input() multiple: boolean = false;
   required = signal(false);
+  private suppressChange: boolean = false;
 
   constructor(private readonly ngZone: NgZone) {
   }
 
   // selectedAttributeKeys
-  value: string[];
+  // depending on single or multi select mode value is sting or string[]
+  value: string |string[];
 
   // initial state
   touched = false;
@@ -95,10 +97,24 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
 
 
   initDropdown(): void {
-
     const options: object = {...this.options,...{
-        onChange: (value: string[]) => {
-          if (value != undefined) {
+        onChange: (value:string | string[]) => {
+          // avoid firing useless change events:
+          // - on clearing the dropdown list
+          // - values did not change
+          // - in single selection mode: empty field not allows
+          let shouldFire = !this.suppressChange  && value != undefined;
+          if (this.multiple){
+            value = value as string[];
+            this.value = this.value as string[];
+            shouldFire = shouldFire && !Utils.arraysEqualUnordered(this.value, value);
+          } else {
+            value = value as string;
+            shouldFire = shouldFire && value.trim() !== '' && this.value != value;
+          }
+
+          if (shouldFire) {
+            this.value = value;
             this.onChange(value);
           }
         }
@@ -112,8 +128,11 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   }
 
   updateDropdown(value: string[]) {
+
     this.ngZone.runOutsideAngular(() => {
+      this.suppressChange = true;
       $(this.dropdown.nativeElement).dropdown('clear');
+      this.suppressChange = false;
       setTimeout(() => {
         $(this.dropdown.nativeElement).dropdown('set exactly', value);
       })

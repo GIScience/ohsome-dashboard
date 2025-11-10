@@ -32,7 +32,7 @@ export default class Utils {
     }
   }
 
-  // helper function which calculates a matching start date for a given end date and peridod
+  // helper function which calculates a matching start date for a given end date and peri od
   // such that: start + n*period ~= end
   static calculateStartDateFromEndAndPeriod(endDate: string, period: string, minDate: string | undefined | null): string {
     if (!minDate) return '';
@@ -49,5 +49,20 @@ export default class Utils {
 
   static async wait(ms:number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Equality check for 2 sting arrays.
+   * - Duplicates are ignored
+   * - Order does not matter
+   */
+  static arraysEqualUnordered(a: string[], b: string[]): boolean {
+    const setA = new Set(a);
+    const setB = new Set(b);
+    if (setA.size !== setB.size) return false;
+    for (const item of setA) {
+      if (!setB.has(item)) return false;
+    }
+    return true;
   }
 }

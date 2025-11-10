@@ -1,21 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewChild
-} from '@angular/core';
+import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
-
-declare const $, Prism;
+import {StateService} from '../../../singelton-services/state.service';
+import {UrlHashParamsProviderService} from '../../../singelton-services/url-hash-params-provider.service';
 
 @Component({
   selector: 'app-oqt-api-query-form',
@@ -26,15 +15,16 @@ declare const $, Prism;
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
-  @Input() hashParams: URLSearchParams = new URLSearchParams();
+  protected stateService = inject(StateService);
+  protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  protected renderer = inject(Renderer2);
+  protected urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+
+  hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
+  hashParams = this.hashParamsSignal();
+
   @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
   private indicatorCoverages: Userlayer[] = [];
-
-  private oqtApiMetadataProviderService: OqtApiMetadataProviderService;
-  private renderer: Renderer2;
-
-  @ViewChild('topicFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
-
   public ohsomedb: string;
 
   // For the ui we need
@@ -58,9 +48,25 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // current quality dimensions to display based on the selected topic
   public currentQualityDimensions: Set<string> = new Set();
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, renderer: Renderer2, private readonly ngZone: NgZone) {
-    this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
-    this.renderer = renderer;
+  topicParamSignal = computed(()=> {
+    const topicParam = this.hashParamsSignal().get('topic');
+    return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Object.keys(this.topics)[0];
+  });
+  indicatorsParamSignal = computed(()=> {
+    return this.hashParamsSignal().get('indicators');
+
+  });
+  constructor() {
+
+    effect(() => {
+      console.log("3 topic", this.topicParamSignal())
+      this.selectedTopicKey = this.topicParamSignal();
+    });
+
+    effect(() => {
+      console.log("4 indicator", this.indicatorsParamSignal())
+      this.setIndicators(this.indicatorsParamSignal());
+    });
   }
 
   ngOnInit(): void {
@@ -73,18 +79,14 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
     // fill form with hash or default values
     // set topic
-    const topicValue = this.hashParams.get('topic');
-    this.selectedTopicKey = (topicValue && Object.keys(this.topics).includes(topicValue)) ? topicValue : Object.keys(this.topics)[0];
+    console.log("1 topic", this.hashParams.get('topic'));
+    const topicParam = this.hashParams.get('topic');
+    this.selectedTopicKey = (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Object.keys(this.topics)[0];
 
     //set indicators
-    let indicatorValues = this.hashParams.get('indicators')?.split(',').filter((ele) => ele.trim() !== '');
-    indicatorValues = (!indicatorValues || indicatorValues.length === 0) ? this.defaultCheckedIndicators : indicatorValues;
-    indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
+    console.log("2 indicator", this.hashParams.get('indicators'));
+    this.setIndicators(this.hashParams.get('indicators'));
 
-    // init semantic-ui
-    this.ngZone.runOutsideAngular(() => {
-      this.initTopicDropdown();
-    })
   }
 
   ngOnDestroy() {
@@ -134,6 +136,32 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     return enrichedTopics;
   }
 
+  updateCurrentQualityDimensions(topicKey: string) {
+
+    // ignore empty calls
+    if (topicKey == undefined || topicKey.trim() === '') {
+      return;
+    }
+
+    // get a list of quality dimensions for the selected topic
+    // 1. From selected topic, get all indicator-keys
+    // 2. With indicator-keys lookup quality dimensions
+    // 3. Add all dimension to a Set to ensure uniqueness
+    // 4. assign new Set to bound variable currentQualityDimensions in one go
+    const tempCurrentQualityDimensions: Set<string> = new Set();
+
+    this.topics[topicKey].indicators
+      .flatMap((indicatorKey: string) => [this.indicators[indicatorKey]?.['qualityDimension']] as Array<string | undefined>)
+      .forEach(qualityDimension => {
+        if (qualityDimension) {
+          tempCurrentQualityDimensions.add(qualityDimension);
+        }
+      });
+
+    this.currentQualityDimensions = tempCurrentQualityDimensions;
+
+  }
+
   get selectedTopicKey() {
     return this._selectedTopicKey;
   }
@@ -146,80 +174,45 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     }
     this._selectedTopicKey = topicKey;
 
-    // get a list of quality dimensions for the selected topic
-    // 0. clear former entries
-    // 1. From selected topic, get all indicator-keys
-    // 2. With indicator-keys lookup quality dimensions
-    // 3. Add all dimension to a Set to ensure uniqueness
-    this.currentQualityDimensions.clear();
+    this.updateCurrentQualityDimensions(topicKey);
 
-    this.topics[topicKey].indicators
-      .map(value => {
-        console.log(value);
-        return value;
-      })
-      .flatMap((indicatorKey: string) => [this.indicators[indicatorKey]?.['qualityDimension']] as Array<string | undefined>)
-      .forEach(qualityDimension => {
-        if (qualityDimension) {
-          this.currentQualityDimensions.add(qualityDimension);
-        }
-      });
-    console.log('qualityDimensions', this.currentQualityDimensions);
+    this.updateIndicatorCoverages();
 
-    this.initIndicatorCoverages();
   }
 
-
-  private initTopicDropdown() {
-    setTimeout(() => {
-      const topicSelect = $('#search-select-topic');
-      topicSelect.dropdown({
-        fullTextSearch: 'exact'
-      });
-      topicSelect.dropdown('set exactly', this.selectedTopicKey);
-    }, 500);
+  setIndicators(indicatorsParam: string | null) {
+    let indicatorValues = indicatorsParam?.split(',').filter((ele) => ele.trim() !== '');
+    indicatorValues = (!indicatorValues || indicatorValues.length === 0) ? this.defaultCheckedIndicators : indicatorValues;
+    indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
   }
 
-  private initIndicatorCoverages() {
+  private updateIndicatorCoverages() {
     //cleanup
     this.indicatorCoverages = [];
     this.changeIndicatorCoverages.emit([]);
 
     // get a list of checked indicators
     // request coverages for all checked indicators
-    Object.keys(this.indicators).forEach(indicatorKey => {
-      // only add coverage for indicators that are checked and available for the current selected topic
-      if (this.indicators[indicatorKey].checked && this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)) {
-        console.log("initIndicatorCoverages", indicatorKey);
-        void this.addIndicatorCoverage(indicatorKey);
-      }
-    });
-  }
+    // emit each separately whenever a coverage is loaded
 
-  private async addIndicatorCoverage(indicatorKey: string) {
+    const checkedIndicators = Object.keys(this.indicators)
+      .filter(indicatorKey =>
+        this.indicators[indicatorKey].checked &&
+        this.topics[this.selectedTopicKey].indicators.includes(indicatorKey)
+      );
 
-    const maskedUserLayer = await this.oqtApiMetadataProviderService.getIndicatorCoverage(indicatorKey);
-
-    this.indicatorCoverages.push(maskedUserLayer);
-    this.changeIndicatorCoverages.emit(this.indicatorCoverages);
-  }
-
-  onTopicChange() {
-    const filter = this.topics[this.selectedTopicKey].filter;
-    //update filter highlighting
-    if (filter) {
-      const highlightedHTML = Prism.highlight(filter, Prism.languages['ohsome-filter'], 'ohsome-filter');
-      this.renderer.setProperty(this.preElem.nativeElement, 'innerHTML', highlightedHTML);
-    } else {
-      this.renderer.setProperty(this.preElem.nativeElement, 'innerHTML', '');
+    for (const indicatorKey of checkedIndicators) {
+      (async ()=>{
+        const maskedUserLayer = await this.oqtApiMetadataProviderService.getIndicatorCoverage(indicatorKey);
+        this.indicatorCoverages.push(maskedUserLayer);
+        this.changeIndicatorCoverages.emit(this.indicatorCoverages);
+      })();
     }
+
   }
 
-  onIndicatorToggle(indicatorToggleEvent) {
-    console.log("indicatorToggleEvent", indicatorToggleEvent)
-
-    //clear indicator coverages and re init
-    this.initIndicatorCoverages();
+  onIndicatorToggle() {
+    this.updateIndicatorCoverages();
   }
 
 }

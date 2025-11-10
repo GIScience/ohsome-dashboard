@@ -1,0 +1,101 @@
+<!-- modal window to display welcome screen-->
+<div id="welcome-dimmer"></div>
+<div #welcome id="welcome" class="ui custom-large modal">
+  <i class="close icon"></i>
+  <div class="header">
+    <div id="title">Welcome to the
+      <img class="ui inline image" src="assets/images/ohsome_narrow.svg" alt="ohsome logo">
+      <span style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!--    TABS-->
+    <div class="ui top attached tabular menu">
+      <a class="item" data-tab="intro" tabindex="0" (keydown.enter)="stateService.updatePartialState({welcomeTab: 'intro'})"><i class="home icon"></i>Introduction</a>
+      <a class="item" data-tab="topicCatalog" tabindex="0" (keydown.enter)="stateService.updatePartialState({welcomeTab: 'topicCatalog'})"><i class="search icon"></i>Topic Catalog</a>
+      <!--      <a class="right item" data-tab="about"><i class="info cirlce icon"></i>About</a>-->
+
+    </div>
+
+    <!-- TABS Content-->
+
+    <!-- First Tab Content: Introduction -->
+    <div class="ui bottom attached active tab segment" data-tab="intro" tabindex="-1">
+      <div class="ui centered link cards">
+
+          <!-- History Stats -->
+          <div class="card"
+               (click)="linkTo('ohsomeApi')"
+               (keydown.enter)="linkTo('ohsomeApi')"
+               tabindex="0" role="link" aria-label="Switch to History Stats">
+            <div class="content">
+              <h2 class="header">History Statistics</h2>
+              <div class="meta">Timeseries & Comparisons</div>
+              <div class="description">
+                Discover how OpenStreetMap data evolves over time.<br>
+                Explore how many buildings have been mapped or how the length of cycleways has grown in your region.<br>
+                Compare different areas, track mapping activity, and gain insights into how the community’s tagging practices change over time.
+              </div>
+              <div class="ui fluid bordered image">
+                <img src="../../assets/images/welcome/history_stats_example_en.png" alt="History Statistics Example">
+              </div>
+            </div>
+          </div>
+
+          <!-- Quality Analyses -->
+          <div class="card"
+               (click)="linkTo('oqtApi')"
+               (keydown.enter)="linkTo('oqtApi')"
+               tabindex="0" role="link" aria-label="Switch to Quality Analyses">
+            <div class="content">
+              <h2 class="header">Quality Analyses</h2>
+              <div class="meta">Indicators & more</div>
+              <div class="description">
+                Assess the quality of OpenStreetMap data.<br>
+                Choose from a wide range of predefined topics.<br>
+                Check out how complete, accurate and up-to-date OSM is for your region of interest.<br>
+                Gain confidence in OSM and find out if relevant features and attributes have been mapped.
+                And finally answer the question: Is OSM data fit for my purpose?
+              </div>
+              <div class="ui fluid bordered image">
+                <img src="../../assets/images/welcome/quality_analysis_example_en.png" alt="Quality Analyses Example">
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Extraction-->
+          <a class="card" target="_blank" href="https://api.ohsome.org/v1/swagger-ui.html?urls.primaryName=Data%20Extraction">
+            <div class="content">
+              <h2 class="header">Data Extraction</h2>
+              <div class="meta">Download OSM</div>
+              <div class="description">
+                <p>We are working on a convenient way for you to download custom filtered OSM data.</p>
+                <p>In the meanwhile you can already download analysis results from the History Stats as CSV or JSON file.</p>
+                <p>For smaller regions you can already use our ohsome API directly here:<br>
+                <a target="_blank" href="https://api.ohsome.org/v1/swagger-ui.html?urls.primaryName=Data%20Extraction">ohsmome API Swagger documentation</a>
+                </p>
+              </div>
+              <div class="ui fluid bordered image">
+                <img src="../../assets/images/welcome/data_extraction_en.png" alt="Data Extraction with Swagger">
+              </div>
+            </div>
+          </a>
+
+      </div><!--end of cards -->
+    </div>
+
+    <!-- Second Tab Content: Topic Catalog -->
+    <div id="topicCatalogContent" class="ui bottom attached tab segment" data-tab="topicCatalog">
+      <div class="header">Available topics and indicators:</div>
+      <div id="topicTable"></div>
+    </div>
+
+    <!-- Additional Tabs here    -->
+    <!--    <div class="ui bottom attached tab segment" data-tab="about">-->
+    <!--      Third-->
+    <!--    </div>-->
+  </div>
+
+</div>
