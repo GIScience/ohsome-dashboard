@@ -36,8 +36,9 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   @ViewChild("dropdown", {static: false}) dropdown: ElementRef;
   // see https://semantic-ui.com/modules/dropdown.html#/settings for properties that you can set in options
   @Input() options: object = {};
-  @Input() selectOptions!: Array<KeyValue<string, {name:string}>>;
+  @Input() selectOptions!: Array<KeyValue<string, {name:string, selected?:boolean}>>;
   @Input() multiple: boolean = false;
+  @Input() searchable: boolean = true;
   required = signal(false);
   private suppressChange: boolean = false;
 

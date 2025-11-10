@@ -1,11 +1,11 @@
 <select
-        [multiple]="this.multiple"
+        [multiple]="multiple"
         [required]="required()"
-        class="ui fluid search selection dropdown"
-        id="search-select-attribute"
+        [class.search]="searchable"
+        class="ui fluid selection dropdown"
         #dropdown
 >
   @for (entry of selectOptions; track entry.key) {
-    <option [value]="entry.key">{{ entry.value.name }}</option>
+    <option [value]="entry.key" [selected]="entry.value.selected">{{ entry.value.name }}</option>
   }
 </select>
