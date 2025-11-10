@@ -39,6 +39,12 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.handleAnnouncementClose();
+
+    // initialize the language menu
+    $('app-root #languageSelector').dropdown({
+      selectOnKeydown: false,
+      onChange: (language)=>this.switchLanguage(language)
+    });
   }
 
   private handleAnnouncementClose() {
@@ -55,4 +61,5 @@ export class AppComponent implements AfterViewInit {
     localStorage.setItem('locale', selectedLanguage)
     location.reload()
   }
+
 }
