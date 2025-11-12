@@ -94,7 +94,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       : environment.selectedValue;
     this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
     this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0].value);
-    this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', $localize`none`);
+    this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
     this.groupByKeys = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKeys', '');
     this.groupByKey = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKey', '');
     this.groupByValues = Utils.getFromParamsOrDefault(this.hashParams, 'groupByValues', '');

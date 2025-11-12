@@ -9,10 +9,10 @@
     <div class="ui top attached tabular menu" [ngClass]="window.innerWidth <= 440? 'icon labeled': ''">
       <a class="item" data-tab="tab-ohsome-api"
          [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''"
-         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i>{{ $localize`OSM History Stats` }}</a>
+         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i><span i18n>OSM History Stats</span></a>
       <a class="item" data-tab="tab-oqt-api"
          [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''"
-         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0"><i class="cogs icon"></i>{{ $localize`OSM Quality Analyses` }}</a>
+         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0"><i class="cogs icon"></i><span i18n>OSM Quality Analyses</span></a>
     </div>
     <!-- tab content -->
     <!--    OSM STATS-->
@@ -46,7 +46,7 @@
            class="ui one column grid">
         <div class="row">
           <div class="column">
-            <h4 class="ui header"><i class="exclamation triangle icon"i18n></i>ohsome quality analyst</h4>
+            <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>ohsome quality analyst</h4>
             <p i18n>Sorry.</p>
             <p i18n>This service is temporarily unavailable.</p>
             <p i18n>Please try again later.</p>

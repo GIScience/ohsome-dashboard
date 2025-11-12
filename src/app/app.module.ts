@@ -40,7 +40,10 @@ declare const Prism;
     WelcomeComponent
   ],
   providers: [
-    provideAppInitializer(translationsInitializerFactory()),
+    provideAppInitializer(() => {
+      const initializerFn = (translationsInitializerFactory)(inject(UrlHashParamsProviderService));
+      return initializerFn();
+    }),
     provideAppInitializer(() => {
         const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
         return initializerFn();
@@ -104,17 +107,28 @@ export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderServ
   return () => provider.updateHashParamsStoreFromUrl()
 }
 
-export function translationsInitializerFactory() {
+export function translationsInitializerFactory(provider: UrlHashParamsProviderService) {
   return async () => {
-    const locale = localStorage.getItem('locale') || 'en';
+    const locale = localStorage.getItem("locale");
+    const documentLanguage = document.querySelector('html')?.getAttribute('lang');
+    const appLanguage = locale ?? documentLanguage ?? "en";
+
+    localStorage.setItem("locale", appLanguage);
+    if (locale != undefined && (locale != documentLanguage)) {
+      //reload page
+      location.href = `../${appLanguage}/#${provider.currentHashParams().toString()}`;
+    }
+
+    if (appLanguage === 'en') return;
+
     try {
-      const translationsModule = await import(`../locale/messages.${locale}.json`);
+      const translationsModule = await import(`../locale/messages.${appLanguage}.json`);
       const translations = translationsModule.default.translations || translationsModule.default;
 
       loadTranslations(translations);
-      console.log(`Loaded translations for locale: ${locale}`);
+      console.log(`Loaded translations for locale: ${appLanguage}`);
     } catch (err) {
-      console.warn(`Could not load translation file for locale: ${locale}`, err);
+      console.warn(`Could not load translation file for locale: ${appLanguage}`, err);
     }
   };
 }

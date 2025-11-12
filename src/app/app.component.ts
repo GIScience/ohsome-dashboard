@@ -15,6 +15,8 @@ declare let $;
   standalone: false
 })
 export class AppComponent implements AfterViewInit {
+  urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
   public announcement: string;
@@ -28,13 +30,12 @@ export class AppComponent implements AfterViewInit {
 
 
   constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
-              oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-              urlHashParamsProviderService: UrlHashParamsProviderService) {
+              oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
     this.hasAnnouncement = ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
     this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
     this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
-    this.stateService.updatePartialState({showWelcomeScreen: urlHashParamsProviderService.getHashURLSearchParams().size === 0});
+    this.stateService.updatePartialState({showWelcomeScreen: this.urlHashParamsProviderService.getHashURLSearchParams().size === 0});
   }
 
   ngAfterViewInit(): void {
@@ -59,7 +60,8 @@ export class AppComponent implements AfterViewInit {
 
   switchLanguage(selectedLanguage: string): void {
     localStorage.setItem('locale', selectedLanguage)
-    location.reload()
+    //location.reload()
+    location.href = `../${selectedLanguage}/#${this.urlHashParamsProviderService.currentHashParams().toString()}`;
   }
 
 }

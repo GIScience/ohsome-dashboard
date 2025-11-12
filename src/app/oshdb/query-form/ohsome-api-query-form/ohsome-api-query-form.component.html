@@ -118,7 +118,7 @@ geometry:polygon
       <h4 class="ui header" i18n><i class="list icon"></i>Group Results By ...</h4>
       <div class="one inline fields">
         <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="'none'" (change)="fireResize()"
-                                                    [(ngModel)]="groupBy" checked><label>none</label></div>
+                                                    [(ngModel)]="groupBy" checked><label i18n>none</label></div>
       </div>
       <div class="four inline fields">
         <div *ngFor="let option of groupByOptions" class="field">

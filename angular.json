@@ -5,10 +5,14 @@
   "projects": {
     "dashboard": {
       "i18n": {
-        "sourceLocale": "en",
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": ""
+        },
         "locales": {
           "de": {
-            "translation": "src/locale/messages.de.json"
+            "translation": "src/locale/messages.de.json",
+            "baseHref": ""
           }
         }
       },
@@ -105,7 +109,7 @@
                 }
               },
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
