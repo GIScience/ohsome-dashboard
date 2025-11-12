@@ -42,7 +42,6 @@
               "node_modules/semantic-ui-calendar/dist/calendar.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/prismjs/themes/prism.css"
               "node_modules/prismjs/themes/prism.css",
               "node_modules/tabulator-tables/dist/css/tabulator_semanticui.css"
             ],
@@ -189,7 +188,6 @@
               "node_modules/semantic-ui-calendar/dist/calendar.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/prismjs/themes/prism.css"
               "node_modules/prismjs/themes/prism.css",
               "node_modules/tabulator-tables/dist/css/tabulator_semanticui.css"
             ],
