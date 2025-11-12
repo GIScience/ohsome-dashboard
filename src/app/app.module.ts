@@ -109,15 +109,9 @@ export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderServ
 
 export function translationsInitializerFactory(provider: UrlHashParamsProviderService) {
   return async () => {
-    const locale = localStorage.getItem("locale");
-    const documentLanguage = document.querySelector('html')?.getAttribute('lang');
-    const appLanguage = locale ?? documentLanguage ?? "en";
 
-    localStorage.setItem("locale", appLanguage);
-    if (locale != undefined && (locale != documentLanguage)) {
-      //reload page
-      location.href = `../${appLanguage}/#${provider.currentHashParams().toString()}`;
-    }
+    const documentLanguage = document.querySelector('html')?.getAttribute('lang');
+    const appLanguage = documentLanguage ?? "en";
 
     if (appLanguage === 'en') return;
 
