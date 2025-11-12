@@ -16,6 +16,7 @@ import {catchError, EMPTY} from 'rxjs';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../prism-language-ohsome-filter';
 import {WelcomeComponent} from './welcome/welcome.component';
 import { loadTranslations } from '@angular/localize';
+import {StateService} from './singelton-services/state.service';
 
 declare const Prism;
 
@@ -41,7 +42,7 @@ declare const Prism;
   ],
   providers: [
     provideAppInitializer(() => {
-      const initializerFn = (translationsInitializerFactory)(inject(UrlHashParamsProviderService));
+      const initializerFn = (translationsInitializerFactory)(inject(StateService));
       return initializerFn();
     }),
     provideAppInitializer(() => {
@@ -107,11 +108,12 @@ export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderServ
   return () => provider.updateHashParamsStoreFromUrl()
 }
 
-export function translationsInitializerFactory(provider: UrlHashParamsProviderService) {
+export function translationsInitializerFactory(provider: StateService) {
   return async () => {
 
     const documentLanguage = document.querySelector('html')?.getAttribute('lang');
     const appLanguage = documentLanguage ?? "en";
+    provider.updatePartialState({appLanguage});
 
     if (appLanguage === 'en') return;
 
