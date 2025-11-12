@@ -6,11 +6,13 @@
     "dashboard": {
       "i18n": {
         "sourceLocale": {
-          "code": "en"
+          "code": "en",
+          "baseHref": ""
         },
         "locales": {
           "de": {
-            "translation": "src/locale/messages.de.json"
+            "translation": "src/locale/messages.de.json",
+            "baseHref": ""
           }
         }
       },

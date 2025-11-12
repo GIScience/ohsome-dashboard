@@ -28,22 +28,17 @@
     return navigator.language;
   }
 
-  function getSubPath() {
-    const url = globalThis.location.href;
-    const domainNameIndex = url.indexOf("//");
-    const firstSlashIndex = url.indexOf("/", domainNameIndex + 2);
-    if (firstSlashIndex === -1) return null;
-    return url.substring(firstSlashIndex + 1);
+  function getHash() {
+    return globalThis.location.hash;
   }
 
-  function redirectToRoute(locale, subPath) {
+  function redirectToRoute(locale, hash) {
     if (enableLog) console.log('matching locale ' + locale + ' ...');
     let route = routing[locale];
     if (route != null) {
       if (enableLog) console.log('will redirect to ' + route);
-      if (subPath) {
-        if (!route.endsWith('/')) route += '/';
-        route += subPath;
+      if (hash) {
+        route += hash;
         if (enableLog) console.log('full url will be ' + route);
       }
       globalThis.location.replace(route);
@@ -54,7 +49,7 @@
     if (parts == null || parts.length <= 1) return;
 
     if (enableLog) console.log("will try to use just the language");
-    redirectToRoute(parts[0], subPath);
+    redirectToRoute(parts[0], hash);
   }
 
   ////////////////
@@ -75,8 +70,8 @@
   }
 
   locale = locale.toLowerCase();
-  let subPath = getSubPath();
-  redirectToRoute(locale, subPath);
+  let hash = getHash();
+  redirectToRoute(locale, hash);
 </script>
 </body>
 </html>
