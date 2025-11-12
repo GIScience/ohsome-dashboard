@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<body>
+<!-- based on https://gist.github.com/bvandenbon/dae62a7008d34ab0895e42d9dc5131fa -->
+<script type="text/javascript">
+
+  //////////////
+  /// CONFIG ///
+  //////////////
+
+  const defaultLocale = 'en';
+  const routing = {
+    "en": 'en',
+    "de": 'de'
+  };
+
+  const enableLog = true;
+
+  /////////////////
+  /// FUNCTIONS ///
+  /////////////////
+
+  function getBrowserLanguage() {
+    if (!navigator) return null;
+    if (navigator.languages && navigator.languages.length > 0) return navigator.languages[0];
+    if (navigator.userLanguage) return navigator.userLanguage;
+    if (navigator.browserLanguage) return navigator.browserLanguage;
+    return navigator.language;
+  }
+
+  function getSubPath() {
+    const url = globalThis.location.href;
+    const domainNameIndex = url.indexOf("//");
+    const firstSlashIndex = url.indexOf("/", domainNameIndex + 2);
+    if (firstSlashIndex === -1) return null;
+    return url.substring(firstSlashIndex + 1);
+  }
+
+  function redirectToRoute(locale, subPath) {
+    if (enableLog) console.log('matching locale ' + locale + ' ...');
+    let route = routing[locale];
+    if (route != null) {
+      if (enableLog) console.log('will redirect to ' + route);
+      if (subPath) {
+        if (!route.endsWith('/')) route += '/';
+        route += subPath;
+        if (enableLog) console.log('full url will be ' + route);
+      }
+      globalThis.location.replace(route);
+      return;
+    }
+
+    const parts = locale.split('-');
+    if (parts == null || parts.length <= 1) return;
+
+    if (enableLog) console.log("will try to use just the language");
+    redirectToRoute(parts[0], subPath);
+  }
+
+  ////////////////
+  /// REDIRECT ///
+  ////////////////
+
+  let locale = localStorage.getItem('locale');
+  if (enableLog) console.log('stored locale: ' + locale);
+
+  if (locale == null || routing[locale] == null) {
+    locale = getBrowserLanguage();
+    if (enableLog) console.log('browser locale: ' + locale);
+  }
+
+  if (locale == null || routing[locale] == null) {
+    if (enableLog) console.log('will use default ' + defaultLocale);
+    locale = defaultLocale;
+  }
+
+  locale = locale.toLowerCase();
+  let subPath = getSubPath();
+  redirectToRoute(locale, subPath);
+</script>
+</body>
+</html>

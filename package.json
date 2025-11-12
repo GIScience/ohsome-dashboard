@@ -5,9 +5,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:prod": "ng build --configuration=production",
-    "build:test": "ng build --configuration=test",
-    "build-idai": "ng build --configuration=idai",
+    "build:prod": "ng build --configuration=production && cp src/redirect-locale.html dist/index.html",
+    "build:test": "ng build --configuration=test && cp src/redirect-locale.html dist/index.html",
+    "build-idai": "ng build --configuration=idai && cp src/redirect-locale.html dist/index.html",
     "test": "ng test",
     "test:coverage": "ng test --code-coverage --watch=false",
     "test-chrome": "ng test --browsers=Chrome",
