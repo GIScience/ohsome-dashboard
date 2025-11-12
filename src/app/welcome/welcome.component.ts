@@ -19,7 +19,6 @@ import {
   SortModule,
   Tabulator
 } from 'tabulator-tables';
-import 'tabulator-tables/dist/css/tabulator_semanticui.min.css';
 import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../oqt/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
