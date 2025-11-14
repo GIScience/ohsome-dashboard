@@ -29,7 +29,7 @@ describe('WelcomeComponent', () => {
         {provide: StateService},
       ],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(WelcomeComponent);
     component = fixture.componentInstance;
@@ -73,7 +73,7 @@ describe('WelcomeComponent', () => {
       spyOn($.fn, 'modal');
 
       component.linkTo('oqtApi');
-      expect(UrlHashParamsProviderServiceMock.setHashParams).toHaveBeenCalledWith({ backend: 'oqtApi' });
+      expect(UrlHashParamsProviderServiceMock.setHashParams).toHaveBeenCalledWith({backend: 'oqtApi'});
       expect($('#welcome').modal).toHaveBeenCalledWith('hide');
     });
   });
@@ -90,6 +90,50 @@ describe('WelcomeComponent', () => {
 
     });
   });
+
+  describe('rowClick handler', ()=>{
+    // prepare
+    const fakeRow = {
+      getData: () => ({id: 'TOPIC_123'})
+    } as any; // cast to satisfy RowComponent
+    const fakeEvent = {} as UIEvent;
+    beforeEach(() => {
+      (component as any).urlHashParamsService.updateHashParams.calls.reset();
+      (component as any).urlHashParamsService.setHashParams.calls.reset();
+    })
+
+    it('should update urlHashParams for backend oqtApi', () => {
+
+      //prepare current form tab is oqtApi
+      ((component as any).urlHashParamsService.getHashURLSearchParams as jasmine.Spy).and.returnValue(new URLSearchParams({ backend: 'oqtApi' }));
+
+      // execute test
+      component.onTopicCatalogRowClick(fakeEvent, fakeRow);
+
+      //evaluate
+      // if current form is based on backend=oqtApi, DO preserve other params when switching to oqapi topic
+      expect((component as any).urlHashParamsService.updateHashParams).toHaveBeenCalledWith({ backend: 'oqtApi', topic: 'TOPIC_123' });
+      expect((component as any).urlHashParamsService.setHashParams).not.toHaveBeenCalled();
+
+    });
+
+    it('should set urlHashParams for backend ohsomeApi', () => {
+
+      //prepare current form tab is ohsomeApi
+      ((component as any).urlHashParamsService.getHashURLSearchParams as jasmine.Spy).and.returnValue(new URLSearchParams({ backend: 'ohsomeApi' }));
+
+      // execute test
+      component.onTopicCatalogRowClick(fakeEvent, fakeRow);
+
+      //evaluate
+      // if current form is based on backend=ohsomeApi, DO NOT preserve other params when switching to oqapi topic
+      expect((component as any).urlHashParamsService.setHashParams).toHaveBeenCalledWith({ backend: 'oqtApi', topic: 'TOPIC_123' });
+      expect((component as any).urlHashParamsService.updateHashParams).not.toHaveBeenCalled();
+
+    });
+
+  });
+
 
 
 });

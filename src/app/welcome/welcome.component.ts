@@ -40,7 +40,7 @@ export class WelcomeComponent {
   protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
   private readonly oqtApiMetadata: MetadataResponseJSON = this.oqtApiMetadataProviderService.getOqtApiMetadata();
-  private tabContentElementsHeight: any;
+  private tabContentElementsHeight: number;
   topicIndicatorMatrix: Tabulator;
 
   @ViewChild('welcome') welcomeElement;
