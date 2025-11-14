@@ -66,6 +66,25 @@
     "572632584496667717": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Run Query ",
     "3914422493239764083": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT} Result Log {$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}",
     "7502005988482888830": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Results will be shown here!",
-    "972290210784113204": " Copy Permalink "
+    "972290210784113204": " Copy Permalink ",
+    "4851643581005075782": "Welcome to the {$TAG_IMG}{$START_TAG_SPAN}  DASHBOARD{$CLOSE_TAG_SPAN}",
+    "2171894153326157864": "Introduction",
+    "9077066717247521441": "Topic Catalog",
+    "1271074412246198083": "Switch to History Stats",
+    "2725132696408790805": "History Statistics",
+    "1024336712674848231": "Timeseries & Comparisons",
+    "2433277349625755180": " Discover how OpenStreetMap data evolves over time.{$LINE_BREAK} Explore how many buildings have been mapped or how the length of cycleways has grown in your region.{$LINE_BREAK} Compare different areas, track mapping activity, and gain insights into how the community’s tagging practices change over time. ",
+    "6138590684076938263": "History Statistics Example",
+    "5803205440130271933": "Switch to Quality Analyses",
+    "2087110564074584259": "Quality Analyses",
+    "9007480072462115815": "Indicators & more",
+    "7479500500386644606": " Assess the quality of OpenStreetMap data.{$LINE_BREAK} Choose from a wide range of predefined topics.{$LINE_BREAK} Check out how complete, accurate and up-to-date OSM is for your region of interest.{$LINE_BREAK} Gain confidence in OSM and find out if relevant features and attributes have been mapped. And finally answer the question: Is OSM data fit for my purpose? ",
+    "5947849602689046402": "Quality Analyses Example",
+    "6013646832735219427": "Link to the Swagger API documentation for data extraction.",
+    "7582218790757932854": "Data Extraction",
+    "1565516189397987767": "Download OSM",
+    "8140899462647138073": "{$START_PARAGRAPH}We are working on a convenient way for you to download custom filtered OSM data.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}In the meanwhile you can already download analysis results from the History Stats as CSV or JSON file.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}For smaller regions you can already use our ohsome API directly here:{$LINE_BREAK}{$START_LINK}ohsome API Swagger documentation{$CLOSE_LINK}{$CLOSE_PARAGRAPH}",
+    "8606546867449697486": "Data Extraction with Swagger",
+    "5790286451234271031": "Available topics and indicators:"
   }
 }

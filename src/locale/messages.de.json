@@ -66,6 +66,25 @@
     "572632584496667717": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Abfrage starten ",
     "3914422493239764083": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT} Ergebnisprotokoll {$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}",
     "7502005988482888830": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Ergebnisse werden hier angezeigt!",
-    "972290210784113204": "Permalink kopieren"
+    "972290210784113204": "Permalink kopieren",
+    "4851643581005075782": "Willkommen zum {$TAG_IMG}{$START_TAG_SPAN}  DASHBOARD{$CLOSE_TAG_SPAN}",
+    "2171894153326157864": "Intro",
+    "9077066717247521441": "Topic Katalog",
+    "1271074412246198083": "OSM-Zeitreihen aufrufen",
+    "2725132696408790805": "OSM-Zeitreihen",
+    "1024336712674848231": "Zeitreihen & Vergleiche",
+    "2433277349625755180": " Entdecke, wie sich die Daten von OpenStreetMap im Laufe der Zeit entwickeln.{$LINE_BREAK} Erkunde, wie viele Gebäude kartiert wurden oder wie die Länge der Radwege in deiner Region gewachsen ist.{$LINE_BREAK} Vergleiche verschiedene Gebiete, verfolge die Mapping-Aktivitäten und gewinne Einblicke über Veränderungen der Tagging-Praktiken der Community im Verlauf der Zeit. ",
+    "6138590684076938263": "Beispiel für OSM Zeitreihen",
+    "5803205440130271933": "Qualitäts Analysen aufrufen",
+    "2087110564074584259": "Qualitäts Analysen",
+    "9007480072462115815": "Indikatoren & mehr",
+    "7479500500386644606": " Analysiere die Qualität der OpenStreetMap-Daten.{$LINE_BREAK} Wähle aus einer großen Auswahl vordefinierter Themen.{$LINE_BREAK} Prüfe, wie vollständig, genau und aktuell OSM für deine Region ist.{$LINE_BREAK} Gewinne Vertrauen in OSM und finde heraus, ob relevante Objekte und Attribute erfasst wurden. Beantworte die Frage: Sind OSM-Daten gut genug für meinen Anwendungsfall? ",
+    "5947849602689046402": "Beispiel für Qualitäts Analysen",
+    "6013646832735219427": "Link zur Swagger API Dokumentation für Datenextraktion.",
+    "7582218790757932854": "Daten Export",
+    "1565516189397987767": "Download OSM",
+    "8140899462647138073": "{$START_PARAGRAPH}Wir arbeiten daran, dass Du schnell und einfach gefilterte OSM-Daten nach deinen Wünschen herunterladen kannst.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Bis es soweit ist, kannst du bereits Analyseergebnisse aus den OSM-Zeitreihen als CSV- oder JSON-Datei herunterladen.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Für kleinere Regionen kannst du auch unsere ohsome API direkt nutzen:{$LINE_BREAK}{$START_LINK}ohsome API Swagger-Dokumentation{$CLOSE_LINK}{$CLOSE_PARAGRAPH}",
+    "8606546867449697486": "Data Extraktion mit Swagger",
+    "5790286451234271031": "Vordefinierte 'topics' und verfügbare Indikatoren:"
   }
 }
