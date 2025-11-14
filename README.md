@@ -51,7 +51,8 @@ npm start
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Be aware that only one locale is available in the dev server mode.
 
 ## Code scaffolding
 
@@ -59,7 +60,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod --env=prod` flag for a production build.
+Run `mpm run build:{prod|test}` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Linting
 We are using `eslint`. To configure rules change `.eslintrc.json`.
