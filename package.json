@@ -15,6 +15,7 @@
     "test-chromium-headless": "ng test --browsers=ChromiumHeadless --watch=false",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
+    "extract-i18n": " ng extract-i18n --format json --output-path src/locale --out-file messages-source.en.json",
     "e2e": "ng e2e"
   },
   "dependencies": {
