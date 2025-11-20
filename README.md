@@ -75,7 +75,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 To enable translations in html templates use the `i18n` directive:
 ```angular20html
-<h1 i18n>Welocome</h1>
+<h1 i18n>Welcome</h1>
 ```
 
 To enable translations in typescript code use `$localize`-template strings:
