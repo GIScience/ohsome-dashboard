@@ -26,3 +26,7 @@
     outline: auto;
     }
 }
+
+.quality-dimension {
+  text-transform: capitalize;
+}
