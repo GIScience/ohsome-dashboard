@@ -4,17 +4,8 @@
   <label for="{{indicator.key}}">
     <div class="content">
       <a class="header">{{indicator.name}}</a>
-      <div [innerHTML]="indicator.description"class="description"></div>
+      <div [innerHTML]="indicator.description" class="description"></div>
     </div>
   </label>
-</div>
-<div *ngIf="indicator.key === 'currentness'">
-  <legend i18n>Do you want to make computation faster, but limit yourself to areas in Germany?</legend>
-  <label i18n
-    ><input type="radio" id="ohsomedb-feature-flag-enabled" name="ohsomedb" [(ngModel)]="ohsomedb" [value]="false"/> No, make sure it works globally.</label>
-  <br>
-  <label i18n
-    ><input type="radio" id="ohsomedb-feature-flag-disabled" name="ohsomedb" [(ngModel)]="ohsomedb" [value]="true" /> Yes, make it faster.</label
-  >
 </div>
 <ng-content></ng-content>

@@ -37,8 +37,7 @@ describe('OqtResultComponent', () => {
       'currentness': false,
       'attribute-completeness': true,
       'attribute-completeness--attribute': "house-number",
-      'bboxes': "8.6252588,49.3819766,8.7295724,49.4364995",
-      "ohsomedb": false
+      'bboxes': "8.6252588,49.3819766,8.7295724,49.4364995"
     }
     fixture.detectChanges();
   });

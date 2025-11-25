@@ -51,7 +51,7 @@
     <div class="ui two column equal width grid">
       <div *ngFor="let indicator of indicatorList" class="indicator-container"
            [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
-        <app-indicator-result [topicKey]="formValues.topic" [indicator]="indicator" [bpolys]="boundaries" [ohsomedb]="formValues.ohsomedb"></app-indicator-result>
+        <app-indicator-result [topicKey]="formValues.topic" [indicator]="indicator" [bpolys]="boundaries"></app-indicator-result>
       </div>
     </div>
   </div>

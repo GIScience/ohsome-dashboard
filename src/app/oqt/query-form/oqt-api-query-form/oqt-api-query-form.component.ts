@@ -25,7 +25,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
   private indicatorCoverages: Userlayer[] = [];
-  public ohsomedb: string;
 
   // For the ui we need
 
@@ -74,8 +73,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.indicators = this.getEnrichedIndicators();
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
-
-    this.ohsomedb = this.hashParams.get('ohsomedb') ?? 'false';
 
     // fill form with hash or default values
     // set topic
