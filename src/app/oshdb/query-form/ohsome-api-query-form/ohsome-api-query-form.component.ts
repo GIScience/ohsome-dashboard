@@ -38,16 +38,21 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   // OSM advanced ohsome filter
   public selectedFilter: string;
 
-  // Measure
-  public measureOptions: string[] = ['count', 'length', 'area', 'perimeter'];
+// Measure
+  public measureOptions: { value: string; label: string }[] = [
+    { value: 'count', label: $localize`count` },
+    { value: 'length', label: $localize`length` },
+    { value: 'area', label: $localize`area` },
+    { value: 'perimeter', label: $localize`perimeter` }
+  ];
   public measure: string;
 
-  // GroupBy
+// GroupBy
   public groupByOptions: { value: string, label: string }[] = [
-    {value: 'type', label: 'OSM type'},
-    {value: 'boundary', label: 'boundary'},
-    {value: 'tag', label: 'tag'},
-    {value: 'key', label: 'key'}
+    { value: 'type', label: $localize`OSM type` },
+    { value: 'boundary', label: $localize`boundary` },
+    { value: 'tag', label: $localize`tag` },
+    { value: 'key', label: $localize`key` }
   ];
   public groupBy: string;
   public groupByKeys: string;
@@ -88,7 +93,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       ? this.hashParams.get('value') ?? ''
       : environment.selectedValue;
     this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
-    this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0]);
+    this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0].value);
     this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
     this.groupByKeys = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKeys', '');
     this.groupByKey = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKey', '');

@@ -1,7 +1,13 @@
 prompt_user() {
     local question="$1"  # Capture the first argument as the question
     while true; do
-        read -p "$question (y/n): " choice
+        read -p "$question (Y/n): " choice
+
+        # Default to "y" if user just presses Enter (-z test on zero length)
+            if [[ -z "$choice" ]]; then
+                choice="y"
+            fi
+
         case "$choice" in
             y|Y )
                 echo "You chose Yes."

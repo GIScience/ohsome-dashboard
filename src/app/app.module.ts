@@ -1,6 +1,6 @@
 import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {AppComponent} from './app.component';
 
 import {OshdbModule} from './oshdb/oshdb.module';
@@ -14,6 +14,9 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from '../prism-language-ohsome-filter';
+import {WelcomeComponent} from './welcome/welcome.component';
+import { loadTranslations } from '@angular/localize';
+import {StateService} from './singelton-services/state.service';
 
 declare const Prism;
 
@@ -22,7 +25,7 @@ declare const Prism;
     AppComponent,
     QueryPanelComponent,
     ResultPanelComponent,
-    ResultListDirective,
+    ResultListDirective
   ],
   exports: [
     QueryPanelComponent,
@@ -34,8 +37,14 @@ declare const Prism;
     BrowserModule,
     SharedModule,
     OshdbModule,
-    OqtModule],
+    OqtModule,
+    WelcomeComponent
+  ],
   providers: [
+    provideAppInitializer(() => {
+      const initializerFn = (translationsInitializerFactory)(inject(StateService));
+      return initializerFn();
+    }),
     provideAppInitializer(() => {
         const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
         return initializerFn();
@@ -60,7 +69,7 @@ declare const Prism;
         const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
         return initializerFn();
       }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
   ]
 })
 export class AppModule {
@@ -97,4 +106,25 @@ export function oqtApiAttributeProviderFactory(provider: OqtApiMetadataProviderS
 
 export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
   return () => provider.updateHashParamsStoreFromUrl()
+}
+
+export function translationsInitializerFactory(provider: StateService) {
+  return async () => {
+
+    const documentLanguage = document.querySelector('html')?.getAttribute('lang');
+    const appLanguage = documentLanguage ?? "en";
+    provider.updatePartialState({appLanguage});
+
+    if (appLanguage === 'en') return;
+
+    try {
+      const translationsModule = await import(`../locale/messages.${appLanguage}.json`);
+      const translations = translationsModule.default.translations || translationsModule.default;
+
+      loadTranslations(translations);
+      console.log(`Loaded translations for locale: ${appLanguage}`);
+    } catch (err) {
+      console.warn(`Could not load translation file for locale: ${appLanguage}`, err);
+    }
+  };
 }

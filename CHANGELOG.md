@@ -3,6 +3,9 @@ Changelog
 
 ## current
 * build: fix Jenkins build pipeline (e.g. use node 22, fix karma test command)
+* feat: add i18n and german translation
+* feat: add new welcome window with introduction to the dashboard
+* fix: fix dead links and remove outdated information in the footer
 
 ## 1.7.1
 

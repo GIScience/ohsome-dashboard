@@ -1,4 +1,4 @@
-<h5 style="margin-top: 0.8rem">Check the topic "{{ selectedTopic.name }}" on having the following attribute(s):</h5>
+<h5 style="margin-top: 0.8rem" i18n>Check the topic "{{ selectedTopic.name }}" on having the following attribute(s):</h5>
 
 <div class="editable-attributes">
   @if (!useCustomFilterMode()) {
@@ -51,7 +51,7 @@
       <!--        <div id="description">Description text will be set automatically</div>-->
       <!--      </div>-->
       <div class="column">
-        <h4 class="ui header">ohsome Filter definition:</h4>
+        <h4 class="ui header" i18n>ohsome Filter definition:</h4>
         <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter">Filter text will be set automatically</code></pre>
       </div>
     </div>
@@ -61,9 +61,9 @@
 <div id="attributes-editor-dimmer"></div>
 <div id="attributes-editor" class="ui modal">
   <div class="header">
-    <h1 class="ui header">View and Edit your Attribute Filter</h1>
+    <h1 class="ui header" i18n>View and Edit your Attribute Filter</h1>
   </div>
-  <div class="scrolling content">
+  <div class="scrolling content" i18n>
     Here you can specify your own attribute filter, in case we do not have an appropriate predefined attribute
     available.
     <div class="ui accordion">

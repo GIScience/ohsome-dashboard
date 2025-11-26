@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ohsome DASHBOARD</title>
+</head>
+<body>
+<noscript>
+  <h1>
+    <a href="https://ohsome.org"><img src="en/assets/images/ohsome_narrow.svg" alt="ohsome logo"></a>
+    &nbsp;<span style="font-family: sans-serif">DASHBOARD</span></h1>
+  <div>
+    <p>The ohsome dashboard doesn't work without JavaScript. Please enable JavaScript.</p>
+
+    <p>More information about the ohsome Platform can be found on
+    <a href="https://ohsome.org">ohsome.org</a>.
+    If you want to know more about HeiGIT in general, please visit us on
+    <a href="https://heigit.org">heigit.org</a>.</p>
+
+    <p><a href="https://heigit.org"><img src="en/assets/images/HeiGIT_Logo_only.svg" alt="HeiGIT Logo"></a></p>
+
+    <p><a href="https://heigit.org/imprint">Imprint</a> | <a href="https://heigit.org/privacy-policy">Privacy Policy</a></p>
+  </div>
+</noscript>
+<!-- based on https://gist.github.com/bvandenbon/dae62a7008d34ab0895e42d9dc5131fa -->
+<script type="text/javascript">
+
+  //////////////
+  /// CONFIG ///
+  //////////////
+
+  const defaultLocale = 'en';
+  const routing = {
+    "en": 'en',
+    "de": 'de'
+  };
+
+  const enableLog = true;
+
+  /////////////////
+  /// FUNCTIONS ///
+  /////////////////
+
+  function getBrowserLanguage() {
+    if (!navigator) return null;
+    if (navigator.languages && navigator.languages.length > 0) return navigator.languages[0];
+    if (navigator.userLanguage) return navigator.userLanguage;
+    if (navigator.browserLanguage) return navigator.browserLanguage;
+    return navigator.language;
+  }
+
+  function getHash() {
+    return globalThis.location.hash;
+  }
+
+  function redirectToRoute(locale, hash) {
+    if (enableLog) console.log('matching locale ' + locale + ' ...');
+    let route = routing[locale];
+    if (route != null) {
+      if (enableLog) console.log('will redirect to ' + route);
+      if (hash) {
+        route += hash;
+        if (enableLog) console.log('full url will be ' + route);
+      }
+      globalThis.location.replace(route);
+      return;
+    }
+
+    const parts = locale.split('-');
+    if (parts == null || parts.length <= 1) return;
+
+    if (enableLog) console.log("will try to use just the language");
+    redirectToRoute(parts[0], hash);
+  }
+
+  ////////////////
+  /// REDIRECT ///
+  ////////////////
+
+  let locale = localStorage.getItem('locale');
+  if (enableLog) console.log('stored locale: ' + locale);
+
+  if (locale == null || routing[locale] == null) {
+    locale = getBrowserLanguage();
+    if (enableLog) console.log('browser locale: ' + locale);
+  }
+
+  if (locale == null || routing[locale] == null) {
+    if (enableLog) console.log('will use default ' + defaultLocale);
+    locale = defaultLocale;
+  }
+
+  locale = locale.toLowerCase();
+  let hash = getHash();
+  redirectToRoute(locale, hash);
+</script>
+</body>
+</html>

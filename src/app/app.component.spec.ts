@@ -9,30 +9,40 @@ import {ResultListDirective} from './result-panel/result-list.directive';
 import {SharedModule} from './shared/shared.module';
 import {OqtModule} from './oqt/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from './oqt/oqt-api-metadata-provider.service.mock';
+import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
+import UrlHashParamsProviderServiceMock from './singelton-services/url-hash-params-provider.service.mock';
+import {WelcomeComponent} from './welcome/welcome.component';
+import {StateService} from './singelton-services/state.service';
 
 describe('AppComponent', () => {
 
   beforeEach(async () => {
+
     await TestBed.configureTestingModule({
-    declarations: [
+      declarations: [
         AppComponent,
         QueryPanelComponent,
         ResultPanelComponent,
         ResultListDirective,
-    ],
-    imports: [BrowserModule,
+      ],
+      imports: [
+        BrowserModule,
         SharedModule,
         OshdbModule,
-        OqtModule],
-    providers: [
-        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
-        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-}).compileComponents();
+        OqtModule,
+        WelcomeComponent
+      ],
+      providers: [
+        {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
+        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
+        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
+        {provide: StateService},
+        provideHttpClient(withInterceptorsFromDi(), withFetch())
+      ]
+    }).compileComponents();
   });
 
   it('should create the app', () => {
@@ -47,10 +57,19 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('ohsome dashboard');
   });
 
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement as HTMLElement;
-  //   expect(compiled.querySelector('.content span')?.textContent).toContain('ng15-dashboard app is running!');
-  // });
+  it('should show welcome screen', () => {
+      UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams());
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.componentInstance;
+      expect((app as any).stateService.appState().showWelcomeScreen).toBeTrue();
+    }
+  );
+
+  it('should not show welcome screen', () => {
+      UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams({backend: "ohsomeApi"}));
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.componentInstance;
+      expect((app as any).stateService.appState().showWelcomeScreen).toBeFalse();
+    }
+  );
 });

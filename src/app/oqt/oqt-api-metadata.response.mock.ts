@@ -1071,22 +1071,22 @@ export const oqtApiMetadataResponseMock: MetadataResponseJSON = {
     },
     "qualityDimensions": {
       "completeness": {
-        "name": "Completeness",
+        "name": "completeness",
         "description": "The degree to which subject data associated with an entity has values for all expected attributes and related entity instances in a specific context of use.",
         "source": "https://www.iso.org/standard/78900.html"
       },
       "currentness": {
-        "name": "Currentness",
+        "name": "currentness",
         "description": "The degree to which data has attributes that are of the right age in a specific context of use.",
         "source": "https://www.iso.org/standard/35736.html"
       },
       "minimal": {
-        "name": "Minimal",
+        "name": "minimal",
         "description": "A minimal quality dimension definition for testing purposes.",
         "source": null
       },
       "none": {
-        "name": "None",
+        "name": "none",
         "description": "No specific quality dimension",
         "source": null
       }

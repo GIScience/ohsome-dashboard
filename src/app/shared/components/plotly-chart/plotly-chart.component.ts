@@ -11,7 +11,7 @@ export class PlotlyChartComponent implements AfterViewInit{
 @Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;
 @ViewChild('chart', {static: false}) chartDiv: ElementRef<HTMLDivElement>;
 
-  ngAfterViewInit(): void {
+ngAfterViewInit(): void {
     if (!this.plotlyDataLayoutConfig) return;
 
     const {data, layout, config} = this.plotlyDataLayoutConfig;

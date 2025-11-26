@@ -27,7 +27,7 @@ pipeline {
           echo env.TAG_NAME
         }
         nodejs('NodeJS 22') {
-          sh 'npm install'
+          sh 'npm clean-install'
         }
       }
       post {

@@ -4,6 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "dashboard": {
+      "i18n": {
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": ""
+        },
+        "locales": {
+          "de": {
+            "translation": "src/locale/messages.de.json",
+            "baseHref": ""
+          }
+        }
+      },
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,13 +25,15 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "localize": true,
             "outputPath": {
               "base": "dist",
               "browser": ""
             },
             "index": "src/index.html",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -32,7 +46,8 @@
               "node_modules/semantic-ui-calendar/dist/calendar.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/prismjs/themes/prism.css"
+              "node_modules/prismjs/themes/prism.css",
+              "node_modules/tabulator-tables/dist/css/tabulator_semanticui.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -94,7 +109,7 @@
                 }
               },
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -163,7 +178,8 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
@@ -176,7 +192,8 @@
               "node_modules/semantic-ui-calendar/dist/calendar.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/prismjs/themes/prism.css"
+              "node_modules/prismjs/themes/prism.css",
+              "node_modules/tabulator-tables/dist/css/tabulator_semanticui.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

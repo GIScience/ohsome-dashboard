@@ -197,12 +197,12 @@ export class TimePeriodPickerInputComponent implements ControlValueAccessor, Aft
 
 
   @Input() periodOptions: { name: string, value: string }[] = [
-    {name: 'hourly', value: 'PT1H'},
-    {name: 'daily', value: 'P1D'},
-    {name: 'weekly', value: 'P1W'},
-    {name: 'monthly', value: 'P1M'},
-    {name: 'quarterly', value: 'P3M'},
-    {name: 'yearly', value: 'P1Y'},
+    {name: $localize`hourly`, value: 'PT1H'},
+    {name: $localize`daily`, value: 'P1D'},
+    {name: $localize`weekly`, value: 'P1W'},
+    {name: $localize`monthly`, value: 'P1M'},
+    {name: $localize`quarterly`, value: 'P3M'},
+    {name: $localize`yearly`, value: 'P1Y'},
   ];
   // public selectedPeriod = this.periodOptions[2];
 

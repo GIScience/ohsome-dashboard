@@ -1,0 +1,105 @@
+#welcome.modal {
+  position: absolute;
+  bottom: 1.5rem;
+  top: 2.5rem;
+
+  & > .header #title {
+    letter-spacing: 0.2rem;
+    word-spacing: 0.5rem;
+  }
+
+  & > .content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: absolute;
+    bottom: 0;
+    top: 5rem;
+
+    & .tab.segment {
+      flex: 1 0 auto;
+      height: 0;
+      overflow: scroll;
+
+      & .cards {
+
+        & .card {
+          width: 30%;
+          min-width: 192px;
+          @media only screen and (max-width: 700px) {
+            width: 100%;
+          }
+
+          & .header {
+            color: var(--heigit-red);
+          }
+
+          & .image {
+            margin-top: 1rem;
+          }
+
+          &[data-tab="intro"] {
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 1200px) {
+  .ui.custom-large.modal {
+    width: 1190px;
+  }
+}
+
+@media only screen and (min-width: 1850px) {
+  .ui.custom-large.modal {
+    width: 1800px;
+  }
+}
+
+@media only screen and (min-width: 1919px) {
+  .ui.custom-large.modal {
+    width: 1910px;
+  }
+}
+
+.ui.modal > .close {
+  top: 0.5rem;
+  right: 0.5rem;
+  color: inherit;
+}
+
+/* Topic Catalog */
+
+#topicTable {
+  height: calc(100% - 2.5rem);
+  margin-bottom: 0;
+
+  .tabulator-header-filter > input[type="search"] {
+    color: rgba(0, 0, 0, 0.95);
+    border-color: rgba(34, 36, 38, 0.15);
+    border-radius: 0.28571429rem;
+    border-width: 1px;
+    border-style: solid;
+
+    &:is(:focus, :focus-visible, :hover) {
+      border-color: #85B7D9;
+      border-width: 1px;
+    }
+  }
+
+  .tabulator-row {
+
+    &:hover .tabulator-cell[tabulator-field="topic"] {
+      background-color: #e0e0e0;
+    }
+
+    .tabulator-cell[tabulator-field="topic"] {
+      font-weight: bold;
+      background-color: #f9fafb;
+    }
+  }
+}

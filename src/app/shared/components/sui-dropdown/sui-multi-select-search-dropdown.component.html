@@ -1,13 +1,11 @@
 <select
-        [multiple]="this.multiple"
+        [multiple]="multiple"
         [required]="required()"
-        class="ui fluid search selection dropdown"
-        id="search-select-attribute"
+        [class.search]="searchable"
+        class="ui fluid selection dropdown"
         #dropdown
 >
-<!--  name="{{indicatorKey}}--attributes"
-        [(ngModel)]="selectedAttributeKeys"-->
-  <option *ngFor="let entry of selectOptions;"
-          [value]="entry.key">{{ entry.value.name }}
-  </option>
+  @for (entry of selectOptions; track entry.key) {
+    <option [value]="entry.key" [selected]="entry.value.selected">{{ entry.value.name }}</option>
+  }
 </select>

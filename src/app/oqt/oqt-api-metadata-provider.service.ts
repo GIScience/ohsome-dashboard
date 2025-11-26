@@ -110,29 +110,33 @@ export class OqtApiMetadataProviderService {
       );
     }
 
-  cachedData: Record<string, Promise<Userlayer>> = {}; // Initialize the cache as empty
+  cachedData: Record<string, Promise<Userlayer>> = {};
   async getIndicatorCoverage(indicatorKey: string): Promise<Userlayer> {
-
-    if (!(indicatorKey in this.cachedData)) {
-      // Start a new download only if no download is in progress
+    // Return cached or in-progress promise immediately
+    if ( this.cachedData[indicatorKey] === undefined ) {
+      // Start the download and store the in-progress Promise
+      this.cachedData[indicatorKey] = (async () => {
         try {
-          const coverageGeoJSON = await firstValueFrom(this.oqtApi.getIndicatorCoverage(indicatorKey,true));
-          // fill cache
-          this.cachedData[indicatorKey] = Promise.resolve(Object.freeze({
-            name: indicatorKey,
-            title: `Coverage of reference data`,
-            data: coverageGeoJSON,
-            style: {color: '#000', stroke: false}
-          }) as Userlayer);
+          const coverageGeoJSON = await firstValueFrom(
+            this.oqtApi.getIndicatorCoverage(indicatorKey, true)
+          );
 
-          return this.cachedData[indicatorKey];
+          // Freeze and return the Userlayer object
+          return Object.freeze({
+            name: indicatorKey,
+            title: 'Coverage of reference data',
+            data: coverageGeoJSON,
+            style: { color: '#000', stroke: false },
+          }) as Userlayer;
         } catch (error) {
           console.error('Error downloading file:', error);
+          // Remove failed entry from cache to allow retry later
+          delete this.cachedData[indicatorKey];
           throw error;
         }
+      })();
     }
 
-    // Return the cached data
     return this.cachedData[indicatorKey];
   }
 

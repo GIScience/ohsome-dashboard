@@ -5,9 +5,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:prod": "ng build --configuration=production",
-    "build:test": "ng build --configuration=test",
-    "build-idai": "ng build --configuration=idai",
+    "build:prod": "ng build --configuration=production && cp src/redirect-locale.html dist/index.html",
+    "build:test": "ng build --configuration=test && cp src/redirect-locale.html dist/index.html",
+    "build-idai": "ng build --configuration=idai && cp src/redirect-locale.html dist/index.html",
     "test": "ng test",
     "test:coverage": "ng test --code-coverage --watch=false",
     "test-chrome": "ng test --browsers=Chrome",
@@ -15,6 +15,7 @@
     "test-chromium-headless": "ng test --browsers=ChromiumHeadless --watch=false",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
+    "extract-i18n": " ng extract-i18n --format json --output-path src/locale --out-file messages-source.en.json",
     "e2e": "ng e2e"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "@angular/compiler": "^20.1.0",
     "@angular/core": "^20.1.0",
     "@angular/forms": "^20.1.0",
+    "@angular/localize": "~20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/platform-browser-dynamic": "^20.1.0",
     "@angular/router": "^20.1.0",
@@ -51,7 +53,9 @@
     "prismjs": "^1.30.0",
     "rxjs": "^7.8.2",
     "semantic-ui-calendar": "^0.0.8",
-    "tslib": "^2.5.0"
+    "tabulator-tables": "^6.3.1",
+    "tslib": "^2.5.0",
+    "zone.js": "^0.15.1"
   },
   "devDependencies": {
     "@angular-eslint/builder": "20.1.1",
@@ -69,6 +73,7 @@
     "@types/node": "~18.14.1",
     "@types/plotly.js-dist-min": "^2.3.4",
     "@types/prismjs": "^1.26.5",
+    "@types/tabulator-tables": "^6.3.0",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",

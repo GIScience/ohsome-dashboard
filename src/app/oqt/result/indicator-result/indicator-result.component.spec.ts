@@ -137,7 +137,7 @@ describe('IndicatorResultComponent', () => {
     const metadataMockResult = oqtApiMetadataResponseMock.result;
     const qualityDimensionKey = metadataMockResult.indicators[component.indicator.key]['qualityDimension'];
     const labelQualifier = component.labelMap[component.label];
-    const labelName = metadataMockResult.qualityDimensions[qualityDimensionKey].name.toLowerCase();
+    const labelName = metadataMockResult.qualityDimensions[qualityDimensionKey].name;
     expect(displayQualityLabel).toBe(`${labelQualifier} ${labelName}`);
   });
 

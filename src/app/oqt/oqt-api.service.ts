@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, /*of*/} from 'rxjs';
 import {IndicatorResponseJSON} from './types/types';
 import {AttributeResponseJSON} from './types/types';
@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {BaseResponseJSON} from './types/BaseResponseJSON';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
+import {StateService} from '../singelton-services/state.service';
 // import {oqtApiMetadataResponseMock} from './oqt-api-metadata.response.mock';
 // import {indicatorResponseMock} from './result/indicator.response.mock';
 
@@ -19,7 +20,10 @@ export class OqtApiService {
 
   OQT_API_PROJECT: string;
 
-  constructor(private http: HttpClient) {
+  private stateService = inject(StateService);
+  private http = inject(HttpClient);
+
+  constructor() {
     const project = null; //urlHashParamsProviderService.getHashURLSearchParams().get("project");
     this.OQT_API_PROJECT = project || environment.oqtApiProject || 'core';
   }
@@ -28,14 +32,20 @@ export class OqtApiService {
     return this.http.get<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       {
         params: new HttpParams({fromString: queryParams}),
-        responseType: 'json'
+        responseType: 'json',
+        headers: new HttpHeaders({'Accept-Language': this.stateService.appState().appLanguage})
       });
   }
 
   post(urlPath: string, body?: object | null): Observable<BaseResponseJSON> {
     return this.http.post<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
       body,
-      {headers: new HttpHeaders({'Content-Type': 'application/json', 'accept': 'application/json'})});
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json', 'accept': 'application/json',
+          'Accept-Language': this.stateService.appState().appLanguage
+        })
+      });
   }
 
   getMetadata(): Observable<MetadataResponseJSON> {
@@ -54,7 +64,7 @@ export class OqtApiService {
     return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>>;
   }
 
-  getAttributes(): Observable<AttributeResponseJSON>{
+  getAttributes(): Observable<AttributeResponseJSON> {
     const path = `metadata/attributes`;
     return this.get(path) as Observable<AttributeResponseJSON>;
   }

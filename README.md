@@ -12,7 +12,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Setup
 
-Use node v18+
+Use node  ^20.19.0 || ^22.12.0 || ^24.0.0
 
 The following steps describe possible setups using `npm`.
 
@@ -51,7 +51,8 @@ npm start
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Be aware that only one locale is available in the dev server mode.
 
 ## Code scaffolding
 
@@ -59,7 +60,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod --env=prod` flag for a production build.
+Run `mpm run build:{prod|test}` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Linting
 We are using `eslint`. To configure rules change `.eslintrc.json`.
@@ -69,6 +70,28 @@ Run `ng lint` to find out about code style problems.
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Internationalization (i18n) and localization
+
+To enable translations in html templates use the `i18n` directive:
+```angular20html
+<h1 i18n>Welcome</h1>
+```
+
+To enable translations in typescript code use `$localize`-template strings:
+```ts
+const category = $localize`high`;
+```
+
+To actually do the translations run `npm run extract-i18n`.
+
+This will analyze the application and generate a source file with ids and original text snippets from html and typescipt code in one place.
+
+`src/locale/messages-source.en.json`
+
+Do a file compare with the destination language file `src/locale/messages.de.json` and translate everything from the source into the target language.
+
+Make sure to maintain or update the ids from the source to the target.
 
 ## Running end-to-end tests
 
