@@ -17,8 +17,8 @@ export const environment = {
   oqtApiProject: 'all',
 
   //the WFS endpoint which will get appended a CQL_FILTER="id" IN (number, number, ...) param and should return a GeoJSON<FeatureCollection>
-  ohsomeBoundaryWFSUrl: 'https://maps.heigit.org/ohsome/wfs?service=wfs&request=GetFeature&typeNames=ohsome:admin_world_water&outputFormat=application/json&version=2.0.0&srsName=EPSG:4326',
-  ohsomeBoundaryWMSUrl: 'https://maps.heigit.org/ohsome/service/wms',
+  ohsomeBoundaryWFSUrl: 'https://maps.heigit.org/vector/service/ohsome/wfs?service=wfs&request=GetFeature&typeNames=ohsome:admin_world_water&outputFormat=application/json&version=2.0.0&srsName=EPSG:4326',
+  ohsomeBoundaryWMSUrl: 'https://maps.heigit.org/raster/ohsome/wms',
   ohsomeBoundaryWMSLayer: 'ohsome:admin_world_water',
 
   // url to fetch an announcement text
