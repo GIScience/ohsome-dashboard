@@ -8,70 +8,94 @@
     <!--      <i class="filter icon"></i>-->
     <!-- simple filter -->
     <div class="ui item">
-      <span *ngIf="formValues.key" class="ui circular label osmtag">
-              {{formValues.key}} = {{(!!formValues.value) ? formValues.value : '*'}}
-      </span>
+      @if (formValues.key) {
+        <span class="ui circular label osmtag">
+          {{formValues.key}} = {{(!!formValues.value) ? formValues.value : '*'}}
+        </span>
+      }
       <!-- advanced filter -->
-      <span *ngIf="formValues.filter" class="ui circular label osmtag" [title]="formValues.filter">
-      {{title}}
-      </span>
+      @if (formValues.filter) {
+        <span class="ui circular label osmtag" [title]="formValues.filter">
+          {{title}}
+        </span>
+      }
     </div>
     <div class="ui header item">
-      <i *ngFor="let type of formValues?.types"
-         [class]="type + ' icon'" [title]="'The result includes OSM '+type+'s.'">
-      </i>
+      @for (type of formValues?.types; track type) {
+        <i
+          [class]="type + ' icon'" [title]="'The result includes OSM '+type+'s.'">
+        </i>
+      }
     </div>
-    <!--    </h3>-->
+  <!--    </h3>-->
 
+  <div class="ui item">
+    <i class="expand icon" title="measure"></i>{{formValues?.measure}}
+  </div>
+  @if (formValues?.groupBy !== 'none') {
     <div class="ui item">
-      <i class="expand icon" title="measure"></i>{{formValues?.measure}}
-    </div>
-    <div *ngIf="formValues?.groupBy !== 'none'" class="ui item">
       <i class="list icon" title="group By"></i>{{formValues?.groupBy}}
     </div>
-    <div *ngIf="formValues?.groupBy === 'tag'" class="ui item">
+  }
+  @if (formValues?.groupBy === 'tag') {
+    <div class="ui item">
       <i class="key icon" title="group By Key"></i>{{formValues?.groupByKey}}
     </div>
-    <div *ngIf="formValues?.groupBy === 'tag' && formValues?.groupByValues !== ''" class="ui item">
+  }
+  @if (formValues?.groupBy === 'tag' && formValues?.groupByValues !== '') {
+    <div class="ui item">
       <i class="info icon" title="group By Values"></i>{{formValues?.groupByValues}}
     </div>
-    <div *ngIf="formValues?.groupBy === 'key'" class="ui item">
+  }
+  @if (formValues?.groupBy === 'key') {
+    <div class="ui item">
       <i class="key icon" title="group By Keys"></i>{{formValues?.groupByKeys}}
     </div>
-    <div *ngIf="getSelectedNames() !== ''" id="boundaryLabelsItem" class="ui item">
+  }
+  @if (getSelectedNames() !== '') {
+    <div id="boundaryLabelsItem" class="ui item">
       <i class="circle outline icon" title="selected areas"></i>
       <span id="boundaryLabelsText" title="{{getSelectedNames()}}">{{getSelectedNames()}}</span>
     </div>
-  </div>
+  }
+</div>
 
-  <div class="ui right borderless text menu">
-    <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">
-      <i class="download icon" title="Download"></i>
-      <div class="menu">
-        <a class="item" [href]="getJSONDataURL()" download="result.json"><i class="file icon"></i> Ohsome JSON</a>
-        <a class="item" [href]="getCSVDataURL()" download="result.csv"><i class="file icon"></i> CSV</a>
-      </div>
+<div class="ui right borderless text menu">
+  <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">
+    <i class="download icon" title="Download"></i>
+    <div class="menu">
+      <a class="item" [href]="getJSONDataURL()" download="result.json"><i class="file icon"></i> Ohsome JSON</a>
+      <a class="item" [href]="getCSVDataURL()" download="result.csv"><i class="file icon"></i> CSV</a>
     </div>
-    <a class="ui link item" title="Share Permalink to this result" [href]="permalink" (click)="showPermalink($event)"><i
-      class="share icon" title="Share"></i></a>
-    <a class="ui link item" title="Remove this result from the list" (click)="onClose()"><i class="large close icon"></i></a>
   </div>
+  <a class="ui link item" title="Share Permalink to this result" [href]="permalink" (click)="showPermalink($event)"><i
+  class="share icon" title="Share"></i></a>
+  <a class="ui link item" title="Remove this result from the list" (click)="onClose()"><i class="large close icon"></i></a>
+</div>
 </div>
 
 <div [ngClass]="{'loading' : isLoading}" class="result ui bottom attached segment">
   <!-- Error -->
-  <div *ngIf="!!error" class="ui segment">
-    <div>{{error | json}}</div>
-  </div>
-  <div *ngIf="responseType === 'groupByResponse' && groupByResponse.getResult().length === 0">
-    <p>Empty result.</p>
-  </div>
+  @if (!!error) {
+    <div class="ui segment">
+      <div>{{error | json}}</div>
+    </div>
+  }
+  @if (responseType === 'groupByResponse' && groupByResponse.getResult().length === 0) {
+    <div>
+      <p>Empty result.</p>
+    </div>
+  }
 
   <!-- Non Error results -->
-  <app-simple-result *ngIf="responseType === 'simpleResponse'" [chartJsData]="chartJsData"
-                     [chartJsOptions]="chartJsOptions" [chartJsPlugins]="chartJsPlugins"
-                     [unit]="unit"></app-simple-result>
-  <app-simple-groupby-type-result *ngIf="responseType === 'groupByResponse' && groupByResponse.getResult().length > 0"
-                                  [response]="groupByResponse"
-                                  [formValues]="formValues"></app-simple-groupby-type-result>
+  @if (responseType === 'simpleResponse') {
+    <app-simple-result [chartJsData]="chartJsData"
+      [chartJsOptions]="chartJsOptions" [chartJsPlugins]="chartJsPlugins"
+    [unit]="unit"></app-simple-result>
+  }
+  @if (responseType === 'groupByResponse' && groupByResponse.getResult().length > 0) {
+    <app-simple-groupby-type-result
+      [response]="groupByResponse"
+    [formValues]="formValues"></app-simple-groupby-type-result>
+  }
 </div>

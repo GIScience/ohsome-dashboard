@@ -7,17 +7,17 @@
       <!-- 1. Topic or AOI-->
       <h4 id="topicHeading" class="ui header"><i class="filter icon"></i>Topic</h4>
       <button type="button" id="searchTopicBtn" class="ui right floated basic button" tabindex="0"
-              (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})">
+        (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})">
         <i class="icon search"></i>
         Search Topic Catalog
       </button>
       <div class="field">
         <app-sui-multi-select-search-dropdown #searchSelectTopic required
-                                              [multiple]="false"
-                                              name="topic"
-                                              [(ngModel)]="selectedTopicKey"
-                                              [options]="{fullTextSearch: 'exact'}"
-                                              [selectOptions]="topics | keyvalue"></app-sui-multi-select-search-dropdown>
+          [multiple]="false"
+          name="topic"
+          [(ngModel)]="selectedTopicKey"
+          [options]="{fullTextSearch: 'exact'}"
+        [selectOptions]="topics | keyvalue"></app-sui-multi-select-search-dropdown>
       </div>
       <div class="ui basic segment">
         <div class="ui items">
@@ -46,47 +46,53 @@
       <!-- disable unavailable indicators_ (sort by availability?) -->
 
       <!-- grouping indicators with ngModelGroup="indicators" does not work properly. Work around -> handle flat indicators in result   -->
-      <div *ngFor="let qualityDimension of currentQualityDimensions;" id="indicatorGroup">
-        <div class="ui secondary segment">
-          <div class="ui small header quality-dimension">{{ qualityDimensions[qualityDimension].name }}</div>
-          <div class="ui divided items">
-            <!-- individual indicators start -->
-            <div class="item" *ngFor="let indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension];">
-              <app-simple-indicator
-                [indicator]="indicator"
-                [qualityDimension]="qualityDimension"
-                (indicatorToggle)="onIndicatorToggle()"
-              >
-                @switch (indicator.key) {
-                  @case ("attribute-completeness") {
-                    @if (indicator.checked) {
-                      <app-attribute-completeness-attributes
-                        [selectedTopic]="topics[selectedTopicKey]"
-                        [hashParams]="hashParams"
-                        [indicatorKey]="indicator.key"
-                      ></app-attribute-completeness-attributes>
+      @for (qualityDimension of currentQualityDimensions; track qualityDimension) {
+        <div id="indicatorGroup">
+          <div class="ui secondary segment">
+            <div class="ui small header quality-dimension">{{ qualityDimensions[qualityDimension].name }}</div>
+            <div class="ui divided items">
+              <!-- individual indicators start -->
+              @for (indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension]; track indicator) {
+                <div class="item">
+                  <app-simple-indicator
+                    [indicator]="indicator"
+                    [qualityDimension]="qualityDimension"
+                    (indicatorToggle)="onIndicatorToggle()"
+                    >
+                    @switch (indicator.key) {
+                      @case ("attribute-completeness") {
+                        @if (indicator.checked) {
+                          <app-attribute-completeness-attributes
+                            [selectedTopic]="topics[selectedTopicKey]"
+                            [hashParams]="hashParams"
+                            [indicatorKey]="indicator.key"
+                          ></app-attribute-completeness-attributes>
+                        }
+                      }
+                      @case ("land-cover-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-thematical-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-thematical-accuracy-indicator>
+                        }
+                      }
                     }
-                  }
-                  @case ("land-cover-thematic-accuracy") {
-                    @if (indicator.checked) {
-                      <app-thematical-accuracy-indicator
-                        [indicatorKey]="indicator.key"
-                        [hashParams]="hashParams"
-                      ></app-thematical-accuracy-indicator>
-                    }
-                  }
-                }
-              </app-simple-indicator>
+                  </app-simple-indicator>
+                </div>
+              }
+              <!-- individual indicators end -->
             </div>
-            <!-- individual indicators end -->
           </div>
         </div>
-      </div>
+      }
 
       <!-- Warning if a topic exists, but none of its indicators_ is available -->
-      <div *ngIf="currentQualityDimensions.size === 0" class="ui small negative icon message" i18n>
+      @if (currentQualityDimensions.size === 0) {
+        <div class="ui small negative icon message" i18n>
         <i class="minus circle icon"></i>Sorry, currently no indicators are available for this topic.
       </div>
+      }
 
     </div>
 

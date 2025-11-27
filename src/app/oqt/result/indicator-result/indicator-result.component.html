@@ -1,22 +1,28 @@
 <div [ngClass]="{'loading' : isLoading}" class="ui segment grow">
 
-<!--  success -->
-  <ng-container *ngIf="!isLoading && !error">
+  <!--  success -->
+  @if (!isLoading && !error) {
     <div class="ui {{label}} ribbon label">{{displayQualityLabel}}</div>
     <h3 class="ui center aligned header">{{indicatorName}}</h3>
     <div [innerHTML]="indicatorResultDescription" class="ui basic center aligned segment"></div>
-    <app-plotly-chart *ngIf="plotlyDataLayoutConfig" [plotlyDataLayoutConfig]="plotlyDataLayoutConfig"></app-plotly-chart>
-  </ng-container>
+    @if (plotlyDataLayoutConfig) {
+      <app-plotly-chart [plotlyDataLayoutConfig]="plotlyDataLayoutConfig"></app-plotly-chart>
+    }
+  }
 
 
-<!--  error -->
-  <div *ngIf="error" class="ui icon error message">
-    <i class="exclamation triangle icon"></i>
-    <div class="content">
-      <h3 class="header" i18n>Sorry, we were unable to process your query!</h3>
-      <h4>{{error.type}}</h4>
-      <div *ngFor="let detail of error.detail">{{detail.msg}}</div>
+  <!--  error -->
+  @if (error) {
+    <div class="ui icon error message">
+      <i class="exclamation triangle icon"></i>
+      <div class="content">
+        <h3 class="header" i18n>Sorry, we were unable to process your query!</h3>
+        <h4>{{error.type}}</h4>
+        @for (detail of error.detail; track detail) {
+          <div>{{detail.msg}}</div>
+        }
+      </div>
     </div>
-    </div>
+  }
 
 </div>

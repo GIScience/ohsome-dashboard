@@ -1,5 +1,5 @@
 <form #f="ngForm" (ngSubmit)="onSubmit()" class="ui stackable celled grid container form"
-      xmlns="http://www.w3.org/1999/html" appAtLeastOneOqtIndicatorCheckboxChecked>
+  xmlns="http://www.w3.org/1999/html" appAtLeastOneOqtIndicatorCheckboxChecked>
 
   <!--column 1-->
   <div class="eight wide tablet six wide computer column">
@@ -8,150 +8,171 @@
     <!-- tab header -->
     <div class="ui top attached tabular menu" [ngClass]="window.innerWidth <= 440? 'icon labeled': ''">
       <a class="item" data-tab="tab-ohsome-api"
-         [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''"
-         (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i><span i18n>OSM History Stats</span></a>
-      <a class="item" data-tab="tab-oqt-api"
-         [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''"
-         (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0"><i class="cogs icon"></i><span i18n>OSM Quality Analyses</span></a>
-    </div>
-    <!-- tab content -->
-    <!--    OSM STATS-->
-    <div class="ui bottom attached tab secondary segment" data-tab="tab-ohsome-api"
-         [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''">
-      @if (activeBackend === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-        <app-ohsome-api-query-form [hashParams]=hashParams></app-ohsome-api-query-form>
-      }
-      @if (activeBackend === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-        <div class="ui one column grid">
-          <div class="row">
-            <div class="column">
-              <h4 class="ui header" i18n><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome API</h4>
-              <p i18n>Sorry.</p>
-              <p i18n>This service is temporarily unavailable.</p>
-              <p i18n>Please try again later.</p>
-              <p i18n>Thanks for your patience.</p>
+        [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''"
+        (click)="setWhichApi('ohsomeApi')" (keydown.enter)="setWhichApi('ohsomeApi')" tabindex="0"><i class="chart bar outline icon"></i><span i18n>OSM History Stats</span></a>
+        <a class="item" data-tab="tab-oqt-api"
+          [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''"
+          (click)="setWhichApi('oqtApi')" (keydown.enter)="setWhichApi('oqtApi')" tabindex="0"><i class="cogs icon"></i><span i18n>OSM Quality Analyses</span></a>
+        </div>
+        <!-- tab content -->
+        <!--    OSM STATS-->
+        <div class="ui bottom attached tab secondary segment" data-tab="tab-ohsome-api"
+          [ngClass]="activeBackend === 'ohsomeApi' ? 'active' : ''">
+          @if (activeBackend === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+            <app-ohsome-api-query-form [hashParams]=hashParams></app-ohsome-api-query-form>
+          }
+          @if (activeBackend === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+            <div class="ui one column grid">
+              <div class="row">
+                <div class="column">
+                  <h4 class="ui header" i18n><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome API</h4>
+                  <p i18n>Sorry.</p>
+                  <p i18n>This service is temporarily unavailable.</p>
+                  <p i18n>Please try again later.</p>
+                  <p i18n>Thanks for your patience.</p>
+                </div>
+              </div>
             </div>
-          </div>
+          }
         </div>
-      }
-    </div>
-    <!--    OSM ANALYSIS-->
-    <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
-         [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''">
-      <app-oqt-api-query-form *ngIf="activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable"
+        <!--    OSM ANALYSIS-->
+        <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
+          [ngClass]="activeBackend === 'oqtApi' ? 'active' : ''">
+          @if (activeBackend==='oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+            <app-oqt-api-query-form
+            (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
+          }
+          <!-- Error message -->
+          @if (activeBackend==='oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)) {
+            <div
+              class="ui one column grid">
+              <div class="row">
+                <div class="column">
+                  <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>ohsome quality analyst</h4>
+                  <p i18n>Sorry.</p>
+                    <p i18n>This service is temporarily unavailable.</p>
+                      <p i18n>Please try again later.</p>
+                        <p i18n>Thanks for your patience.</p>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <!-- End of Error message -->
 
-                              (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
-      <!-- Error message -->
-      <div *ngIf="activeBackend==='oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)"
-           class="ui one column grid">
-        <div class="row">
-          <div class="column">
-            <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>ohsome quality analyst</h4>
-            <p i18n>Sorry.</p>
-            <p i18n>This service is temporarily unavailable.</p>
-            <p i18n>Please try again later.</p>
-            <p i18n>Thanks for your patience.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End of Error message -->
+              </div>
+              <!-- End of column 1 -->
 
-  </div>
-  <!-- End of column 1 -->
+              <!--column 2-->
+              <div id="col2" class="eight wide tablet ten wide computer column">
+                <h4 class="ui header" i18n>Area of interest</h4>
 
-  <!--column 2-->
-  <div id="col2" class="eight wide tablet ten wide computer column">
-    <h4 class="ui header" i18n>Area of interest</h4>
+                  <div id="boundaryTypeButtons" class="ui top attached buttons leaflet-pm-toolbar">
+                    <button type="button" class="ui button" title="Select admin boundaries"
+                      [ngClass]="{'active': boundaryType === 'admin'}"
+                      (click)="boundaryType = 'admin'"><i class="admin icon"></i></button>
+                      <button type="button" class="ui button active" title="Draw boxes" [ngClass]="{'active': boundaryType === 'bbox'}"
+                        (click)="boundaryType = 'bbox'"><i class="bbox icon"></i></button>
+                        @if (activeBackend==='ohsomeApi') {
+                          <button type="button" class="ui button" title="Draw circles"
+                            [ngClass]="{'active': boundaryType === 'bcircle'}"
+                            (click)="boundaryType = 'bcircle'"><i class="bcircle icon"></i></button>
+                          }
+                          <button type="button" class="ui button" title="Draw polygons" [ngClass]="{'active': boundaryType === 'bpoly'}"
+                            (click)="boundaryType = 'bpoly'"><i class="bpoly icon"></i></button>
+                          </div>
 
-    <div id="boundaryTypeButtons" class="ui top attached buttons leaflet-pm-toolbar">
-      <button type="button" class="ui button" title="Select admin boundaries"
-              [ngClass]="{'active': boundaryType === 'admin'}"
-              (click)="boundaryType = 'admin'"><i class="admin icon"></i></button>
-      <button type="button" class="ui button active" title="Draw boxes" [ngClass]="{'active': boundaryType === 'bbox'}"
-              (click)="boundaryType = 'bbox'"><i class="bbox icon"></i></button>
-      <button *ngIf="activeBackend==='ohsomeApi'" type="button" class="ui button" title="Draw circles"
-              [ngClass]="{'active': boundaryType === 'bcircle'}"
-              (click)="boundaryType = 'bcircle'"><i class="bcircle icon"></i></button>
-      <button type="button" class="ui button" title="Draw polygons" [ngClass]="{'active': boundaryType === 'bpoly'}"
-              (click)="boundaryType = 'bpoly'"><i class="bpoly icon"></i></button>
-    </div>
+                          @if (boundaryType === 'admin') {
+                            <app-boundary-select-input #bsi name="bpolys"
+                              [options]="mapOptions"
+                            [(ngModel)]="adminBoundaries" required></app-boundary-select-input>
+                          }
+                          @if (boundaryType === 'bbox') {
+                            <app-boundary-input #bsi name="bboxes"
+                              [interactionType]="'bbox'"
+                              [options]="mapOptions"
+                            [(ngModel)]="bboxes" required></app-boundary-input>
+                          }
+                          @if (boundaryType === 'bcircle') {
+                            <app-boundary-input #bsi name="bcircles"
+                              [interactionType]="'bcircle'"
+                              [options]="mapOptions"
+                            [(ngModel)]="bcircles" required></app-boundary-input>
+                          }
+                          @if (boundaryType === 'bpoly') {
+                            <app-boundary-input #bsi name="bpolys"
+                              [interactionType]="'bpoly'"
+                              [options]="mapOptions"
+                            [(ngModel)]="bpolys" required></app-boundary-input>
+                          }
 
-    <app-boundary-select-input #bsi *ngIf="boundaryType === 'admin'" name="bpolys"
-                               [options]="mapOptions"
-                               [(ngModel)]="adminBoundaries" required></app-boundary-select-input>
-    <app-boundary-input #bsi *ngIf="boundaryType === 'bbox'" name="bboxes"
-                        [interactionType]="'bbox'"
-                        [options]="mapOptions"
-                        [(ngModel)]="bboxes" required></app-boundary-input>
-    <app-boundary-input #bsi *ngIf="boundaryType === 'bcircle'" name="bcircles"
-                        [interactionType]="'bcircle'"
-                        [options]="mapOptions"
-                        [(ngModel)]="bcircles" required></app-boundary-input>
-    <app-boundary-input #bsi *ngIf="boundaryType === 'bpoly'" name="bpolys"
-                        [interactionType]="'bpoly'"
-                        [options]="mapOptions"
-                        [(ngModel)]="bpolys" required></app-boundary-input>
+                          @if (boundaryType === 'admin') {
+                            <div class="field">
+                              <label i18n>Selected areas</label>
+                                <div class="selected-names ui blue labels">
+                                  @for (selected of selectedNames; track selected; let i = $index) {
+                                    <a [attr.data-feature-index]="i" (click)="removeAdminBoundary($event)" class="ui label">
+                                      {{ selected }} <i class="delete icon"></i>
+                                    </a>
+                                  }
+                                  @if (selectedNames && selectedNames.length > 0) {
+                                    <button
+                                      type="button"
+                                      class="ui tiny red icon button"
+                                      (click)="onRemoveAllBoundaries()"
+                                      title="Remove all"
+                                      >
+                                      <i class="close icon"></i>
+                                    </button>
+                                  }
+                                </div>
+                              </div>
+                            }
 
-    <div *ngIf="boundaryType === 'admin'" class="field">
-      <label i18n>Selected areas</label>
+                            @if (boundaryType === 'bbox') {
+                              <div class="field">
+                                <label for="bboxes" i18n>Bounding Box</label>
+                                  <div class="ui action input">
+                                    <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
+                                    <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear" [disabled]="!bboxes.trim()">
+                                      <i class="close icon"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              }
 
-      <div class="selected-names ui blue labels">
-        <ng-container *ngFor="let selected of selectedNames; let i = index">
-          <a [attr.data-feature-index]="i" (click)="removeAdminBoundary($event)" class="ui label">
-            {{ selected }} <i class="delete icon"></i>
-          </a>
-        </ng-container>
-        <button
-          *ngIf="selectedNames && selectedNames.length > 0"
-          type="button"
-          class="ui tiny red icon button"
-          (click)="onRemoveAllBoundaries()"
-          title="Remove all"
-        >
-          <i class="close icon"></i>
-        </button>
-      </div>
-    </div>
+                              @if (boundaryType === 'bcircle') {
+                                <div class="field">
+                                  <label for="bcircles" i18n>Bounding Circle</label>
+                                    <div class="ui action input">
+                                      <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
+                                      <button type="button" class="ui tiny red icon button" (click)="bcircles = ''" title="Clear" [disabled]="!bcircles.trim()">
+                                        <i class="close icon"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                }
 
-    <div *ngIf="boundaryType === 'bbox'" class="field">
-      <label for="bboxes" i18n>Bounding Box</label>
-      <div class="ui action input">
-        <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
-        <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear" [disabled]="!bboxes.trim()">
-          <i class="close icon"></i>
-        </button>
-      </div>
-    </div>
+                                @if (boundaryType === 'bpoly') {
+                                  <div class="field">
+                                    <label for="bpolys" i18n>Bounding Polygon</label>
+                                      <div class="ui action input">
+                                        <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
+                                        <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear" [disabled]="!bpolys.trim()">
+                                          <i class="close icon"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  }
 
-    <div *ngIf="boundaryType === 'bcircle'" class="field">
-      <label for="bcircles" i18n>Bounding Circle</label>
-      <div class="ui action input">
-        <input type="text" id="bcircles" name="bcircles" [(ngModel)]="bcircles">
-        <button type="button" class="ui tiny red icon button" (click)="bcircles = ''" title="Clear" [disabled]="!bcircles.trim()">
-          <i class="close icon"></i>
-        </button>
-      </div>
-    </div>
+                                </div>
 
-    <div *ngIf="boundaryType === 'bpoly'" class="field">
-      <label for="bpolys" i18n>Bounding Polygon</label>
-      <div class="ui action input">
-        <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
-        <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear" [disabled]="!bpolys.trim()">
-          <i class="close icon"></i>
-        </button>
-      </div>
-    </div>
-
-  </div>
-
-  <!--row 2-->
-  <div class="row">
-    <div class="sixteen wide column">
-      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n><i class="play icon"></i>Run
+                                <!--row 2-->
+                                <div class="row">
+                                  <div class="sixteen wide column">
+                                    <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n><i class="play icon"></i>Run
         Query
       </button>
-    </div>
-  </div>
-</form>
+                                  </div>
+                                </div>
+                              </form>

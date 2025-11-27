@@ -1,34 +1,36 @@
 <h4 class="ui header" i18n><i class="clock icon"></i>Time Interval</h4>
 <div class="bottom attached three fields">
-    <div class="field" id="startfield">
-        <label>Start</label>
-        <div class="ui calendar" id="start">
-            <div class="ui input">
-                <!--<i class="calendar icon"></i>-->
-                <input type="text" name="start" placeholder="Date/Time" [placeholder]="this.autoStartDate()" autocomplete="off" [disabled]="disabled" (blur)="onStartBlur()" onfocus="this.select();">
-            </div>
-        </div>
-
-        <!--<input type="text" name="start" [(value)]="start" (input)="onStartChange($event)" [disabled]="disabled">-->
+  <div class="field" id="startfield">
+    <label>Start</label>
+    <div class="ui calendar" id="start">
+      <div class="ui input">
+        <!--<i class="calendar icon"></i>-->
+        <input type="text" name="start" placeholder="Date/Time" [placeholder]="this.autoStartDate()" autocomplete="off" [disabled]="disabled" (blur)="onStartBlur()" onfocus="this.select();">
+      </div>
     </div>
-    <div class="field" id="endfield">
-        <label i18n>End</label>
-        <div class="ui calendar" id="end">
-            <div class="ui input">
-                <!--<i class="calendar icon"></i>-->
-                <input type="text" name="end" placeholder="Date/Time" i18n-placeholder autocomplete="off" [disabled]="disabled" (blur)="onEndBlur()" onfocus="this.select();">
-            </div>
-        </div>
+
+    <!--<input type="text" name="start" [(value)]="start" (input)="onStartChange($event)" [disabled]="disabled">-->
+  </div>
+  <div class="field" id="endfield">
+    <label i18n>End</label>
+    <div class="ui calendar" id="end">
+      <div class="ui input">
+        <!--<i class="calendar icon"></i>-->
+        <input type="text" name="end" placeholder="Date/Time" i18n-placeholder autocomplete="off" [disabled]="disabled" (blur)="onEndBlur()" onfocus="this.select();">
+      </div>
+    </div>
 
 
-        <!--<input type="text" name="end" [(value)]="end" (input)="onEndChange($event)" [disabled]="disabled">-->
-    </div>
-    <div class="field">
-        <label i18n>Period</label>
-        <select name="period" [(ngModel)]="period"  (input)="onPeriodChange($event)" [disabled]="disabled">
-            <option *ngFor="let option of periodOptions" [value]="option.value">{{option.name}}</option>
-        </select>
-    </div>
+    <!--<input type="text" name="end" [(value)]="end" (input)="onEndChange($event)" [disabled]="disabled">-->
+  </div>
+  <div class="field">
+    <label i18n>Period</label>
+    <select name="period" [(ngModel)]="period"  (input)="onPeriodChange($event)" [disabled]="disabled">
+      @for (option of periodOptions; track option) {
+        <option [value]="option.value">{{option.name}}</option>
+      }
+    </select>
+  </div>
 </div>
 <div class="ui warning message" [class.visible]="(start > end) || periodCheck(start, end, period)" i18n>
     <div class="header">
@@ -36,7 +38,11 @@
     </div>
     Ignoring these may lead to unexpected results.
     <ul class="list">
-        <li *ngIf="start> end" >End time must not be lower than start time.</li>
-        <li *ngIf="periodCheck(start, end, period)">Period is too small for this large timerange.</li>
+        @if (start> end) {
+<li >End time must not be lower than start time.</li>
+}
+        @if (periodCheck(start, end, period)) {
+<li>Period is too small for this large timerange.</li>
+}
     </ul>
 </div>
