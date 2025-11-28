@@ -4,7 +4,6 @@ import {QueryPanelComponent} from './query-panel.component';
 import {OhsomeApiMetadataProviderService} from '../ohsomeapi/ohsome-api-metadata-provider.service';
 import OhsomeApiMetadataProviderServiceMock from '../ohsomeapi/ohsome-api-metadata-provider.service.mock';
 import {OshdbModule} from '../ohsomeapi/oshdb.module';
-import {SharedModule} from '../shared/shared.module';
 import {BrowserModule} from '@angular/platform-browser';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtModule} from '../oqapi/oqt.module';
@@ -16,7 +15,6 @@ describe('QueryPanelComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     imports: [BrowserModule,
-        SharedModule,
         OshdbModule,
         OqtModule, QueryPanelComponent],
     providers: [

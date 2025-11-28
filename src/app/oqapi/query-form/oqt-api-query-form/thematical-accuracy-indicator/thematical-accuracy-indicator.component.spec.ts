@@ -6,7 +6,7 @@ import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provide
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
 import { provideAppInitializer } from '@angular/core';
-import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
+import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 
 

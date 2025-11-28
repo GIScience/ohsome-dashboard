@@ -6,7 +6,6 @@ import OhsomeApiMetadataProviderServiceMock from './ohsomeapi/ohsome-api-metadat
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {ResultListDirective} from './result-panel/result-list.directive';
-import {SharedModule} from './shared/shared.module';
 import {OqtModule} from './oqapi/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
@@ -22,16 +21,15 @@ describe('AppComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-    declarations: [AppComponent],
     imports: [
         BrowserModule,
-        SharedModule,
         OshdbModule,
         OqtModule,
         WelcomeComponent,
         ResultListDirective,
         QueryPanelComponent,
-        ResultPanelComponent
+        ResultPanelComponent,
+        AppComponent
     ],
     providers: [
         { provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock },

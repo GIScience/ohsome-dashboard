@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {ResultComponent} from './result/result.component';
 import {OhsomeApiService} from './ohsome-api.service';
 import {SimpleChartComponent} from './result/simple-chart/simple-chart.component';
 import {SimpleGroupbyResultComponent} from './result/simple-groupby-result/simple-groupby-result.component';
@@ -13,7 +12,6 @@ import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/oh
 @NgModule({
     imports: [
     NgDatePipesModule,
-    ResultComponent,
     SimpleChartComponent,
     SimpleGroupbyResultComponent,
     SimpleResultComponent,
@@ -22,7 +20,6 @@ import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/oh
 ],
     exports: [
         OhsomeApiQueryFormComponent,
-        ResultComponent,
         SimpleChartComponent,
         SimpleGroupbyResultComponent,
         SimpleResultComponent,

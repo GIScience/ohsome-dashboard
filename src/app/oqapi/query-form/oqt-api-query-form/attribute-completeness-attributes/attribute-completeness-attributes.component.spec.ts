@@ -7,7 +7,7 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
 import { SimpleChange, provideAppInitializer } from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
-import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../app.module';
+import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {OqtAttribute, RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {By} from '@angular/platform-browser';
