@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -28,6 +28,12 @@ import bboxPolygon from '@turf/bbox-polygon';
   standalone: false
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
+  private dataService = inject(DataService);
+  ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
+  oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  private osmBoundaryProviderService = inject(OsmBoundaryProviderService);
+
 
   @ViewChild('f', {static: true})
   form: NgForm;
@@ -61,14 +67,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   private formChangesSubscription: Subscription;
 
-
-  constructor(
-    private dataService: DataService,
-    public ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
-    public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private urlHashParamsProviderService: UrlHashParamsProviderService,
-    private osmBoundaryProviderService: OsmBoundaryProviderService,
-  ) {
+  constructor() {
 
     // react on updates in the URLHashParamsProviderService
     effect(() => {

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {environment} from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import {FeatureCollection} from 'geojson';
@@ -10,9 +10,7 @@ const OHSOME_BOUNDARY_WFS_URL = environment.ohsomeBoundaryWFSUrl;
   providedIn: 'root'
 })
 export class OsmBoundaryProviderService {
-
-  constructor(private http: HttpClient) {
-  }
+  private http = inject(HttpClient);
 
   getOsmBoundariesByIds(ids: number[] | undefined): Observable<string> {
     console.log('GET BOUNDARIES', ids);

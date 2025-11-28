@@ -16,6 +16,8 @@ declare let $;
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
+  oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
@@ -28,13 +30,11 @@ export class AppComponent implements AfterViewInit {
 
   protected stateService = inject(StateService);
 
-
-  constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
-              oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
-    this.hasAnnouncement = ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
-    this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
-    this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
-    this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
+  constructor() {
+    this.hasAnnouncement = this.ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
+    this.announcement = this.ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
+    this.ohsomeApiVersion = this.ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
+    this.oqtApiVersion = this.oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
     this.stateService.updatePartialState({showWelcomeScreen: this.urlHashParamsProviderService.getHashURLSearchParams().size === 0});
   }
 

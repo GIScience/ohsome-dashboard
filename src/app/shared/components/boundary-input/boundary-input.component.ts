@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges, inject } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LatLngBounds, Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
@@ -24,6 +24,9 @@ import area from '@turf/area';
 })
 
 export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+  private elRef = inject(ElementRef);
+  private readonly ngZone = inject(NgZone);
+
 
   @Input('interactionType')
   get interactionType(): BoundaryInputComponentInteractionType {
@@ -91,9 +94,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   private isListeningToPmRemove = false;
 
   public map: L.Map;
-
-  constructor(private elRef: ElementRef, private readonly ngZone: NgZone) {
-  }
 
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
