@@ -4,21 +4,18 @@
   <!-- update time -->
   @if (viewUpdateTime) {
     <div class="row" [attr.data-tooltip]="maxDate | date:'yyyy-MM-dd HH:mm'"
-      data-position="bottom center">
+         data-position="bottom center">
       <div class="center aligned column">
         <div class="ui small statistic">
           <div class="label" i18n>
-          Last Data Update
-        </div>
+            Last Data Update
+          </div>
           <div class="value">
             {{ getMaxDateAsDate() | timeAgo }}
           </div>
         </div>
       </div>
     </div>
-  }
-
-  @if (viewUpdateTime) {
     <div class="ui divider"></div>
   }
 
@@ -51,20 +48,20 @@
                        placeholder="leave blank to query all values" i18n-placeholder>
               </div>
             </div>
-            @if (selectedKey.trim()==='*' || selectedValue.trim()==='*' && selectedKey.trim() !== '') {
-              <div class="ui icon message"
-                >
-                <i class="warning icon"></i>
-                <span i18n>You are searching for '*' as literal.
-                    @if (selectedKey.trim()==='*') {
-<span><br>Leave 'Key' blank to not use a tag filter.</span>
-}
-                    @if (selectedValue.trim()==='*') {
-<span><br>Leave 'Value' blank to query all values.</span>
-}
+              @if (selectedKey.trim() === '*' || selectedValue.trim() === '*' && selectedKey.trim() !== '') {
+                <div class="ui icon message">
+                  <i class="warning icon"></i>
+                  <span>
+                    <span i18n>You are searching for '*' as literal.</span>
+                      @if (selectedKey.trim() === '*') {
+                        <br><span i18n>Leave 'Key' blank to not use a tag filter.</span>
+                      }
+                      @if (selectedValue.trim() === '*') {
+                        <br><span i18n>Leave 'Value' blank to query all values.</span>
+                      }
                   </span>
-              </div>
-            }
+                </div>
+              }
           </div>
           <!-- type -->
           <h4 class="ui header" i18n><i class="chooseosmtype icon"></i>OSM type</h4>
