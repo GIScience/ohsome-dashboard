@@ -25,12 +25,10 @@ declare const Prism;
     AppComponent,
     QueryPanelComponent,
     ResultPanelComponent,
-    ResultListDirective
   ],
   exports: [
     QueryPanelComponent,
     ResultPanelComponent,
-    ResultListDirective
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -38,7 +36,8 @@ declare const Prism;
     SharedModule,
     OshdbModule,
     OqtModule,
-    WelcomeComponent
+    WelcomeComponent,
+    ResultListDirective
   ],
   providers: [
     provideAppInitializer(() => {

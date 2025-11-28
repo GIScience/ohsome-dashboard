@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ResultPanelComponent} from './result-panel.component';
 import {ResultListDirective} from './result-list.directive';
@@ -10,10 +10,11 @@ describe('ResultPanelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResultPanelComponent, ResultListDirective ],
-      providers:[DataService]
+      declarations: [ResultPanelComponent],
+      imports: [ResultListDirective],
+      providers: [DataService]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

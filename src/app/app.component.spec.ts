@@ -26,14 +26,14 @@ describe('AppComponent', () => {
         AppComponent,
         QueryPanelComponent,
         ResultPanelComponent,
-        ResultListDirective,
       ],
       imports: [
         BrowserModule,
         SharedModule,
         OshdbModule,
         OqtModule,
-        WelcomeComponent
+        WelcomeComponent,
+        ResultListDirective
       ],
       providers: [
         {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},

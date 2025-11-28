@@ -1,18 +1,16 @@
-import {ComponentRef, Directive, OnInit, ViewContainerRef} from '@angular/core';
+import { ComponentRef, Directive, OnInit, ViewContainerRef, inject } from '@angular/core';
 import {ResultComponent} from '../oshdb/result/result.component';
 import {DataService} from '../singelton-services/data.service';
 import {OqtResultComponent} from '../oqt/result/oqt-result.component';
 
 @Directive({
-    selector: '[appResultList]',
-    standalone: false
+  selector: '[appResultList]'
 })
 export class ResultListDirective implements OnInit {
-  private resultItem: ComponentRef<ResultComponent>;
+  private container = inject(ViewContainerRef);
+  private dataService = inject(DataService);
 
-  constructor(private container: ViewContainerRef,
-              private dataService: DataService) {
-  }
+  private resultItem: ComponentRef<ResultComponent>;
 
   get length() {
     return this.container.length;
