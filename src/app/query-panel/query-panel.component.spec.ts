@@ -15,11 +15,10 @@ describe('QueryPanelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [QueryPanelComponent],
     imports: [BrowserModule,
         SharedModule,
         OshdbModule,
-        OqtModule],
+        OqtModule, QueryPanelComponent],
     providers: [
         { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
         provideHttpClient(withInterceptorsFromDi())

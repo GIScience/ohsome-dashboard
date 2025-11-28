@@ -19,13 +19,12 @@ describe('OqtResultComponent', () => {
     document.body.appendChild(testContainer);
 
     await TestBed.configureTestingModule({
-      declarations: [OqtResultComponent],
-      imports: [OqtModule],
-      providers: [
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
+    imports: [OqtModule, OqtResultComponent],
+    providers: [
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
         provideHttpClient(withInterceptorsFromDi())
-      ]
-    })
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(OqtResultComponent);

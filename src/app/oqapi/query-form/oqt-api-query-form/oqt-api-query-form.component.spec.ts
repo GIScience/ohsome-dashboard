@@ -13,8 +13,7 @@ describe('OqtApiQueryFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [OqtApiQueryFormComponent],
-    imports: [FormsModule, OqtModule],
+    imports: [FormsModule, OqtModule, OqtApiQueryFormComponent],
     providers: [
         NgForm,
         { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },

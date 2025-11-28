@@ -11,28 +11,26 @@ import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
-  imports: [
-    SharedModule,
-    NgDatePipesModule,
-  ],
-  declarations: [
-    ResultComponent,
-    SimpleChartComponent,
-    SimpleGroupbyResultComponent,
-    SimpleResultComponent,
-    TimePeriodPickerInputComponent,
-    OhsomeApiQueryFormComponent,
-  ],
-  exports: [
-    OhsomeApiQueryFormComponent,
-    ResultComponent,
-    SimpleChartComponent,
-    SimpleGroupbyResultComponent,
-    SimpleResultComponent,
-  ],
-  providers: [
-    OhsomeApiService,
-  ]
+    imports: [
+        SharedModule,
+        NgDatePipesModule,
+        ResultComponent,
+        SimpleChartComponent,
+        SimpleGroupbyResultComponent,
+        SimpleResultComponent,
+        TimePeriodPickerInputComponent,
+        OhsomeApiQueryFormComponent,
+    ],
+    exports: [
+        OhsomeApiQueryFormComponent,
+        ResultComponent,
+        SimpleChartComponent,
+        SimpleGroupbyResultComponent,
+        SimpleResultComponent,
+    ],
+    providers: [
+        OhsomeApiService,
+    ]
 })
 export class OshdbModule {
 }

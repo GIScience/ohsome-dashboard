@@ -1,7 +1,10 @@
 import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject } from '@angular/core';
-import {ControlContainer, NgForm} from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
+import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
+import { PrismEditorComponent } from '../../../../shared/components/prism-editor/prism-editor.component';
+import { KeyValuePipe } from '@angular/common';
 
 
 declare const $, Prism;
@@ -11,7 +14,7 @@ declare const $, Prism;
     templateUrl: './attribute-completeness-attributes.component.html',
     styleUrl: './attribute-completeness-attributes.component.css',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    standalone: false
+    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe]
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
   ngZone = inject(NgZone);

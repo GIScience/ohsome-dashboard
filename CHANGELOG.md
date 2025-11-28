@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current
+* refactor: switch to standalone components
+* refactor: use inject() instead of constructor based dependency injection (DI)
+* chore: update to angular v21
 * build: fix Jenkins build pipeline (e.g. use node 22, fix karma test command)
 * feat: add i18n and german translation
 * feat: add new welcome window with introduction to the dashboard

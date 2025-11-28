@@ -4,15 +4,20 @@ import {
   OnInit,
 } from '@angular/core';
 import { corineLandCoverClassMapLevel2 } from './thematical-accuracy-indicator.constants';
-import { ControlContainer, NgForm } from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
+import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
+import { KeyValuePipe } from '@angular/common';
 
 
 @Component({
-  selector: 'app-thematical-accuracy-indicator',
-  templateUrl: './thematical-accuracy-indicator.component.html',
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
-
-  standalone: false,
+    selector: 'app-thematical-accuracy-indicator',
+    templateUrl: './thematical-accuracy-indicator.component.html',
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    imports: [
+        SuiMultiSelectSearchDropdownComponent,
+        FormsModule,
+        KeyValuePipe,
+    ],
 })
 export class ThematicalAccuracyIndicatorComponent implements OnInit {
   @Input({required: true}) indicatorKey!: string;

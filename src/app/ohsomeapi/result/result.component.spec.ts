@@ -17,14 +17,15 @@ describe('ResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResultComponent],
-      imports: [
-        OshdbModule
-      ],
-      providers: [
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
-        provideHttpClient(withInterceptorsFromDi())]
-    })
+    imports: [
+        OshdbModule,
+        ResultComponent
+    ],
+    providers: [
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(ResultComponent);

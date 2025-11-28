@@ -8,8 +8,8 @@ describe('SimpleChartComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleChartComponent ]
-    })
+    imports: [SimpleChartComponent]
+})
     .compileComponents();
   }));
 

@@ -2,12 +2,14 @@ import {Component, Input, OnInit} from '@angular/core';
 import moment from 'moment';
 import {computeGrowthRateCssClass, growthRate, percentFormatter} from '../result.utils';
 import {ChartData} from 'chart.js';
+import { SimpleChartComponent } from '../simple-chart/simple-chart.component';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-simple-result',
     templateUrl: './simple-result.component.html',
     styleUrls: ['./simple-result.component.css'],
-    standalone: false
+    imports: [SimpleChartComponent, NgClass]
 })
 export class SimpleResultComponent implements OnInit {
   public moment = moment;

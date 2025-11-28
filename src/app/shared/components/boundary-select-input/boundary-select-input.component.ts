@@ -20,8 +20,7 @@ import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
             useExisting: forwardRef(() => BoundarySelectInputComponent),
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 
 export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit, OnChanges {

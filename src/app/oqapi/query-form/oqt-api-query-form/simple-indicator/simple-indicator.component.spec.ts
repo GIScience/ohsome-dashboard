@@ -10,13 +10,11 @@ describe('SimpleIndicatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OqtModule],
-      declarations: [SimpleIndicatorComponent],
-      providers: [
+    imports: [OqtModule, SimpleIndicatorComponent],
+    providers: [
         NgForm,
-      ]
-
-    })
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(SimpleIndicatorComponent);

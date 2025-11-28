@@ -19,8 +19,7 @@ import area from '@turf/area';
             useExisting: forwardRef(() => BoundaryInputComponent),
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 
 export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {

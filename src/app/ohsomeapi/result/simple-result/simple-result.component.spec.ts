@@ -11,8 +11,8 @@ describe('SimpleResultComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SimpleResultComponent, SimpleChartComponent]
-    })
+    imports: [SimpleResultComponent, SimpleChartComponent]
+})
       .compileComponents();
   }));
 

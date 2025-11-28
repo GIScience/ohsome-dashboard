@@ -4,7 +4,7 @@ import {
   Input,
   forwardRef
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import moment from 'moment';
 import Utils from '../../../../utils';
 
@@ -21,7 +21,7 @@ declare let $: any;
             multi: true
         }
     ],
-    standalone: false
+    imports: [FormsModule]
 })
 
 export class TimePeriodPickerInputComponent implements ControlValueAccessor, AfterViewInit {

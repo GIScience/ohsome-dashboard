@@ -10,10 +10,9 @@ describe('ResultPanelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ResultPanelComponent],
-      imports: [ResultListDirective],
-      providers: [DataService]
-    })
+    imports: [ResultListDirective, ResultPanelComponent],
+    providers: [DataService]
+})
       .compileComponents();
   }));
 

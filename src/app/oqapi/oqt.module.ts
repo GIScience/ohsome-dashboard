@@ -17,29 +17,27 @@ import {
 
 
 @NgModule({
-  declarations: [
-    OqtApiQueryFormComponent,
-    SimpleIndicatorComponent,
-    AttributeCompletenessAttributesComponent,
-    ThematicalAccuracyIndicatorComponent,
-    OqtResultComponent,
-    IndicatorResultComponent,
-  ],
-  imports: [
-    SharedModule,
-    PrismEditorComponent,
-    SuiMultiSelectSearchDropdownComponent,
-  ],
-  providers: [
-    OqtApiMetadataProviderService,
-    OqtApiService
-  ],
-  exports: [
-    OqtApiQueryFormComponent,
-    SimpleIndicatorComponent,
-    AttributeCompletenessAttributesComponent,
-    OqtResultComponent
-  ]
+    imports: [
+        SharedModule,
+        PrismEditorComponent,
+        SuiMultiSelectSearchDropdownComponent,
+        OqtApiQueryFormComponent,
+        SimpleIndicatorComponent,
+        AttributeCompletenessAttributesComponent,
+        ThematicalAccuracyIndicatorComponent,
+        OqtResultComponent,
+        IndicatorResultComponent,
+    ],
+    providers: [
+        OqtApiMetadataProviderService,
+        OqtApiService
+    ],
+    exports: [
+        OqtApiQueryFormComponent,
+        SimpleIndicatorComponent,
+        AttributeCompletenessAttributesComponent,
+        OqtResultComponent
+    ]
 })
 export class OqtModule {
 }

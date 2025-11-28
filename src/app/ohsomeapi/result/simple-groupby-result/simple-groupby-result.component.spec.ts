@@ -12,8 +12,8 @@ describe('SimpleGroupbyResultComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SimpleGroupbyResultComponent, SimpleChartComponent]
-    })
+    imports: [SimpleGroupbyResultComponent, SimpleChartComponent]
+})
       .compileComponents();
   }));
 

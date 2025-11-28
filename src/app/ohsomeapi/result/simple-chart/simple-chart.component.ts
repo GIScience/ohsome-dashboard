@@ -6,8 +6,7 @@ declare let $: any;
 @Component({
     selector: 'app-simple-chart',
     templateUrl: './simple-chart.component.html',
-    styleUrls: ['./simple-chart.component.css'],
-    standalone: false
+    styleUrls: ['./simple-chart.component.css']
 })
 export class SimpleChartComponent implements AfterViewInit {
   private elemRef = inject(ElementRef);

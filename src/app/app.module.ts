@@ -21,55 +21,53 @@ import {StateService} from './singelton-services/state.service';
 declare const Prism;
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    QueryPanelComponent,
-    ResultPanelComponent,
-  ],
-  exports: [
-    QueryPanelComponent,
-    ResultPanelComponent,
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    SharedModule,
-    OshdbModule,
-    OqtModule,
-    WelcomeComponent,
-    ResultListDirective
-  ],
-  providers: [
-    provideAppInitializer(() => {
-      const initializerFn = (translationsInitializerFactory)(inject(StateService));
-      return initializerFn();
-    }),
-    provideAppInitializer(() => {
-        const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
-        return initializerFn();
-      }),
-    provideAppInitializer(() => {
-        const initializerFn = (ohsomeApiMetadataProviderFactory)(inject(OhsomeApiMetadataProviderService));
-        return initializerFn();
-      }),
-    provideAppInitializer(() => {
-        const initializerFn = (ohsomeApiAnnouncementProviderFactory)(inject(OhsomeApiMetadataProviderService));
-        return initializerFn();
-      }),
-    provideAppInitializer(() => {
-        const initializerFn = (oqtApiMetadataProviderFactory)(inject(OqtApiMetadataProviderService));
-        return initializerFn();
-      }),
-    provideAppInitializer(() => {
-        const initializerFn = (oqtApiAttributeProviderFactory)(inject(OqtApiMetadataProviderService));
-        return initializerFn();
-      }),
-    provideAppInitializer(() => {
-        const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
-        return initializerFn();
-      }),
-    provideHttpClient(withInterceptorsFromDi(), withFetch()),
-  ]
+    declarations: [AppComponent],
+    exports: [
+        QueryPanelComponent,
+        ResultPanelComponent,
+    ],
+    bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
+        SharedModule,
+        OshdbModule,
+        OqtModule,
+        WelcomeComponent,
+        ResultListDirective,
+        QueryPanelComponent,
+        ResultPanelComponent
+    ],
+    providers: [
+        provideAppInitializer(() => {
+            const initializerFn = (translationsInitializerFactory)(inject(StateService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (ohsomeApiMetadataProviderFactory)(inject(OhsomeApiMetadataProviderService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (ohsomeApiAnnouncementProviderFactory)(inject(OhsomeApiMetadataProviderService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (oqtApiMetadataProviderFactory)(inject(OqtApiMetadataProviderService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (oqtApiAttributeProviderFactory)(inject(OqtApiMetadataProviderService));
+            return initializerFn();
+        }),
+        provideAppInitializer(() => {
+            const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
+            return initializerFn();
+        }),
+        provideHttpClient(withInterceptorsFromDi(), withFetch()),
+    ]
 })
 export class AppModule {
 }

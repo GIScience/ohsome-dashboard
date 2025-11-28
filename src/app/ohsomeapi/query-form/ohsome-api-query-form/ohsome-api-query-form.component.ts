@@ -1,8 +1,11 @@
 import { AfterViewInit, Component, Input, OnInit, inject } from '@angular/core';
-import {ControlContainer, NgForm} from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {environment} from '../../../../environments/environment';
 import Utils from '../../../../utils';
 import {OhsomeApiMetadataProviderService} from '../../ohsome-api-metadata-provider.service';
+import { NgClass, DatePipe } from '@angular/common';
+import { TimePeriodPickerInputComponent } from '../time-period-picker-input/time-period-picker-input.component';
+import { NgDatePipesModule } from 'ngx-pipes';
 
 declare let $: any;
 
@@ -11,7 +14,7 @@ declare let $: any;
     templateUrl: './ohsome-api-query-form.component.html',
     styleUrls: ['./ohsome-api-query-form.component.css'],
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    standalone: false
+    imports: [FormsModule, NgClass, TimePeriodPickerInputComponent, DatePipe, NgDatePipesModule]
 })
 
 export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {

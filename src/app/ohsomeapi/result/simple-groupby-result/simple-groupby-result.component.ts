@@ -4,6 +4,8 @@ import moment from 'moment';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import Utils from '../../../../utils';
 import {computeGrowthRateCssClass, growthRate} from '../result.utils';
+import { NgClass } from '@angular/common';
+import { SimpleChartComponent } from '../simple-chart/simple-chart.component';
 import format = OhsomeApi.v1.format;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 
@@ -12,7 +14,7 @@ import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
     selector: 'app-simple-groupby-type-result',
     templateUrl: './simple-groupby-result.component.html',
     styleUrls: ['./simple-groupby-result.component.css'],
-    standalone: false
+    imports: [NgClass, SimpleChartComponent]
 })
 export class SimpleGroupbyResultComponent implements OnInit {
 

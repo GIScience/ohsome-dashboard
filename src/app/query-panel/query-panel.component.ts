@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import {NgForm} from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
 import envelope from '@turf/envelope';
@@ -20,12 +20,16 @@ import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
+import { AtLeastOneCheckboxCheckedDirective } from '../shared/directives/validation/at-least-one-checkbox-checked.directive';
+import { NgClass } from '@angular/common';
+import { OhsomeApiQueryFormComponent } from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
+import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form/oqt-api-query-form.component';
 
 @Component({
-  selector: 'app-query-panel',
-  templateUrl: './query-panel.component.html',
-  styleUrls: ['./query-panel.component.css'],
-  standalone: false
+    selector: 'app-query-panel',
+    templateUrl: './query-panel.component.html',
+    styleUrls: ['./query-panel.component.css'],
+    imports: [FormsModule, AtLeastOneCheckboxCheckedDirective, NgClass, OhsomeApiQueryFormComponent, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);

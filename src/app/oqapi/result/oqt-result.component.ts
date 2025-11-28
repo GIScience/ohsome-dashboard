@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, inject } from '@angular/core';
-import {ViewportScroller} from '@angular/common';
+import { ViewportScroller, NgClass } from '@angular/common';
 import {Feature, FeatureCollection, MultiPolygon, Polygon, BBox} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
@@ -13,6 +13,7 @@ import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-pa
 import {IndicatorParams, Params} from '../types/types'
 import Bpolys = OhsomeApi.v1.request.Bpolys;
 import { corineLandCoverClassMapLevel2 } from '../query-form/oqt-api-query-form/thematical-accuracy-indicator/thematical-accuracy-indicator.constants';
+import { IndicatorResultComponent } from './indicator-result/indicator-result.component';
 
 declare let $: any;
 
@@ -20,7 +21,7 @@ declare let $: any;
     selector: 'app-oqt-result',
     templateUrl: './oqt-result.component.html',
     styleUrls: ['./oqt-result.component.css'],
-    standalone: false
+    imports: [NgClass, IndicatorResultComponent]
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);

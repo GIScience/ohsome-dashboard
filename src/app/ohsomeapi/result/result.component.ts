@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, inject } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {OhsomeApiService} from '../ohsome-api.service';
-import {ViewportScroller} from '@angular/common';
+import { ViewportScroller, NgClass, JsonPipe } from '@angular/common';
 import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipOptions} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
@@ -16,6 +16,9 @@ import Response = OhsomeApi.v1.response.Response;
 import SimpleResponse = OhsomeApi.v1.response.SimpleResponse;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 import {RequiredAndDefined} from '../../shared/shared-types';
+import { SimpleResultComponent } from './simple-result/simple-result.component';
+import { SimpleGroupbyResultComponent } from './simple-groupby-result/simple-groupby-result.component';
+import { OshdbModule } from '../oshdb.module';
 
 declare let $: any;
 
@@ -23,7 +26,7 @@ declare let $: any;
     selector: 'app-result',
     templateUrl: './result.component.html',
     styleUrls: ['./result.component.css'],
-    standalone: false
+    imports: [NgClass, SimpleResultComponent, SimpleGroupbyResultComponent, OshdbModule, JsonPipe]
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);

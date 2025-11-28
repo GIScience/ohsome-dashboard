@@ -1,17 +1,23 @@
 import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
-import {ControlContainer, NgForm} from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
 import {StateService} from '../../../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../../../singelton-services/url-hash-params-provider.service';
+import { SuiMultiSelectSearchDropdownComponent } from '../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
+import { PrismEditorComponent } from '../../../shared/components/prism-editor/prism-editor.component';
+import { SimpleIndicatorComponent } from './simple-indicator/simple-indicator.component';
+import { AttributeCompletenessAttributesComponent } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
+import { ThematicalAccuracyIndicatorComponent } from './thematical-accuracy-indicator/thematical-accuracy-indicator.component';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-oqt-api-query-form',
-  templateUrl: './oqt-api-query-form.component.html',
-  styleUrls: ['./oqt-api-query-form.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
-  standalone: false
+    selector: 'app-oqt-api-query-form',
+    templateUrl: './oqt-api-query-form.component.html',
+    styleUrls: ['./oqt-api-query-form.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, ThematicalAccuracyIndicatorComponent, KeyValuePipe]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 

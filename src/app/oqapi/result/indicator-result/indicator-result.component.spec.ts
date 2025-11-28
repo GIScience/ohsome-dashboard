@@ -13,8 +13,7 @@ describe('IndicatorResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [IndicatorResultComponent],
-    imports: [],
+    imports: [IndicatorResultComponent],
     providers: [provideHttpClient(withInterceptorsFromDi())]
 })
       .compileComponents();

@@ -22,27 +22,25 @@ describe('AppComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        QueryPanelComponent,
-        ResultPanelComponent,
-      ],
-      imports: [
+    declarations: [AppComponent],
+    imports: [
         BrowserModule,
         SharedModule,
         OshdbModule,
         OqtModule,
         WelcomeComponent,
-        ResultListDirective
-      ],
-      providers: [
-        {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
-        {provide: StateService},
+        ResultListDirective,
+        QueryPanelComponent,
+        ResultPanelComponent
+    ],
+    providers: [
+        { provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock },
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+        { provide: StateService },
         provideHttpClient(withInterceptorsFromDi(), withFetch())
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   it('should create the app', () => {

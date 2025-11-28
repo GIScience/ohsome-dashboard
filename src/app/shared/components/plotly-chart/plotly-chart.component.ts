@@ -4,8 +4,7 @@ import * as Plotly from 'plotly.js-dist-min';
 @Component({
     selector: 'app-plotly-chart',
     templateUrl: './plotly-chart.component.html',
-    styleUrls: ['./plotly-chart.component.css'],
-    standalone: false
+    styleUrls: ['./plotly-chart.component.css']
 })
 export class PlotlyChartComponent implements AfterViewInit{
 @Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;

@@ -12,13 +12,12 @@ describe('OhsomeApiQueryFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OshdbModule],
-      declarations: [OhsomeApiQueryFormComponent],
-      providers: [
+    imports: [OshdbModule, OhsomeApiQueryFormComponent],
+    providers: [
         NgForm,
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock}
-      ]
-    })
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock }
+    ]
+})
       .compileComponents();
 
     fixture = TestBed.createComponent(OhsomeApiQueryFormComponent);

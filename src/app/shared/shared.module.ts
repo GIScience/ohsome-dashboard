@@ -8,22 +8,20 @@ import {BoundaryInputComponent} from './components/boundary-input/boundary-input
 
 
 @NgModule({
-  declarations: [
-    AtLeastOneCheckboxCheckedDirective,
-    PlotlyChartComponent,
-    BoundarySelectInputComponent,
-    BoundaryInputComponent,
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    AtLeastOneCheckboxCheckedDirective,
-    PlotlyChartComponent,
-    BoundarySelectInputComponent,
-    BoundaryInputComponent,
-  ]
+    imports: [
+        CommonModule,
+        AtLeastOneCheckboxCheckedDirective,
+        PlotlyChartComponent,
+        BoundarySelectInputComponent,
+        BoundaryInputComponent
+    ],
+    exports: [
+        CommonModule,
+        FormsModule,
+        AtLeastOneCheckboxCheckedDirective,
+        PlotlyChartComponent,
+        BoundarySelectInputComponent,
+        BoundaryInputComponent,
+    ]
 })
 export class SharedModule { }
