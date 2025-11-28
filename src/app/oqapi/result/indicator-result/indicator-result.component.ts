@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiService} from '../../oqt-api.service';
 import {IndicatorLabel, IndicatorParams, IndicatorResponseJSON} from '../../types/types';
@@ -15,6 +15,10 @@ import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
     standalone: false
 })
 export class IndicatorResultComponent implements OnInit {
+  private oqtApi = inject(OqtApiService);
+  private oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
 
   @Input() topicKey: string;
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
@@ -37,13 +41,6 @@ export class IndicatorResultComponent implements OnInit {
   displayQualityLabel: string;
   // display the indicator name on top of all as header
   indicatorName: string;
-
-  constructor(
-    private oqtApi: OqtApiService,
-    private oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
-  }
 
   ngOnInit(): void {
     // add additional request parameters from attributes that have attributeParams like attribite-completeness

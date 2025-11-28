@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, inject } from '@angular/core';
 import {ViewportScroller} from '@angular/common';
 import {Feature, FeatureCollection, MultiPolygon, Polygon, BBox} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
@@ -23,6 +23,11 @@ declare let $: any;
     standalone: false
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  protected urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  private viewportScroller = inject(ViewportScroller);
+  protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   formValues: { topic: string; [formFieldName: string]: string | string[] | boolean };
   boundaryType: string;
@@ -42,14 +47,10 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   corineLandCoverClassMapLevel2 = corineLandCoverClassMapLevel2;
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private urlHashParamsProviderService: UrlHashParamsProviderService,
-    private viewportScroller: ViewportScroller) {
-    this.metadata = oqtApiMetadataProviderService.getOqtApiMetadata();
-    changeDetectorRef.detach();
-    viewportScroller.setOffset([0, 100]);
+  constructor() {
+    this.metadata = this.oqtApiMetadataProviderService.getOqtApiMetadata();
+    this.changeDetectorRef.detach();
+    this.viewportScroller.setOffset([0, 100]);
   }
 
   ngOnInit(): void {

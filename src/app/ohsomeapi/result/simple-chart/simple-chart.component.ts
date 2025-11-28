@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, inject } from '@angular/core';
 import {Chart} from 'chart.js';
 
 declare let $: any;
@@ -10,14 +10,14 @@ declare let $: any;
     standalone: false
 })
 export class SimpleChartComponent implements AfterViewInit {
+  private elemRef = inject(ElementRef);
+
   public chart: any;
 
   @Input() type: string;
   @Input() chartJsData: any;
   @Input() chartJsOptions: any;
   @Input() chartJsPlugins: any;
-
-  constructor(private elemRef: ElementRef) { }
 
   ngAfterViewInit(){//
     this.createChart();

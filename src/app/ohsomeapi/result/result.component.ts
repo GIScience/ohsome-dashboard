@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, inject } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {OhsomeApiService} from '../ohsome-api.service';
 import {ViewportScroller} from '@angular/common';
@@ -7,7 +7,7 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
 import Utils from '../../../utils';
-import {OhsomeApiMetadataProviderService} from '../../oshdb/ohsome-api-metadata-provider.service';
+import {OhsomeApiMetadataProviderService} from '../ohsome-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import GroupByResponseJSON = OhsomeApi.v1.format.GroupByResponseJSON;
 import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
@@ -26,6 +26,14 @@ declare let $: any;
     standalone: false
 })
 export class ResultComponent implements OnInit, AfterViewInit {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private restApi = inject(OhsomeApiService);
+  private metadataProvider = inject(OhsomeApiMetadataProviderService);
+  private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  private viewportScroller = inject(ViewportScroller);
+  private elemRef = inject(ElementRef);
+  private sanitizer = inject(DomSanitizer);
+
 
   public componentRef;
   public moment = moment;
@@ -137,15 +145,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
   };
 
-  constructor(private changeDetectorRef: ChangeDetectorRef,
-              private restApi: OhsomeApiService,
-              private metadataProvider: OhsomeApiMetadataProviderService,
-              private urlHashParamsProviderService: UrlHashParamsProviderService,
-              private viewportScroller: ViewportScroller,
-              private elemRef: ElementRef,
-              private sanitizer: DomSanitizer) {
-    changeDetectorRef.detach();
-    viewportScroller.setOffset([0, 100]);
+  constructor() {
+    this.changeDetectorRef.detach();
+    this.viewportScroller.setOffset([0, 100]);
   }
 
   ngOnInit() {

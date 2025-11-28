@@ -1,17 +1,4 @@
-import {
-  Component,
-  effect,
-  ElementRef,
-  Input,
-  NgZone,
-  OnChanges,
-  OnInit,
-  signal,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild,
-  viewChild
-} from '@angular/core';
+import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
@@ -27,6 +14,9 @@ declare const $, Prism;
     standalone: false
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
+  ngZone = inject(NgZone);
+  oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+
   @Input({required: true}) selectedTopic!: Topic;
   @Input() hashParams!: URLSearchParams;
   @Input({required: true}) indicatorKey!: string;
@@ -35,7 +25,6 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
   customAttributeLabelElement = viewChild<ElementRef<HTMLDivElement>>('customAttributeLabelElement')
 
-  oqtApiMetadataProviderService: OqtApiMetadataProviderService;
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
 
@@ -46,9 +35,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   customFilterTitle = signal<string>('');
   customFilterDefinition = signal<string>('');
 
-  constructor(oqtApiMetadataProviderService: OqtApiMetadataProviderService, public ngZone: NgZone) {
-    this.oqtApiMetadataProviderService = oqtApiMetadataProviderService;
-
+  constructor() {
     // update popup content whenever the signal customFilterDefinition changes
     effect(() => {
       $(this.customAttributeLabelElement()?.nativeElement).popup({

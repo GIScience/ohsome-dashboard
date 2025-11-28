@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {OqtApiService} from './oqt-api.service';
 import {catchError, firstValueFrom, retry, tap, throwError} from 'rxjs';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
@@ -9,12 +9,11 @@ import {AttributeResponseJSON } from './types/types';
   providedIn: 'root'
 })
 export class OqtApiMetadataProviderService {
+  private oqtApi = inject(OqtApiService);
+
   oqtMetadataResponse: MetadataResponseJSON;
   oqtAttributes: AttributeResponseJSON;
   public oqtApiAvailable = false;
-
-  constructor(private oqtApi: OqtApiService) {
-  }
 
   getOqtApiMetadata(): MetadataResponseJSON {
     return this.oqtMetadataResponse;

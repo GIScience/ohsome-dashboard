@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
@@ -10,8 +10,7 @@ const OHSOME_API_ANNOUNCEMENT_URL = environment.announcementUrl;
 
 @Injectable()
 export class OhsomeApiService {
-  constructor(private http: HttpClient) {
-  }
+  private http = inject(HttpClient);
 
   get<T>(urlPath: string, queryParams = ''): Observable<T> {
     return this.http.get<T>(OHSOME_API_ROOT_URL + '/' + urlPath,

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, inject } from '@angular/core';
 import {ControlContainer, NgForm} from '@angular/forms';
 import {environment} from '../../../../environments/environment';
 import Utils from '../../../../utils';
@@ -15,6 +15,8 @@ declare let $: any;
 })
 
 export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
+  private metadataProvider = inject(OhsomeApiMetadataProviderService);
+
 
   @Input() hashParams: URLSearchParams = new URLSearchParams();
 
@@ -59,9 +61,9 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   public groupByKey: string;
   public groupByValues: string;
 
-  constructor(private metadataProvider: OhsomeApiMetadataProviderService) {
-    this.minDate = metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp ?? "";
-    this.maxDate = metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.toTimestamp ?? "";
+  constructor() {
+    this.minDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp ?? "";
+    this.maxDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.toTimestamp ?? "";
     this.start = Utils.loadEnv('startDate', '');
     this.end = Utils.loadEnv('endDate', this.maxDate);
     this.period = Utils.loadEnv('period', this.period);

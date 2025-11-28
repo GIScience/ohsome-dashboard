@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {OhsomeApiService} from './ohsome-api.service';
 import {catchError, Observable, of, retry, tap, throwError} from 'rxjs';
@@ -9,12 +9,11 @@ import MetadataResponse = OhsomeApi.v1.response.MetadataResponse;
   providedIn: 'root'
 })
 export class OhsomeApiMetadataProviderService {
+  private ohsomeApiService = inject(OhsomeApiService);
+
   private ohsomeMetadataResponse: MetadataResponse;
   private ohsomeApiAnnouncement = '';
   public ohsomeApiAvailable = false;
-
-  constructor(private ohsomeApiService: OhsomeApiService) {
-  }
 
   public getOhsomeMetadataResponse(): MetadataResponse | undefined {
     return this.ohsomeMetadataResponse;
