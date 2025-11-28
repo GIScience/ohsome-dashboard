@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, inject} from '@angular/core';
-import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
+import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
-import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
 

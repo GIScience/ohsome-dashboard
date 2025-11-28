@@ -6,7 +6,7 @@ import envelope from '@turf/envelope';
 import centroid from '@turf/centroid';
 import {getCoord} from '@turf/invariant';
 
-import {OhsomeApiMetadataProviderService} from '../oshdb/ohsome-api-metadata-provider.service';
+import {OhsomeApiMetadataProviderService} from '../ohsomeapi/ohsome-api-metadata-provider.service';
 import {Feature, GeoJsonProperties, Polygon} from 'geojson';
 import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
@@ -16,7 +16,7 @@ import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
-import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';

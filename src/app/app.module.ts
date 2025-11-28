@@ -3,10 +3,10 @@ import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import {AppComponent} from './app.component';
 
-import {OshdbModule} from './oshdb/oshdb.module';
-import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
-import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
-import {OqtModule} from './oqt/oqt.module';
+import {OshdbModule} from './ohsomeapi/oshdb.module';
+import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
+import {OqtModule} from './oqapi/oqt.module';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {SharedModule} from './shared/shared.module';

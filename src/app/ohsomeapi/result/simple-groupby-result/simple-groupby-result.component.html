@@ -20,7 +20,7 @@
         <tbody>
           @for (groupByResult of response.getResult(); track groupByResult; let i = $index) {
             <tr
-              [style.backgroundColor]="colors[i % colors.length]">
+              [style.background-color]="colors[i % colors.length]">
               <td>{{chartJsData.datasets[i].label}}</td>
               <td class="right aligned">{{kFormatter(chartJsDataStart[i].y, unit)}}</td>
               <td class="right aligned">{{kFormatter(chartJsDataEnd[i].y, unit)}}</td>

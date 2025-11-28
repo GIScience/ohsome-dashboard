@@ -1,7 +1,7 @@
 import { ComponentRef, Directive, OnInit, ViewContainerRef, inject } from '@angular/core';
-import {ResultComponent} from '../oshdb/result/result.component';
+import {ResultComponent} from '../ohsomeapi/result/result.component';
 import {DataService} from '../singelton-services/data.service';
-import {OqtResultComponent} from '../oqt/result/oqt-result.component';
+import {OqtResultComponent} from '../oqapi/result/oqt-result.component';
 
 @Directive({
   selector: '[appResultList]'
