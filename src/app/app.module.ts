@@ -9,7 +9,7 @@ import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.s
 import {OqtModule} from './oqapi/oqt.module';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
-import {SharedModule} from './shared/shared.module';
+
 import {ResultListDirective} from './result-panel/result-list.directive';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {catchError, EMPTY} from 'rxjs';
@@ -28,15 +28,14 @@ declare const Prism;
     ],
     bootstrap: [AppComponent],
     imports: [
-        BrowserModule,
-        SharedModule,
-        OshdbModule,
-        OqtModule,
-        WelcomeComponent,
-        ResultListDirective,
-        QueryPanelComponent,
-        ResultPanelComponent
-    ],
+    BrowserModule,
+    OshdbModule,
+    OqtModule,
+    WelcomeComponent,
+    ResultListDirective,
+    QueryPanelComponent,
+    ResultPanelComponent
+],
     providers: [
         provideAppInitializer(() => {
             const initializerFn = (translationsInitializerFactory)(inject(StateService));

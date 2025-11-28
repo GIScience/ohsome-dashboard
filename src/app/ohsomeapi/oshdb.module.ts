@@ -7,20 +7,19 @@ import {SimpleResultComponent} from './result/simple-result/simple-result.compon
 import {NgDatePipesModule} from 'ngx-pipes';
 import {TimePeriodPickerInputComponent} from './query-form/time-period-picker-input/time-period-picker-input.component';
 import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/ohsome-api-query-form.component';
-import {SharedModule} from '../shared/shared.module';
+
 
 
 @NgModule({
     imports: [
-        SharedModule,
-        NgDatePipesModule,
-        ResultComponent,
-        SimpleChartComponent,
-        SimpleGroupbyResultComponent,
-        SimpleResultComponent,
-        TimePeriodPickerInputComponent,
-        OhsomeApiQueryFormComponent,
-    ],
+    NgDatePipesModule,
+    ResultComponent,
+    SimpleChartComponent,
+    SimpleGroupbyResultComponent,
+    SimpleResultComponent,
+    TimePeriodPickerInputComponent,
+    OhsomeApiQueryFormComponent,
+],
     exports: [
         OhsomeApiQueryFormComponent,
         ResultComponent,
