@@ -1,4 +1,4 @@
-import {Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LayerOptions, LeafletEvent} from 'leaflet';
@@ -20,11 +20,13 @@ import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
             useExisting: forwardRef(() => BoundarySelectInputComponent),
             multi: true
         }
-    ],
-    standalone: false
+    ]
 })
 
 export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit, OnChanges {
+  private elRef = inject(ElementRef);
+  private readonly ngZone = inject(NgZone);
+
 
   @Input() disabled = false;
 
@@ -55,9 +57,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
   private userDefinedLayersGroup = L.layerGroup();
 
   public map: L.Map;
-
-  constructor(private elRef: ElementRef, private readonly ngZone: NgZone) {
-  }
 
   ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {

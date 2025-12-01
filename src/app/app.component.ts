@@ -1,21 +1,27 @@
 import {AfterViewInit, Component, inject} from '@angular/core';
-import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
+import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
-import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
+import { NgClass } from '@angular/common';
+import { QueryPanelComponent } from './query-panel/query-panel.component';
+import { ResultPanelComponent } from './result-panel/result-panel.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 
 declare let $;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: false
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
+  oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
@@ -28,13 +34,11 @@ export class AppComponent implements AfterViewInit {
 
   protected stateService = inject(StateService);
 
-
-  constructor(ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
-              oqtApiMetadataProviderService: OqtApiMetadataProviderService) {
-    this.hasAnnouncement = ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
-    this.announcement = ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
-    this.ohsomeApiVersion = ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
-    this.oqtApiVersion = oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
+  constructor() {
+    this.hasAnnouncement = this.ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
+    this.announcement = this.ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
+    this.ohsomeApiVersion = this.ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
+    this.oqtApiVersion = this.oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
     this.stateService.updatePartialState({showWelcomeScreen: this.urlHashParamsProviderService.getHashURLSearchParams().size === 0});
   }
 

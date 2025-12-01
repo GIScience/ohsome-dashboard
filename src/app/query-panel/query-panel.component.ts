@@ -1,12 +1,12 @@
-import {AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { NgForm, FormsModule } from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
 import envelope from '@turf/envelope';
 import centroid from '@turf/centroid';
 import {getCoord} from '@turf/invariant';
 
-import {OhsomeApiMetadataProviderService} from '../oshdb/ohsome-api-metadata-provider.service';
+import {OhsomeApiMetadataProviderService} from '../ohsomeapi/ohsome-api-metadata-provider.service';
 import {Feature, GeoJsonProperties, Polygon} from 'geojson';
 import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
@@ -16,18 +16,28 @@ import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
-import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
+import { AtLeastOneCheckboxCheckedDirective } from '../shared/directives/validation/at-least-one-checkbox-checked.directive';
+import { NgClass } from '@angular/common';
+import { OhsomeApiQueryFormComponent } from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
+import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form/oqt-api-query-form.component';
 
 @Component({
-  selector: 'app-query-panel',
-  templateUrl: './query-panel.component.html',
-  styleUrls: ['./query-panel.component.css'],
-  standalone: false
+    selector: 'app-query-panel',
+    templateUrl: './query-panel.component.html',
+    styleUrls: ['./query-panel.component.css'],
+    imports: [FormsModule, AtLeastOneCheckboxCheckedDirective, NgClass, OhsomeApiQueryFormComponent, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
+  private dataService = inject(DataService);
+  ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
+  oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  private osmBoundaryProviderService = inject(OsmBoundaryProviderService);
+
 
   @ViewChild('f', {static: true})
   form: NgForm;
@@ -61,14 +71,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   private formChangesSubscription: Subscription;
 
-
-  constructor(
-    private dataService: DataService,
-    public ohsomeApiMetadataProviderService: OhsomeApiMetadataProviderService,
-    public oqtApiMetadataProviderService: OqtApiMetadataProviderService,
-    private urlHashParamsProviderService: UrlHashParamsProviderService,
-    private osmBoundaryProviderService: OsmBoundaryProviderService,
-  ) {
+  constructor() {
 
     // react on updates in the URLHashParamsProviderService
     effect(() => {

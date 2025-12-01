@@ -19,8 +19,8 @@ import {
   SortModule,
   Tabulator
 } from 'tabulator-tables';
-import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
-import {MetadataResponseJSON} from '../oqt/types/MetadataResponseJSON';
+import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
+import {MetadataResponseJSON} from '../oqapi/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 

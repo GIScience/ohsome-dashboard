@@ -5,7 +5,7 @@ import {ResultListDirective} from './result-list.directive';
     selector: 'app-result-panel',
     templateUrl: './result-panel.component.html',
     styleUrls: ['./result-panel.component.css'],
-    standalone: false
+    imports: [ResultListDirective]
 })
 export class ResultPanelComponent {
 

@@ -2,9 +2,9 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WelcomeComponent} from './welcome.component';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {OqtApiMetadataProviderService} from '../oqt/oqt-api-metadata-provider.service';
-import OqtApiMetadataProviderServiceMock from '../oqt/oqt-api-metadata-provider.service.mock';
-import {oqtApiMetadataResponseMock} from '../oqt/oqt-api-metadata.response.mock';
+import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
+import OqtApiMetadataProviderServiceMock from '../oqapi/oqt-api-metadata-provider.service.mock';
+import {oqtApiMetadataResponseMock} from '../oqapi/oqt-api-metadata.response.mock';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from '../singelton-services/url-hash-params-provider.service.mock';
 import Utils from '../../utils';

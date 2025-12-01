@@ -1,17 +1,16 @@
 import {TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
-import {OshdbModule} from './oshdb/oshdb.module';
-import {OhsomeApiMetadataProviderService} from './oshdb/ohsome-api-metadata-provider.service';
-import OhsomeApiMetadataProviderServiceMock from './oshdb/ohsome-api-metadata-provider.service.mock';
+import {OshdbModule} from './ohsomeapi/oshdb.module';
+import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
+import OhsomeApiMetadataProviderServiceMock from './ohsomeapi/ohsome-api-metadata-provider.service.mock';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {ResultListDirective} from './result-panel/result-list.directive';
-import {SharedModule} from './shared/shared.module';
-import {OqtModule} from './oqt/oqt.module';
+import {OqtModule} from './oqapi/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
-import {OqtApiMetadataProviderService} from './oqt/oqt-api-metadata-provider.service';
-import OqtApiMetadataProviderServiceMock from './oqt/oqt-api-metadata-provider.service.mock';
+import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
+import OqtApiMetadataProviderServiceMock from './oqapi/oqt-api-metadata-provider.service.mock';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from './singelton-services/url-hash-params-provider.service.mock';
 import {WelcomeComponent} from './welcome/welcome.component';
@@ -22,27 +21,24 @@ describe('AppComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        QueryPanelComponent,
-        ResultPanelComponent,
-        ResultListDirective,
-      ],
-      imports: [
+    imports: [
         BrowserModule,
-        SharedModule,
         OshdbModule,
         OqtModule,
-        WelcomeComponent
-      ],
-      providers: [
-        {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
-        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
-        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
-        {provide: StateService},
+        WelcomeComponent,
+        ResultListDirective,
+        QueryPanelComponent,
+        ResultPanelComponent,
+        AppComponent
+    ],
+    providers: [
+        { provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock },
+        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+        { provide: StateService },
         provideHttpClient(withInterceptorsFromDi(), withFetch())
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   it('should create the app', () => {

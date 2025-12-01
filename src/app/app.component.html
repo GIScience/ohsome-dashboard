@@ -21,13 +21,15 @@
     </div>
   </div>
 </div>
-<div id="announcement" *ngIf="hasAnnouncement" class="ui bottom fixed one item menu">
-  <div class="ui item red message">
-    <i class="close icon" (click)="hasAnnouncement=false"></i>
-    <div class="header" [innerHTML]="announcement">
+@if (hasAnnouncement) {
+  <div id="announcement" class="ui bottom fixed one item menu">
+    <div class="ui item red message">
+      <i class="close icon" (click)="hasAnnouncement=false"></i>
+      <div class="header" [innerHTML]="announcement">
+      </div>
     </div>
   </div>
-</div>
+}
 
 <div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
   <app-query-panel></app-query-panel>
@@ -46,47 +48,47 @@
           contributors.</a><br>
           Base map from OpenStreetMap and OpenStreetMap Foundation.<br>
         </p>
-      </div>
-      <div class="five wide column">
-        <h3 class="header" i18n>Technology</h3>
-        <p i18n>
+    </div>
+    <div class="five wide column">
+      <h3 class="header" i18n>Technology</h3>
+      <p i18n>
           The “ohsome” OpenStreetMap History Analyzer Platform is based
           on technology <a href="https://heigit.org/technology/#osm-data" target="_blank">developed by HeiGIT</a>.
         </p>
-        <p i18n>
+      <p i18n>
           The source code for this dashboard is open source (GPL-3.0) and <a
           href="https://github.com/giscience/ohsome-dashboard">available on GitHub</a>.
         </p>
-        <h4 class="header" i18n>Data Analyses are powered by:</h4>
-        <div class="ui list">
-          <div class="item">OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
-            API</a> (AGPL-3.0)
-          </div>
-          <div class="item"> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
-                                                      target="_blank">ohsome quality API</a> (AGPL-3.0)
-          </div>
-        </div>
-      </div>
-      <div class="five wide column">
-        <h3 class="header" i18n>Contact</h3>
-        <p i18n>
+    <h4 class="header" i18n>Data Analyses are powered by:</h4>
+    <div class="ui list">
+      <div class="item">OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
+      API</a> (AGPL-3.0)
+    </div>
+    <div class="item"> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
+    target="_blank">ohsome quality API</a> (AGPL-3.0)
+  </div>
+</div>
+</div>
+<div class="five wide column">
+  <h3 class="header" i18n>Contact</h3>
+  <p i18n>
           HeiGIT gGmbH<br>
           Heidelberg, Germany<br>
           Email: <a href="mailto:ohsome@heigit.org">ohsome&#64;heigit.org</a><br>
           Web: <a href="https://ohsome.org" target="_blank">ohsome.org</a>
         </p>
-      </div>
-    </div>
-    <div class="ui horizontal divider"></div>
-    <div class="ui stackable equal width center aligned padded grid">
-      <div class="column">&copy; {{ currentYear }} HeiGIT gGmbH</div>
-    </div>
-    <div class="ui stackable equal width center aligned padded grid">
-      <div class="column" i18n>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
+</div>
+</div>
+<div class="ui horizontal divider"></div>
+<div class="ui stackable equal width center aligned padded grid">
+  <div class="column">&copy; {{ currentYear }} HeiGIT gGmbH</div>
+</div>
+<div class="ui stackable equal width center aligned padded grid">
+  <div class="column" i18n>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
         &middot; ohsome-quality-API: {{ oqtApiVersion }}
       </div>
-    </div>
-  </div>
+</div>
+</div>
 </div>
 
 <app-welcome></app-welcome>

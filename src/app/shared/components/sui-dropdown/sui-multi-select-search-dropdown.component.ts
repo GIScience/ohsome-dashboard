@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, signal, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, signal, ViewChild, inject } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALIDATORS,
@@ -32,6 +32,8 @@ declare const $;
   ]
 })
 export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccessor, AfterViewInit {
+  private readonly ngZone = inject(NgZone);
+
 
   @ViewChild("dropdown", {static: false}) dropdown: ElementRef;
   // see https://semantic-ui.com/modules/dropdown.html#/settings for properties that you can set in options
@@ -41,9 +43,6 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
   @Input() searchable: boolean = true;
   required = signal(false);
   private suppressChange: boolean = false;
-
-  constructor(private readonly ngZone: NgZone) {
-  }
 
   // selectedAttributeKeys
   // depending on single or multi select mode value is sting or string[]
