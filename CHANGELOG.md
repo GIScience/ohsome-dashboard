@@ -3,6 +3,11 @@ Changelog
 
 ## current
 
+## 1.8.1
+
+* test: update ohsomeapi- and oqapi-metadata response mocks
+* test: fix utils test
+
 ## 1.8.0
 
 This version requires [ohsome-quality-api](https://github.com/GIScience/ohsome-quality-api) backend version >=1.14.0
