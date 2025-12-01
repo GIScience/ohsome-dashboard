@@ -2,6 +2,12 @@ Changelog
 =========
 
 ## current
+
+## 1.8.0
+
+This version requires [ohsome-quality-api](https://github.com/GIScience/ohsome-quality-api) backend version >=1.14.0
+
+* refactor: switch to new angular conditional template style (@if)
 * refactor: switch to standalone components
 * refactor: use inject() instead of constructor based dependency injection (DI)
 * chore: update to angular v21
