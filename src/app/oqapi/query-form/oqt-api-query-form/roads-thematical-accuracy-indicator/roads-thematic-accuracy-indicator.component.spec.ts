@@ -10,7 +10,7 @@ import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 
 
-describe('ThematicalAccuracyIndicatorComponent', () => {
+describe('LandCoverThematicAccuracyIndicatorComponent', () => {
   let component: RoadsThematicAccuracyIndicatorComponent;
   let fixture: ComponentFixture<RoadsThematicAccuracyIndicatorComponent>;
 
