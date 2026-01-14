@@ -32,8 +32,8 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
     fixture = TestBed.createComponent(RoadsThematicAccuracyIndicatorComponent);
     component = fixture.componentInstance;
     component.indicatorKey = "land-cover-thematic-accuracy";
-    component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--corine_land_cover_class=11");
-    component.selectedCorineClassIds = '11';
+    component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--attribute=surface");
+    component.selectedThematicAttributeIds = 'surface';
     fixture.detectChanges();
   });
 
@@ -42,31 +42,31 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
   });
 
 
-  describe('getCorineLandCoverClassFromUrlHashParams', () => {
+  describe('getThematicAttributeFromUrlHashParams', () => {
     const hashParamsCases = [
       {
-        description: 'Valid corine land cover class',
-        topicKey: 'lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class=11'),
-        expected: '11'
+        description: 'Valid attribute',
+        topicKey: 'roads',
+        hashParams: new URLSearchParams('roads-thematic-accuracy--attribute=surface'),
+        expected: 'surface'
       },
       {
-        description: 'Invalid corine land cover class',
-        topicKey: 'lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class=19'),
+        description: 'Invalid attribute',
+        topicKey: 'roads',
+        hashParams: new URLSearchParams('roads-thematic-accuracy--attribute=foo'),
         expected: ''
       },
       {
-        description: 'No corine land cover class selected',
-        topicKey: 'building-lulc',
-        hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class='),
+        description: 'No attribute selected',
+        topicKey: 'roads',
+        hashParams: new URLSearchParams('roads-thematic-accuracy--attribute='),
         expected: ''
       }
     ];
 
     hashParamsCases.forEach((hashParamsCase) => {
       it(hashParamsCase.description, () => {
-        const result = component.getCorineLandCoverClassFromUrlHashParams(hashParamsCase.hashParams);
+        const result = component.getThematicAttributeFromUrlHashParams(hashParamsCase.hashParams);
         expect(result).toEqual(hashParamsCase.expected);
       })
     })
