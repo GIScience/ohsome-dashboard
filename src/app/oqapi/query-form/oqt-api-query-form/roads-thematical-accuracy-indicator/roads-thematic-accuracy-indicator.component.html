@@ -1,0 +1,11 @@
+<h5 style="margin-top: 0.8rem" i18n>Select a specific attribute to check. Leave empty for all attributes:</h5>
+
+<div class="field">
+  <app-sui-multi-select-search-dropdown
+                                        id="search-select-thematic-attribute-class"
+                                        name="{{indicatorKey}}--attribute"
+                                        [(ngModel)]="selectedThematicAttributeIds"
+                                        [options]="thematicAttributeClassDropdownOptions"
+                                        [selectOptions]="this.thematicAttributeClassMap | keyvalue">
+  </app-sui-multi-select-search-dropdown>
+</div>
