@@ -2,9 +2,9 @@ export const thematicAttributeMap: Record<
   string,
   { name: string}
 > = {
-  "surface": { name: "Surface"},
-  "oneway": { name: "Oneway"},
-  "lanes": { name: "Lanes"},
-  "name": { name: "Name"},
-  "width": { name: "Width"},
+  "surface": { name: $localize`Surface`},
+  "oneway": { name: $localize`Oneway`},
+  "lanes": { name: $localize`Lanes`},
+  "name": { name: $localize`Name`},
+  "width": { name: $localize`Width`},
 };
