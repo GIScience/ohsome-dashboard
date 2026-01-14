@@ -77,6 +77,14 @@
                           ></app-thematical-accuracy-indicator>
                         }
                       }
+                      @case ("roads-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-roads-thematic-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-roads-thematic-accuracy-indicator>
+                        }
+                      }
                     }
                   </app-simple-indicator>
                 </div>
