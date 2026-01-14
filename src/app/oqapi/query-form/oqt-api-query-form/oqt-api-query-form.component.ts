@@ -9,7 +9,7 @@ import { SuiMultiSelectSearchDropdownComponent } from '../../../shared/component
 import { PrismEditorComponent } from '../../../shared/components/prism-editor/prism-editor.component';
 import { SimpleIndicatorComponent } from './simple-indicator/simple-indicator.component';
 import { AttributeCompletenessAttributesComponent } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
-import { ThematicalAccuracyIndicatorComponent } from './thematical-accuracy-indicator/thematical-accuracy-indicator.component';
+import { LandCoverThematicAccuracyIndicatorComponent } from './land-cover-thematic-accuracy-indicator/land-cover-thematic-accuracy-indicator.component';
 import { KeyValuePipe } from '@angular/common';
 import {
   RoadsThematicAccuracyIndicatorComponent
@@ -20,7 +20,7 @@ import {
     templateUrl: './oqt-api-query-form.component.html',
     styleUrls: ['./oqt-api-query-form.component.css'],
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-  imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, ThematicalAccuracyIndicatorComponent, KeyValuePipe, RoadsThematicAccuracyIndicatorComponent]
+  imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, LandCoverThematicAccuracyIndicatorComponent, KeyValuePipe, RoadsThematicAccuracyIndicatorComponent]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
