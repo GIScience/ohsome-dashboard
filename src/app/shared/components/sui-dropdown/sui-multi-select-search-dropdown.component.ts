@@ -100,9 +100,21 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
     const options: object = {...this.options,...{
         onChange: (value:string | string[]) => {
           // avoid firing useless change events:
-          // - on clearing the dropdown list
           // - values did not change
           // - in single selection mode: empty field not allows
+          const isCleared =
+            value === undefined ||
+            (typeof value === 'string' && value.trim() === '') ||
+            (Array.isArray(value) && value.length === 0);
+
+          if (isCleared) {
+            if (this.value !== null) {
+              this.value = "";
+              this.onChange("");
+            }
+            return;
+          }
+
           let shouldFire = !this.suppressChange  && value != undefined;
           if (this.multiple){
             value = value as string[];
