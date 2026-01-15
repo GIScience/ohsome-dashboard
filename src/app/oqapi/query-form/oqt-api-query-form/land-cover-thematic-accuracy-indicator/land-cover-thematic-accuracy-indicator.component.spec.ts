@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ThematicalAccuracyIndicatorComponent} from './thematical-accuracy-indicator.component';
+import {LandCoverThematicAccuracyIndicatorComponent} from './land-cover-thematic-accuracy-indicator.component';
 import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
@@ -10,9 +10,9 @@ import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 
 
-describe('ThematicalAccuracyIndicatorComponent', () => {
-  let component: ThematicalAccuracyIndicatorComponent;
-  let fixture: ComponentFixture<ThematicalAccuracyIndicatorComponent>;
+describe('LandCoverThematicAccuracyIndicatorComponent', () => {
+  let component: LandCoverThematicAccuracyIndicatorComponent;
+  let fixture: ComponentFixture<LandCoverThematicAccuracyIndicatorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(ThematicalAccuracyIndicatorComponent);
+    fixture = TestBed.createComponent(LandCoverThematicAccuracyIndicatorComponent);
     component = fixture.componentInstance;
     component.indicatorKey = "land-cover-thematic-accuracy";
     component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--corine_land_cover_class=11");
@@ -46,7 +46,7 @@ describe('ThematicalAccuracyIndicatorComponent', () => {
     const hashParamsCases = [
       {
         description: 'Valid corine land cover class',
-        topicKey: 'lulc',
+        topicKey: 'land-cover',
         hashParams: new URLSearchParams('land-cover-thematic-accuracy--corine_land_cover_class=11'),
         expected: '11'
       },

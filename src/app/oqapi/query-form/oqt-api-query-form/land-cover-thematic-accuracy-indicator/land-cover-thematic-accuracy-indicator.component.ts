@@ -3,15 +3,15 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { corineLandCoverClassMapLevel2 } from './thematical-accuracy-indicator.constants';
+import { corineLandCoverClassMapLevel2 } from './land-cover-thematic-accuracy-indicator.constants';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
 import { KeyValuePipe } from '@angular/common';
 
 
 @Component({
-    selector: 'app-thematical-accuracy-indicator',
-    templateUrl: './thematical-accuracy-indicator.component.html',
+    selector: 'app-land-cover-thematic-accuracy-indicator',
+    templateUrl: './land-cover-thematic-accuracy-indicator.component.html',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
     imports: [
         SuiMultiSelectSearchDropdownComponent,
@@ -19,7 +19,7 @@ import { KeyValuePipe } from '@angular/common';
         KeyValuePipe,
     ],
 })
-export class ThematicalAccuracyIndicatorComponent implements OnInit {
+export class LandCoverThematicAccuracyIndicatorComponent implements OnInit {
   @Input({required: true}) indicatorKey!: string;
   @Input() selectOptions!: { label: string; value: number }[];
   @Input() hashParams!: URLSearchParams;
