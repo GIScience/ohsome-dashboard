@@ -10,7 +10,7 @@ import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 
 
-describe('LandCoverThematicAccuracyIndicatorComponent', () => {
+describe('RoadsThematicAccuracyIndicatorComponent', () => {
   let component: RoadsThematicAccuracyIndicatorComponent;
   let fixture: ComponentFixture<RoadsThematicAccuracyIndicatorComponent>;
 
@@ -31,8 +31,8 @@ describe('LandCoverThematicAccuracyIndicatorComponent', () => {
 
     fixture = TestBed.createComponent(RoadsThematicAccuracyIndicatorComponent);
     component = fixture.componentInstance;
-    component.indicatorKey = "land-cover-thematic-accuracy";
-    component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--attribute=surface");
+    component.indicatorKey = "roads-thematic-accuracy";
+    component.hashParams = new URLSearchParams("roads-thematic-accuracy--attribute=surface");
     component.selectedThematicAttributeIds = 'surface';
     fixture.detectChanges();
   });
