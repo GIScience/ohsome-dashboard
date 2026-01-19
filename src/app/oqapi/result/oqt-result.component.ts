@@ -214,7 +214,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     const key = String(this.formValues?.['land-cover-thematic-accuracy--corine_land_cover_class']);
     return key && this.corineLandCoverClassMapLevel2[key]
       ? this.corineLandCoverClassMapLevel2[key].name
-      : null;
+      : "All Classes";
   }
 
   getSelectedThematicAttribute(): string | null {
