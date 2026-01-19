@@ -14,6 +14,9 @@ import {IndicatorParams, Params} from '../types/types'
 import Bpolys = OhsomeApi.v1.request.Bpolys;
 import { corineLandCoverClassMapLevel2 } from '../query-form/oqt-api-query-form/land-cover-thematic-accuracy-indicator/land-cover-thematic-accuracy-indicator.constants';
 import { IndicatorResultComponent } from './indicator-result/indicator-result.component';
+import {
+  thematicAttributeMap
+} from "../query-form/oqt-api-query-form/roads-thematical-accuracy-indicator/roads-thematic-accuracy-indicator.constants";
 
 declare let $: any;
 
@@ -47,6 +50,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   permalink: SafeUrl;
 
   corineLandCoverClassMapLevel2 = corineLandCoverClassMapLevel2;
+
+  thematicAttributeMap = thematicAttributeMap;
 
   constructor() {
     this.metadata = this.oqtApiMetadataProviderService.getOqtApiMetadata();
@@ -210,6 +215,13 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     return key && this.corineLandCoverClassMapLevel2[key]
       ? this.corineLandCoverClassMapLevel2[key].name
       : null;
+  }
+
+  getSelectedThematicAttribute(): string | null {
+    const key = String(this.formValues?.['roads-thematic-accuracy--attribute']);
+    return key && this.thematicAttributeMap[key]
+      ? this.thematicAttributeMap[key].name
+      : "All Attributes";
   }
 
   protected readonly Utils = Utils;
