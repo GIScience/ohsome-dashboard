@@ -17,6 +17,14 @@
           {{ getSelectedCorineLabel() }}
         </span>
       }
+      @if (formValues['roads-thematic-accuracy'] === true && getSelectedThematicAttribute()) {
+        <span
+          class="ui circular label attribute"
+          [title]="getSelectedThematicAttribute()"
+        >
+          {{ getSelectedThematicAttribute() }}
+        </span>
+      }
 
 
     </div>
