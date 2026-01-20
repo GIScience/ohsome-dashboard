@@ -9,20 +9,20 @@
       <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
         {{metadata.result.topics[formValues.topic].name}}
       </span>
-      @if (formValues['land-cover-thematic-accuracy'] === true && getSelectedCorineLabel()) {
+      @if (formValues['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {
         <span
           class="ui circular label attribute"
-          [title]="getSelectedCorineLabel()"
+          [title]="getThematicAccuracyLabel('land-cover-thematic-accuracy')"
           >
-          {{ getSelectedCorineLabel() }}
+          {{ getThematicAccuracyLabel('land-cover-thematic-accuracy') }}
         </span>
       }
-      @if (formValues['roads-thematic-accuracy'] === true && getSelectedThematicAttribute()) {
+      @if (formValues['roads-thematic-accuracy'] === true && getThematicAccuracyLabel('roads-thematic-accuracy')) {
         <span
           class="ui circular label attribute"
-          [title]="getSelectedThematicAttribute()"
+          [title]="getThematicAccuracyLabel('roads-thematic-accuracy')"
         >
-          {{ getSelectedThematicAttribute() }}
+          {{ getThematicAccuracyLabel('roads-thematic-accuracy') }}
         </span>
       }
 

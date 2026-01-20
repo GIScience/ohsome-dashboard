@@ -1,4 +1,4 @@
-export const corineLandCoverClassMapLevel2: Record<
+const corineLandCoverClassMapLevel2: Record<
   string,
   { name: string; class: number }
 > = {
@@ -18,3 +18,29 @@ export const corineLandCoverClassMapLevel2: Record<
   "51": { name: $localize`Inland waters`, class: 5 },
   "52": { name: $localize`Marine waters`, class: 5 },
 };
+
+export const thematicAttributeMap: Record<
+  string,
+  { name: string}
+> = {
+  "surface": { name: $localize`Surface`},
+  "oneway": { name: $localize`Oneway`},
+  "lanes": { name: $localize`Lanes`},
+  "name": { name: $localize`Name`},
+  "width": { name: $localize`Width`},
+};
+
+export const categoryRegistry = {
+  "land-cover-thematic-accuracy": corineLandCoverClassMapLevel2,
+  "roads-thematic-accuracy" : thematicAttributeMap
+} as const;
+
+export const thematicCategoryType = {
+  "land-cover-thematic-accuracy" : "corine_land_cover_class",
+  "roads-thematic-accuracy" : "attribute"
+}
+
+export const thematicAccuracyCategoryNamesForBlank = {
+  "land-cover-thematic-accuracy" : "All Classes",
+  "roads-thematic-accuracy" : "All Attributes"
+}
