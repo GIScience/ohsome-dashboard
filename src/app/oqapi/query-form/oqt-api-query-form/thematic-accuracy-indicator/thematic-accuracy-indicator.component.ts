@@ -6,7 +6,7 @@ import {
 import { categoryRegistry, thematicCategoryType } from './thematic-accuracy-indicator.constants';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
-import {KeyValuePipe, NgSwitch, NgSwitchCase} from '@angular/common';
+import {KeyValuePipe} from '@angular/common';
 
 
 @Component({
@@ -17,8 +17,6 @@ import {KeyValuePipe, NgSwitch, NgSwitchCase} from '@angular/common';
     SuiMultiSelectSearchDropdownComponent,
     FormsModule,
     KeyValuePipe,
-    NgSwitch,
-    NgSwitchCase,
   ],
 })
 export class ThematicAccuracyIndicatorComponent implements OnInit {
