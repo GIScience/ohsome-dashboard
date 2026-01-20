@@ -41,6 +41,6 @@ export const thematicCategoryType = {
 }
 
 export const thematicAccuracyCategoryNamesForBlank = {
-  "land-cover-thematic-accuracy" : "All Classes",
-  "roads-thematic-accuracy" : "All Attributes"
+  "land-cover-thematic-accuracy" : $localize`All Classes`,
+  "roads-thematic-accuracy" : $localize`All Attributes`
 }
