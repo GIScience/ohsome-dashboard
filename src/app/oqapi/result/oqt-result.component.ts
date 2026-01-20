@@ -209,12 +209,12 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   }
 
-  getThematicAccuracyLabel(thematicAccuracyIndicatorName: string): string | null {
-    const key = String(this.formValues?.[thematicAccuracyIndicatorName + '--' + this.thematicAccuracyCategoryType[thematicAccuracyIndicatorName]]);
-    console.log(thematicAccuracyIndicatorName + '--' + this.thematicAccuracyCategoryType[thematicAccuracyIndicatorName])
-    return key && this.thematicAccuracyCategories[thematicAccuracyIndicatorName][key]
-      ? this.thematicAccuracyCategories[thematicAccuracyIndicatorName][key].name
-      : "All Classes";
+  getThematicAccuracyLabel(topicKey: string): string | null {
+    const key = String(this.formValues?.[topicKey + '--' + this.thematicAccuracyCategoryType[topicKey]]);
+    console.log(topicKey + '--' + this.thematicAccuracyCategoryType[topicKey])
+    return key && this.thematicAccuracyCategories[topicKey][key]
+      ? this.thematicAccuracyCategories[topicKey][key].name
+      : thematicAccuracyCategoryNamesForBlank[topicKey];
   }
 
   protected readonly Utils = Utils;
