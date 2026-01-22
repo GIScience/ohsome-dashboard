@@ -14,4 +14,11 @@ export class SimpleIndicatorComponent {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
+
+  getDescriptionWithLink(): string {
+    const locale = JSON.parse(localStorage.getItem("locale") || '"en"');
+    const link_text = $localize`Click here for more info.`
+    return `${this.indicator.description} <a href="https://github.com/GIScience/ohsome-quality-api/blob/main/docs/indicators_${locale}.md">${link_text}</a>`;
   }
+
+}
