@@ -117,7 +117,7 @@ describe('ThematicAccuracyIndicatorComponent', () => {
         {
           description: 'Invalid thematic attribute',
           topicKey: 'roads',
-          hashParams: new URLSearchParams('lroads-thematic-accuracy--attribute=foo'),
+          hashParams: new URLSearchParams('roads-thematic-accuracy--attribute=foo'),
           expected: ''
         },
         {
