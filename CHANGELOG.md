@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+* feat: add option for new indicator roads-thematic-accuracy
+
 ## 1.8.1
 
 * test: update ohsomeapi- and oqapi-metadata response mocks

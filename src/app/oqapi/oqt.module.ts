@@ -12,8 +12,8 @@ import {
 import {PrismEditorComponent} from '../shared/components/prism-editor/prism-editor.component';
 import {SuiMultiSelectSearchDropdownComponent} from '../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
 import {
-  ThematicalAccuracyIndicatorComponent
-} from "./query-form/oqt-api-query-form/thematical-accuracy-indicator/thematical-accuracy-indicator.component";
+  ThematicAccuracyIndicatorComponent
+} from "./query-form/oqt-api-query-form/thematic-accuracy-indicator/thematic-accuracy-indicator.component";
 
 
 @NgModule({
@@ -23,9 +23,9 @@ import {
     OqtApiQueryFormComponent,
     SimpleIndicatorComponent,
     AttributeCompletenessAttributesComponent,
-    ThematicalAccuracyIndicatorComponent,
     OqtResultComponent,
     IndicatorResultComponent,
+    ThematicAccuracyIndicatorComponent
 ],
     providers: [
         OqtApiMetadataProviderService,
