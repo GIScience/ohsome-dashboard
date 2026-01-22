@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+* feat: add link to indicator description page to oqapi indicators
+
 ## 1.8.1
 
 * test: update ohsomeapi- and oqapi-metadata response mocks
