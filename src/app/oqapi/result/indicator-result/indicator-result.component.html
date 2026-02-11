@@ -2,7 +2,12 @@
 
   <!--  success -->
   @if (!isLoading && !error) {
+    @if (displayQualityLabel) {
     <div class="ui {{label}} ribbon label">{{displayQualityLabel}}</div>
+    }
+    @else {
+      <div class="ui {{label}} ribbon label">No quality estimation</div>
+    }
     <h3 class="ui center aligned header">{{indicatorName}}</h3>
     <div [innerHTML]="indicatorResultDescription" class="ui basic center aligned segment"></div>
     @if (plotlyDataLayoutConfig) {
