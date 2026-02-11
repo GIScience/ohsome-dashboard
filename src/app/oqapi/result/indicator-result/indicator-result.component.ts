@@ -114,7 +114,12 @@ export class IndicatorResultComponent implements OnInit {
 
     this.indicatorResultDescription = description;
 
-    this.displayQualityLabel = this.createDisplayQualityLabel();
+    if (metadata.qualityDimension === 'none') {
+      this.displayQualityLabel = '';
+    }
+    else {
+      this.displayQualityLabel = this.createDisplayQualityLabel();
+    }
   }
 
 
