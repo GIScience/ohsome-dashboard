@@ -85,7 +85,7 @@ const category = $localize`high`;
 
 To actually do the translations run `npm run extract-i18n`.
 
-This will analyze the application and generate a source file with ids and original text snippets from html and typescipt code in one place.
+This will analyze the application and generate a source file with ids and original text snippets from html and typescript code in one place.
 
 `src/locale/messages-source.en.json`
 

@@ -71,10 +71,18 @@
                       }
                       @case ("land-cover-thematic-accuracy") {
                         @if (indicator.checked) {
-                          <app-thematical-accuracy-indicator
+                          <app-thematic-accuracy-indicator
                             [indicatorKey]="indicator.key"
                             [hashParams]="hashParams"
-                          ></app-thematical-accuracy-indicator>
+                          ></app-thematic-accuracy-indicator>
+                        }
+                      }
+                      @case ("roads-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-thematic-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-thematic-accuracy-indicator>
                         }
                       }
                     }
