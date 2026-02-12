@@ -1,0 +1,18 @@
+@switch  (indicatorKey) {
+  @case ("land-cover-thematic-accuracy") {
+    <h5 style="margin-top: 0.8rem" i18n>Select a specific land cover class to check. Leave empty for all classes:</h5>
+  }
+  @case ("roads-thematic-accuracy") {
+    <h5 style="margin-top: 0.8rem" i18n>Select a attribute to check. Leave empty for all attributes:</h5>
+  }
+}
+
+<div class="field">
+  <app-sui-multi-select-search-dropdown
+                                        id="search-select-thematic-accuracy"
+                                        name="{{indicatorKey}}--{{categoryType}}"
+                                        [(ngModel)]="selectedCategoryIds"
+                                        [options]="thematicDropdownOptions"
+                                        [selectOptions]="this.categories | keyvalue">
+  </app-sui-multi-select-search-dropdown>
+</div>
