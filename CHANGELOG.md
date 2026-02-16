@@ -3,6 +3,9 @@ Changelog
 
 ## current
 
+* feat: add link to indicator description page to oqapi indicators
+* feat: add option for new indicator roads-thematic-accuracy
+
 ## 1.8.1
 
 * test: update ohsomeapi- and oqapi-metadata response mocks
