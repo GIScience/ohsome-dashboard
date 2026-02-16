@@ -50,8 +50,6 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   thematicAccuracyCategoryType = thematicCategoryType
 
-  thematicAccuracyCategoryNamesForBlank = thematicAccuracyCategoryNamesForBlank
-
   constructor() {
     this.metadata = this.oqtApiMetadataProviderService.getOqtApiMetadata();
     this.changeDetectorRef.detach();

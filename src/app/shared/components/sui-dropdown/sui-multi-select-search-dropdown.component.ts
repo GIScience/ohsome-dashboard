@@ -102,12 +102,14 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
           // avoid firing useless change events:
           // - values did not change
           // - in single selection mode: empty field not allows
+
+          let shouldFire = !this.suppressChange  && value != undefined;
           const isCleared =
             value === undefined ||
             (typeof value === 'string' && value.trim() === '') ||
             (Array.isArray(value) && value.length === 0);
 
-          if (isCleared) {
+          if (isCleared && shouldFire) {
             if (this.value !== null) {
               this.value = "";
               this.onChange("");
@@ -115,7 +117,6 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
             return;
           }
 
-          let shouldFire = !this.suppressChange  && value != undefined;
           if (this.multiple){
             value = value as string[];
             this.value = this.value as string[];
