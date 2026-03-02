@@ -50,7 +50,7 @@
     "6349663852098896443": "monatlich",
     "3096451804401616458": "Quartarl",
     "952317333312932720": "jährlich",
-    "973067067648670560": "Untersuche das Topic \"{$INTERPOLATION}\", ob es folgende Attribut(e) hat:",
+    "973067067648670560": "Untersuche das Thema \"{$INTERPOLATION}\", ob es folgende Attribut(e) hat:",
     "4926560909163306317": "ohsome-Filterdefinition:",
     "8995426950565392965": "Zeige und bearbeite die Attributfilter",
     "4181005868320620737": "Städtische geprägte Flächen",
@@ -68,10 +68,12 @@
     "7468167181547853661": "Feuchtflächen an der Küste",
     "90841969426082572": "Wasserflächen im Landesinneren",
     "5667462948934122040": "Meeresgewässer",
-    "6029461601943644800": " Hier können eigene Attributfilter erstellt werden, falls wir kein passendes vordefiniertes Attribut bereitstellen. {$START_TAG_DIV_3}{$START_TAG_DIV}{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}mehr...{$CLOSE_TAG_DIV}{$START_TAG_DIV_2}{$START_PARAGRAPH}Der Attribute-Completeness-Indikator berechnet die Prozentzahl der Features, die sowohl mit dem Topic-Filter als auch dem Attribut-Filter übereinstimmen gegenüber allen Features, die nur mit dem Topic-Filter übereinstimmen.{$CLOSE_PARAGRAPH}{$START_TAG_DIV_1}{$START_TAG_LABEL}Topic Filter {$START_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}{$START_PARAGRAPH_1}{$START_TAG__MATH_MATH}{$START_TAG__MATH_MSUB}{$START_TAG__MATH_MI}attributeCompleteness{$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}percent{$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MSUB}{$START_TAG__MATH_MO}={$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MFRAC}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Topic Filter) matching the Attribute Filter {$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Topic Filter){$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MFRAC}{$START_TAG__MATH_MO}×{$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MN}100{$CLOSE_TAG__MATH_MN}{$CLOSE_TAG__MATH_MATH}{$CLOSE_PARAGRAPH}{$CLOSE_TAG_DIV}{$CLOSE_TAG_DIV}{$LINE_BREAK}{$START_TAG_DIV_1}{$START_TAG_LABEL_1}Attribute Title{$CLOSE_TAG_LABEL}{$TAG_INPUT}{$CLOSE_TAG_DIV}{$START_TAG_DIV_1}{$START_TAG_LABEL}Attribute Filter ({$START_LINK}Wie funktioniert das?{$CLOSE_LINK}) {$START_TAG_APP_PRISM_EDITOR_1}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}",
-    "8342918610925275021": "{$START_LINK}ohsome filter{$CLOSE_LINK}-Definition des Topics: {$START_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_APP_PRISM_EDITOR}",
+    "6029461601943644800": " Hier können eigene Attributfilter erstellt werden, falls wir kein passendes vordefiniertes Attribut bereitstellen. {$START_TAG_DIV_3}{$START_TAG_DIV}{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}mehr...{$CLOSE_TAG_DIV}{$START_TAG_DIV_2}{$START_PARAGRAPH}Der Attribute-Completeness-Indikator berechnet die Prozentzahl der Features, die sowohl mit dem Thema-Filter als auch dem Attribut-Filter übereinstimmen gegenüber allen Features, die nur mit dem Thema-Filter übereinstimmen.{$CLOSE_PARAGRAPH}{$START_TAG_DIV_1}{$START_TAG_LABEL}Thema-Filter {$START_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}{$START_PARAGRAPH_1}{$START_TAG__MATH_MATH}{$START_TAG__MATH_MSUB}{$START_TAG__MATH_MI}attributeCompleteness{$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}percent{$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MSUB}{$START_TAG__MATH_MO}={$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MFRAC}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Thema-Filter) übereinstimmend mit Attribut-Filter {$CLOSE_TAG__MATH_MI}{$START_TAG__MATH_MI}{$INTERPOLATION} of \"{$INTERPOLATION_1}\" (Thema-Filter){$CLOSE_TAG__MATH_MI}{$CLOSE_TAG__MATH_MFRAC}{$START_TAG__MATH_MO}×{$CLOSE_TAG__MATH_MO}{$START_TAG__MATH_MN}100{$CLOSE_TAG__MATH_MN}{$CLOSE_TAG__MATH_MATH}{$CLOSE_PARAGRAPH}{$CLOSE_TAG_DIV}{$CLOSE_TAG_DIV}{$LINE_BREAK}{$START_TAG_DIV_1}{$START_TAG_LABEL_1}Attribut-Titel{$CLOSE_TAG_LABEL}{$TAG_INPUT}{$CLOSE_TAG_DIV}{$START_TAG_DIV_1}{$START_TAG_LABEL}Attribut-Filter ({$START_LINK}Wie funktioniert das?{$CLOSE_LINK}) {$START_TAG_APP_PRISM_EDITOR_1}{$CLOSE_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_LABEL}{$CLOSE_TAG_DIV}",
+    "8008761738243063999": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Thema",
+    "1898635526007830132": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT} Durchsuche Themenkatalog ",
+    "8342918610925275021": "{$START_LINK}ohsome filter{$CLOSE_LINK}-Definition des Themas: {$START_TAG_APP_PRISM_EDITOR}{$CLOSE_TAG_APP_PRISM_EDITOR}",
     "3849220132321290397": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Qualitätsindikatoren",
-    "4960734757433808567": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Entschuldigung, momentan stehen keine Indikatoren für dieses Topic bereit. ",
+    "4960734757433808567": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Entschuldigung, momentan stehen keine Indikatoren für dieses Thema bereit. ",
     "6993643722960122605": "Klicke hier für mehr Informationen.",
     "3550122436687078050": "Wähle eine spezifische Land-Cover-Klasse aus, um diese zu untersuchen. Leer lassen, um für alle Klassen zu berechnen:",
     "1238775438066472532": "Wähle ein spezifisches Attribut aus, um dieses zu untersuchen. Leer lassen, um alle Attribute zu vergleichen:",
@@ -105,7 +107,7 @@
     "972290210784113204": "Permalink kopieren",
     "4851643581005075782": "Willkommen zum {$TAG_IMG}{$START_TAG_SPAN}  DASHBOARD{$CLOSE_TAG_SPAN}",
     "2171894153326157864": "Intro",
-    "9077066717247521441": "Topic-Katalog",
+    "9077066717247521441": "Themen-Katalog",
     "1271074412246198083": "OSM-Zeitreihen aufrufen",
     "2725132696408790805": "OSM-Zeitreihen",
     "1024336712674848231": "Zeitreihen & Vergleiche",
@@ -121,6 +123,6 @@
     "1565516189397987767": "Download OSM",
     "8140899462647138073": "{$START_PARAGRAPH}Wir arbeiten daran, dass Du schnell und einfach gefilterte OSM-Daten nach deinen Wünschen herunterladen kannst.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Bis es soweit ist, kannst du bereits Analyseergebnisse aus den OSM-Zeitreihen als CSV- oder JSON-Datei herunterladen.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Für kleinere Regionen kannst du auch unsere ohsome API direkt nutzen:{$LINE_BREAK}{$START_LINK}ohsome API Swagger-Dokumentation{$CLOSE_LINK}{$CLOSE_PARAGRAPH}",
     "8606546867449697486": "Data Extraktion mit Swagger",
-    "5790286451234271031": "Vordefinierte 'topics' und verfügbare Indikatoren:"
+    "5790286451234271031": "Vordefinierte 'Themen' und verfügbare Indikatoren:"
   }
 }
