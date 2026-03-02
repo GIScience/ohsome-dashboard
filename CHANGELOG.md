@@ -3,8 +3,9 @@ Changelog
 
 ## current
 
-* feat: add option for new indicator roads-thematic-accuracy
+## 1.9.0
 
+* feat: add option for new indicator roads-thematic-accuracy
 * feat: add link to indicator description page to oqapi indicators
 
 ## 1.8.1
