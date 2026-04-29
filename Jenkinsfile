@@ -26,7 +26,7 @@ pipeline {
           echo env.BUILD_NUMBER
           echo env.TAG_NAME
         }
-        nodejs('NodeJS 22') {
+        nodejs('NodeJS 24') {
           sh 'npm clean-install'
         }
       }
@@ -39,7 +39,7 @@ pipeline {
 
     stage ('Build') {
       steps {
-        nodejs('NodeJS 22') {
+        nodejs('NodeJS 24') {
           sh 'npm run build:prod'
         }
       }
@@ -52,7 +52,7 @@ pipeline {
 
     stage ('Test') {
       steps {
-        nodejs('NodeJS 22') {
+        nodejs('NodeJS 24') {
           sh 'ng test --karma-config karma-jenkins.conf.js --code-coverage --watch=false'
         }
       }
@@ -77,7 +77,7 @@ pipeline {
             } else {
               SONAR_CLI_PARAMETER += "-Dsonar.branch.name=${env.BRANCH_NAME}"
             }
-            nodejs('NodeJS 22') {
+            nodejs('NodeJS 24') {
               sh "${scannerHome}/bin/sonar-scanner " + SONAR_CLI_PARAMETER
             }
           }
