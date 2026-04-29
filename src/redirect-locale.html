@@ -48,13 +48,17 @@
     return navigator.language;
   }
 
+  function getOrigin() {
+    return globalThis.location.origin;
+  }
+
   function getHash() {
     return globalThis.location.hash;
   }
 
-  function redirectToRoute(locale, hash) {
+  function redirectToRoute(origin, locale, hash) {
     if (enableLog) console.log('matching locale ' + locale + ' ...');
-    let route = routing[locale];
+    let route = origin + '/' + routing[locale];
     if (route != null) {
       if (enableLog) console.log('will redirect to ' + route);
       if (hash) {
@@ -69,7 +73,7 @@
     if (parts == null || parts.length <= 1) return;
 
     if (enableLog) console.log("will try to use just the language");
-    redirectToRoute(parts[0], hash);
+    redirectToRoute(origin, parts[0], hash);
   }
 
   ////////////////
@@ -91,7 +95,8 @@
 
   locale = locale.toLowerCase();
   let hash = getHash();
-  redirectToRoute(locale, hash);
+  let origin = getOrigin();
+  redirectToRoute(origin, locale, hash);
 </script>
 </body>
 </html>
