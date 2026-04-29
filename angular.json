@@ -109,7 +109,7 @@
                 }
               },
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
