@@ -7,10 +7,17 @@ pipeline {
   }
 
   environment {
+    // this variable defines which branches will be deployed
+    SNAPSHOT_BRANCH_REGEX = /(^main$)/
+    RELEASE_REGEX = /^([0-9]+(\.[0-9]+)*)(-(RC|beta-|alpha-)\.[0-9]+)?$/
     REPO_NAME = sh(returnStdout: true, script: 'basename `git remote get-url origin` .git').trim()
     VERSION = sh(returnStdout: true, script: 'grep -Po "\\"version\\": \\"\\K([^\\"]+)" package.json').trim()
     LATEST_AUTHOR = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
     LATEST_COMMIT_ID = sh(returnStdout: true, script: 'git describe --tags --long  --always').trim()
+    DOCKER_IMAGE_NAME = 'repo.heigit.org/heigit/ohsome-dashboard'
+    DOCKER_CREDENTIALS_ID = 'docker-heigit-ci-service'
+    DOCKER_REGISTRY_URL = 'https://repo.heigit.org'
+
     PATH = "${WORKSPACE}/node_modules/.bin:${env.PATH}"
   }
 
@@ -89,6 +96,30 @@ pipeline {
         }
       }
     }
+
+    stage('Build and publish Docker image') {
+      steps {
+        script {
+          docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_CREDENTIALS_ID) {
+            if (env.BRANCH_NAME ==~ SNAPSHOT_BRANCH_REGEX) {
+              dockerImage = docker.build(DOCKER_IMAGE_NAME + ':' + env.BRANCH_NAME, '--build-arg build_config=test .')
+              dockerImage.push()
+            }
+            if (VERSION ==~ RELEASE_REGEX && env.TAG_NAME ==~ RELEASE_REGEX) {
+              dockerImage = docker.build(DOCKER_IMAGE_NAME + ':' + VERSION, '--build-arg build_config=prod .')
+              dockerImage.push()
+              dockerImage.push('latest')
+            }
+          }
+        }
+      }
+      post {
+        failure {
+          rocket_buildfail()
+        }
+      }
+    }
+
     stage('Wrapping Up') {
          steps {
             encourage()
