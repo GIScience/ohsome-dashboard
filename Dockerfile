@@ -15,7 +15,8 @@ COPY Semantic-UI-2.5.0 /app/Semantic-UI-2.5.0
 COPY src /app/src
 
 # build
-RUN --mount=type=cache,target=/root/.npm npm run build:prod
+ARG build_config=test
+RUN --mount=type=cache,target=/root/.npm npm run build:${build_config}
 
 FROM nginx:alpine-slim
 RUN echo 'absolute_redirect off;' > /etc/nginx/conf.d/redirect.conf
