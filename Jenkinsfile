@@ -103,14 +103,17 @@ pipeline {
           docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_CREDENTIALS_ID) {
             if (env.BRANCH_NAME ==~ SNAPSHOT_BRANCH_REGEX) {
               dockerImage = docker.build(DOCKER_IMAGE_NAME + ':' + env.BRANCH_NAME, '--build-arg build_config=test .')
+              grypeScan(scanDest: 'docker:' + dockerImage.id, repName: 'myGrypeScanResult.txt', autoInstall: true)
               dockerImage.push()
             }
             if (VERSION ==~ RELEASE_REGEX && env.TAG_NAME ==~ RELEASE_REGEX) {
               dockerImage = docker.build(DOCKER_IMAGE_NAME + ':' + VERSION, '--build-arg build_config=prod .')
+              grypeScan(scanDest: 'docker:' + dockerImage.id, repName: 'myGrypeScanResult.txt', autoInstall: true)
               dockerImage.push()
               dockerImage.push('latest')
             }
           }
+          recordIssues enabledForFailure: true, tools: [grype()]
         }
       }
       post {
