@@ -2,6 +2,13 @@ apiVersion: v2
 name: ohsome-dashboard
 description: Deploys the ohsome dashboard to kubernetes
 
+sources:
+  - https://github.com/GIScience/ohsome-dashboard
+maintainers:
+  - name: HeiGIT
+    email: ohsome@heigit.org
+    url: https://heigit.org
+
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
