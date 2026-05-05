@@ -7,17 +7,17 @@
       <!-- 1. Topic or AOI-->
       <h4 id="topicHeading" class="ui header"><i class="filter icon"></i>Topic</h4>
       <button type="button" id="searchTopicBtn" class="ui right floated basic button" tabindex="0"
-        (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})">
+              (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})">
         <i class="icon search"></i>
         Search Topic Catalog
       </button>
       <div class="field">
         <app-sui-multi-select-search-dropdown #searchSelectTopic required
-          [multiple]="false"
-          name="topic"
-          [(ngModel)]="selectedTopicKey"
-          [options]="{fullTextSearch: 'exact'}"
-        [selectOptions]="topics | keyvalue"></app-sui-multi-select-search-dropdown>
+                                              [multiple]="false"
+                                              name="topic"
+                                              [(ngModel)]="selectedTopicKey"
+                                              [options]="{fullTextSearch: 'exact'}"
+                                              [selectOptions]="topics | keyvalue"></app-sui-multi-select-search-dropdown>
       </div>
       <div class="ui basic segment">
         <div class="ui items">
@@ -26,14 +26,39 @@
               {{ topics[selectedTopicKey].description }}
             </div>
           </div>
+          @if (selectedTopicKey === 'custom-topic') {
+            <div class="item">
+              <div class="content">
+                <label for="topic-title">Custom Topic Title:</label>
+                <input type="text" id="topic-title"
+                       name="topic-title"
+                       placeholder="Enter your Topic Title"
+                       [ngModel]="topicTitleDefinition()"
+                       required>
+              </div>
+            </div>
+          }
           <div class="item">
             <div class="content" i18n>
               <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
               of the topic:
-              <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
-                                [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
-                                [backgroundColor]="'#f9f9f9'"
-              ></app-prism-editor>
+              @if (selectedTopicKey === 'custom-topic') {
+                <app-prism-editor id="topicFilter" [readonly]="false"
+                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"
+                                  [value]="topicFilterDefinition()"
+                                  (valueChange)="setCustomTopicFilterDeninition($event)"
+                ></app-prism-editor>
+                <input type="hidden" id="topic-filter"
+                       name="topic-filter"
+                       [ngModel]="topicFilterDefinition()"
+                       required>
+              } @else {
+                <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
+                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
+                                  [backgroundColor]="'#f9f9f9'"
+                ></app-prism-editor>
+              }
+
             </div>
           </div>
         </div>
@@ -58,7 +83,7 @@
                     [indicator]="indicator"
                     [qualityDimension]="qualityDimension"
                     (indicatorToggle)="onIndicatorToggle()"
-                    >
+                  >
                     @switch (indicator.key) {
                       @case ("attribute-completeness") {
                         @if (indicator.checked) {
@@ -98,8 +123,8 @@
       <!-- Warning if a topic exists, but none of its indicators_ is available -->
       @if (currentQualityDimensions.size === 0) {
         <div class="ui small negative icon message" i18n>
-        <i class="minus circle icon"></i>Sorry, currently no indicators are available for this topic.
-      </div>
+          <i class="minus circle icon"></i>Sorry, currently no indicators are available for this topic.
+        </div>
       }
 
     </div>
