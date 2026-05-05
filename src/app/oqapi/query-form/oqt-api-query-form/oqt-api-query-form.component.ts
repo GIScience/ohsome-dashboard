@@ -1,4 +1,15 @@
-import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  signal
+} from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
@@ -28,6 +39,9 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
   hashParams = this.hashParamsSignal();
+
+  topicTitleDefinition = signal<string>('');
+  topicFilterDefinition = signal<string>('');
 
   @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
   private indicatorCoverages: Userlayer[] = [];
@@ -216,6 +230,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   onIndicatorToggle() {
     this.updateIndicatorCoverages();
+  }
+
+  setCustomTopicFilterDeninition(filter: string) {
+    this.topicFilterDefinition.set(filter)
+    this.topics[this.selectedTopicKey].filter = filter;
   }
 
 }
