@@ -43,6 +43,17 @@
   margin-left: 1rem;
 }
 
+#topic-details {
+  transition: box-shadow 0.5s;
+}
+
+.highlight-topic-details {
+  /*outline: 2px solid #2185D0;*/
+  /*outline-offset: 5px;*/
+  box-shadow:
+    0 0 0 5px #f3f4f5,
+    0 0 0 7px #2185D0;
+}
 
 .quality-dimension {
   text-transform: capitalize;

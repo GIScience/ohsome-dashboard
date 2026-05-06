@@ -241,4 +241,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.topics[this.selectedTopicKey].filter = filter;
   }
 
+  setCustomTopic() {
+    this.urlHashParamsProviderService.updateHashParams({
+      "topic": "custom-topic",
+      "topic-title": this.topics[this.selectedTopicKey].name,
+      "topic-filter": this.topics[this.selectedTopicKey].filter
+    });
+  }
 }

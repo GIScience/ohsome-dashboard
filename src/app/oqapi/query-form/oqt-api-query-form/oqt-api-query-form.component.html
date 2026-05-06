@@ -13,27 +13,33 @@
       </button>
 
       <div class="ui basic segment">
-        <div class="ui items">
-          <div class="item">
-            <div class="editable-topic">
-              <div class="field">
-                <app-sui-multi-select-search-dropdown #searchSelectTopic required
-                                                      [multiple]="false"
-                                                      name="topic"
-                                                      [(ngModel)]="selectedTopicKey"
-                                                      [options]="{fullTextSearch: 'exact'}"
-                                                      [selectOptions]="topics | keyvalue">
-                </app-sui-multi-select-search-dropdown>
-              </div>
-              <button type="button" class="ui blue icon button"
-                      data-tooltip="Edit the topic filter."
-                      data-inverted
-                      (click)="urlHashParamsProviderService.updateHashParam('topic', 'custom-topic')"
-              >
-                <i class="edit icon"></i>
-              </button>
+      <div class="ui items">
+        <div class="item">
+          <div class="editable-topic">
+            <div class="field">
+              <app-sui-multi-select-search-dropdown #searchSelectTopic required
+                                                    [multiple]="false"
+                                                    name="topic"
+                                                    [(ngModel)]="selectedTopicKey"
+                                                    [options]="{fullTextSearch: 'exact'}"
+                                                    [selectOptions]="topics | keyvalue">
+              </app-sui-multi-select-search-dropdown>
             </div>
+            <button type="button" class="ui blue icon button"
+                    data-tooltip="Edit the topic filter."
+                    data-inverted
+                    [class.disabled]="selectedTopicKey === 'custom-topic'"
+                    (click)="setCustomTopic()"
+            >
+              <i class="edit icon"></i>
+            </button>
           </div>
+        </div>
+      </div>
+
+
+<!--      <div class="ui basic segment">-->
+        <div class="ui items" id="topic-details" [class.highlight-topic-details]="selectedTopicKey === 'custom-topic'">
           <div class="item">
             <div class="content">
               {{ topics[selectedTopicKey].description }}
@@ -42,7 +48,7 @@
           @if (selectedTopicKey === 'custom-topic') {
             <div class="item">
               <div class="content">
-                <label for="topic-title">Custom Topic Title:</label>
+                <label for="topic-title">Custom topic title:</label>
                 <input type="text" id="topic-title"
                        name="topic-title"
                        placeholder="Enter your Topic Title"
