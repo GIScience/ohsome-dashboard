@@ -1,33 +1,26 @@
-import {
-  Component,
-  computed,
-  effect,
-  EventEmitter,
-  inject,
-  OnDestroy,
-  OnInit,
-  Output,
-  Renderer2,
-  signal
-} from '@angular/core';
-import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
+import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
 import {StateService} from '../../../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../../../singelton-services/url-hash-params-provider.service';
-import { SuiMultiSelectSearchDropdownComponent } from '../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
-import { PrismEditorComponent } from '../../../shared/components/prism-editor/prism-editor.component';
-import { SimpleIndicatorComponent } from './simple-indicator/simple-indicator.component';
-import { AttributeCompletenessAttributesComponent } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
-import { ThematicAccuracyIndicatorComponent } from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
-import { KeyValuePipe } from '@angular/common';
+import {
+  SuiMultiSelectSearchDropdownComponent
+} from '../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
+import {PrismEditorComponent} from '../../../shared/components/prism-editor/prism-editor.component';
+import {SimpleIndicatorComponent} from './simple-indicator/simple-indicator.component';
+import {
+  AttributeCompletenessAttributesComponent
+} from './attribute-completeness-attributes/attribute-completeness-attributes.component';
+import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
+import {KeyValuePipe} from '@angular/common';
 
 @Component({
-    selector: 'app-oqt-api-query-form',
-    templateUrl: './oqt-api-query-form.component.html',
-    styleUrls: ['./oqt-api-query-form.component.css'],
-    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+  selector: 'app-oqt-api-query-form',
+  templateUrl: './oqt-api-query-form.component.html',
+  styleUrls: ['./oqt-api-query-form.component.css'],
+  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
   imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
@@ -40,8 +33,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
   hashParams = this.hashParamsSignal();
 
-  topicTitleDefinition = signal<string>('');
-  topicFilterDefinition = signal<string>('');
 
   @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
   private indicatorCoverages: Userlayer[] = [];
@@ -67,14 +58,27 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // current quality dimensions to display based on the selected topic
   public currentQualityDimensions: Set<string> = new Set();
 
-  topicParamSignal = computed(()=> {
+  // Set values from Permalink
+  // topic
+  topicParamSignal = computed(() => {
     const topicParam = this.hashParamsSignal().get('topic');
     return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Object.keys(this.topics)[0];
   });
-  indicatorsParamSignal = computed(()=> {
+
+  // custom topic (title and filter)
+  topicTitleDefinition = computed(() => {
+    return this.hashParamsSignal().get('topic-title') ?? '';
+  });
+  topicFilterDefinition = computed(() => {
+    return this.hashParamsSignal().get('topic-filter') ?? '';
+  })
+
+  // indicators
+  indicatorsParamSignal = computed(() => {
     return this.hashParamsSignal().get('indicators');
 
   });
+
   constructor() {
 
     effect(() => {
@@ -219,7 +223,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       );
 
     for (const indicatorKey of checkedIndicators) {
-      (async ()=>{
+      (async () => {
         const maskedUserLayer = await this.oqtApiMetadataProviderService.getIndicatorCoverage(indicatorKey);
         this.indicatorCoverages.push(maskedUserLayer);
         this.changeIndicatorCoverages.emit(this.indicatorCoverages);
@@ -232,8 +236,8 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.updateIndicatorCoverages();
   }
 
-  setCustomTopicFilterDeninition(filter: string) {
-    this.topicFilterDefinition.set(filter)
+  setCustomTopicFilterDefinition(filter: string) {
+    this.urlHashParamsProviderService.updateHashParam('topic-filter', filter);
     this.topics[this.selectedTopicKey].filter = filter;
   }
 
