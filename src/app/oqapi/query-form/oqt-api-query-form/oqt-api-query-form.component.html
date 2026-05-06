@@ -7,20 +7,33 @@
       <!-- 1. Topic or AOI-->
       <h4 id="topicHeading" class="ui header" i18n><i class="filter icon"></i>Topic</h4>
       <button type="button" id="searchTopicBtn" class="ui right floated basic button" tabindex="0"
-        (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})" i18n>
+              (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})" i18n>
         <i class="icon search"></i>
         Search Topic Catalog
       </button>
-      <div class="field">
-        <app-sui-multi-select-search-dropdown #searchSelectTopic required
-                                              [multiple]="false"
-                                              name="topic"
-                                              [(ngModel)]="selectedTopicKey"
-                                              [options]="{fullTextSearch: 'exact'}"
-                                              [selectOptions]="topics | keyvalue"></app-sui-multi-select-search-dropdown>
-      </div>
+
       <div class="ui basic segment">
         <div class="ui items">
+          <div class="item">
+            <div class="editable-topic">
+              <div class="field">
+                <app-sui-multi-select-search-dropdown #searchSelectTopic required
+                                                      [multiple]="false"
+                                                      name="topic"
+                                                      [(ngModel)]="selectedTopicKey"
+                                                      [options]="{fullTextSearch: 'exact'}"
+                                                      [selectOptions]="topics | keyvalue">
+                </app-sui-multi-select-search-dropdown>
+              </div>
+              <button type="button" class="ui blue icon button"
+                      data-tooltip="Edit the topic filter."
+                      data-inverted
+                      (click)="urlHashParamsProviderService.updateHashParam('topic', 'custom-topic')"
+              >
+                <i class="edit icon"></i>
+              </button>
+            </div>
+          </div>
           <div class="item">
             <div class="content">
               {{ topics[selectedTopicKey].description }}

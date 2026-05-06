@@ -27,6 +27,23 @@
     }
 }
 
+/* dropdown search with pre defined attributes + EDIT button*/
+.editable-topic {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.editable-topic > div.field {
+  flex: 1 1 auto;
+}
+
+.editable-topic > button {
+  flex: 0 0 auto;
+  margin-left: 1rem;
+}
+
+
 .quality-dimension {
   text-transform: capitalize;
 }
