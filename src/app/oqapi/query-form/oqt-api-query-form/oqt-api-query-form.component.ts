@@ -69,6 +69,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   topicTitleDefinition = computed(() => {
     return this.hashParamsSignal().get('topic-title') ?? '';
   });
+
   topicFilterDefinition = computed(() => {
     return this.hashParamsSignal().get('topic-filter') ?? '';
   })
@@ -84,12 +85,30 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     effect(() => {
       console.log("3 topic", this.topicParamSignal())
       this.selectedTopicKey = this.topicParamSignal();
+      // on topic change, check if a stored custom topic is available and use it
+      if (this.selectedTopicKey === "custom-topic") {
+        const appState = this.stateService.appState()
+        if (appState.customTopicTitle && appState.customTopicFilter) {
+          this.urlHashParamsProviderService.updateHashParams({
+            'topic-title': appState.customTopicTitle,
+            'topic-filter': appState.customTopicFilter,
+          })
+        }
+      }
     });
 
     effect(() => {
       console.log("4 indicator", this.indicatorsParamSignal())
       this.setIndicators(this.indicatorsParamSignal());
     });
+
+    // update appState to store custom topic init when coming form url
+    this.stateService.updatePartialState({
+        customTopicTitle: this.topicTitleDefinition(),
+        customTopicFilter: this.topicFilterDefinition()
+      }
+    )
+
   }
 
   ngOnInit(): void {
@@ -236,16 +255,27 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.updateIndicatorCoverages();
   }
 
+  setCustomTopicTitleDefinition(title: string) {
+    this.urlHashParamsProviderService.updateHashParam('topic-title', title);
+    this.stateService.updatePartialState({'customTopicTitle': title});
+  }
+
   setCustomTopicFilterDefinition(filter: string) {
     this.urlHashParamsProviderService.updateHashParam('topic-filter', filter);
+    this.stateService.updatePartialState({'customTopicFilter': filter});
     this.topics[this.selectedTopicKey].filter = filter;
   }
 
   setCustomTopic() {
-    this.urlHashParamsProviderService.updateHashParams({
+    let customTopic = {
       "topic": "custom-topic",
       "topic-title": this.topics[this.selectedTopicKey].name,
       "topic-filter": this.topics[this.selectedTopicKey].filter
-    });
+    }
+    this.urlHashParamsProviderService.updateHashParams(customTopic);
+    this.stateService.updatePartialState({
+      customTopicTitle: customTopic['topic-title'],
+      customTopicFilter: customTopic['topic-filter'],
+    })
   }
 }

@@ -53,6 +53,7 @@
                        name="topic-title"
                        placeholder="Enter your Topic Title"
                        [ngModel]="topicTitleDefinition()"
+                       (ngModelChange)="setCustomTopicTitleDefinition($event)"
                        required>
               </div>
             </div>
