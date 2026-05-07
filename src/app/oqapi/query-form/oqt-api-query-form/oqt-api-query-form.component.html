@@ -30,6 +30,7 @@
                     data-inverted
                     [class.disabled]="selectedTopicKey === 'custom-topic'"
                     (click)="setCustomTopic()"
+                    i18n-data-tooltip
             >
               <i class="edit icon"></i>
             </button>
@@ -54,7 +55,9 @@
                        placeholder="Enter your Topic Title"
                        [ngModel]="topicTitleDefinition()"
                        (ngModelChange)="setCustomTopicTitleDefinition($event)"
-                       required>
+                       required
+                       i18n-placeholder
+                >
               </div>
             </div>
           }
