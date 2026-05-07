@@ -9,6 +9,7 @@ export const environment = {
 
   // core, experimental, all, ...
   oqtApiProject: 'all',
+  defaultTopicKey: 'roads-all-highways',
 
   //the WFS endpoint which will get appended a CQL_FILTER="id" IN (number, number, ...) param and should return a GeoJSON<FeatureCollection>
   ohsomeBoundaryWFSUrl: 'https://maps.heigit.org/vector/service/ohsome/wfs?service=wfs&request=GetFeature&typeNames=ohsome:admin_world_water&outputFormat=application/json&version=2.0.0&srsName=EPSG:4326',

@@ -15,6 +15,7 @@ import {
 } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
 import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
 import {KeyValuePipe} from '@angular/common';
+import Utils from '../../../../utils';
 
 @Component({
   selector: 'app-oqt-api-query-form',
@@ -62,7 +63,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   // topic
   topicParamSignal = computed(() => {
     const topicParam = this.hashParamsSignal().get('topic');
-    return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Object.keys(this.topics)[0];
+    return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Utils.loadEnv('defaultTopicKey',Object.keys(this.topics)[0]) ;
   });
 
   // custom topic (title and filter)
@@ -83,7 +84,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   constructor() {
 
     effect(() => {
-      console.log("3 topic", this.topicParamSignal())
+      console.log("1 topic", this.topicParamSignal())
       this.selectedTopicKey = this.topicParamSignal();
       // on topic change, check if a stored custom topic is available and use it
       if (this.selectedTopicKey === "custom-topic") {
@@ -98,7 +99,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     });
 
     effect(() => {
-      console.log("4 indicator", this.indicatorsParamSignal())
+      console.log("2 indicator", this.indicatorsParamSignal())
       this.setIndicators(this.indicatorsParamSignal());
     });
 
@@ -116,17 +117,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     this.indicators = this.getEnrichedIndicators();
     this.topics = this.getEnrichedTopics(this.indicators);
     this.qualityDimensions = structuredClone(this.oqtApiMetadataProviderService.getOqtApiMetadata().result['qualityDimensions']);
-
-    // fill form with hash or default values
-    // set topic
-    console.log("1 topic", this.hashParams.get('topic'));
-    const topicParam = this.hashParams.get('topic');
-    this.selectedTopicKey = (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Object.keys(this.topics)[0];
-
-    //set indicators
-    console.log("2 indicator", this.hashParams.get('indicators'));
-    this.setIndicators(this.hashParams.get('indicators'));
-
   }
 
   ngOnDestroy() {
