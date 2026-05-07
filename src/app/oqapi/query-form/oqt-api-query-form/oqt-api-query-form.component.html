@@ -62,9 +62,9 @@
             </div>
           }
           <div class="item">
-            <div class="content" i18n>
-              <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
-              of the topic:
+            <div class="content">
+              <span i18n><a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
+              of the topic:</span>
               @if (selectedTopicKey === 'custom-topic') {
                 <app-prism-editor id="topicFilter" [readonly]="false"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"
