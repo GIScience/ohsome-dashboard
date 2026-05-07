@@ -6,9 +6,17 @@
       <i class="cogs icon"></i><span i18n>OSM Quality Analyses</span>
     </h3>
     <div class="ui item">
-      <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
-        {{ metadata.result.topics[formValues.topic].name }}
-      </span>
+      @if (formValues.topic === "custom-topic") {
+        <span class="ui circular label topic" title="{{ formValues['topic-filter'] }}">
+          {{ formValues['topic-title'] }}
+        </span>
+      } @else {
+        <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
+          {{ metadata.result.topics[formValues.topic].name }}
+        </span>
+      }
+
+
       @if (formValues['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {
         <span
           class="ui circular label attribute"
