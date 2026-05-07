@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, inject, input } from '@angular/core';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiService} from '../../oqt-api.service';
 import {IndicatorLabel, IndicatorParams, IndicatorResponseJSON} from '../../types/types';
@@ -23,6 +23,8 @@ export class IndicatorResultComponent implements OnInit {
 
 
   @Input() topicKey: string;
+  topicTitle= input<string>()
+  topicFilter= input<string>()
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
   @Input() indicator!: IndicatorParams;
 
@@ -45,13 +47,13 @@ export class IndicatorResultComponent implements OnInit {
   indicatorName: string;
 
   ngOnInit(): void {
-    // add additional request parameters from attributes that have attributeParams like attribite-completeness
+    // add additional request parameters from attributes that have attributeParams like attribute-completeness
     const body = this.prepareRequestBody();
     this.getIndicatorResults(body);
   }
 
   private prepareRequestBody() {
-    const body = {
+    let body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
     }
@@ -74,6 +76,12 @@ export class IndicatorResultComponent implements OnInit {
         return body;
 
       })
+    }
+
+    if(this.topicKey === 'custom-topic') {
+        // delete body.topic
+      body['topicTitle'] = this.topicTitle();
+      body['topicFilter'] = this.topicFilter();
     }
 
     return body;

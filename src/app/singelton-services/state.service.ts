@@ -4,6 +4,8 @@ interface StateParams {
   showWelcomeScreen: boolean;
   welcomeTab: string;
   appLanguage: string;
+  customTopicTitle?: string;
+  customTopicFilter?: string;
 }
 
 @Injectable({
