@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current
+* feat: add custom topic filter ([#86])
+
+[#86]: https://github.com/GIScience/ohsome-dashboard/issues/86
 
 ## 1.9.0
 
