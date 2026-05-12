@@ -9,7 +9,7 @@ pipeline {
   environment {
     // this variable defines which branches will be deployed
     SNAPSHOT_BRANCH_REGEX = /(^main$)/
-    RELEASE_REGEX = /^([0-9]+(\.[0-9]+)*)(-(RC|beta-|alpha-)\.[0-9]+)?$/
+    RELEASE_REGEX = /^([0-9]+(\.[0-9]+)*)(-(RC|rc|beta|alpha)\.[0-9]+)?$/
     REPO_NAME = sh(returnStdout: true, script: 'basename `git remote get-url origin` .git').trim()
     VERSION = sh(returnStdout: true, script: 'grep -Po "\\"version\\": \\"\\K([^\\"]+)" package.json').trim()
     LATEST_AUTHOR = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
