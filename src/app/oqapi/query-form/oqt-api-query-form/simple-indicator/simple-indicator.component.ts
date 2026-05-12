@@ -18,6 +18,9 @@ export class SimpleIndicatorComponent {
   getDescriptionWithLink(): string {
     const locale = localStorage.getItem("locale") || "en";
     const link_text = $localize`Click here for more info.`
+    if (locale === 'de') {
+      return `${this.indicator.description} <br> <a target="_blank" href="https://giscience.github.io/oqapi-jupyter-book/${this.indicator.key}">${link_text}</a>`;
+    }
     return `${this.indicator.description} <br> <a target="_blank" href="https://github.com/GIScience/ohsome-quality-api/blob/main/docs/indicators_${locale}.md">${link_text}</a>`;
   }
 
