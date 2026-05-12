@@ -1,3 +1,4 @@
+// until v2 is released, this will be the config for our NEXT dashboard
 export const environment = {
   production: true,
 
@@ -5,7 +6,7 @@ export const environment = {
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
 
   //oqtApi (ohsome quality analyst)
-  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
+  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
   // core, experimental, all, ...
   oqtApiProject: 'core',
   defaultTopicKey: 'cycleway',
