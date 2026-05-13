@@ -111,8 +111,13 @@ export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccess
 
           if (isCleared && shouldFire) {
             if (this.value !== null) {
-              this.value = "";
-              this.onChange("");
+              if (typeof value === 'string') {
+                this.value = "";
+                this.onChange("");
+              } else if (Array.isArray(value)) {
+                this.value = [""];
+                this.onChange([""]);
+              }
             }
             return;
           }
