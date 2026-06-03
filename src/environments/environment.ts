@@ -11,7 +11,7 @@ export const environment = {
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
-  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
+  oqtApiRootUrl: 'https://staging.api.heigit.org/ohsome-quality-api/v1',
    // oqtApiRootUrl: 'http://127.0.0.1:8000',
   // core, experimental, all, ...
   oqtApiProject: 'all',
@@ -44,4 +44,10 @@ export const environment = {
   // endDate : '2020-03-01',
   period : 'P1M',
   viewUpdateTime : false,
+
+  // userManagement
+  appwriteEndpoint: 'https://api.account.heigit.org',
+  appwriteProjectId: '6a158c93000c7437fe54',
+  accountFrontendUrl: "https://account.heigit.org",
+  skipAppwriteAPIKey: ""
 };

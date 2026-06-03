@@ -43,6 +43,7 @@
     "@turf/projection": "^7.3.1",
     "@turf/truncate": "^7.3.1",
     "@turf/union": "^7.3.1",
+    "appwrite": "^25.2.0",
     "chart.js": "^2.7.1",
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",

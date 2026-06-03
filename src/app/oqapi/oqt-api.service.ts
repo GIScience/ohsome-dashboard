@@ -8,6 +8,7 @@ import {BaseResponseJSON} from './types/BaseResponseJSON';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {StateService} from '../singelton-services/state.service';
+import {AuthService} from "../singelton-services/auth.service";
 // import {oqtApiMetadataResponseMock} from './oqt-api-metadata.response.mock';
 // import {indicatorResponseMock} from './result/indicator.response.mock';
 
@@ -21,6 +22,7 @@ export class OqtApiService {
   OQT_API_PROJECT: string;
 
   private stateService = inject(StateService);
+  private authService = inject(AuthService);
   private http = inject(HttpClient);
 
   constructor() {
@@ -43,7 +45,8 @@ export class OqtApiService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json', 'accept': 'application/json',
-          'Accept-Language': this.stateService.appState().appLanguage
+          'Accept-Language': this.stateService.appState().appLanguage,
+          'Authorization': this.authService.key().key
         })
       });
   }
