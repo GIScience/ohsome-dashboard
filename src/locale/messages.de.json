@@ -126,6 +126,8 @@
     "1565516189397987767": "Download OSM",
     "8140899462647138073": "{$START_PARAGRAPH}Wir arbeiten daran, dass Du schnell und einfach gefilterte OSM-Daten nach deinen Wünschen herunterladen kannst.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Bis es soweit ist, kannst du bereits Analyseergebnisse aus den OSM-Zeitreihen als CSV- oder JSON-Datei herunterladen.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}Für kleinere Regionen kannst du auch unsere ohsome API direkt nutzen:{$LINE_BREAK}{$START_LINK}ohsome API Swagger-Dokumentation{$CLOSE_LINK}{$CLOSE_PARAGRAPH}",
     "8606546867449697486": "Data Extraktion mit Swagger",
-    "5790286451234271031": "Vordefinierte 'Themen' und verfügbare Indikatoren:"
+    "5790286451234271031": "Vordefinierte 'Themen' und verfügbare Indikatoren:",
+    "7055939305301334826": "Es konnte kein valider Key für die HeiGIT APIs generiert werden.",
+    "8950123402223308957": "Schreib eine Mail an support(at)account.heigit.org falls dies kein bekanntes Problem ist."
   }
 }
