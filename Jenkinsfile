@@ -60,7 +60,7 @@ pipeline {
     stage ('Test') {
       steps {
         nodejs('NodeJS 24') {
-          sh 'ng test --karma-config karma-jenkins.conf.js --code-coverage --watch=false'
+          sh 'npm run test:ci'
         }
       }
       post {

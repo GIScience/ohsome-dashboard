@@ -1,16 +1,13 @@
-import createSpyObj = jasmine.createSpyObj;
+import { vi } from 'vitest';
 
-const UrlHashParamsProviderServiceMock = createSpyObj(
-  "UrlHashParamsProviderService",
-  [
-    "updateHashParamsStoreFromUrl",
-    "getHashURLSearchParams",
-    "setHashParams",
-    "updateHashParams",
-    "updateHashParam"
-  ]
-);
+const UrlHashParamsProviderServiceMock = {
+  "updateHashParamsStoreFromUrl": vi.fn(),
+  "getHashURLSearchParams": vi.fn(),
+  "setHashParams": vi.fn(),
+  "updateHashParams": vi.fn(),
+  "updateHashParam" : vi.fn(),
+};
 
-UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams({backend: "ohsomeApi"}));
+UrlHashParamsProviderServiceMock.getHashURLSearchParams.mockReturnValue(new URLSearchParams({backend: "ohsomeApi"}));
 
 export default UrlHashParamsProviderServiceMock;

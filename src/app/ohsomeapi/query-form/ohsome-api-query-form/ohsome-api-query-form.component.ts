@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {environment} from '../../../../environments/environment';
 import Utils from '../../../../utils';
@@ -7,13 +7,14 @@ import { NgClass, DatePipe } from '@angular/common';
 import { TimePeriodPickerInputComponent } from '../time-period-picker-input/time-period-picker-input.component';
 import { NgDatePipesModule } from 'ngx-pipes';
 
-declare let $: any;
+declare const $: any;
 
 @Component({
     selector: 'app-ohsome-api-query-form',
     templateUrl: './ohsome-api-query-form.component.html',
     styleUrls: ['./ohsome-api-query-form.component.css'],
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, NgClass, TimePeriodPickerInputComponent, DatePipe, NgDatePipesModule]
 })
 

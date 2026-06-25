@@ -1,4 +1,4 @@
-import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2, ChangeDetectionStrategy} from '@angular/core';
 import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
@@ -22,6 +22,7 @@ import Utils from '../../../../utils';
   templateUrl: './oqt-api-query-form.component.html',
   styleUrls: ['./oqt-api-query-form.component.css'],
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {

@@ -1,22 +1,19 @@
-import createSpyObj = jasmine.createSpyObj;
 import {of} from 'rxjs';
 import {oqtApiMetadataResponseMock, oqtAttributesResponseMock} from './oqt-api-metadata.response.mock';
-import {OqtApiMetadataProviderService} from './oqt-api-metadata-provider.service';
+import {vi} from 'vitest';
 
-const OqtApiMetadataProviderServiceMock: jasmine.SpyObj<OqtApiMetadataProviderService> = createSpyObj(
-  'MetadataProviderService',
-  [
-    'loadOqtApiMetadata',
-    'getOqtApiMetadata',
-    'getAttributes',
-    'getAttributeName',
-    'getAttributeDescription',
-    'getAttributeFilter',
-  ]);
+const OqtApiMetadataProviderServiceMock = {
+  'loadOqtApiMetadata': vi.fn(),
+  'getOqtApiMetadata': vi.fn(),
+  'getAttributes': vi.fn(),
+  'getAttributeName': vi.fn(),
+  'getAttributeDescription': vi.fn(),
+  'getAttributeFilter': vi.fn(),
+};
 
-OqtApiMetadataProviderServiceMock.loadOqtApiMetadata.and.returnValue(of(oqtApiMetadataResponseMock))
-OqtApiMetadataProviderServiceMock.getOqtApiMetadata.and.returnValue(oqtApiMetadataResponseMock);
-OqtApiMetadataProviderServiceMock.getAttributes.and.returnValue(oqtAttributesResponseMock);
+OqtApiMetadataProviderServiceMock.loadOqtApiMetadata.mockReturnValue(of(oqtApiMetadataResponseMock))
+OqtApiMetadataProviderServiceMock.getOqtApiMetadata.mockReturnValue(oqtApiMetadataResponseMock);
+OqtApiMetadataProviderServiceMock.getAttributes.mockReturnValue(oqtAttributesResponseMock);
 
 export default OqtApiMetadataProviderServiceMock;
 

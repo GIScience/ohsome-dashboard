@@ -151,6 +151,16 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "testing": {
+              "aot": false,
+              "optimization": false,
+              "extractLicenses": false,
+              "polyfills": [
+                "zone.js",
+                "zone.js/testing",
+                "@angular/localize/init"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -174,35 +184,40 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing",
-              "@angular/localize/init"
-            ],
+            "isolate": true,
             "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "reporters": [
+              "default"
             ],
-            "styles": [
-              "src/styles.css",
-              "Semantic-UI-2.5.0/dist/semantic.css",
-              "node_modules/semantic-ui-calendar/dist/calendar.css",
-              "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css",
-              "node_modules/prismjs/themes/prism.css",
-              "node_modules/tabulator-tables/dist/css/tabulator_semanticui.css"
+            "coverageReporters": [
+              "html",
+              "text-summary"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.js",
-              "Semantic-UI-2.5.0/dist/semantic.js",
-              "node_modules/semantic-ui-calendar/dist/calendar.js",
-              "node_modules/chart.js/dist/Chart.js",
-              "node_modules/prismjs/components/prism-core.js"
+            "buildTarget": ":build:testing",
+            "runner": "vitest",
+            "runnerConfig": "vitest-base.config.ts",
+            "exclude": [
+              "src/**/environment.test.ts"
             ],
-            "karmaConfig": "karma.conf.js"
+            "setupFiles": [
+              "test-setup-files/test-setup.ts"
+            ]
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "reporters": ["minimal", "junit"],
+              "coverageReporters": ["lcovonly"],
+              "outputFile": "coverage/lcov.info"
+            },
+            "coverage": {
+              "watch": false,
+              "coverage": true,
+              "coverageInclude": ["src/**/*.ts"],
+              "coverageExclude": ["src/environments/*", "**/*.mock.ts"]
+            }
           }
         },
         "lint": {

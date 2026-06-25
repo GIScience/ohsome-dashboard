@@ -1,6 +1,7 @@
 import Utils from './utils';
 import moment from 'moment';
-import { environment } from './environments/environment';
+import {environment} from './environments/environment';
+import {describe, expect, it} from 'vitest';
 
 describe('Utils', () => {
   describe('sanitizeLabel', () => {
@@ -32,7 +33,7 @@ describe('Utils', () => {
     it('should set nested property', () => {
       const obj: any = {};
       Utils.setObjectProperty(obj, 'a.b.c', 42);
-      expect(obj).toEqual({ a: { b: { c: 42 } } });
+      expect(obj).toEqual({a: {b: {c: 42}}});
     });
   });
 
@@ -58,8 +59,8 @@ describe('Utils', () => {
       const min = '2024-01-01T00:00:00Z';
       const result = Utils.calculateStartDateFromEndAndPeriod(end, 'P1D', min);
       const start = moment(result);
-      expect(start.isSameOrAfter(moment(min))).toBeTrue();
-      expect(start.isBefore(moment(end))).toBeTrue();
+      expect(start.isSameOrAfter(moment(min))).toBe(true);
+      expect(start.isBefore(moment(end))).toBe(true);
     });
   });
 
@@ -68,25 +69,26 @@ describe('Utils', () => {
       const start = Date.now();
       await Utils.wait(100);
       const diff = Date.now() - start;
-      expect(diff).toBeGreaterThanOrEqual(100);
+      expect(diff).toBeGreaterThan(95);
+      expect(diff).toBeLessThan(105);
     });
   });
 
   describe('arraysEqualUnordered', () => {
     it('should return true for same arrays (unordered)', () => {
-      expect(Utils.arraysEqualUnordered(['a', 'b'], ['b', 'a'])).toBeTrue();
+      expect(Utils.arraysEqualUnordered(['a', 'b'], ['b', 'a'])).toBe(true);
     });
 
     it('should return false for different arrays', () => {
-      expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'c'])).toBeFalse();
+      expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'c'])).toBe(false);
     });
 
     it('should return false for different arrays length', () => {
-      expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'b', 'c'])).toBeFalse();
+      expect(Utils.arraysEqualUnordered(['a', 'b'], ['a', 'b', 'c'])).toBe(false);
     });
 
     it('should ignore duplicates', () => {
-      expect(Utils.arraysEqualUnordered(['a', 'a', 'b'], ['b', 'a'])).toBeTrue();
+      expect(Utils.arraysEqualUnordered(['a', 'a', 'b'], ['b', 'a'])).toBe(true);
     });
   });
 });

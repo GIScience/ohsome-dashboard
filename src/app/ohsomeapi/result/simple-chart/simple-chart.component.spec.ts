@@ -1,17 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SimpleChartComponent} from './simple-chart.component';
+import {beforeEach, describe, expect, it} from 'vitest';
 
 describe('SimpleChartComponent', () => {
   let component: SimpleChartComponent;
   let fixture: ComponentFixture<SimpleChartComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [SimpleChartComponent]
-})
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SimpleChartComponent]
+    })
+      .compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleChartComponent);

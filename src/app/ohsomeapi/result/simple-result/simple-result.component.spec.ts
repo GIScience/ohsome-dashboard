@@ -4,17 +4,18 @@ import {SimpleResultComponent} from './simple-result.component';
 import {SimpleChartComponent} from '../simple-chart/simple-chart.component';
 import {ResultComponent} from '../result.component';
 import {simpleResultMockInputs} from './simple-result.mockdata';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('SimpleResultComponent', () => {
   let component: SimpleResultComponent;
   let fixture: ComponentFixture<SimpleResultComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [SimpleResultComponent, SimpleChartComponent]
-})
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SimpleResultComponent, SimpleChartComponent]
+    })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleResultComponent);

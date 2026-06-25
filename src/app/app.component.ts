@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {AfterViewInit, Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
@@ -10,12 +10,13 @@ import { ResultPanelComponent } from './result-panel/result-panel.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 
-declare let $;
+declare const $: any;
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent]
 })
 export class AppComponent implements AfterViewInit {

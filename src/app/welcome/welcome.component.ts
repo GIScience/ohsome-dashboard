@@ -5,7 +5,8 @@ import {
   computed,
   inject,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ColumnDefinition,
@@ -24,13 +25,14 @@ import {MetadataResponseJSON} from '../oqapi/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 
-declare let $;
+declare const $: any;
 
 @Component({
   selector: 'app-welcome',
   imports: [],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class WelcomeComponent {

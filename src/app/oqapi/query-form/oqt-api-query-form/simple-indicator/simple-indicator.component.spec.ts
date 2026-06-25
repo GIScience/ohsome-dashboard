@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {SimpleIndicatorComponent} from './simple-indicator.component';
 import {NgForm} from '@angular/forms';
 import {OqtModule} from '../../../oqt.module';
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe('SimpleIndicatorComponent', () => {
   let component: SimpleIndicatorComponent;

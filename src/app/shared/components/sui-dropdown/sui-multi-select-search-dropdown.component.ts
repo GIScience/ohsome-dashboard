@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, signal, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, signal, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALIDATORS,
@@ -10,7 +10,7 @@ import {KeyValue} from '@angular/common';
 import Utils from '../../../../utils';
 
 
-declare const $;
+declare const $: any;
 
 @Component({
   selector: 'app-sui-multi-select-search-dropdown',
@@ -18,6 +18,7 @@ declare const $;
     ReactiveFormsModule
   ],
   templateUrl: './sui-multi-select-search-dropdown.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

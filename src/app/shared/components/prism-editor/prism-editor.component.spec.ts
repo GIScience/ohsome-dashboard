@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PrismEditorComponent } from './prism-editor.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {PrismEditorComponent} from './prism-editor.component';
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe('PrismEditorComponent', () => {
   let component: PrismEditorComponent;

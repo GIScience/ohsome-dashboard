@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {OhsomeApiService} from '../ohsome-api.service';
 import { ViewportScroller, NgClass, JsonPipe } from '@angular/common';
@@ -20,12 +20,13 @@ import { SimpleResultComponent } from './simple-result/simple-result.component';
 import { SimpleGroupbyResultComponent } from './simple-groupby-result/simple-groupby-result.component';
 import { OshdbModule } from '../oshdb.module';
 
-declare let $: any;
+declare const $: any;
 
 @Component({
     selector: 'app-result',
     templateUrl: './result.component.html',
     styleUrls: ['./result.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, SimpleResultComponent, SimpleGroupbyResultComponent, OshdbModule, JsonPipe]
 })
 export class ResultComponent implements OnInit, AfterViewInit {

@@ -5,17 +5,18 @@ import {SimpleChartComponent} from '../simple-chart/simple-chart.component';
 import {simpleGroupbyResultMockInputs} from './simple-groupby-result.mockdata';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
+import {beforeEach, describe, expect, it } from 'vitest';
 
 describe('SimpleGroupbyResultComponent', () => {
   let component: SimpleGroupbyResultComponent;
   let fixture: ComponentFixture<SimpleGroupbyResultComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [SimpleGroupbyResultComponent, SimpleChartComponent]
-})
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SimpleGroupbyResultComponent, SimpleChartComponent]
+    })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleGroupbyResultComponent);

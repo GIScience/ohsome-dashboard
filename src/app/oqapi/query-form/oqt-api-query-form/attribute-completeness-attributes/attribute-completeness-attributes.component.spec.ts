@@ -3,15 +3,15 @@ import {AttributeCompletenessAttributesComponent} from './attribute-completeness
 import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
-import { SimpleChange, provideAppInitializer } from '@angular/core';
+import {provideAppInitializer, SimpleChange} from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
-import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../main';
 import {OqtAttribute, RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {By} from '@angular/platform-browser';
-import Utils from '../../../../../utils';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../app-initializers';
 
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
@@ -23,7 +23,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   const enrichedTopicsMock = {
     roads: enrichedRoadsTopic,
     'building-count': enrichedBuildingCountTopic,
-  }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -32,10 +32,10 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         NgForm,
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
         provideAppInitializer(() => {
-        const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
-        return initializerFn();
-      }),
-        provideHttpClient(withInterceptorsFromDi())
+          const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
+          return initializerFn();
+        }),
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
       ]
     })
       .compileComponents();
@@ -66,7 +66,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   });
 
   it('should sanitize the attribute list when the topic changes', () => {
-    spyOn(component, 'sanitizeAttributeKeys').and.callThrough();
+    vi.spyOn(component, 'sanitizeAttributeKeys');
 
 
     // switch from topic roads to building-count
@@ -125,8 +125,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         component.selectedTopic = enrichedTopicsMock[hashParamsCase.topicKey];
         const result = component.getAttributeKeysFromUrlHashParams(hashParamsCase.hashParams);
         expect(result).toEqual(hashParamsCase.expected);
-      })
-    })
+      });
+    });
   });
 
   describe('getDefaultAttributeKey(topicKey)', () => {
@@ -146,8 +146,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       it(testCase.description, () => {
         const result = component.getDefaultAttributeKey(testCase.topicKey);
         expect(result).toEqual(testCase.expected);
-      })
-    })
+      });
+    });
   });
 
   describe('getAttributesByTopicKey(topicKey)', () => {
@@ -168,11 +168,23 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       it(testCase.description, () => {
         const result = component.getAttributesByTopicKey(testCase.topicKey);
         expect(result).toEqual(testCase.expected);
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('showAttributeDetails(event)', () => {
+
+    //mocking jQuery-SemanticUI extensions
+    beforeEach(() => {
+      (globalThis as any).$ = (selector?: any) => ({
+        modal: vi.fn().mockReturnThis(),
+        accordion: vi.fn(),
+        dropdown: vi.fn(),
+        popup: vi.fn(),
+        html: vi.fn(),
+      });
+    })
+
 
     // the event is coming from the anchor element which hosts the 'x'-icon, so clicking x also triggers the event but
     // rather than opening the details we only want to remove the attribute from the selected list
@@ -190,7 +202,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         expected: {
           element: {
             shouldExist: true,
-            shouldNotHaveClass: 'visible'
+            shouldBeVisible: false
           }
         }
       },
@@ -205,7 +217,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         expected: {
           element: {
             shouldExist: true,
-            shouldHaveClass: 'visible'
+            shouldBeVisible: true
           }
         }
       },
@@ -214,10 +226,9 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     testCases.forEach((testCase) => {
       it(testCase.description, async () => {
 
-        component.showAttributeDetails(testCase.event);
+        vi.spyOn(component, 'openAttributeDetailsModal');
 
-        // wait for the css transition to be finished before checking the final DOM elements state
-        await Utils.wait(500);
+        component.showAttributeDetails(testCase.event);
 
         // check for the dimmer to exist (will be created by semantic-ui modal('show')
         // const element = document.querySelector('body > div.ui.dimmer.modals')
@@ -225,16 +236,16 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
         if (testCase.expected.element.shouldExist) {
           expect(modalContentElement).toBeDefined();
-          if (testCase.expected.element.shouldHaveClass) {
-            expect(modalContentElement).toHaveClass('visible');
+          if (testCase.expected.element.shouldBeVisible) {
+            expect(component.openAttributeDetailsModal).toHaveBeenCalled();
           }
-          if (testCase.expected.element.shouldNotHaveClass) {
-            expect(modalContentElement).not.toHaveClass('visible');
+          if (!testCase.expected.element.shouldBeVisible) {
+            expect(component.openAttributeDetailsModal).not.toHaveBeenCalled();
           }
         }
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('combineSelectedAttributes()', () => {
 
@@ -242,7 +253,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       topic1: {
         key: 'topic1',
       }
-    }
+    };
 
     const testCases = [
       {
@@ -302,24 +313,33 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     testCases.forEach((testCase) => {
       it(testCase.description, async () => {
+        // // Re-create the component fresh for this test case
+        // fixture = TestBed.createComponent(AttributeCompletenessAttributesComponent);
+        // component = fixture.componentInstance;
+        // service = TestBed.inject(OqtApiMetadataProviderService);
 
-        (component.oqtApiMetadataProviderService as typeof OqtApiMetadataProviderServiceMock).getAttributeFilter.and.returnValues(...testCase.filterValues);
-        (component.oqtApiMetadataProviderService as typeof OqtApiMetadataProviderServiceMock).getAttributeName.and.returnValues(...testCase.nameValues);
+        // Spy is bound to THIS iteration's testCase
+        const filterValues = [...testCase.filterValues];
+        const nameValues = [...testCase.nameValues];
+        vi.spyOn(component.oqtApiMetadataProviderService, 'getAttributeFilter')
+          .mockImplementation(() => filterValues.shift());
+        vi.spyOn(component.oqtApiMetadataProviderService, 'getAttributeName')
+          .mockImplementation(() => nameValues.shift());
+
+        fixture.detectChanges();
 
         component.selectedTopic = topics[testCase.selectedTopicKey];
         component.selectedAttributeKeys = testCase.selectedAttributeKeys;
-        fixture.detectChanges()
-
-        await Utils.wait(1000);
+        fixture.detectChanges();
 
         component.ngZone.runOutsideAngular(() => {
           const result = component.combineSelectedAttributes();
 
           expect(result.combinedNames).toEqual(testCase.expectedName);
           expect(result.combinedFilters).toEqual(testCase.expectedFilter);
-        })
-      })
-    })
+        });
+      });
+    });
 
   });
 
@@ -339,8 +359,9 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       const combineSelectedAttributesReturnValue = {
         combinedNames: testAttributes['topic1']['attributeKey1'].name,
         combinedFilters: testAttributes['topic1']['attributeKey1'].filter
-      }
-      spyOn(component, 'combineSelectedAttributes').and.returnValue(combineSelectedAttributesReturnValue);
+      };
+      vi.spyOn(component, 'combineSelectedAttributes').mockReturnValue(combineSelectedAttributesReturnValue);
+      vi.spyOn(component, 'openAttributesEditorModal');
 
       // Arrange
       component.attributes = testAttributes;
@@ -361,16 +382,13 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       component.showAttributeFilterEditDialog();
       fixture.detectChanges();
 
-      // Wait for CSS transition to complete (simulate delay using a real Promise)
-      await Utils.wait(1000);
-
       // Check if the modal element exists and editor has the filter value
       const contentElement = fixture.nativeElement.querySelector('div#attributes-editor');
       const prismEditorDebugElement = fixture.debugElement.query(By.css('app-prism-editor#customAttributeFilter'));
       const prismEditorComponentInstance = prismEditorDebugElement.componentInstance as PrismEditorComponent;
 
       expect(contentElement).toBeDefined();
-      expect(contentElement).toHaveClass('active');
+      expect(component.openAttributesEditorModal).toHaveBeenCalled();
       expect(prismEditorComponentInstance.value).toBe('attr=one');
     });
   });

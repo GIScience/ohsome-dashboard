@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import moment from 'moment';
 import {computeGrowthRateCssClass, growthRate, percentFormatter} from '../result.utils';
 import {ChartData} from 'chart.js';
@@ -9,6 +9,7 @@ import { NgClass } from '@angular/common';
     selector: 'app-simple-result',
     templateUrl: './simple-result.component.html',
     styleUrls: ['./simple-result.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SimpleChartComponent, NgClass]
 })
 export class SimpleResultComponent implements OnInit {

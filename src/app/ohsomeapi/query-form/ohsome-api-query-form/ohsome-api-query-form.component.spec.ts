@@ -5,6 +5,7 @@ import {OhsomeApiMetadataProviderService} from '../../ohsome-api-metadata-provid
 import OhsomeApiMetadataProviderServiceMock from '../../ohsome-api-metadata-provider.service.mock';
 import {OshdbModule} from '../../oshdb.module';
 import {NgForm} from '@angular/forms';
+import {beforeEach, describe, expect, it } from 'vitest';
 
 describe('OhsomeApiQueryFormComponent', () => {
   let component: OhsomeApiQueryFormComponent;

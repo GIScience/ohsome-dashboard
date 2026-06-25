@@ -1,20 +1,18 @@
-import createSpyObj = jasmine.createSpyObj;
 import {of} from 'rxjs';
 import {ohsomeApiMetadataResponse} from './ohsome-api-metadata.response.mock';
+import { vi } from 'vitest';
 
-const OhsomeApiMetadataProviderServiceMock = createSpyObj(
-  'MetadataProviderService',
-  [
-    'loadOhsomeMetaData',
-    'getOhsomeMetadataResponse',
-    'hasOhsomeApiAnnouncement',
-    'getOhsomeApiAnnouncement'
-  ]);
+const OhsomeApiMetadataProviderServiceMock = {
+  'loadOhsomeMetaData': vi.fn(),
+  'getOhsomeMetadataResponse': vi.fn(),
+  'hasOhsomeApiAnnouncement': vi.fn(),
+  'getOhsomeApiAnnouncement': vi.fn(),
+}
 
-OhsomeApiMetadataProviderServiceMock.loadOhsomeMetaData.and.returnValue(of(ohsomeApiMetadataResponse))
-OhsomeApiMetadataProviderServiceMock.getOhsomeMetadataResponse.and.returnValue(ohsomeApiMetadataResponse);
-OhsomeApiMetadataProviderServiceMock.hasOhsomeApiAnnouncement.and.returnValue(true);
-OhsomeApiMetadataProviderServiceMock.getOhsomeApiAnnouncement.and.returnValue({"Announce": "Hello World"});
+OhsomeApiMetadataProviderServiceMock.loadOhsomeMetaData.mockReturnValue(of(ohsomeApiMetadataResponse));
+OhsomeApiMetadataProviderServiceMock.getOhsomeMetadataResponse.mockReturnValue(ohsomeApiMetadataResponse);
+OhsomeApiMetadataProviderServiceMock.hasOhsomeApiAnnouncement.mockReturnValue(true);
+OhsomeApiMetadataProviderServiceMock.getOhsomeApiAnnouncement.mockReturnValue({"Announce": "Hello World"});
 
 
 export default OhsomeApiMetadataProviderServiceMock;
