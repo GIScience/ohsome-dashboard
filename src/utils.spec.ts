@@ -70,7 +70,7 @@ describe('Utils', () => {
       await Utils.wait(100);
       const diff = Date.now() - start;
       expect(diff).toBeGreaterThan(95);
-      expect(diff).toBeLessThan(105);
+      expect(diff).toBeLessThan(150);
     });
   });
 

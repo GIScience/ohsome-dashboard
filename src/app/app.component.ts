@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, inject, ChangeDetectionStrategy} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
-import { NgClass } from '@angular/common';
-import { QueryPanelComponent } from './query-panel/query-panel.component';
-import { ResultPanelComponent } from './result-panel/result-panel.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import {NgClass} from '@angular/common';
+import {QueryPanelComponent} from './query-panel/query-panel.component';
+import {ResultPanelComponent} from './result-panel/result-panel.component';
+import {WelcomeComponent} from './welcome/welcome.component';
 
 
 declare const $: any;
