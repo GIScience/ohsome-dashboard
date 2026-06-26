@@ -7,7 +7,8 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {basicEditor, SetupOptions,} from 'prism-code-editor/setups';
 import {languages} from 'prism-code-editor/prism';
@@ -16,6 +17,7 @@ import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-fi
 @Component({
   selector: 'app-prism-editor',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './prism-editor.component.html'
 })
 

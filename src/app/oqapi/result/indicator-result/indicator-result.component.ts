@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, inject, input } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, Input, OnInit} from '@angular/core';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiService} from '../../oqt-api.service';
 import {IndicatorLabel, IndicatorParams, IndicatorResponseJSON} from '../../types/types';
@@ -6,14 +6,15 @@ import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import Utils from '../../../../utils';
 import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
-import { NgClass } from '@angular/common';
-import { PlotlyChartComponent } from '../../../shared/components/plotly-chart/plotly-chart.component';
+import {NgClass} from '@angular/common';
+import {PlotlyChartComponent} from '../../../shared/components/plotly-chart/plotly-chart.component';
 
 
 @Component({
     selector: 'app-indicator-result',
     templateUrl: './indicator-result.component.html',
     styleUrls: ['./indicator-result.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, PlotlyChartComponent]
 })
 export class IndicatorResultComponent implements OnInit {

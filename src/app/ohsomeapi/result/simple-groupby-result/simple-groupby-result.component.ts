@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipItem, ChartTooltipOptions} from 'chart.js';
 import moment from 'moment';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
@@ -14,6 +14,7 @@ import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
     selector: 'app-simple-groupby-type-result',
     templateUrl: './simple-groupby-result.component.html',
     styleUrls: ['./simple-groupby-result.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, SimpleChartComponent]
 })
 export class SimpleGroupbyResultComponent implements OnInit {

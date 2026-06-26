@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgForm, FormsModule } from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
@@ -29,6 +29,7 @@ import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form
     selector: 'app-query-panel',
     templateUrl: './query-panel.component.html',
     styleUrls: ['./query-panel.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, AtLeastOneCheckboxCheckedDirective, NgClass, OhsomeApiQueryFormComponent, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {

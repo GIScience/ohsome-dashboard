@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PlotlyChartComponent } from './plotly-chart.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {PlotlyChartComponent} from './plotly-chart.component';
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe('PlotlyChartComponent', () => {
   let component: PlotlyChartComponent;

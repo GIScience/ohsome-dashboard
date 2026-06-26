@@ -15,57 +15,56 @@ import {UrlHashParamsProviderService} from './singelton-services/url-hash-params
 import UrlHashParamsProviderServiceMock from './singelton-services/url-hash-params-provider.service.mock';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {StateService} from './singelton-services/state.service';
+import {beforeEach, describe, expect, it} from "vitest";
 
 describe('AppComponent', () => {
 
-  beforeEach(async () => {
+    beforeEach(async () => {
 
-    await TestBed.configureTestingModule({
-    imports: [
-        BrowserModule,
-        OshdbModule,
-        OqtModule,
-        WelcomeComponent,
-        ResultListDirective,
-        QueryPanelComponent,
-        ResultPanelComponent,
-        AppComponent
-    ],
-    providers: [
-        { provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock },
-        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
-        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
-        { provide: StateService },
-        provideHttpClient(withInterceptorsFromDi(), withFetch())
-    ]
-}).compileComponents();
-  });
+        await TestBed.configureTestingModule({
+            imports: [
+                BrowserModule,
+                OshdbModule,
+                OqtModule,
+                WelcomeComponent,
+                ResultListDirective,
+                QueryPanelComponent,
+                ResultPanelComponent,
+                AppComponent
+            ],
+            providers: [
+                { provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock },
+                { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+                { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+                { provide: StateService },
+                provideHttpClient(withInterceptorsFromDi(), withFetch())
+            ]
+        }).compileComponents();
+    });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+    it('should create the app', () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.componentInstance;
+        expect(app).toBeTruthy();
+    });
 
-  it(`should have as title 'ohsome dashboard'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('ohsome dashboard');
-  });
+    it(`should have as title 'ohsome dashboard'`, () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.componentInstance;
+        expect(app.title).toEqual('ohsome dashboard');
+    });
 
-  it('should show welcome screen', () => {
-      UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams());
-      const fixture = TestBed.createComponent(AppComponent);
-      const app = fixture.componentInstance;
-      expect((app as any).stateService.appState().showWelcomeScreen).toBeTrue();
-    }
-  );
+    it('should show welcome screen', () => {
+        UrlHashParamsProviderServiceMock.getHashURLSearchParams.mockReturnValue(new URLSearchParams());
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.componentInstance;
+        expect((app as any).stateService.appState().showWelcomeScreen).toBe(true);
+    });
 
-  it('should not show welcome screen', () => {
-      UrlHashParamsProviderServiceMock.getHashURLSearchParams.and.returnValue(new URLSearchParams({backend: "ohsomeApi"}));
-      const fixture = TestBed.createComponent(AppComponent);
-      const app = fixture.componentInstance;
-      expect((app as any).stateService.appState().showWelcomeScreen).toBeFalse();
-    }
-  );
+    it('should not show welcome screen', () => {
+        UrlHashParamsProviderServiceMock.getHashURLSearchParams.mockReturnValue(new URLSearchParams({ backend: "ohsomeApi" }));
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.componentInstance;
+        expect((app as any).stateService.appState().showWelcomeScreen).toBe(false);
+    });
 });

@@ -2,13 +2,14 @@ import {
   AfterViewInit,
   Component,
   Input,
-  forwardRef
+  forwardRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import moment from 'moment';
 import Utils from '../../../../utils';
 
-declare let $: any;
+declare const $: any;
 
 @Component({
     selector: 'app-time-period-picker-input',
@@ -21,6 +22,7 @@ declare let $: any;
             multi: true
         }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule]
 })
 

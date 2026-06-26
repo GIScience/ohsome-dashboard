@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LatLngBounds, Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
@@ -13,6 +13,7 @@ import area from '@turf/area';
     selector: 'app-boundary-input',
     templateUrl: './boundary-input.component.html',
     styleUrls: ['./boundary-input.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

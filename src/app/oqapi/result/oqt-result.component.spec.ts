@@ -1,13 +1,13 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtResultComponent} from './oqt-result.component';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../oqt.module';
 import {IndicatorParams} from '../types/types';
 import {Feature, FeatureCollection, GeoJsonProperties, Polygon} from 'geojson';
-
+import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 describe('OqtResultComponent', () => {
   let component: OqtResultComponent;
@@ -22,7 +22,7 @@ describe('OqtResultComponent', () => {
     imports: [OqtModule, OqtResultComponent],
     providers: [
         { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ]
 })
       .compileComponents();

@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LayerOptions, LeafletEvent} from 'leaflet';
@@ -14,6 +14,7 @@ import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
     selector: 'app-boundary-select-input',
     templateUrl: './boundary-select-input.component.html',
     styleUrls: ['./boundary-select-input.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

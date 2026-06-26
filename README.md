@@ -12,7 +12,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Setup
 
-Use node  ^20.19.0 || ^22.12.0 || ^24.0.0
+Use node ^22.0.0 || ^24.0.0
 
 The following steps describe possible setups using `npm`.
 
@@ -63,13 +63,17 @@ Run `ng generate component component-name` to generate a new component. You can 
 Run `mpm run build:{prod|test}` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Linting
-We are using `eslint`. To configure rules change `.eslintrc.json`.
+We are using `eslint`. To configure rules change `[eslint.config.js](eslint.config.js)`.
 
-Run `ng lint` to find out about code style problems.
+Run `npm run lint` to find out about code style problems.
 
 ## Running unit tests
+We are using [Vitest](https://vitest.dev/).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run test` to execute the unit test without real browser using `jsdom` as DOM Mock.
+Run `npm run test:chrome` or `npm run test:chrome-headless` to execute the unit test in a real browser.
+Run `npm run test:coverage` to run tests and produce a local HTML coverage report. Find it in [coverage/dashboard/index.html](coverage/dashboard/index.html)
+Run `npm run test:ci` to run tests and produce a JUnit coverage report for Jenkins/SonarCloud. Find it in [coverage/lcov.info](coverage/lcov.info)
 
 ## Internationalization (i18n) and localization
 

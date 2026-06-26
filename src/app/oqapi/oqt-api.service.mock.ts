@@ -1,15 +1,11 @@
-import {OqtApiService} from './oqt-api.service';
-import createSpyObj = jasmine.createSpyObj;
-
-const OqtApiServiceMock: jasmine.SpyObj<OqtApiService> = createSpyObj(
-  'OqtApiService',
-  [
-    'get',
-    'post',
-    'getMetadata',
-    'getIndicator',
-    'getIndicatorCoverage',
-    'getAttributes',
-  ]);
+const OqtApiServiceMock =
+  {
+    'get': vi.fn(),
+    'post': vi.fn(),
+    'getMetadata': vi.fn(),
+    'getIndicator': vi.fn(),
+    'getIndicatorCoverage': vi.fn(),
+    'getAttributes': vi.fn(),
+  };
 
 export default OqtApiServiceMock;

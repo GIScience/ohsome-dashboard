@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import * as Plotly from 'plotly.js-dist-min';
 
 @Component({
     selector: 'app-plotly-chart',
     templateUrl: './plotly-chart.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./plotly-chart.component.css']
 })
 export class PlotlyChartComponent implements AfterViewInit{

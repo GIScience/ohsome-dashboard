@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentRef, HostBinding, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ViewportScroller, NgClass } from '@angular/common';
 import {Feature, FeatureCollection, MultiPolygon, Polygon, BBox} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
@@ -15,12 +15,13 @@ import Bpolys = OhsomeApi.v1.request.Bpolys;
 import { IndicatorResultComponent } from './indicator-result/indicator-result.component';
 import { categoryRegistry, thematicCategoryType, thematicAccuracyCategoryNamesForBlank } from '../query-form/oqt-api-query-form/thematic-accuracy-indicator/thematic-accuracy-indicator.constants';
 
-declare let $: any;
+declare const $: any;
 
 @Component({
     selector: 'app-oqt-result',
     templateUrl: './oqt-result.component.html',
     styleUrls: ['./oqt-result.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IndicatorResultComponent]
 })
 export class OqtResultComponent implements OnInit, AfterViewInit {

@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import {Chart} from 'chart.js';
 
-declare let $: any;
+declare const $: any;
 
 @Component({
     selector: 'app-simple-chart',
     templateUrl: './simple-chart.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./simple-chart.component.css']
 })
 export class SimpleChartComponent implements AfterViewInit {

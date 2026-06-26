@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject } from '@angular/core';
+import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
@@ -6,14 +6,15 @@ import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/compon
 import { PrismEditorComponent } from '../../../../shared/components/prism-editor/prism-editor.component';
 import { KeyValuePipe } from '@angular/common';
 
-
-declare const $, Prism;
+declare const $: any;
+declare const Prism;
 
 @Component({
     selector: 'app-attribute-completeness-attributes',
     templateUrl: './attribute-completeness-attributes.component.html',
     styleUrl: './attribute-completeness-attributes.component.css',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe]
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
@@ -118,6 +119,11 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     //   .html(attribute.description);
     $('#attribute-details #attributeFilter')
       .html(highlightedHTML);
+
+    this.openAttributeDetailsModal()
+  }
+
+  openAttributeDetailsModal(){
 
     $('#attribute-details').modal({
       inverted: true,
@@ -239,6 +245,10 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
       this.customFilterDefinition.set(combinedFilters);
     }
 
+    this.openAttributesEditorModal()
+  }
+
+  openAttributesEditorModal() {
     this.ngZone.runOutsideAngular(() => {
       $('#attributes-editor').modal({
         inverted: true,

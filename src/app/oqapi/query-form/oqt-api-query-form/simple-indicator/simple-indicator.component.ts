@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
 import {Checkbox, Indicator} from '../../../types/types';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -8,6 +8,7 @@ import { NgClass } from '@angular/common';
     templateUrl: './simple-indicator.component.html',
     styleUrl: './simple-indicator.component.css',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, FormsModule]
 })
 export class SimpleIndicatorComponent {

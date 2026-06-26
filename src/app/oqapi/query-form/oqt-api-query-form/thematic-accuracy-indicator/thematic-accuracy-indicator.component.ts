@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { categoryRegistry, thematicCategoryType } from './thematic-accuracy-indicator.constants';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import {KeyValuePipe} from '@angular/common';
     selector: 'app-thematic-accuracy-indicator',
     templateUrl: './thematic-accuracy-indicator.component.html',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SuiMultiSelectSearchDropdownComponent,
     FormsModule,
