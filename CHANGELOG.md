@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## current
+* chore: update to angular v22
+* test: switch from karma/jasmine to vitest
+* style: migrate to eslint flat config format to support newer eslint versions 
 * feat: add custom topic filter ([#86])
 
 [#86]: https://github.com/GIScience/ohsome-dashboard/issues/86
