@@ -198,12 +198,10 @@
             "buildTarget": ":build:testing",
             "runner": "vitest",
             "runnerConfig": "vitest-base.config.ts",
-            "exclude": [
-              "src/**/environment.test.ts"
-            ],
-            "setupFiles": [
-              "test-setup-files/test-setup.ts"
-            ]
+            "exclude": ["src/**/environment.test.ts"],
+            "setupFiles": ["test-setup-files/test-setup.ts"],
+            "coverageInclude": ["src/**/*.ts"],
+            "coverageExclude": ["src/environments/*", "**/*.mock.ts"]
           },
           "configurations": {
             "ci": {
@@ -214,9 +212,7 @@
             },
             "coverage": {
               "watch": false,
-              "coverage": true,
-              "coverageInclude": ["src/**/*.ts"],
-              "coverageExclude": ["src/environments/*", "**/*.mock.ts"]
+              "coverage": true
             }
           }
         },
