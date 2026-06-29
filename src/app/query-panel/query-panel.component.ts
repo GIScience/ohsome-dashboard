@@ -24,6 +24,7 @@ import { AtLeastOneCheckboxCheckedDirective } from '../shared/directives/validat
 import { NgClass } from '@angular/common';
 import { OhsomeApiQueryFormComponent } from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
 import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form/oqt-api-query-form.component';
+import {AuthService} from "../singelton-services/auth.service";
 
 @Component({
     selector: 'app-query-panel',
@@ -34,6 +35,7 @@ import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);
+  protected authService = inject(AuthService);
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
   private urlHashParamsProviderService = inject(UrlHashParamsProviderService);

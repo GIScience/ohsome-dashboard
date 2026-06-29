@@ -30,4 +30,10 @@ export const environment = {
   selectedValue : 'tree',
   selectedTypes : ['node'],
   period : 'P1M',
+
+  // userManagement
+  appwriteEndpoint: 'https://api.account.heigit.org',
+  appwriteProjectId: '6a158c93000c7437fe54',
+  accountFrontendUrl: "https://account.heigit.org",
+  skipAppwriteAPIKey: ""
 };

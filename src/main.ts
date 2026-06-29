@@ -9,6 +9,7 @@ import {provideHttpClient, withFetch, withInterceptorsFromDi} from "@angular/com
 import {OshdbModule} from "./app/ohsomeapi/oshdb.module";
 import {OqtModule} from "./app/oqapi/oqt.module";
 import {AppComponent} from "./app/app.component";
+import {AuthService} from "./app/singelton-services/auth.service";
 import {
   ohsomeApiAnnouncementProviderFactory,
   ohsomeApiMetadataProviderFactory,
@@ -50,6 +51,10 @@ bootstrapApplication(AppComponent, {
     provideAppInitializer(() => {
       const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
       return initializerFn();
+    }),
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      return authService.initializeUser()
     }),
     provideHttpClient(withInterceptorsFromDi(), withFetch())
   ]

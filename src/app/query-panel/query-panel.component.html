@@ -34,6 +34,16 @@
               </div>
             </div>
           }
+          @if(authService.keyUnavailable()){
+            <div class="ui one column grid">
+              <div class="row">
+                <div class="column">
+                  <p i18n>Could not get valid key to access HeiGIT APIs</p>
+                  <p i18n>Notify support(at)account.heigit.org if this error persists.</p>
+                </div>
+              </div>
+            </div>
+          }
         </div>
         <!--    OSM ANALYSIS-->
         <div class="ui bottom attached tab secondary segment" data-tab="tab-oqt-api"
