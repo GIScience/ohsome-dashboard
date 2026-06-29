@@ -18,5 +18,11 @@ export const environment = {
   endDate : '',
   period : 'P1D',
   viewUpdateTime : true,
+
+  // userManagement
+  appwriteEndpoint: '',
+  appwriteProjectId: '',
+  accountFrontendUrl: '',
+  skipAppwriteAPIKey: ''
 };
 
