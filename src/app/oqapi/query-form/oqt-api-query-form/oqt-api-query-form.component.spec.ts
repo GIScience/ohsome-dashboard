@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtApiQueryFormComponent} from './oqt-api-query-form.component';
 import {FormsModule, NgForm} from '@angular/forms';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../../oqt.module';
@@ -18,7 +18,7 @@ describe('OqtApiQueryFormComponent', () => {
     providers: [
         NgForm,
         { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient()
     ]
 })
       .compileComponents();

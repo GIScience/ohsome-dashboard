@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {IndicatorResultComponent} from './indicator-result.component';
-import {HttpErrorResponse, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
 import {of, throwError} from 'rxjs';
 import {ErrorResponseJSON} from '../../types/ErrorResponseJSON';
 import {indicatorResponseMock} from '../indicator.response.mock';
@@ -16,7 +16,7 @@ describe('IndicatorResultComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [IndicatorResultComponent],
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()]
     })
       .compileComponents();
 

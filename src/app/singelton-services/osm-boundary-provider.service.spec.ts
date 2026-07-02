@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {OsmBoundaryProviderService} from './osm-boundary-provider.service';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {beforeEach, describe, expect, it} from "vitest";
 
 describe('OsmBoundaryServiceService', () => {
@@ -10,7 +10,7 @@ describe('OsmBoundaryServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     imports: [],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient()]
 });
     service = TestBed.inject(OsmBoundaryProviderService);
   });

@@ -5,7 +5,7 @@ import {StateService} from "./app/singelton-services/state.service";
 import {UrlHashParamsProviderService} from "./app/singelton-services/url-hash-params-provider.service";
 import {OhsomeApiMetadataProviderService} from "./app/ohsomeapi/ohsome-api-metadata-provider.service";
 import {OqtApiMetadataProviderService} from "./app/oqapi/oqt-api-metadata-provider.service";
-import {provideHttpClient, withFetch, withInterceptorsFromDi} from "@angular/common/http";
+import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {OshdbModule} from "./app/ohsomeapi/oshdb.module";
 import {OqtModule} from "./app/oqapi/oqt.module";
 import {AppComponent} from "./app/app.component";
@@ -56,7 +56,7 @@ bootstrapApplication(AppComponent, {
       const authService = inject(AuthService);
       return authService.initializeUser()
     }),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptors([]))
   ]
 })
   .catch(err => console.error(err));

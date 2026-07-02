@@ -8,7 +8,7 @@ import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {ResultListDirective} from './result-panel/result-list.directive';
 import {OqtModule} from './oqapi/oqt.module';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from './oqapi/oqt-api-metadata-provider.service.mock';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
@@ -37,7 +37,7 @@ describe('AppComponent', () => {
                 { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
                 { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
                 { provide: StateService },
-                provideHttpClient(withInterceptorsFromDi())
+                provideHttpClient()
             ]
         }).compileComponents();
     });

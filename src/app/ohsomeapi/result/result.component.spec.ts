@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ResultComponent} from './result.component';
 import {OshdbModule} from '../oshdb.module';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
 import {OhsomeApiMetadataProviderService} from '../ohsome-api-metadata-provider.service';
 import OhsomeApiMetadataProviderServiceMock from '../ohsome-api-metadata-provider.service.mock';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
@@ -24,7 +24,7 @@ describe('ResultComponent', () => {
     ],
     providers: [
         { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient()
     ]
 })
       .compileComponents();
