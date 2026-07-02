@@ -3,7 +3,7 @@ import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator.
 import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
 import {provideAppInitializer} from '@angular/core';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
@@ -27,7 +27,7 @@ describe('ThematicAccuracyIndicatorComponent', () => {
             const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
             return initializerFn();
           }),
-          provideHttpClient(withXhr(), withInterceptorsFromDi())
+          provideHttpClient(withInterceptorsFromDi())
         ]
       })
         .compileComponents();
@@ -89,7 +89,7 @@ describe('ThematicAccuracyIndicatorComponent', () => {
             const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
             return initializerFn();
           }),
-          provideHttpClient(withXhr(), withInterceptorsFromDi())
+          provideHttpClient(withInterceptorsFromDi())
         ]
       })
         .compileComponents();

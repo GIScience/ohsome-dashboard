@@ -3,7 +3,7 @@ import {AttributeCompletenessAttributesComponent} from './attribute-completeness
 import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {NgForm} from '@angular/forms';
 import {provideAppInitializer, SimpleChange} from '@angular/core';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
@@ -35,7 +35,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
           const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
           return initializerFn();
         }),
-        provideHttpClient(withXhr(), withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi())
       ]
     })
       .compileComponents();

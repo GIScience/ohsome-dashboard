@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi, type Mock} from "vitest";
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WelcomeComponent} from './welcome.component';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../oqapi/oqt-api-metadata-provider.service.mock';
 import {oqtApiMetadataResponseMock} from '../oqapi/oqt-api-metadata.response.mock';
@@ -24,7 +24,7 @@ describe('WelcomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WelcomeComponent],
       providers: [
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withInterceptorsFromDi()),
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
         {provide: UrlHashParamsProviderService, useValue: UrlHashParamsProviderServiceMock},
         {provide: StateService},

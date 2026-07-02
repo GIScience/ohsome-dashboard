@@ -5,7 +5,7 @@ import {OhsomeApiMetadataProviderService} from '../ohsomeapi/ohsome-api-metadata
 import OhsomeApiMetadataProviderServiceMock from '../ohsomeapi/ohsome-api-metadata-provider.service.mock';
 import {OshdbModule} from '../ohsomeapi/oshdb.module';
 import {BrowserModule} from '@angular/platform-browser';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {OqtModule} from '../oqapi/oqt.module';
 import {beforeEach, describe, expect, it } from 'vitest';
 
@@ -20,7 +20,7 @@ describe('QueryPanelComponent', () => {
         OqtModule, QueryPanelComponent],
     providers: [
         { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
-        provideHttpClient(withXhr(), withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
       .compileComponents();

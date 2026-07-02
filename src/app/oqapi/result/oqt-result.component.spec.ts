@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtResultComponent} from './oqt-result.component';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../oqt.module';
@@ -22,7 +22,7 @@ describe('OqtResultComponent', () => {
     imports: [OqtModule, OqtResultComponent],
     providers: [
         { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
-        provideHttpClient(withXhr(), withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
       .compileComponents();

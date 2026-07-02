@@ -56,7 +56,7 @@ bootstrapApplication(AppComponent, {
       const authService = inject(AuthService);
       return authService.initializeUser()
     }),
-    provideHttpClient(withInterceptorsFromDi(), withFetch())
+    provideHttpClient(withInterceptorsFromDi())
   ]
 })
   .catch(err => console.error(err));

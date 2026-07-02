@@ -3,7 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {OqtApiService} from './oqt-api.service';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {environment} from '../../environments/environment';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 
@@ -14,7 +14,7 @@ describe('OqtApiServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
-      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     service = TestBed.inject(OqtApiService);
     httpMock = TestBed.inject(HttpTestingController);

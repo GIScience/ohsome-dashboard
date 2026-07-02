@@ -37,7 +37,7 @@ describe('AppComponent', () => {
                 { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
                 { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
                 { provide: StateService },
-                provideHttpClient(withInterceptorsFromDi(), withFetch())
+                provideHttpClient(withInterceptorsFromDi())
             ]
         }).compileComponents();
     });

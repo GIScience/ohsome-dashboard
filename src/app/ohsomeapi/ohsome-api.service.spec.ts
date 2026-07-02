@@ -3,7 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {OhsomeApiService} from './ohsome-api.service';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {environment} from '../../environments/environment';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 let service: OhsomeApiService;
@@ -13,7 +13,7 @@ describe('OhsomeApiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     imports: [],
-    providers: [OhsomeApiService, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [OhsomeApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 });
 
     service = TestBed.inject(OhsomeApiService);

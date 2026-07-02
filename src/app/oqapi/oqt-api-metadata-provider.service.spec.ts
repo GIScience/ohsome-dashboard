@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OqtApiMetadataProviderService } from './oqt-api-metadata-provider.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AttributeResponseJSON, OqtAttribute } from './types/types';
 import { OqtApiService } from './oqt-api.service';
 import OqtApiServiceMock from './oqt-api.service.mock';
@@ -24,7 +24,7 @@ describe('OqtMetadataProviderService', () => {
             imports: [],
             providers: [
                 { provide: OqtApiService, useValue: OqtApiServiceMock },
-                provideHttpClient(withXhr(), withInterceptorsFromDi()),
+                provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting()
             ]
         });
