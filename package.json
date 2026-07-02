@@ -68,7 +68,7 @@
     "@types/geojson": "7946.0.16",
     "@types/jquery": "^4.0.1",
     "@types/leaflet": "^1.9.21",
-    "@types/node": "~26.0.0",
+    "@types/node": "^24.1.0",
     "@types/prismjs": "^1.26.5",
     "@types/tabulator-tables": "^6.3.4",
     "@vitest/browser-webdriverio": "^4.1.9",
