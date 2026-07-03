@@ -4,6 +4,7 @@ export const environment = {
 
   //ohsomeAPI (osm history stats from OSHDB)
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
+  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
 
   //oqtApi (ohsome quality analyst)
   oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',

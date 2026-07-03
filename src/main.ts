@@ -19,6 +19,7 @@ import {
   translationsInitializerFactory,
   urlHashParamsProviderFactory
 } from './app-initializers';
+import {authInterceptor} from './app/interceptors/auth.interceptor';
 
 
 bootstrapApplication(AppComponent, {
@@ -56,7 +57,7 @@ bootstrapApplication(AppComponent, {
       const authService = inject(AuthService);
       return authService.initializeUser()
     }),
-    provideHttpClient(withInterceptors([]))
+    provideHttpClient(withInterceptors([authInterceptor]))
   ]
 })
   .catch(err => console.error(err));

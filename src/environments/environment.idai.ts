@@ -2,6 +2,8 @@ export const environment = {
   production: true,
 
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
+  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
+
   zoomLevel : 5,
   mapCenter : {lat: -19.0, lng: 37.0},
   mapCenterFromPoly : false,
