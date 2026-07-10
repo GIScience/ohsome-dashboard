@@ -48,8 +48,7 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
   public measureOptions: { value: string; label: string }[] = [
     { value: 'count', label: $localize`count` },
     { value: 'length', label: $localize`length` },
-    { value: 'area', label: $localize`area` },
-    { value: 'perimeter', label: $localize`perimeter` }
+    { value: 'area', label: $localize`area` }
   ];
   public measure: string;
 
