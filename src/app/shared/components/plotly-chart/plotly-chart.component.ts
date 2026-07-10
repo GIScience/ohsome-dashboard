@@ -1,21 +1,33 @@
-import {AfterViewInit, Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import * as Plotly from 'plotly.js-dist-min';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, input, viewChild} from '@angular/core';
+import Plotly from 'plotly.js-dist-min';
 
 @Component({
-    selector: 'app-plotly-chart',
-    templateUrl: './plotly-chart.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrls: ['./plotly-chart.component.css']
+  selector: 'app-plotly-chart',
+  templateUrl: './plotly-chart.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./plotly-chart.component.css']
 })
-export class PlotlyChartComponent implements AfterViewInit{
-@Input() plotlyDataLayoutConfig: Plotly.PlotlyDataLayoutConfig;
-@ViewChild('chart', {static: false}) chartDiv: ElementRef<HTMLDivElement>;
+export class PlotlyChartComponent {
 
-ngAfterViewInit(): void {
-    if (!this.plotlyDataLayoutConfig) return;
+  // 👇 signal-based input
+  plotlyDataLayoutConfig = input.required<Plotly.PlotlyDataLayoutConfig>();
+  chartDiv = viewChild.required<ElementRef<HTMLDivElement>>('chart');
 
-    const {data, layout, config} = this.plotlyDataLayoutConfig;
+  constructor() {
+    afterRenderEffect(() => {
+      const cfg = this.plotlyDataLayoutConfig();
 
-    Plotly.newPlot(this.chartDiv.nativeElement,data, layout, config);
+      if (!cfg || !this.chartDiv().nativeElement) return;
+
+      const {data, layout, config} = cfg;
+
+      Plotly.react(
+        this.chartDiv().nativeElement,
+        data,
+        layout,
+        config
+      );
+
+    });
   }
 }
