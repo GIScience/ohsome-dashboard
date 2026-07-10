@@ -77,13 +77,6 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
     return new Date(this.maxDate);
   }
 
-  setWhichFilter(filterMode: 'simple' | 'advanced') {
-    this.whichFilter = filterMode;
-    if (filterMode === 'simple') {
-      this.initOSMTypeDropdown();
-    }
-  }
-
   ngOnInit() {
     // fill form with supplied hashParams
     this.time = this.hashParams.get('time') ?? `${this.start}/${this.end}/${this.period}`;
@@ -93,7 +86,6 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
       // @ts-ignore
       ? this.hashParams.get('types').split(',').filter(t => this.typeOptions.includes(t))
       : environment.selectedTypes || this.typeOptions;
-    this.whichFilter = this.hashParams.has('filter') ? 'advanced' : 'simple';
     this.selectedKey = Utils.getFromParamsOrDefault(this.hashParams, 'key', environment.selectedKey);
     this.selectedValue = this.hashParams.has('key') || this.hashParams.has('value')
       ? this.hashParams.get('value') ?? ''

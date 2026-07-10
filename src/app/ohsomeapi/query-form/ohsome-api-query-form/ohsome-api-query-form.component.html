@@ -24,68 +24,11 @@
   <div class="row">
     <div id="filter" class="column">
       <h4 class="ui header"><i class="filter icon"></i>Filter</h4>
-      <div class="ui top attached tabular menu">
-        <a class="item" [ngClass]="whichFilter === 'simple' ? ' active' : ''" data-tab="simple-filter"
-        (click)="setWhichFilter('simple')" i18n>Simple</a>
-        <a class="item" [ngClass]="whichFilter === 'advanced' ? ' active' : ''" data-tab="advanced-filter"
-        (click)="setWhichFilter('advanced')" i18n>Advanced</a>
-      </div>
-      <div class="ui bottom attached tab secondary segment" [ngClass]="whichFilter === 'simple' ? ' active' : ''"
-        data-tab="simple-filter">
-        @if (whichFilter==='simple') {
-          <div class="row">
-            <!-- key/value -->
-            <div id="osmTag" class="column">
-              <!--                <div class="ui hidden divider"></div>-->
-              <h4 class="ui header" i18n><i class="tags icon"></i>OSM tag</h4>
-              <div class="two fields">
-                <div class="six wide field">
-                  <label>Key</label>
-                  <input type="text" name="key" [(ngModel)]="selectedKey" class="">
-                </div>
-                <div class="ten wide field" [class.disabled]="selectedKey.trim() === ''" i18n><label>Value</label>
-                <input type="text" name="value" [(ngModel)]="selectedValue" class=""
-                       placeholder="leave blank to query all values" i18n-placeholder>
-              </div>
-            </div>
-              @if (selectedKey.trim() === '*' || selectedValue.trim() === '*' && selectedKey.trim() !== '') {
-                <div class="ui icon message">
-                  <i class="warning icon"></i>
-                  <span>
-                    <span i18n>You are searching for '*' as literal.</span>
-                      @if (selectedKey.trim() === '*') {
-                        <br><span i18n>Leave 'Key' blank to not use a tag filter.</span>
-                      }
-                      @if (selectedValue.trim() === '*') {
-                        <br><span i18n>Leave 'Value' blank to query all values.</span>
-                      }
-                  </span>
-                </div>
-              }
-          </div>
-          <!-- type -->
-          <h4 class="ui header" i18n><i class="chooseosmtype icon"></i>OSM type</h4>
-          <select name="types" class="ui fluid selection dropdown" [(ngModel)]="types" multiple required>
-            @for (osmtype of typeOptions; track osmtype) {
-              <option [value]="osmtype"><i
-              class="small {{osmtype}} icon"></i>{{osmtype}}</option>
-            }
-          </select>
-        </div>
-      }
-    </div>
-    <div class="ui bottom attached tab secondary segment" [ngClass]="whichFilter === 'advanced' ? ' active' : ''"
-      data-tab="advanced-filter">
-      @if (whichFilter==='advanced') {
         <div class="row">
           <!-- filter -->
           <div id="filter_param" class="column">
-            <!--          <h4 class="ui header"><i class="filter icon"></i>OSM tag filter</h4>-->
-            <!--                <div class="ui hidden divider"></div>-->
-            <h4 class="ui header" i18n><i class="tags icon"></i>ohsome filter</h4>
             <a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank" i18n>How does this work?</a>
             <div class="field">
-              <!--                  <label>ohsome filter</label>-->
               <textarea name="filter" [(ngModel)]="selectedFilter">
                 building=* and building!=no and
                 geometry:polygon
@@ -93,13 +36,13 @@
             </div>
           </div>
         </div>
-      }
-    </div>
+<!--      }-->
+<!--    </div>-->
   </div>
 </div>
 
 <!-- End of Filter section-->
-
+  <div class="ui divider"></div>
 <!-- measure -->
 <div class="row">
   <div class="column">
