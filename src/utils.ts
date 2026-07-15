@@ -67,14 +67,14 @@ export default class Utils {
   }
 
   static getUnitByMeasure(measure: string): string {
-    let unit = '';
+
     const units: {[measure: string]: string} = {
       'count':      '',
       'length':     'm',
       'area':       'm²'
     }
 
-    unit = units[measure];
+    const unit = units[measure];
     if (unit == undefined)  throw new TypeError(`${measure} has no known unit.`)
 
     return unit;

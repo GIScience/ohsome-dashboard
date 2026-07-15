@@ -1,36 +1,28 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   HostBinding,
-  OnInit,
   inject,
-  ChangeDetectionStrategy, signal, Type
+  OnInit,
+  signal,
+  Type
 } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {OhsomeApiService} from '../ohsome-api.service';
-import {ViewportScroller, NgClass, JsonPipe, NgComponentOutlet} from '@angular/common';
-import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipOptions} from 'chart.js';
+import {JsonPipe, NgClass, NgComponentOutlet, ViewportScroller} from '@angular/common';
+import {ChartPoint} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
-import Utils from '../../../utils';
-import {OhsomeApiMetadataProviderService} from '../ohsome-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
-import GroupByResponseJSON = OhsomeApi.v1.format.GroupByResponseJSON;
-import ResponseJSON = OhsomeApi.v1.format.ResponseJSON;
-import SimpleResponseJSON = OhsomeApi.v1.format.SimpleResponseJSON;
-import Response = OhsomeApi.v1.response.Response;
-import SimpleResponse = OhsomeApi.v1.response.SimpleResponse;
-import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
-import {RequiredAndDefined} from '../../shared/shared-types';
-import {SimpleGroupbyResultComponent} from './simple-groupby-result/simple-groupby-result.component';
 import {OshdbModule} from '../oshdb.module';
 import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
 import {OhsomeApiV2Service} from '../ohsome-api-v2.service';
 import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
+import Response = OhsomeApi.v1.response.Response;
+import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 
 declare const $: any;
 

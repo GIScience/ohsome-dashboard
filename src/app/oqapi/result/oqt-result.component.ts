@@ -1,31 +1,28 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
   HostBinding,
-  OnInit,
   inject,
-  ChangeDetectionStrategy
+  OnInit
 } from '@angular/core';
-import {ViewportScroller, NgClass} from '@angular/common';
-import {Feature, FeatureCollection, MultiPolygon, Polygon, BBox} from 'geojson';
+import {NgClass, ViewportScroller} from '@angular/common';
+import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
-import {default as union} from '@turf/union';
-import {default as bbox2geojson} from '@turf/bbox-polygon';
-import {featureCollection, polygon} from '@turf/helpers';
+import {featureCollection} from '@turf/helpers';
 import Utils from '../../../utils';
 import {SafeUrl} from '@angular/platform-browser';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import {IndicatorParams, Params} from '../types/types'
-import Bpolys = OhsomeApi.v1.request.Bpolys;
 import {IndicatorResultComponent} from './indicator-result/indicator-result.component';
 import {
   categoryRegistry,
-  thematicCategoryType,
-  thematicAccuracyCategoryNamesForBlank
+  thematicAccuracyCategoryNamesForBlank,
+  thematicCategoryType
 } from '../query-form/oqt-api-query-form/thematic-accuracy-indicator/thematic-accuracy-indicator.constants';
 import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 

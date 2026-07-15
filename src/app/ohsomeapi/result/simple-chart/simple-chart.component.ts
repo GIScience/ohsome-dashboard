@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import {Chart} from 'chart.js';
 
-declare const $: any;
-
 @Component({
     selector: 'app-simple-chart',
     templateUrl: './simple-chart.component.html',

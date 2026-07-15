@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 const OqtApiServiceMock =
   {
     'get': vi.fn(),

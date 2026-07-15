@@ -6,7 +6,6 @@ import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.servic
 import OqtApiMetadataProviderServiceMock from '../oqt-api-metadata-provider.service.mock';
 import {OqtModule} from '../oqt.module';
 import {IndicatorParams} from '../types/types';
-import {Feature, FeatureCollection, GeoJsonProperties, Polygon} from 'geojson';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 describe('OqtResultComponent', () => {
@@ -19,12 +18,12 @@ describe('OqtResultComponent', () => {
     document.body.appendChild(testContainer);
 
     await TestBed.configureTestingModule({
-    imports: [OqtModule, OqtResultComponent],
-    providers: [
-        { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
+      imports: [OqtModule, OqtResultComponent],
+      providers: [
+        {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
         provideHttpClient()
-    ]
-})
+      ]
+    })
       .compileComponents();
 
     fixture = TestBed.createComponent(OqtResultComponent);

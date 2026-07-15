@@ -41,7 +41,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
 
   component: PlotlyChartComponent,
 
-  execute(formValues: FormValues, api: OhsomeApiV2Service, aoiPolygons: Feature<Polygon | MultiPolygon>[]): Observable<any> {
+  execute(formValues: FormValues, api: OhsomeApiV2Service): Observable<any> {
     let [start, end, interval] = formValues.time.split("/");
     // handle null, undefined and empty string
     start = start.trim() ? start : "earliest";
