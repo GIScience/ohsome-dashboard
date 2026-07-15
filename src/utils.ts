@@ -65,4 +65,25 @@ export default class Utils {
     }
     return true;
   }
+
+  static getUnitByMeasure(measure: string): string {
+    let unit = '';
+    const units: {[measure: string]: string} = {
+      'count':      '',
+      'length':     'm',
+      'area':       'm²'
+    }
+
+    unit = units[measure];
+    if (unit == undefined)  throw new TypeError(`${measure} has no known unit.`)
+
+    return unit;
+  }
+
+  static capitalizeFirstLetter(str: string): string {
+    if (str.trim() === "") return str.trim();
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
 }
+
