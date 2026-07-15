@@ -75,6 +75,18 @@ Run `npm run test:chrome` or `npm run test:chrome-headless` to execute the unit 
 Run `npm run test:coverage` to run tests and produce a local HTML coverage report. Find it in [coverage/dashboard/index.html](coverage/dashboard/index.html)
 Run `npm run test:ci` to run tests and produce a JUnit coverage report for Jenkins/SonarCloud. Find it in [coverage/lcov.info](coverage/lcov.info)
 
+## Update ohsome-api-v2 typescript types
+
+We are using auto-generated types based on the OAS spec of ohsome-api v2.
+
+As generator tool we use [openapi-typescript](https://openapi-ts.dev/).
+
+To update the type file in `src/app/shared/ohsome-api-v2-types.d.ts` run:
+
+```shell
+npm run create-ohsome-api-v2-types
+```
+
 ## Internationalization (i18n) and localization
 
 To enable translations in html templates use the `i18n` directive:

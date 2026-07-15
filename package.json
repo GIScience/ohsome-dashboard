@@ -18,6 +18,8 @@
     "lint:fix": "ng lint --fix",
     "extract-i18n": " ng extract-i18n --format json --output-path src/locale --out-file messages-source.en.json",
     "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "create-ohsome-api-v2-types": "npx openapi-typescript  https://api.heigit.org/ohsome-api-staging/v2/openapi.json -o src/app/shared/ohsome-api-v2-types.d.ts"
   },
   "dependencies": {
     "@angular/common": "^22.0.2",
@@ -61,6 +63,7 @@
     "@angular-eslint/schematics": "22.0.0",
     "@angular/build": "^22.0.4",
     "@angular/cli": "^22.0.4",
+    "@angular/compiler": "^22.0.2",
     "@angular/compiler-cli": "^22.0.2",
     "@eslint/js": "^10.0.1",
     "@standard-schema/spec": "^1.0.0",
@@ -74,7 +77,6 @@
     "@vitest/browser-webdriverio": "^4.1.9",
     "@vitest/coverage-v8": "^4.1.9",
     "@vitest/ui": "^4.1.9",
-    "@angular/compiler": "^22.0.2",
     "angular-eslint": "^22.0.0",
     "baseline-browser-mapping": "^2.10.38",
     "eslint": "^10.5.0",

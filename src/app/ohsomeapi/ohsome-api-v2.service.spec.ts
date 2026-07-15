@@ -7,6 +7,7 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from '../interceptors/auth.interceptor';
 import {AuthService} from '../singelton-services/auth.service';
 import {ApplicationInitStatus, inject, provideAppInitializer} from '@angular/core';
+import {paths} from '../shared/ohsome-api-v2-types';
 
 describe('OhsomeApiv2Service', () => {
   let service: OhsomeApiV2Service;
@@ -31,7 +32,7 @@ describe('OhsomeApiv2Service', () => {
   });
 
   it('should perform a features count request', async () => {
-    const params = {
+    const params: paths['/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter: "type:node and natural=tree",
       timeSeries: {
         "start": "2026-01-01T00:00:00Z",
