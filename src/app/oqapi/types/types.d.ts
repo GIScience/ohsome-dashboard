@@ -53,8 +53,8 @@ interface Indicator extends RawIndicatorMetadata {
 }
 
 // parameter information from the formValues
-type Params = { [paramName: string]: string | string[] | boolean } | null
-type IndicatorParams = KeyValue<string, { "params": Params }>;
+type Params = { [paramName: string]: string | string[] | boolean }
+type IndicatorParams = KeyValue<string, { "params": Params | null }>;
 
 interface RawReportMetadata {
   name: string;

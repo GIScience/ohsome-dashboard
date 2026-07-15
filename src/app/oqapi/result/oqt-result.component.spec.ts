@@ -119,29 +119,4 @@ describe('OqtResultComponent', () => {
     expect(indicatorParamsList).toEqual(expected);
   });
 
-
-  it('unionPolygonFeatures(features) should return a unified polygon', () => {
-    const geojson: FeatureCollection<Polygon> = {
-      "type": "FeatureCollection", "features": [{
-        "type": "Feature", "id": "one", "properties": {}, "geometry": {
-          "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]], "type": "Polygon"
-        }
-      }, {
-        "type": "Feature", "id": "two","properties": {}, "geometry": {
-          "coordinates": [[[1, 0], [2, 0], [2, 1], [1, 1], [1, 0]]], "type": "Polygon"
-        }
-      }]
-    };
-
-    const expected: Feature<Polygon, GeoJsonProperties> = {
-      "type": "Feature", "id": "one + two", "properties": {"id": "one + two"}, "geometry": {
-        "coordinates": [[[0, 0], [2, 0], [2, 1], [0, 1], [0, 0]]], "type": "Polygon"
-      }
-    };
-
-    const result = component.unionPolygonFeatures(geojson.features);
-
-    expect(result).toEqual(expected);
-
-  })
 });

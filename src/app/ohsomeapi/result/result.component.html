@@ -28,7 +28,7 @@
       }
     </div>
   <!--    </h3>-->
-
+<!--  TODO clean up group by labels-->
   <div class="ui item">
     <i class="expand icon" title="measure"></i>{{formValues?.measure}}
   </div>
@@ -81,21 +81,10 @@
       <div>{{error | json}}</div>
     </div>
   }
-  @if (responseType === 'groupByResponse' && groupByResponse.getResult().length === 0) {
-    <div>
-      <p>Empty result.</p>
-    </div>
-  }
 
   <!-- Non Error results -->
-  @if (responseType === 'simpleResponse') {
-    <app-simple-result [chartJsData]="chartJsData"
-      [chartJsOptions]="chartJsOptions" [chartJsPlugins]="chartJsPlugins"
-    [unit]="unit"></app-simple-result>
-  }
-  @if (responseType === 'groupByResponse' && groupByResponse.getResult().length > 0) {
-    <app-simple-groupby-type-result
-      [response]="groupByResponse"
-    [formValues]="formValues"></app-simple-groupby-type-result>
-  }
+  <ng-container
+    *ngComponentOutlet="handlerComponent();inputs: handlerInputs()"
+  ></ng-container>
+
 </div>

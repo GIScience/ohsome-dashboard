@@ -1,7 +1,16 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy, signal, Type
+} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {OhsomeApiService} from '../ohsome-api.service';
-import { ViewportScroller, NgClass, JsonPipe } from '@angular/common';
+import {ViewportScroller, NgClass, JsonPipe, NgComponentOutlet} from '@angular/common';
 import {ChartData, ChartHoverOptions, ChartPoint, ChartTooltipOptions} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
@@ -16,26 +25,27 @@ import Response = OhsomeApi.v1.response.Response;
 import SimpleResponse = OhsomeApi.v1.response.SimpleResponse;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 import {RequiredAndDefined} from '../../shared/shared-types';
-import { SimpleResultComponent } from './simple-result/simple-result.component';
-import { SimpleGroupbyResultComponent } from './simple-groupby-result/simple-groupby-result.component';
-import { OshdbModule } from '../oshdb.module';
+import {SimpleGroupbyResultComponent} from './simple-groupby-result/simple-groupby-result.component';
+import {OshdbModule} from '../oshdb.module';
+import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
+import {OhsomeApiV2Service} from '../ohsome-api-v2.service';
+import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
+import {Feature, MultiPolygon, Polygon} from 'geojson';
 
 declare const $: any;
 
 @Component({
-    selector: 'app-result',
-    templateUrl: './result.component.html',
-    styleUrls: ['./result.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass, SimpleResultComponent, SimpleGroupbyResultComponent, OshdbModule, JsonPipe]
+  selector: 'app-result',
+  templateUrl: './result.component.html',
+  styleUrls: ['./result.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [NgClass, /*SimpleGroupbyResultComponent,*/ OshdbModule, JsonPipe, NgComponentOutlet]
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
-  private restApi = inject(OhsomeApiService);
-  private metadataProvider = inject(OhsomeApiMetadataProviderService);
+  private ohsomeApiV2 = inject(OhsomeApiV2Service)
   private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   private viewportScroller = inject(ViewportScroller);
-  private elemRef = inject(ElementRef);
   private sanitizer = inject(DomSanitizer);
 
 
@@ -44,91 +54,14 @@ export class ResultComponent implements OnInit, AfterViewInit {
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   public title = '';
   public unit = '';
-  public creationDate: string = new Date().toUTCString();
   public formValues: any;
   public boundaryType: string;
   private data: any;
   public response: Response;
-  public simpleResponse: SimpleResponse;
-  public groupByResponse: GroupByResponse;
-  public responseType: string;
   public permalink: SafeUrl;
 
   public error: any;
   public isLoading = false;
-
-  private simpleRequestColor = '#6EB0E0';
-
-  public chartJsData: RequiredAndDefined<ChartData>;
-
-  public chartJsOptions: any = {
-    responsive: true,
-    maintainAspectRatio: false,
-    elements: {line: {tension: 0}},
-    scales: {
-      xAxes: [{
-        type: 'time',
-        distribution: 'linear'
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: false,
-          labelString: ''
-        },
-        ticks: {
-          callback: this.yAxesFormatter.bind(this),
-          beginAtZero: true
-        }
-      }]
-    },
-    hover: {
-      mode: 'index',
-      intersect: false
-    } as ChartHoverOptions,
-    tooltips: {
-      mode: 'index',
-      intersect: false,
-      caretPadding: 6,
-      callbacks: {
-        label: this.labelFormatter.bind(this)
-      }
-    } as ChartTooltipOptions,
-    customVerticalLine: {
-      color: 'gray',
-      x: undefined
-    }
-  };
-
-  public chartJsPlugins = [
-    {
-      afterEvent: function (chart, e) {
-        if (/*e.type === 'mousemove' && (e.x > e.chart.chartArea.left)
-          && (e.x < e.chart.chartArea.right) &&*/ chart.active && chart.active.length > 0) {
-          chart.options.customVerticalLine.x = chart.active[0]._view.x;
-
-        } else {
-          chart.options.customVerticalLine.x = undefined;
-        }
-      },
-      beforeDatasetsDraw: function (chart, easing) {
-        const ctx = chart.chart.ctx;
-        const chartArea = chart.chartArea;
-        const x = chart.options.customVerticalLine.x;
-        if (!isNaN(x)) {
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(x, chartArea.bottom);
-          ctx.lineTo(x, chartArea.top);
-          ctx.strokeStyle = chart.options.customVerticalLine.color;
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-    }
-  ];
-
-  public chartJsDataStart: any = null;
-  public chartJsDataEnd: any = null;
 
   public UNITS = {
     '': {
@@ -149,16 +82,33 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
   };
 
+  protected handlerComponent = signal<Type<unknown> | null>(null);
+  protected handlerInputs = signal<{}>({});
+  private handler: QueryHandler<any>;
+  private aoiPolygons: Feature<Polygon | MultiPolygon>[];
+
+
   constructor() {
     this.changeDetectorRef.detach();
     this.viewportScroller.setOffset([0, 100]);
   }
 
   ngOnInit() {
+    const handler = this.queryHandlerRegistry.find(h => h.matches(this.formValues));
+    if (!handler) {
+      throw new Error('No ResultHandler matches the current form values');
+    }
+    this.handler = handler as QueryHandler<any>;
+
+    //create boundary feautures as geojson
+    this.aoiPolygons = toPolygonFeatures(this.formValues);
+
+
     // console.log('result', this.formValues);
     this.permalink = this.getPermalink();
     this.setTitle();
     this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues.measure);
+
     this.getData();
     this.changeDetectorRef.detectChanges();
   }
@@ -186,145 +136,33 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
   }
 
+  queryHandlerRegistry = [
+    timeSeriesHandler
+  ]
+
+
   getData() {
-    // build request
-
-    // measure
-    const urlSegments: string[] = ['elements', this.formValues.measure];
-
-    //TODO use ratio, density or nothing
-    // if (this.formValues.???) {
-    //   urlSegments.push('density');
-    // }
-
-    // groupBy + type, boundary, tag, key or nothing
-    if (this.formValues.groupBy !== 'none') {
-      urlSegments.push('groupBy', this.formValues.groupBy);
-    }
-
-    // build path from segments
-    const urlPath = urlSegments.join('/');
-
-    // TODO: could be fetched from swagger api-docs
-    const supportedParamKeys = [
-      'bboxes', 'bcircles', 'bpolys', 'userids', 'time', 'filter',
-      'groupByKey', 'groupByKeys', 'groupByValues', 'showMetadata'
-    ];
-
-    const params: any = {'showMetadata': true};
-    for (const key in this.formValues) {
-      if (supportedParamKeys.includes(key) && !!this.formValues[key]) {
-        params[key] = this.formValues[key];
-      }
-    }
-
-    // if start time is not specified: choose a "good" start date automatically
-    if (params.time && params.time.startsWith('/')) {
-      const minDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp;
-      const timeParts = params.time.split('/');
-      params.time = Utils.calculateStartDateFromEndAndPeriod(timeParts[1], timeParts[2], minDate) + params.time;
-    }
-
-    if (!this.formValues.filter) {
-      // migrate "simple" filters (types + key=value) to OSHDB filter
-      const typesPart = this.formValues.types.map(t => 'type:' + t).join(' or ');
-      const escapeQuotes = s => `"${s.replace(/"/g, '\\"')}"`;
-
-      params.filter = '(' + typesPart + ')';
-      if (this.formValues.key) {
-        if (this.formValues.value) {
-          params.filter += ' and ' + escapeQuotes(this.formValues.key) + '='
-            + escapeQuotes(this.formValues.value);
-        } else {
-          params.filter += ' and ' + escapeQuotes(this.formValues.key) + '=*';
-        }
-      }
-    }
-
-    // now add the params
-    const urlSearchParams = new URLSearchParams();
-    for (const param in params) {
-      urlSearchParams.set(param, params[param]);
-    }
-
-    // start request
+    //new code starts here
     this.isLoading = true;
-    this.restApi.post(urlPath, urlSearchParams.toString())
-      .subscribe(
-        {
-          next: (data) => {
-            console.log(data);
-            this.data = data;
-
-            if (SimpleResponse.isSimpleResponseJSON(data as ResponseJSON)) {
-              this.responseType = 'simpleResponse';
-              this.response = this.simpleResponse = new SimpleResponse(data as SimpleResponseJSON);
-              this.chartJsData = this.createChartJsData(data as ResponseJSON);
-              this.chartJsDataStart = this.getChartJsDataAtIndex(0);
-              this.chartJsDataEnd = this.getChartJsDataAtIndex(this.simpleResponse.getResult().length - 1);
-            } else if (GroupByResponse.isGroupByResponseJSON(data as ResponseJSON)) {
-              this.responseType = 'groupByResponse';
-              this.response = this.groupByResponse = new GroupByResponse(data as GroupByResponseJSON);
-              return;
-            } else {
-              throw new TypeError('Response::create(): This ResponseJSON format is currently not supported');
-            }
-
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.error = err;
-            console.error(this.error);
-            this.changeDetectorRef.detectChanges();
-          },
-          complete: () => {
-            console.log('loading done');
-            this.isLoading = false;
-            this.changeDetectorRef.detectChanges();
-          }
-        }
-      );
-  }
-
-  createChartJsData(ohsomeApiResponse: ResponseJSON): RequiredAndDefined<ChartData> {
-    const chartData: RequiredAndDefined<ChartData> = {
-      labels: [],
-      datasets: []
-    };
-
-    chartData.datasets.push({});
-    // chartData.datasets[0].borderColor = this.simpleRequestColor;
-    chartData.datasets[0].backgroundColor = this.simpleRequestColor;
-    chartData.datasets[0].pointStyle = 'cross';
-    chartData.datasets[0].pointRadius = 0;
-    chartData.datasets[0].fill = true;
-    chartData.datasets[0].pointHoverRadius = 5;
-    chartData.datasets[0].pointHoverBorderColor = 'blue';
-    chartData.datasets[0].pointHoverBorderWidth = 2;
-
-    if (SimpleResponse.isSimpleResponseJSON(ohsomeApiResponse)) {
-      const simpleResponse = new SimpleResponse(ohsomeApiResponse);
-
-      chartData.datasets[0].label = this.title;
-      chartData.datasets[0].data = simpleResponse.result.map((tv) => ({x: tv.timestamp, y: tv.value}));
-    } else {
-      throw new Error('unknown result type in OSHDB response. ' + JSON.stringify(ohsomeApiResponse));
-    }
-    return chartData;
-  }
-
-  public getChartJsDataAtIndex(index: number) {
-    const dataAt: any[] = [];
-
-    this.chartJsData.datasets.forEach(
-      (dataset) => {
-        if (dataset.data) {
-          dataAt.push(dataset.data[index]);
-        }
+    this.handler.execute(this.formValues, this.ohsomeApiV2, this.aoiPolygons).subscribe({
+      next: (response) => {
+        this.handlerComponent.set(this.handler.component);
+        this.handlerInputs.set(this.handler.toInputs(response, this.formValues));
+        this.data = response;
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.error = err;
+        console.error(err);
+        this.changeDetectorRef.detectChanges();
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.changeDetectorRef.detectChanges();
       }
-    );
+    })
 
-    return dataAt;
   }
 
   private yAxesFormatter(value, index, values) {
@@ -361,38 +199,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
 
   getSelectedNames(): string {
-    const values: any[] = [];
-    let inputValues = '';
-    if (this.formValues.bpolys) {
-      let bpolys = this.formValues.bpolys;
-      let isJson = false;
-      try {
-        bpolys = JSON.parse(bpolys);
-        isJson = true;
-      } catch (e) {
-        console.log('Bpoly is no JSON');
-      }
-      if (isJson) {
-        if (bpolys.features === undefined) {
-          return '';
-        }
-        values.push(bpolys.features.map((feature: any) => {
-          return Utils.sanitizeLabel(feature.id);
-        }));
-      } else {
-        inputValues = bpolys;
-      }
-    } else if (this.formValues.bcircles) {
-      inputValues = this.formValues.bcircles;
-    } else if (this.formValues.bboxes) {
-      inputValues = this.formValues.bboxes;
-    }
-    inputValues.split('|').forEach(function (val) {
-      if (val.includes(':')) {
-        values.push(val.split(':')[0]);
-      }
-    });
-    return values.join(', ');
+
+    return this.handler.toBoundaryLabel(this.formValues, this.aoiPolygons);
   }
 
   // for download links
@@ -403,8 +211,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   getCSVDataURL(): SafeUrl {
-    if (this.response) {
-      const csv = this.response.toCSV();
+    if (this.data) {
+      const csv = this.handler.toCSV(this.data);
       const blob = new Blob([csv], {type: 'text/csv'});
       return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
     } else {

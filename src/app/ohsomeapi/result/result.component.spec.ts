@@ -12,21 +12,23 @@ describe('ResultComponent', () => {
   let fixture: ComponentFixture<ResultComponent>;
 
   const formValuesMock = {
-    'keys': 'natural',
-    'types': ['node']
-  }
+    filter: 'natural=* and type:node',
+    groupBy: 'none',
+    bboxes: '8.9,48.8,9.0,48.9',
+    time: '/2026-01-01Z/P1Y'
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         OshdbModule,
         ResultComponent
-    ],
-    providers: [
-        { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },
+      ],
+      providers: [
+        {provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock},
         provideHttpClient()
-    ]
-})
+      ]
+    })
       .compileComponents();
 
     fixture = TestBed.createComponent(ResultComponent);
