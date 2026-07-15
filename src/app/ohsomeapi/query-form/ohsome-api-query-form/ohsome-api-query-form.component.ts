@@ -1,24 +1,24 @@
-import { AfterViewInit, Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
+import {AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
+import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {environment} from '../../../../environments/environment';
 import Utils from '../../../../utils';
 import {OhsomeApiMetadataProviderService} from '../../ohsome-api-metadata-provider.service';
-import { NgClass, DatePipe } from '@angular/common';
-import { TimePeriodPickerInputComponent } from '../time-period-picker-input/time-period-picker-input.component';
-import { NgDatePipesModule } from 'ngx-pipes';
+import {DatePipe} from '@angular/common';
+import {TimePeriodPickerInputComponent} from '../time-period-picker-input/time-period-picker-input.component';
+import {NgDatePipesModule} from 'ngx-pipes';
 
 declare const $: any;
 
 @Component({
-    selector: 'app-ohsome-api-query-form',
-    templateUrl: './ohsome-api-query-form.component.html',
-    styleUrls: ['./ohsome-api-query-form.component.css'],
-    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule, NgClass, TimePeriodPickerInputComponent, DatePipe, NgDatePipesModule]
+  selector: 'app-ohsome-api-query-form',
+  templateUrl: './ohsome-api-query-form.component.html',
+  styleUrls: ['./ohsome-api-query-form.component.css'],
+  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [FormsModule, TimePeriodPickerInputComponent, DatePipe, NgDatePipesModule]
 })
 
-export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
+export class OhsomeApiQueryFormComponent implements OnInit/*, AfterViewInit*/ {
   private metadataProvider = inject(OhsomeApiMetadataProviderService);
 
 
@@ -33,31 +33,23 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
 
   viewUpdateTime: boolean = Utils.loadEnv('viewUpdateTime', false);
 
-  // OSM type
-  public typeOptions: string[] = ['node', 'way', 'relation'];
-  public types: string[];
-
-  public whichFilter: 'simple' | 'advanced';
-  public selectedKey: string;
-  public selectedValue: string;
-
   // OSM advanced ohsome filter
   public selectedFilter: string;
 
 // Measure
   public measureOptions: { value: string; label: string }[] = [
-    { value: 'count', label: $localize`count` },
-    { value: 'length', label: $localize`length` },
-    { value: 'area', label: $localize`area` }
+    {value: 'count', label: $localize`count`},
+    {value: 'length', label: $localize`length`},
+    {value: 'area', label: $localize`area`}
   ];
   public measure: string;
 
 // GroupBy
   public groupByOptions: { value: string, label: string }[] = [
-    { value: 'type', label: $localize`OSM type` },
-    { value: 'boundary', label: $localize`boundary` },
-    { value: 'tag', label: $localize`tag` },
-    { value: 'key', label: $localize`key` }
+    {value: 'type', label: $localize`OSM type`},
+    {value: 'boundary', label: $localize`boundary`},
+    {value: 'tag', label: $localize`tag`},
+    {value: 'key', label: $localize`key`}
   ];
   public groupBy: string;
   public groupByKeys: string;
@@ -80,15 +72,6 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
     // fill form with supplied hashParams
     this.time = this.hashParams.get('time') ?? `${this.start}/${this.end}/${this.period}`;
 
-    this.types = (this.hashParams.has('types'))
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      ? this.hashParams.get('types').split(',').filter(t => this.typeOptions.includes(t))
-      : environment.selectedTypes || this.typeOptions;
-    this.selectedKey = Utils.getFromParamsOrDefault(this.hashParams, 'key', environment.selectedKey);
-    this.selectedValue = this.hashParams.has('key') || this.hashParams.has('value')
-      ? this.hashParams.get('value') ?? ''
-      : environment.selectedValue;
     this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
     this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0].value);
     this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
@@ -97,24 +80,16 @@ export class OhsomeApiQueryFormComponent implements OnInit, AfterViewInit {
     this.groupByValues = Utils.getFromParamsOrDefault(this.hashParams, 'groupByValues', '');
   }
 
-  ngAfterViewInit() {
-    this.initSemanticUI();
-  }
-
-  initSemanticUI() {
-    $('.ui.radio.checkbox').checkbox();
-    $('.ui.checkbox').checkbox();
-
-    this.initOSMTypeDropdown();
-  }
-
-  initOSMTypeDropdown() {
-    setTimeout(() => {
-      $('select[name=types]')
-        .dropdown()
-      ;
-    }, 500);
-  }
+  // TODO comment in for group by options
+  // ngAfterViewInit() {
+  //   this.initSemanticUI();
+  // }
+  //
+  // initSemanticUI() {
+  // // init group by checkboxes
+  //   $('.ui.radio.checkbox').checkbox();
+  //   $('.ui.checkbox').checkbox();
+  // }
 
   fireResize() {
     window.dispatchEvent(new Event('resize'));
