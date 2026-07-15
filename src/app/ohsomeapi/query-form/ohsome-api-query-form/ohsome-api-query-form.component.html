@@ -69,49 +69,50 @@
 </div>
 
 <!-- groupBy -->
-<div class="ui divider"></div>
-<div class="row">
-  <div class="column">
-    <h4 class="ui header" i18n><i class="list icon"></i>Group Results By ...</h4>
-    <div class="one inline fields">
-      <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="'none'" (change)="fireResize()"
-        [(ngModel)]="groupBy" checked><label i18n>none</label></div>
-      </div>
-      <div class="four inline fields">
-        @for (option of groupByOptions; track option) {
-          <div class="field">
-            <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="option.value"
-              (change)="fireResize()" [(ngModel)]="groupBy"><label
-            style="white-space: nowrap;">{{option.label}}</label></div>
-          </div>
-        }
-      </div>
-      <div class="two fields">
-        @if (groupBy === 'key') {
-          <div class="sixteen wide field">
-            <label i18n><i class="key icon"></i>Grouping Keys</label>
-            <input type="text" name="groupByKeys" [(ngModel)]="groupByKeys" class="" required>
-          </div>
-        }
-        @if (groupBy === 'tag') {
-          <div class="eight wide field">
-            <label i18n><i class="key icon"></i>Grouping Key</label>
-            <input type="text" name="groupByKey" [(ngModel)]="groupByKey" class="" required>
-          </div>
-        }
-        @if (groupBy === 'tag') {
-          <div class="eight wide field">
-            <label i18n><i class="info icon"></i>Grouping Values</label>
-            <input type="text" name="groupByValues" [(ngModel)]="groupByValues" class="">
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+<!--<div class="ui divider"></div>-->
+<!--<div class="row">-->
+<!--  <div class="column">-->
+<!--    <h4 class="ui header" i18n><i class="list icon"></i>Group Results By ...</h4>-->
+<!--    <div class="one inline fields">-->
+<!--      <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="'none'" (change)="fireResize()"-->
+<!--        [(ngModel)]="groupBy" checked><label i18n>none</label></div>-->
+<!--      </div>-->
+<!--      <div class="four inline fields">-->
+<!--        @for (option of groupByOptions; track option) {-->
+<!--          <div class="field">-->
+<!--            <div class="ui radio checkbox field"><input name="groupBy" type="radio" [value]="option.value"-->
+<!--              (change)="fireResize()" [(ngModel)]="groupBy"><label-->
+<!--            style="white-space: nowrap;">{{option.label}}</label></div>-->
+<!--          </div>-->
+<!--        }-->
+<!--      </div>-->
+<!--      <div class="two fields">-->
+<!--        @if (groupBy === 'key') {-->
+<!--          <div class="sixteen wide field">-->
+<!--            <label i18n><i class="key icon"></i>Grouping Keys</label>-->
+<!--            <input type="text" name="groupByKeys" [(ngModel)]="groupByKeys" class="" required>-->
+<!--          </div>-->
+<!--        }-->
+<!--        @if (groupBy === 'tag') {-->
+<!--          <div class="eight wide field">-->
+<!--            <label i18n><i class="key icon"></i>Grouping Key</label>-->
+<!--            <input type="text" name="groupByKey" [(ngModel)]="groupByKey" class="" required>-->
+<!--          </div>-->
+<!--        }-->
+<!--        @if (groupBy === 'tag') {-->
+<!--          <div class="eight wide field">-->
+<!--            <label i18n><i class="info icon"></i>Grouping Values</label>-->
+<!--            <input type="text" name="groupByValues" [(ngModel)]="groupByValues" class="">-->
+<!--          </div>-->
+<!--        }-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
-  <div class="ui divider"></div>
+
 
   <!-- time picker -->
+  <div class="ui divider"></div>
   <div class="column">
     <app-time-period-picker-input name="time" [(ngModel)]="time"
     [options]="{minDate: minDate, maxDate: maxDate}"></app-time-period-picker-input>

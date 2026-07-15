@@ -17,7 +17,6 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "extract-i18n": " ng extract-i18n --format json --output-path src/locale --out-file messages-source.en.json",
-    "e2e": "ng e2e"
     "e2e": "ng e2e",
     "create-ohsome-api-v2-types": "npx openapi-typescript  https://api.heigit.org/ohsome-api-staging/v2/openapi.json -o src/app/shared/ohsome-api-v2-types.d.ts"
   },
