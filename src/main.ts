@@ -20,6 +20,7 @@ import {
   urlHashParamsProviderFactory
 } from './app-initializers';
 import {authInterceptor} from './app/interceptors/auth.interceptor';
+import {timeoutInterceptor} from './app/interceptors/timeout.interceptor';
 
 
 bootstrapApplication(AppComponent, {
@@ -57,7 +58,7 @@ bootstrapApplication(AppComponent, {
       const authService = inject(AuthService);
       return authService.initializeUser()
     }),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor, timeoutInterceptor]))
   ]
 })
   .catch(err => console.error(err));
