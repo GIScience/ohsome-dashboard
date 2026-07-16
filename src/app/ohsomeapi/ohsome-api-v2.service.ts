@@ -18,10 +18,10 @@ export class OhsomeApiV2Service {
 
   features(
     measure: components['schemas']['MeasureRequestModel'],
-    body: paths['/features/{measure}.json']['post']['requestBody']['content']['application/json']
+    body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json']
   ) {
     return this.http.post(
-      `${OHSOME_API_ROOT_URL}/features/${measure}.json`,
+      `${OHSOME_API_ROOT_URL}/stats/features/${measure}.json`,
       body
     )
   }

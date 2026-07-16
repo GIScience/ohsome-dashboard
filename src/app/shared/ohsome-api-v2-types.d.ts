@@ -29,7 +29,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Metadata of the underlying database (ohsomedb). */
+        /** Metadata of the underlying database. */
         get: operations["get_metadata_metadata_get"];
         put?: never;
         post?: never;
@@ -39,7 +39,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/features/{measure}.json": {
+    "/stats/features/{measure}.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -49,14 +49,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Aggregate features by {measure} as time series. */
-        post: operations["post_features_as_json_features__measure__json_post"];
+        post: operations["post_features_as_json_stats_features__measure__json_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/features/{measure}.csv": {
+    "/stats/features/{measure}.csv": {
         parameters: {
             query?: never;
             header?: never;
@@ -73,14 +73,14 @@ export interface paths {
          *     - Line terminator: `\n`
          *     - Quote character: `\`
          */
-        post: operations["post_features_as_csv_features__measure__csv_post"];
+        post: operations["post_features_as_csv_stats_features__measure__csv_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/features/extraction.parquet": {
+    "/stats/contributors/activity.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -89,49 +89,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Download features. */
-        post: operations["post_contributions_extract_features_extraction_parquet_post"];
+        /** Active contributors per time bin. */
+        post: operations["post_contributors_activity_as_json_stats_contributors_activity_json_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/features/extraction.arrow": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Download features */
-        post: operations["post_contributions_extract_arrow_features_extraction_arrow_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/activity/users.json": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Active users per time bin. */
-        post: operations["post_users_activity_as_json_activity_users_json_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/activity/users.csv": {
+    "/stats/contributors/activity.csv": {
         parameters: {
             query?: never;
             header?: never;
@@ -141,21 +107,21 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Active users per time bin.
+         * Active contributors per time bin.
          * @description CSV Response Format:
          *     - Delimiter: `;`
          *     - Comments: `#`
          *     - Line terminator: `\n`
          *     - Quote character: `\`
          */
-        post: operations["post_users_activity_as_csv_activity_users_csv_post"];
+        post: operations["post_contributors_activity_as_csv_stats_contributors_activity_csv_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/currentness/{measure}.json": {
+    "/stats/currentness/{measure}.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -165,14 +131,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Currentness of features in time bins. */
-        post: operations["post_currentness_as_json_currentness__measure__json_post"];
+        post: operations["post_currentness_as_json_stats_currentness__measure__json_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/currentness/{measure}.csv": {
+    "/stats/currentness/{measure}.csv": {
         parameters: {
             query?: never;
             header?: never;
@@ -189,7 +155,41 @@ export interface paths {
          *     - Line terminator: `\n`
          *     - Quote character: `\`
          */
-        post: operations["post_currentness_as_csv_currentness__measure__csv_post"];
+        post: operations["post_currentness_as_csv_stats_currentness__measure__csv_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/extraction/features.parquet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Download features. */
+        post: operations["post_contributions_extract_extraction_features_parquet_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/extraction/features.arrow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Download features. */
+        post: operations["post_contributions_extract_arrow_extraction_features_arrow_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -239,15 +239,15 @@ export interface components {
              */
             clip: boolean;
             /**
-             * Time
+             * Timestamp
              * @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp.
              * @default latest
              * @example latest
              * @example 2026-04-17T00:00:00Z
              */
-            time: string | "latest";
+            timestamp: string | "latest";
             /**
-             * @description [filter language documentation](https://docs.ohsome.org/ohsome-api/v1/filter.html)
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
@@ -265,7 +265,7 @@ export interface components {
         /** FilterRequestModel */
         FilterRequestModel: {
             /**
-             * @description [filter language documentation](https://docs.ohsome.org/ohsome-api/v1/filter.html)
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
@@ -274,7 +274,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -321,7 +321,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -408,7 +408,7 @@ export interface components {
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -434,7 +434,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -497,7 +497,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -511,10 +511,10 @@ export interface components {
         };
         /** TimeBinsRequestParametersModel */
         TimeBinsRequestParametersModel: {
-            /** @description Time bins defined using a start/end timestamp (ISO-8601, UTC) and a bin size (ISO-8601 duration). Last bin might not cover bin size. */
+            /** @description Time bins defined using a start/end timestamp (ISO-8601, UTC) and a bin size (ISO-8601 duration). Last bin might not cover bin size. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
             timeBins: components["schemas"]["TimeBinSizeRequestModel"];
             /**
-             * @description [filter language documentation](https://docs.ohsome.org/ohsome-api/v1/filter.html)
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
@@ -533,7 +533,7 @@ export interface components {
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f723be3
+             * @default 2.0.0a3+f23ebb8
              */
             apiVersion: string;
             /**
@@ -570,10 +570,10 @@ export interface components {
         };
         /** TimeSeriesRequestParametersModel */
         TimeSeriesRequestParametersModel: {
-            /** @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. */
+            /** @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
             timeSeries: components["schemas"]["TimeIntervalRequestModel"];
             /**
-             * @description [filter language documentation](https://docs.ohsome.org/ohsome-api/v1/filter.html)
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
@@ -613,7 +613,7 @@ export interface operations {
     validate_filter_get_filter_validation_get: {
         parameters: {
             query: {
-                /** @description [filter language documentation](https://docs.ohsome.org/ohsome-api/v1/filter.html) */
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
             };
             header?: never;
@@ -695,7 +695,7 @@ export interface operations {
             };
         };
     };
-    post_features_as_json_features__measure__json_post: {
+    post_features_as_json_stats_features__measure__json_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -730,7 +730,7 @@ export interface operations {
             };
         };
     };
-    post_features_as_csv_features__measure__csv_post: {
+    post_features_as_csv_stats_features__measure__csv_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -752,7 +752,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f723be3
+                     * @example # apiVersion: 2.0.0a3+f23ebb8
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -772,69 +772,7 @@ export interface operations {
             };
         };
     };
-    post_contributions_extract_features_extraction_parquet_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    post_contributions_extract_arrow_features_extraction_arrow_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    post_users_activity_as_json_activity_users_json_post: {
+    post_contributors_activity_as_json_stats_contributors_activity_json_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -867,7 +805,7 @@ export interface operations {
             };
         };
     };
-    post_users_activity_as_csv_activity_users_csv_post: {
+    post_contributors_activity_as_csv_stats_contributors_activity_csv_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -887,7 +825,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f723be3
+                     * @example # apiVersion: 2.0.0a3+f23ebb8
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -907,7 +845,7 @@ export interface operations {
             };
         };
     };
-    post_currentness_as_json_currentness__measure__json_post: {
+    post_currentness_as_json_stats_currentness__measure__json_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -942,7 +880,7 @@ export interface operations {
             };
         };
     };
-    post_currentness_as_csv_currentness__measure__csv_post: {
+    post_currentness_as_csv_stats_currentness__measure__csv_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -964,7 +902,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f723be3
+                     * @example # apiVersion: 2.0.0a3+f23ebb8
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -972,6 +910,68 @@ export interface operations {
                      */
                     "text/csv": string;
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_contributions_extract_extraction_features_parquet_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_contributions_extract_arrow_extraction_features_arrow_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

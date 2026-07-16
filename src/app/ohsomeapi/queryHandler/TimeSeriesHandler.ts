@@ -26,7 +26,7 @@ export interface QueryHandler<TResponse> {
 
 interface FormValues {
   filter: string;
-  measure: paths['/features/{measure}.json']['post']['parameters']['path']['measure'];
+  measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
   groupBy: string;
   time: string;
   bpolys?: string;
@@ -48,7 +48,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
 
     const aoi = unionPolygonFeatures(toPolygonFeatures(formValues)).geometry as components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"];
 
-    const body: paths['/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
+    const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter: formValues.filter,
       timeSeries: {
         start,
