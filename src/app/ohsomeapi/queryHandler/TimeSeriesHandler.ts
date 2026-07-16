@@ -105,7 +105,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
   },
 
   toBoundaryLabel(formValues: FormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string {
-    return String(unionPolygonFeatures(aoiPolygons).id)
+    return String(unionPolygonFeatures(aoiPolygons).properties["display_name"])
   }
 
 }

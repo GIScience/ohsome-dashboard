@@ -33,7 +33,7 @@ export function toPolygonFeatures(formValues: Partial<{
     if (Bpolys.isBPolysString(bpolys)) {
       const bpolysInstance = new Bpolys().parse(bpolys);
       const features: Feature<Polygon>[] = bpolysInstance.boundaries.map((bpoly, index) => {
-          const id = (bpoly.id) ? String(bpoly.id) : `area ${index + 1}`;
+        const id = (bpoly.id) ? String(bpoly.id) : `area ${index + 1}`;
         const coords1d: number[] = bpoly.geometry.split(',').map(Number);
 
         // transform array of numbers into array of pairs of numbers (coordinates)
@@ -52,7 +52,7 @@ export function toPolygonFeatures(formValues: Partial<{
     }
   }
 
- throw Error("Form Values do not contain boundaries (bpolys or bboxes)");
+  throw Error("Form Values do not contain boundaries (bpolys or bboxes)");
 }
 
 
@@ -79,40 +79,48 @@ export function getAvailablePropertyOrId(
   return defaultValue;
 }
 
+function toLabeledFeature(feature, label): Feature<Polygon | MultiPolygon, { id: any, display_name: string }> {
+  const id = feature.id || feature.properties?.["id"];
+  const propId = feature.properties?.["id"]
+  feature.id = id ?? label;
+  feature.properties = {};
+  feature.properties['id'] = propId ?? id ?? label;
+  feature.properties['display_name'] = label;
+  return feature;
+}
+
+function getLabel(feature, defaultValue) {
+  return getAvailablePropertyOrId(feature, ["display_name"], defaultValue);
+}
+
 export function unionPolygonFeatures(
   features: Feature<Polygon | MultiPolygon>[]
-): Feature<Polygon | MultiPolygon> {
+): Feature<Polygon | MultiPolygon, { id: any, display_name: string }> {
 
-  const getLabel = (feature, currentIndex)=> {
-    return getAvailablePropertyOrId(feature, ["display_name"], currentIndex)
-  }
 
-  return features.reduce(
-    (previousValue: Feature<Polygon | MultiPolygon>, currentValue, currentIndex) => {
-      if (currentIndex === 0) {
-        return currentValue;
+  return features
+    .map((feature, index) => {
+      const label = getLabel(feature, `area ${index + 1}`);
+      return toLabeledFeature(feature, label);
+    })
+    .reduce(
+      (previousValue, currentValue, currentIndex) => {
+
+        const merged = union(featureCollection([previousValue, currentValue]));
+        if (merged) {
+
+          const mergedLabel = [getLabel(previousValue, `area ${currentIndex}`), getLabel(currentValue, `area ${currentIndex + 1}`)].join(' + ');
+
+          merged.id = mergedLabel;
+          merged.properties = {};
+          merged.properties['id'] = mergedLabel;
+          merged.properties['display_name'] = mergedLabel;
+
+          return merged as Feature<Polygon | MultiPolygon, { id: any, display_name: string }>;
+        } else {
+
+          throw new Error("Couldn't union the given PolygonFeatures");
+        }
       }
-
-      const merged = union(featureCollection([previousValue, currentValue]));
-      if (merged) {
-
-        const mergedLabel = [getLabel(previousValue,`area ${currentIndex}`), getLabel(currentValue, `area ${currentIndex + 1}`)].join(' + ');
-
-        merged.id = mergedLabel;
-        merged.properties = {};
-        merged.properties['id'] = mergedLabel;
-
-        return merged as Feature<Polygon | MultiPolygon>;
-      } else {
-
-        const label = getLabel(previousValue, `area ${currentIndex}`);
-
-        previousValue.id = label;
-        previousValue.properties = {};
-        previousValue.properties['id'] = label;
-        return previousValue;
-      }
-    },
-    features[0]
-  );
+    );
 }
