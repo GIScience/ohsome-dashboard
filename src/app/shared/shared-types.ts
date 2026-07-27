@@ -44,7 +44,7 @@ interface BoundaryInputComponentOptions {
   minZoom?: number;
   maxZoom?: number;
   maskPoly?: Polygon | MultiPolygon | Feature<Polygon | MultiPolygon> | FeatureCollection<Polygon | MultiPolygon>;
-  userDefinedPolygonLayers?: Userlayer[]
+  userDefinedPolygonLayers?: Userlayer[];
 }
 
 // removes the optional (?) and nullish values from types or interfaces

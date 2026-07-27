@@ -1,4 +1,16 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, OnChanges, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  inject,
+  Input,
+  NgZone,
+  OnChanges,
+  SimpleChanges,
+  viewChild
+} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as L from 'leaflet';
 import {LatLngBounds, Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
@@ -6,27 +18,27 @@ import '@geoman-io/leaflet-geoman-free';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import mask from '@turf/mask';
 import {BoundaryInputComponentInteractionType, BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
-import OhsomeApiRequest = OhsomeApi.v1.request;
 import area from '@turf/area';
+import OhsomeApiRequest = OhsomeApi.v1.request;
 
 @Component({
-    selector: 'app-boundary-input',
-    templateUrl: './boundary-input.component.html',
-    styleUrls: ['./boundary-input.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => BoundaryInputComponent),
-            multi: true
-        }
-    ]
+  selector: 'app-boundary-input',
+  templateUrl: './boundary-input.component.html',
+  styleUrls: ['./boundary-input.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BoundaryInputComponent),
+      multi: true
+    }
+  ]
 })
 
 export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
-  private elRef = inject(ElementRef);
   private readonly ngZone = inject(NgZone);
 
+  protected boundaryMapElement = viewChild.required<ElementRef<HTMLDivElement>>('boundaryMap');
 
   @Input('interactionType')
   get interactionType(): BoundaryInputComponentInteractionType {
@@ -98,6 +110,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
       this.initMap(this.interactionType);
+      this.updateMapFromValue(this._value);
     })
   }
 
@@ -140,7 +153,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   set value(val: string) {
     this._value = val;
-    this.updateMapFromValue(val);
+    if (this.map) this.updateMapFromValue(val);
   }
 
   // @param value is a text representation of a boundary value (bboxes=... or bcircles=... or bpolys=...
@@ -179,15 +192,15 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       bcircles.boundaries.forEach(bcircle => {
         console.log('updateMapFromValue::bcircle', bcircle.geometry, bcircle.lng, bcircle.lat, bcircle.radius);
         const cirle = L.circle([bcircle.lat, bcircle.lng], {
-          radius: bcircle.radius,
-          bubblingMouseEvents: false
-        } as L.CircleOptions).addTo(this.bcircleLayersGroup)
-          .on('pm:edit', this.updateValueFromMap, this)
-          .on('click', () => {
-            if (!this.map.pm.globalRemovalModeEnabled()) {
-              this.map.pm.enableGlobalEditMode();
-            }
-          })
+            radius: bcircle.radius,
+            bubblingMouseEvents: false
+          } as L.CircleOptions).addTo(this.bcircleLayersGroup)
+            .on('pm:edit', this.updateValueFromMap, this)
+            .on('click', () => {
+              if (!this.map.pm.globalRemovalModeEnabled()) {
+                this.map.pm.enableGlobalEditMode();
+              }
+            })
         ;
         commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : new LatLngBounds(cirle.getBounds().getSouthEast(), cirle.getBounds().getNorthWest());
       });
@@ -283,7 +296,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
   private initMap(interactionType: string): void {
     //theMap
-    const mapDiv = this.elRef.nativeElement.querySelector('#boundaryMap');
+    const mapDiv = this.boundaryMapElement().nativeElement;
 
     this.map = L.map(mapDiv, {
       maxBounds: this.options.maxBounds,
@@ -412,10 +425,10 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
       return;
     } else if (doListen) {
       this.isListeningToPmRemove = true;
-      this.map.on('pm:remove', this.onPmRemove, this);
+      this.map?.on('pm:remove', this.onPmRemove, this);
     } else {
       this.isListeningToPmRemove = false;
-      this.map.off('pm:remove', this.onPmRemove, this);
+      this.map?.off('pm:remove', this.onPmRemove, this);
     }
 
 
