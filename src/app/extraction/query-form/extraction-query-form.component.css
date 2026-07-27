@@ -1,3 +1,8 @@
+#col1 {
+  max-height: 67dvh;
+  overflow-y: auto;
+}
+
 .editable-topic {
   display: flex;
   align-items: flex-start;
@@ -11,6 +16,35 @@
     flex: 0 0 auto;
     margin-left: 1rem;
   }
+}
+
+#topic-description{
+  margin-left: 1rem;
+}
+
+#topic-details {
+  transition: box-shadow 0.5s;
+}
+
+.highlight-topic-details {
+  /*outline: 2px solid #2185D0;*/
+  /*outline-offset: 5px;*/
+  box-shadow:
+    0 0 0 5px #f3f4f5,
+    0 0 0 7px #2185D0;
+}
+
+#topicFilter {
+  /*display: block;*/
+  min-height: 3rem;
+  height: 12rem;
+  max-height: 40rem;
+  overflow: auto;
+  resize: vertical;
+  width: 100%;
+  white-space: pre-wrap;
+  border: 1px solid lightgrey;
+  background-color: #f9f9f9;
 }
 
 #col2 {

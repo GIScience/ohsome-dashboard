@@ -1,5 +1,5 @@
 #topicFilter {
-  display: block;
+  display: flex;
   min-height: 5rem;
   height: 6rem;
   max-height: 40rem;
