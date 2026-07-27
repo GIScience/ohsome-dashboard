@@ -18,7 +18,7 @@ describe('bonudaries.utils', () => {
     };
 
     const expected: Feature<Polygon, GeoJsonProperties> = {
-      "type": "Feature", "id": "one + two", "properties": {"id": "one + two"}, "geometry": {
+      "type": "Feature", "id": "one + two", "properties": {"id": "one + two", "display_name": "one + two",}, "geometry": {
         "coordinates": [[[0, 0], [2, 0], [2, 1], [0, 1], [0, 0]]], "type": "Polygon"
       }
     };

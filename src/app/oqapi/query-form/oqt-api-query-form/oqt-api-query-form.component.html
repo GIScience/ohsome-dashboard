@@ -17,7 +17,8 @@
         <div class="item">
           <div class="editable-topic">
             <div class="field">
-              <app-sui-multi-select-search-dropdown #searchSelectTopic required
+              <app-sui-multi-select-search-dropdown #searchSelectTopic
+                                                    [required]="true"
                                                     [multiple]="false"
                                                     name="topic"
                                                     [(ngModel)]="selectedTopicKey"
@@ -46,18 +47,31 @@
               {{ topics[selectedTopicKey].description }}
             </div>
           </div>
+          <!--name="topic-title"-->
+          <!--required-->
+<!--          [ngModel]="qualityForm['topic-title']().value()"-->
           @if (selectedTopicKey === 'custom-topic') {
             <div class="item">
               <div class="content">
                 <label for="topic-title" i18n>Custom topic title:</label>
                 <input type="text" id="topic-title"
-                       name="topic-title"
                        placeholder="Enter your Topic Title"
-                       [ngModel]="topicTitleDefinition()"
-                       (ngModelChange)="setCustomTopicTitleDefinition($event)"
-                       required
+                       [formField]="qualityForm['topic-title']"
                        i18n-placeholder
                 >
+                <input type="hidden"
+                       name="topic-title"
+                       [ngModel]="qualityForm['topic-title']().value()"
+                       required
+                >
+<!--                <input type="text" id="topic-title"-->
+<!--                       name="topic-title"-->
+<!--                       placeholder="Enter your Topic Title"-->
+<!--                       [ngModel]="topicTitleDefinition()"-->
+<!--                       (ngModelChange)="setCustomTopicTitleDefinition($event)"-->
+<!--                       required-->
+<!--                       i18n-placeholder-->
+<!--                >-->
               </div>
             </div>
           }
@@ -66,14 +80,18 @@
               <span i18n><a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
               of the topic:</span>
               @if (selectedTopicKey === 'custom-topic') {
-                <app-prism-editor id="topicFilter" [readonly]="false"
+                <app-prism-editor id="topicFilter"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"
-                                  [value]="topicFilterDefinition()"
-                                  (valueChange)="setCustomTopicFilterDefinition($event)"
+                                  [formField]="qualityForm['topic-filter']"
                 ></app-prism-editor>
+<!--                <app-prism-editor id="topicFilter" [readonly]="false"-->
+<!--                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"-->
+<!--                                  [value]="topicFilterDefinition()"-->
+<!--                                  (valueChange)="setCustomTopicFilterDefinition($event)"-->
+<!--                ></app-prism-editor>-->
                 <input type="hidden" id="topic-filter"
                        name="topic-filter"
-                       [ngModel]="topicFilterDefinition()"
+                       [ngModel]="qualityForm['topic-filter']().value()"
                        required>
               } @else {
                 <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
@@ -105,7 +123,7 @@
                   <app-simple-indicator
                     [indicator]="indicator"
                     [qualityDimension]="qualityDimension"
-                    (indicatorToggle)="onIndicatorToggle()"
+                    (indicatorToggle)="onIndicatorToggle($event)"
                   >
                     @switch (indicator.key) {
                       @case ("attribute-completeness") {

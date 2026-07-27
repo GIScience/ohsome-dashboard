@@ -66,7 +66,10 @@
           </div>
 
           <!-- Data Extraction-->
-          <a class="card" target="_blank" href="https://api.ohsome.org/v1/swagger-ui.html?urls.primaryName=Data%20Extraction" i18n-aria-label aria-label="Link to the Swagger API documentation for data extraction.">
+          <div class="card"
+               (click)="linkTo('extraction')"
+               (keydown.enter)="linkTo('extraction')"
+               tabindex="0" role="link" i18n-aria-label aria-label="Switch to Data Extraction">
             <div class="content">
               <h2 class="header" i18n>Data Extraction</h2>
               <div class="meta" i18n>Download OSM</div>
@@ -81,7 +84,7 @@
                 <img src="assets/images/welcome/data_extraction_en.png" i18n-alt alt="Data Extraction with Swagger">
               </div>
             </div>
-          </a>
+          </div>
 
       </div><!--end of cards -->
     </div>

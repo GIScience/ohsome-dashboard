@@ -1,7 +1,6 @@
 import {OqtApiMetadataProviderService} from './app/oqapi/oqt-api-metadata-provider.service';
 import {catchError, EMPTY} from 'rxjs';
 import {OhsomeApiMetadataProviderService} from './app/ohsomeapi/ohsome-api-metadata-provider.service';
-import {UrlHashParamsProviderService} from './app/singelton-services/url-hash-params-provider.service';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from './prism-language-ohsome-filter';
 import {StateService} from './app/singelton-services/state.service';
 import {loadTranslations} from '@angular/localize';
@@ -37,9 +36,12 @@ export function oqtApiAttributeProviderFactory(provider: OqtApiMetadataProviderS
   )
 }
 
-export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
-  return () => provider.updateHashParamsStoreFromUrl()
-}
+// export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
+//   return () => {
+//     console.log("urlHashParamsProviderFactory");
+//     return provider.updateHashParamsStoreFromUrl();
+//   }
+// }
 
 export function translationsInitializerFactory(provider: StateService) {
   return async () => {

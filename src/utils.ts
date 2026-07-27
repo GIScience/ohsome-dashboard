@@ -3,7 +3,9 @@ import {environment} from './environments/environment';
 
 export default class Utils {
   static sanitizeLabel(label) {
-    if (label == undefined) { return ''}
+    if (label == undefined) {
+      return ''
+    }
     if (label.includes('-_-')) {
       label = label.split('-_-')[1];
     }
@@ -24,12 +26,15 @@ export default class Utils {
     keys.reduce((o, k) => o[k] ??= {}, obj)[last] = val
   }
 
-  static getFromParamsOrDefault(params: URLSearchParams, key: string, def: string): string {
+  static getFromParamsOrDefault<T>(params: URLSearchParams, key: string, def: T): T {
     if (!params.has(key)) {
       return def;
-    } else {
-      return params.get(key) || '';
     }
+    if (Array.isArray(def)) {
+      return (params.get(key)?.split(",") || []) as T;
+    }
+    // if (typeof def === 'string')
+    return (params.get(key) || '') as T;
   }
 
   // helper function which calculates a matching start date for a given end date and peri od
@@ -47,7 +52,7 @@ export default class Utils {
     return moment(time).subtract(multiplePeriod).toISOString();
   }
 
-  static async wait(ms:number): Promise<void> {
+  static async wait(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -68,14 +73,14 @@ export default class Utils {
 
   static getUnitByMeasure(measure: string): string {
 
-    const units: {[measure: string]: string} = {
-      'count':      '',
-      'length':     'm',
-      'area':       'm²'
+    const units: { [measure: string]: string } = {
+      'count': '',
+      'length': 'm',
+      'area': 'm²'
     }
 
     const unit = units[measure];
-    if (unit == undefined)  throw new TypeError(`${measure} has no known unit.`)
+    if (unit == undefined) throw new TypeError(`${measure} has no known unit.`)
 
     return unit;
   }

@@ -274,7 +274,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -321,7 +321,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -408,7 +408,7 @@ export interface components {
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -434,7 +434,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -497,7 +497,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -533,7 +533,7 @@ export interface components {
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+f23ebb8
+             * @default 2.0.0a3+235d68d
              */
             apiVersion: string;
             /**
@@ -752,7 +752,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f23ebb8
+                     * @example # apiVersion: 2.0.0a3+235d68d
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -825,7 +825,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f23ebb8
+                     * @example # apiVersion: 2.0.0a3+235d68d
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -902,7 +902,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+f23ebb8
+                     * @example # apiVersion: 2.0.0a3+235d68d
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value

@@ -1,7 +1,8 @@
-import { ComponentRef, Directive, OnInit, ViewContainerRef, inject } from '@angular/core';
+import {ComponentRef, Directive, OnInit, ViewContainerRef, inject} from '@angular/core';
 import {ResultComponent} from '../ohsomeapi/result/result.component';
 import {DataService} from '../singelton-services/data.service';
 import {OqtResultComponent} from '../oqapi/result/oqt-result.component';
+import {ExtractionResultComponent} from '../extraction/result/extraction-result.component';
 
 @Directive({
   selector: '[appResultList]'
@@ -26,6 +27,9 @@ export class ResultListDirective implements OnInit {
         case 'oqtApi':
           this.createOqtComponent(result);
           break;
+        default:
+          console.log("create extraction result", result);
+          this.createExtractionComponent(result);
       }
 
     });
@@ -44,4 +48,12 @@ export class ResultListDirective implements OnInit {
     oqtResultItem.instance.boundaryType = result.boundaryType;
     oqtResultItem.instance.componentRef = oqtResultItem;
   }
+
+  private createExtractionComponent(result) {
+    const extractionResultItem = this.container.createComponent(ExtractionResultComponent, {index: 0});
+    // oqtResultItem.instance.formValues = result.formValues;
+    // oqtResultItem.instance.boundaryType = result.boundaryType;
+    extractionResultItem.instance.componentRef = extractionResultItem;
+  }
+
 }

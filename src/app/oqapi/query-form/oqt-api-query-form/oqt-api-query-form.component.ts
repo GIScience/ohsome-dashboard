@@ -1,4 +1,15 @@
-import {Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Renderer2, ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2
+} from '@angular/core';
 import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
@@ -15,15 +26,15 @@ import {
 } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
 import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
 import {KeyValuePipe} from '@angular/common';
-import Utils from '../../../../utils';
+import {form, FormField} from '@angular/forms/signals';
 
 @Component({
   selector: 'app-oqt-api-query-form',
   templateUrl: './oqt-api-query-form.component.html',
   styleUrls: ['./oqt-api-query-form.component.css'],
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent, FormField]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
@@ -32,8 +43,16 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   protected renderer = inject(Renderer2);
   protected urlHashParamsProviderService = inject(UrlHashParamsProviderService);
 
+  //new
+  qualityFormModel = this.stateService.qualityFormModel;
+  qualityForm = form(this.qualityFormModel);
+
+  //new
+
   hashParamsSignal = computed(() => this.urlHashParamsProviderService.currentHashParams());
-  hashParams = this.hashParamsSignal();
+
+  //init sub form inputs
+  hashParams = this.stateService.initialHashParams;
 
 
   @Output() changeIndicatorCoverages = new EventEmitter<Userlayer[]>()
@@ -53,7 +72,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
-  private defaultCheckedIndicators: string[] = ['mapping-saturation'];
+  public defaultCheckedIndicators: string[] = ['mapping-saturation'];
 
   //Quality Dimensions
   public qualityDimensions: Record<string, RawQualityDimensionMetadata>;
@@ -61,42 +80,50 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   public currentQualityDimensions: Set<string> = new Set();
 
   // Set values from Permalink
-  // topic
-  topicParamSignal = computed(() => {
-    const topicParam = this.hashParamsSignal().get('topic');
-    return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Utils.loadEnv('defaultTopicKey',Object.keys(this.topics)[0]) ;
-  });
+  // topic //TODO get from state service
+  topicParamSignal = this.stateService.sharedFormSignals.topic
+  // topicParamSignal = computed(() => {
+  //   // const topicParam = this.hashParamsSignal().get('topic');
+  //   // const topicParam = this.stateService.appState().topic;
+  //   const topicParam = this.stateService.sharedFormSignals.topic();
+  //   // TODO check and set default in state service
+  //   return (topicParam && Object.keys(this.topics).includes(topicParam)) ? topicParam : Utils.loadEnv('defaultTopicKey',Object.keys(this.topics)[0]) ;
+  // });
 
-  // custom topic (title and filter)
-  topicTitleDefinition = computed(() => {
-    return this.hashParamsSignal().get('topic-title') ?? '';
-  });
+  // // custom topic (title and filter)
+  // topicTitleDefinition = computed(() => {
+  //   return this.hashParamsSignal().get('topic-title') ?? '';
+  // });
 
-  topicFilterDefinition = computed(() => {
-    return this.hashParamsSignal().get('topic-filter') ?? '';
-  })
+  // topicFilterDefinition = computed(() => {
+  //   return this.hashParamsSignal().get('topic-filter') ?? '';
+  // })
 
   // indicators
   indicatorsParamSignal = computed(() => {
-    return this.hashParamsSignal().get('indicators');
+    // return this.hashParamsSignal().get('indicators');
+    return this.stateService.qualityFormModel().indicators.join();
 
   });
 
   constructor() {
+    // linkField(this.qualityFormModel, 'topic', this.stateService.sharedFormSignals['topic']);
+    // linkField(this.qualityFormModel, 'topic-filter', this.stateService.sharedFormSignals['topic-filter']);
 
     effect(() => {
       console.log("1 topic", this.topicParamSignal())
       this.selectedTopicKey = this.topicParamSignal();
       // on topic change, check if a stored custom topic is available and use it
-      if (this.selectedTopicKey === "custom-topic") {
-        const appState = this.stateService.appState()
-        if (appState.customTopicTitle && appState.customTopicFilter) {
-          this.urlHashParamsProviderService.updateHashParams({
-            'topic-title': appState.customTopicTitle,
-            'topic-filter': appState.customTopicFilter,
-          })
-        }
-      }
+      // if (this.selectedTopicKey === "custom-topic") {
+      //   console.log("hello")
+      //   const appState = this.stateService.appState();
+      //   if (appState.customTopicTitle && appState.customTopicFilter) {
+      //     this.urlHashParamsProviderService.updateHashParams({
+      //       'topic-title': appState.customTopicTitle,
+      //       'topic-filter': appState.customTopicFilter,
+      //     })
+      //   }
+      // }
     });
 
     effect(() => {
@@ -105,11 +132,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     });
 
     // update appState to store custom topic init when coming form url
-    this.stateService.updatePartialState({
-        customTopicTitle: this.topicTitleDefinition(),
-        customTopicFilter: this.topicFilterDefinition()
-      }
-    )
+    // this.stateService.updatePartialState({
+    //     customTopicTitle: this.topicTitleDefinition(),
+    //     customTopicFilter: this.topicFilterDefinition()
+    //   }
+    // )
 
   }
 
@@ -209,9 +236,11 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
     this.updateIndicatorCoverages();
 
+    this.stateService.sharedFormSignals.topic.set(topicKey);
   }
 
   setIndicators(indicatorsParam: string | null) {
+    console.log(">>>>>>>set indicators", indicatorsParam);
     let indicatorValues = indicatorsParam?.split(',').filter((ele) => ele.trim() !== '');
     indicatorValues = (!indicatorValues || indicatorValues.length === 0) ? this.defaultCheckedIndicators : indicatorValues;
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
@@ -242,31 +271,71 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   }
 
-  onIndicatorToggle() {
+  onIndicatorToggle(event: { indicator: Indicator; state: boolean; }) {
+    // TODO this is a temp solution keep quality model in sync
+    // console.log('onIndicatorToggle', event);
+    this.stateService.qualityFormModel.update((old) => {
+      const indicators = new Set(old.indicators);
+      if (event.state) {
+        indicators.add(event.indicator.key)
+      }
+      else {
+        indicators.delete(event.indicator.key)
+      }
+
+      return {
+        ...old,
+        indicators: Array.from(indicators)
+      }
+    });
+    //end temp solution
+
     this.updateIndicatorCoverages();
   }
 
   setCustomTopicTitleDefinition(title: string) {
-    this.urlHashParamsProviderService.updateHashParam('topic-title', title);
-    this.stateService.updatePartialState({'customTopicTitle': title});
+    // this.urlHashParamsProviderService.updateHashParam('topic-title', title);
+    // this.stateService.updatePartialState({'customTopicTitle': title});
+    // this.stateService.sharedFormSignals.topic.set(title);
+    this.qualityForm['topic-title']().value.set(title);
   }
 
-  setCustomTopicFilterDefinition(filter: string) {
-    this.urlHashParamsProviderService.updateHashParam('topic-filter', filter);
-    this.stateService.updatePartialState({'customTopicFilter': filter});
-    this.topics[this.selectedTopicKey].filter = filter;
+  // setCustomTopicFilterDefinition(filter: string) {
+  //   this.urlHashParamsProviderService.updateHashParam('topic-filter', filter);
+  //   this.stateService.updatePartialState({'customTopicFilter': filter});
+  //   //stored filter to 'custom-topic' todo remove
+  //   this.topics[this.selectedTopicKey].filter = filter;
+  // }
+
+  protected setCustomTopic() {
+    // this.extractionForm.topic().value.set('custom-topic');
+    this.qualityFormModel.update((old) => {
+      const oldTopic = this.topics[old.topic];
+      return {
+        ...old,
+        topic: 'custom-topic',
+        "topic-title": oldTopic.name,
+        "topic-filter": oldTopic.filter
+      }
+    });
   }
 
-  setCustomTopic() {
-    let customTopic = {
-      "topic": "custom-topic",
-      "topic-title": this.topics[this.selectedTopicKey].name,
-      "topic-filter": this.topics[this.selectedTopicKey].filter
-    }
-    this.urlHashParamsProviderService.updateHashParams(customTopic);
-    this.stateService.updatePartialState({
-      customTopicTitle: customTopic['topic-title'],
-      customTopicFilter: customTopic['topic-filter'],
-    })
-  }
+  // setCustomTopic() {
+  //   let customTopic = {
+  //     "topic": "custom-topic",
+  //     "topic-title": this.topics[this.selectedTopicKey].name,
+  //     "topic-filter": this.topics[this.selectedTopicKey].filter
+  //   }
+  //   //TODO remove hash param update and handle through service and in hashparam service
+  //   // this.urlHashParamsProviderService.updateHashParams(customTopic);
+  //   this.stateService.sharedFormSignals['topic-title'].set(customTopic['topic-title']);
+  //   this.stateService.sharedFormSignals['topic-filter'].set(customTopic['topic-filter']);
+  //   this.stateService.sharedFormSignals.topic.set(customTopic.topic);
+  //
+  //   // this.stateService.updatePartialState({
+  //   //   // topic: customTopic['topic'],
+  //   //   customTopicTitle: customTopic['topic-title'],
+  //   //   customTopicFilter: customTopic['topic-filter'],
+  //   // })
+  // }
 }

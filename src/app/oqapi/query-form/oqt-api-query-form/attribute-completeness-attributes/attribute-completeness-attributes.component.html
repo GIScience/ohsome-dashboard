@@ -3,7 +3,7 @@
 <div class="editable-attributes">
   @if (!useCustomFilterMode()) {
     <div class="field">
-      <app-sui-multi-select-search-dropdown required
+      <app-sui-multi-select-search-dropdown [required]="true"
                                             [multiple]="true"
                                             id="search-select-attribute"
                                             name="{{indicatorKey}}--attributes"

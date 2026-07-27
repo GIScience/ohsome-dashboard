@@ -32,7 +32,7 @@ describe('OhsomeApiv2Service', () => {
   });
 
   it('should perform a features count request', async () => {
-    const params: paths['/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
+    const params: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter: "type:node and natural=tree",
       timeSeries: {
         "start": "2026-01-01T00:00:00Z",

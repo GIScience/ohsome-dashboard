@@ -32,7 +32,37 @@
 }
 
 <div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
-  <app-query-panel></app-query-panel>
+  <!-- Query mode Menu  -->
+  q: {{ stateService.qualityFormModel() | json}} <br>
+  l: {{ stateService.legacyFormModel()  | json}}
+  <h3>Select a type of ohsome query:</h3>
+  <div class="ui three inverted labeled item tabs menu" style="background-color: #3E6184">
+
+    <a class="item" data-tab="tab-ohsome-api"
+       [ngClass]="queryModeSignal() === 'ohsomeApi' ? ['active', 'blue'] : ''"
+       (click)="this.stateService.updatePartialState({'queryMode':'ohsomeApi'})"
+       (keydown.enter)="this.stateService.updatePartialState({'queryMode':'ohsomeApi'})" tabindex="0"><i
+      class="chart bar outline icon"></i><span i18n>OSM History Stats</span></a>
+    <a class="item" data-tab="tab-oqt-api"
+       [ngClass]="queryModeSignal() === 'oqtApi' ? ['active', 'blue'] : ''"
+       (click)="this.stateService.updatePartialState({'queryMode':'oqtApi'})"
+       (keydown.enter)="this.stateService.updatePartialState({'queryMode':'oqtApi'})" tabindex="0">
+      <i class="cogs icon"></i><span i18n>OSM Quality Analyses</span></a>
+
+    <a class="item" data-tab="tab-extraction"
+       [ngClass]="queryModeSignal() === 'extraction' ? ['active', 'blue'] : ''"
+       (click)="this.stateService.updatePartialState({'queryMode':'extraction'})"
+       (keydown.enter)="this.stateService.updatePartialState({'queryMode':'extraction'})" tabindex="0">
+      <i class="download icon"></i>OSM Data Extraction</a>
+
+  </div>
+
+  @if (['ohsomeApi', 'oqtApi'].includes(queryModeSignal())) {
+    <app-query-panel></app-query-panel>
+  }
+  @if (queryModeSignal() === 'extraction') {
+    <app-extraction-query-form></app-extraction-query-form>
+  }
   <app-result-panel></app-result-panel>
 </div>
 
@@ -48,47 +78,47 @@
           contributors.</a><br>
           Base map from OpenStreetMap and OpenStreetMap Foundation.<br>
         </p>
-    </div>
-    <div class="five wide column">
-      <h3 class="header" i18n>Technology</h3>
-      <p i18n>
+      </div>
+      <div class="five wide column">
+        <h3 class="header" i18n>Technology</h3>
+        <p i18n>
           The “ohsome” OpenStreetMap History Analyzer Platform is based
           on technology <a href="https://heigit.org/technology/#osm-data" target="_blank">developed by HeiGIT</a>.
         </p>
-      <p i18n>
+        <p i18n>
           The source code for this dashboard is open source (GPL-3.0) and <a
           href="https://github.com/giscience/ohsome-dashboard">available on GitHub</a>.
         </p>
-    <h4 class="header" i18n>Data Analyses are powered by:</h4>
-    <div class="ui list">
-      <div class="item">OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
-      API</a> (AGPL-3.0)
-    </div>
-    <div class="item"> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
-    target="_blank">ohsome quality API</a> (AGPL-3.0)
-  </div>
-</div>
-</div>
-<div class="five wide column">
-  <h3 class="header" i18n>Contact</h3>
-  <p i18n>
+        <h4 class="header" i18n>Data Analyses are powered by:</h4>
+        <div class="ui list">
+          <div class="item">OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
+            API</a> (AGPL-3.0)
+          </div>
+          <div class="item"> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
+                                                      target="_blank">ohsome quality API</a> (AGPL-3.0)
+          </div>
+        </div>
+      </div>
+      <div class="five wide column">
+        <h3 class="header" i18n>Contact</h3>
+        <p i18n>
           HeiGIT gGmbH<br>
           Heidelberg, Germany<br>
           Email: <a href="mailto:ohsome@heigit.org">ohsome&#64;heigit.org</a><br>
           Web: <a href="https://ohsome.org" target="_blank">ohsome.org</a>
         </p>
-</div>
-</div>
-<div class="ui horizontal divider"></div>
-<div class="ui stackable equal width center aligned padded grid">
-  <div class="column">&copy; {{ currentYear }} HeiGIT gGmbH</div>
-</div>
-<div class="ui stackable equal width center aligned padded grid">
-  <div class="column" i18n>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
+      </div>
+    </div>
+    <div class="ui horizontal divider"></div>
+    <div class="ui stackable equal width center aligned padded grid">
+      <div class="column">&copy; {{ currentYear }} HeiGIT gGmbH</div>
+    </div>
+    <div class="ui stackable equal width center aligned padded grid">
+      <div class="column" i18n>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
         &middot; ohsome-quality-API: {{ oqtApiVersion }}
       </div>
-</div>
-</div>
+    </div>
+  </div>
 </div>
 
 <app-welcome></app-welcome>

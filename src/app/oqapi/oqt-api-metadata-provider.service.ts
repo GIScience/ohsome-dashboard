@@ -15,6 +15,10 @@ export class OqtApiMetadataProviderService {
   oqtAttributes: AttributeResponseJSON;
   public oqtApiAvailable = false;
 
+  constructor() {
+    console.log("OqtApiMetadataProviderService constructor");
+  }
+
   getOqtApiMetadata(): MetadataResponseJSON {
     return this.oqtMetadataResponse;
   }

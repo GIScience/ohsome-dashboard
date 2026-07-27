@@ -1,8 +1,7 @@
 /// <reference types="@angular/localize" />
-import {importProvidersFrom, inject, provideAppInitializer} from "@angular/core";
+import {importProvidersFrom, inject, provideAppInitializer, provideEnvironmentInitializer} from "@angular/core";
 import {bootstrapApplication, BrowserModule} from '@angular/platform-browser';
 import {StateService} from "./app/singelton-services/state.service";
-import {UrlHashParamsProviderService} from "./app/singelton-services/url-hash-params-provider.service";
 import {OhsomeApiMetadataProviderService} from "./app/ohsomeapi/ohsome-api-metadata-provider.service";
 import {OqtApiMetadataProviderService} from "./app/oqapi/oqt-api-metadata-provider.service";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
@@ -17,21 +16,25 @@ import {
   oqtApiMetadataProviderFactory,
   preparePrismToRenderOhsomeFilterLangauge,
   translationsInitializerFactory,
-  urlHashParamsProviderFactory
 } from './app-initializers';
 import {authInterceptor} from './app/interceptors/auth.interceptor';
 import {timeoutInterceptor} from './app/interceptors/timeout.interceptor';
+import {setHashParamsFromUrl} from './env-initializers';
 
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, OshdbModule, OqtModule),
-    provideAppInitializer(() => {
-      const initializerFn = (translationsInitializerFactory)(inject(StateService));
+    provideEnvironmentInitializer(()=>{
+      const initializerFn = (setHashParamsFromUrl)(inject(StateService));
       return initializerFn();
     }),
+    // provideAppInitializer(() => {
+    //   const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
+    //   return initializerFn();
+    // }),
     provideAppInitializer(() => {
-      const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
+      const initializerFn = (translationsInitializerFactory)(inject(StateService));
       return initializerFn();
     }),
     provideAppInitializer(() => {

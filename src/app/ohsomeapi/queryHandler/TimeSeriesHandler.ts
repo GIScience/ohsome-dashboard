@@ -7,6 +7,7 @@ import Utils from '../../../utils';
 import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../shared/ohsome-api-v2-types';
+import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 
 
 export interface QueryHandler<TResponse> {
@@ -61,7 +62,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
     return api.features(formValues.measure, body);
   },
 
-  toInputs(response, formValues) {
+  toInputs(response, formValues): {plotlyDataLayoutConfig: PlotlyDataLayoutConfig} {
 
     let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
@@ -77,6 +78,15 @@ export const timeSeriesHandler: QueryHandler<any> = {
           }
         ],
         layout: {
+          hovermode: 'x',
+          xaxis: {
+            showspikes: true,            // Enable the spike line
+            spikemode: 'across+marker',  // Draw across plot area AND show target marker
+            spikesnap: 'data',         // Snap the line directly to your mouse pointer
+            spikethickness: 1,           // Width of the line in pixels
+            spikecolor: '#ff0000',       // Color of the line
+            spikedash: 'dash'
+          },
           yaxis: {
             title: {
               text: yAxisText

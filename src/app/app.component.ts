@@ -4,25 +4,26 @@ import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
-import {NgClass} from '@angular/common';
+import {JsonPipe, NgClass} from '@angular/common';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-
+import {ExtractionQueryFormComponent} from './extraction/query-form/extraction-query-form.component';
 
 declare const $: any;
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, ExtractionQueryFormComponent, JsonPipe]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  protected stateService = inject(StateService);
 
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
@@ -32,15 +33,15 @@ export class AppComponent implements AfterViewInit {
   protected readonly frontendVersion: string = packageJson.version;
   protected readonly ohsomeApiVersion: string;
   protected readonly oqtApiVersion: string;
+  readonly queryModeSignal = this.stateService.queryModeSignal;
 
-  protected stateService = inject(StateService);
 
   constructor() {
+    console.log("AppComponent constructor");
     this.hasAnnouncement = this.ohsomeApiMetadataProviderService.hasOhsomeApiAnnouncement();
     this.announcement = this.ohsomeApiMetadataProviderService.getOhsomeApiAnnouncement();
     this.ohsomeApiVersion = this.ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.apiVersion ?? '';
     this.oqtApiVersion = this.oqtApiMetadataProviderService.getOqtApiMetadata()?.apiVersion ?? '';
-    this.stateService.updatePartialState({showWelcomeScreen: this.urlHashParamsProviderService.getHashURLSearchParams().size === 0});
   }
 
   ngAfterViewInit(): void {
@@ -49,7 +50,7 @@ export class AppComponent implements AfterViewInit {
     // initialize the language menu
     $('app-root #languageSelector').dropdown({
       selectOnKeydown: false,
-      onChange: (language)=>this.switchLanguage(language)
+      onChange: (language) => this.switchLanguage(language)
     });
   }
 
@@ -65,7 +66,7 @@ export class AppComponent implements AfterViewInit {
 
   switchLanguage(selectedLanguage: string): void {
     localStorage.setItem('locale', selectedLanguage)
-    location.href = `../${selectedLanguage}/#${this.urlHashParamsProviderService.currentHashParams().toString()}`;
+    location.href = `../${selectedLanguage}/#${this.urlHashParamsProviderService.getHashURLSearchParams().toString()}`;
   }
 
 }
