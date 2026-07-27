@@ -19,10 +19,7 @@ export class UrlHashParamsProviderService {
     switch (backend) {
       case "ohsomeApi":
       case "oqtApi":
-        console.log("URLPARAMS: Legacy", legacyForm)
-
         activeForm = {...qualityForm, ...legacyForm};
-        console.log("ActiveForm", activeForm);
         break;
       case "extraction":
         activeForm = extractionForm;
@@ -31,9 +28,14 @@ export class UrlHashParamsProviderService {
     //exclude empty url params
     for (const key of Object.keys(activeForm)) {
       const value = activeForm[key];
-      if (value === null || value === undefined || value === '') {
-        delete activeForm[key];
-      }
+        if (value === null || value === undefined || value === '') {
+          delete activeForm[key];
+        }
+    }
+    // exclude custom params if regular topic
+    if (activeForm.topic !== 'custom-topic') {
+      delete activeForm['topic-title'];
+      delete activeForm['topic-filter'];
     }
 
     //hash params
@@ -61,14 +63,6 @@ export class UrlHashParamsProviderService {
 
     effect(() => {
       this.setHashParams(this.relevantState())
-      // const backend = this.relevantState().queryMode;
-      //
-      // this.updateHashParams({
-      //   backend: backend,
-      //   topic: this.stateService.sharedFormSignals.topic(),
-      //   "topic-title": this.relevantState().customTopicTitle,
-      //   "topic-filter": this.relevantState().customTopicFilter,
-      // })
     });
   }
 
@@ -77,17 +71,11 @@ export class UrlHashParamsProviderService {
   });
   public readonly currentHashParams = this._currentHashParams.asReadonly();
 
-  // updateHashParamsStoreFromUrl() {
-  //   this._currentHashParams.update(() => new URLSearchParams(globalThis.location.hash.slice(1)));//.toLowerCase());
-  // }
-
-
   private initHashParamsStore() {
     this._currentHashParams.set(new URLSearchParams(this.stateService.initialHashParams));
   }
 
   getHashURLSearchParams() {
-    // if (this._currentHashParams().size === 0) this.updateHashParamsStoreFromUrl();
     return this._currentHashParams();
   }
 
