@@ -48,7 +48,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Aggregate features by {measure} as time series. */
+        /**
+         * Aggregate features by {measure} as time series.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. You can not derive statistics for all other relations.
+         */
         post: operations["post_features_as_json_stats_features__measure__json_post"];
         delete?: never;
         options?: never;
@@ -169,9 +172,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Download features.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
+        get: operations["get_contributions_extract_extraction_features_parquet_get"];
         put?: never;
-        /** Download features. */
+        /**
+         * Download features.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
         post: operations["post_contributions_extract_extraction_features_parquet_post"];
         delete?: never;
         options?: never;
@@ -186,10 +196,41 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Download features.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
+        get: operations["get_contributions_extract_arrow_extraction_features_arrow_get"];
         put?: never;
-        /** Download features. */
+        /**
+         * Download features.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
         post: operations["post_contributions_extract_arrow_extraction_features_arrow_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/extraction/collections.parquet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download collections.
+         * @description Returns relations (not tagged as `type=multipolygon` or `type=boundary`) as geometry collections. For each relation a separate row is returned for their linear, polygonal or point members
+         */
+        get: operations["get_features_collections_extract_extraction_collections_parquet_get"];
+        put?: never;
+        /**
+         * Download collections.
+         * @description Returns relations (not tagged as `type=multipolygon` or `type=boundary`) as geometry collections. For each relation a separate row is returned for their linear, polygonal or point members
+         */
+        post: operations["post_features_collections_extract_extraction_collections_parquet_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -230,6 +271,38 @@ export interface components {
              */
             text: string;
         };
+        /** CollectionsExtractionRequestParametersModel */
+        CollectionsExtractionRequestParametersModel: {
+            /**
+             * Clip
+             * @description Whether to clip extracted features with AOI or not.
+             * @default true
+             */
+            clip: boolean;
+            /**
+             * Timestamp
+             * @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp.
+             * @default latest
+             * @example latest
+             * @example 2026-04-17T00:00:00Z
+             */
+            timestamp: string | "latest";
+            /**
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
+             * @example type:relation and type=route and route=bus and service=night
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+        };
         /** ExtractionRequestParametersModel */
         ExtractionRequestParametersModel: {
             /**
@@ -255,12 +328,12 @@ export interface components {
              * Aoi
              * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
              */
-            aoi: (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | [
+            aoi: [
                 number,
                 number,
                 number,
                 number
-            ] | string;
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
         };
         /** FilterRequestModel */
         FilterRequestModel: {
@@ -274,7 +347,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -307,21 +380,21 @@ export interface components {
         /** Metadata */
         Metadata: {
             /**
-             * Latesttimestamp
+             * Start
              * Format: date-time
              */
-            latestTimestamp: string;
+            start: string;
             /**
-             * Earliesttimestamp
+             * End
              * Format: date-time
              */
-            earliestTimestamp: string;
+            end: string;
         };
         /** MetadataResponseModel */
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -408,7 +481,7 @@ export interface components {
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -434,7 +507,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -497,7 +570,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -522,18 +595,18 @@ export interface components {
              * Aoi
              * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
              */
-            aoi: (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | [
+            aoi: [
                 number,
                 number,
                 number,
                 number
-            ] | string;
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
         };
         /** TimeBinsResponseModel */
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a3+235d68d
+             * @default 2.0.0a5+5cc2f7b
              */
             apiVersion: string;
             /**
@@ -581,12 +654,12 @@ export interface components {
              * Aoi
              * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
              */
-            aoi: (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | [
+            aoi: [
                 number,
                 number,
                 number,
                 number
-            ] | string;
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
         };
         /** ValidationError */
         ValidationError: {
@@ -752,7 +825,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+235d68d
+                     * @example # apiVersion: 2.0.0a5+5cc2f7b
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -825,7 +898,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+235d68d
+                     * @example # apiVersion: 2.0.0a5+5cc2f7b
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -902,7 +975,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a3+235d68d
+                     * @example # apiVersion: 2.0.0a5+5cc2f7b
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -910,6 +983,42 @@ export interface operations {
                      */
                     "text/csv": string;
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_contributions_extract_extraction_features_parquet_get: {
+        parameters: {
+            query: {
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
+                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
+                timestamp?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                filter: components["schemas"]["OhsomeFilter"];
+                /** @description Area of interest as Bounding Box. */
+                aoi: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -953,6 +1062,42 @@ export interface operations {
             };
         };
     };
+    get_contributions_extract_arrow_extraction_features_arrow_get: {
+        parameters: {
+            query: {
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
+                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
+                timestamp?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                filter: components["schemas"]["OhsomeFilter"];
+                /** @description Area of interest as Bounding Box. */
+                aoi: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     post_contributions_extract_arrow_extraction_features_arrow_post: {
         parameters: {
             query?: never;
@@ -963,6 +1108,73 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ExtractionRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_features_collections_extract_extraction_collections_parquet_get: {
+        parameters: {
+            query: {
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
+                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
+                timestamp?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                filter: components["schemas"]["OhsomeFilter"];
+                /** @description Area of interest as Bounding Box. */
+                aoi: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_features_collections_extract_extraction_collections_parquet_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionsExtractionRequestParametersModel"];
             };
         };
         responses: {
