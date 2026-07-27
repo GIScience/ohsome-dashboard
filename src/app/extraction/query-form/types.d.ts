@@ -1,3 +1,5 @@
+import {AOIData} from '../../shared/components/aoi-input/aoi-input.component';
+
 interface SharedFormData {
   topic: string;
   "topic-title": string;
@@ -5,7 +7,7 @@ interface SharedFormData {
 }
 
 interface ExtractionFormData extends SharedFormData {
-  aoi: string;
+  aoi: AOIData;
   clip: boolean;
   timestamp: string;
 }

@@ -1,5 +1,5 @@
 import {Component, computed, inject} from '@angular/core';
-import {form, FormField, submit} from '@angular/forms/signals';
+import {form, FormField, required, submit, validate} from '@angular/forms/signals';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provider.service';
 import {FormsModule} from '@angular/forms';
@@ -12,6 +12,9 @@ import {StateService} from '../../singelton-services/state.service';
 import {OhsomeApiMetadataProviderService} from '../../ohsomeapi/ohsome-api-metadata-provider.service';
 import {ExtractionFormData} from './types';
 import Utils from '../../../utils';
+import {BoundaryInputComponent} from '../../shared/components/boundary-input/boundary-input.component';
+import {BoundaryInputComponentOptions} from '../../shared/shared-types';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-extraction-query-form',
@@ -20,7 +23,8 @@ import Utils from '../../../utils';
     FormField,
     KeyValuePipe,
     SuiMultiSelectSearchDropdownComponent,
-    FormsModule
+    FormsModule,
+    BoundaryInputComponent
   ],
   templateUrl: './extraction-query-form.component.html',
   styleUrl: './extraction-query-form.component.css',
@@ -38,7 +42,16 @@ export class ExtractionQueryFormComponent {
   // this info survives component recreation in state service
   extractionFormModel = this.stateService.extractionFormModel;
 
-  extractionForm = form(this.extractionFormModel);
+  extractionForm = form(this.extractionFormModel, (schemaPath)=>{
+    required(schemaPath.aoi);
+    validate(schemaPath.aoi, ({ value }) => {
+      console.log("VALIDATOR", value());
+      const numberOfShapes = value().toString().split('|').length;
+      return numberOfShapes !== 1
+        ? { kind: 'singleBboxRequired', message: 'A single bounding box is required.' }
+        : null;
+    });
+  });
 
   protected boundaryType: string;
 
@@ -55,22 +68,13 @@ export class ExtractionQueryFormComponent {
     return this.extractionFormModel()['topic-filter'];
   });
 
+  protected mapOptions: BoundaryInputComponentOptions = {
+    center: environment.mapCenter ?? {lat: 0, lng: 0},
+    zoom: environment.zoomLevel ?? 5,
+  };
+
   constructor() {
     console.log("Extraction Query Form constructor");
-
-    //set shared form fields
-    // linkField(this.extractionFormModel, 'topic', this.stateService.sharedFormSignals['topic']);
-    // Derive filter from topic and push it into the form model
-    // derivedField(this.extractionFormModel, 'topic-filter', this.filterFromTopic);
-
-    // effect(() => {
-    //   const topic = this.extractionFormModel().topic;
-    //   if (topic !== 'custom-topic') {
-    //     console.log("effect extraction query", topic);
-    //     const filter = this.ohsomeQualityApiMetadataProviderService.getOqtApiMetadata().result.topics[topic].filter;
-    //     this.extractionFormModel.update((old) => ({...old, "topic-filter": filter}));
-    //   }
-    // });
   }
 
   onSubmit(event: Event) {
@@ -91,7 +95,7 @@ export class ExtractionQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: '',
+      aoi: initialHashParams.get('aoi') ?? '',
       clip: initialHashParams.get('clip')?.toLowerCase() !== "false", //only "true" is true
       timestamp: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
     }

@@ -72,8 +72,12 @@
 
     <!--column 2-->
     <div id="col2" class="eight wide tablet ten wide computer column">
-      <h4 class="ui header" i18n>Area of interest</h4>
-
+      <h4 class="ui header" i18n>Area of interest: Choose a bounding box</h4>
+      <app-boundary-input
+                          [interactionType]="'bbox'"
+                          [options]="mapOptions"
+                          [formField]="extractionForm.aoi">
+      </app-boundary-input>
     </div>
   </div>
 
