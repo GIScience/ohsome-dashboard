@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+#grid-container{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  div {
+    display: flex;
+    flex: 1 1 auto;
+  }
+}
