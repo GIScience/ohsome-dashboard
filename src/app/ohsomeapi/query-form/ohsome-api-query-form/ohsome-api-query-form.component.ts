@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
 import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {environment} from '../../../../environments/environment';
 import Utils from '../../../../utils';
@@ -6,8 +6,6 @@ import {OhsomeApiMetadataProviderService} from '../../ohsome-api-metadata-provid
 import {DatePipe} from '@angular/common';
 import {TimePeriodPickerInputComponent} from '../time-period-picker-input/time-period-picker-input.component';
 import {NgDatePipesModule} from 'ngx-pipes';
-
-declare const $: any;
 
 @Component({
   selector: 'app-ohsome-api-query-form',
@@ -57,8 +55,8 @@ export class OhsomeApiQueryFormComponent implements OnInit/*, AfterViewInit*/ {
   public groupByValues: string;
 
   constructor() {
-    this.minDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.fromTimestamp ?? "";
-    this.maxDate = this.metadataProvider.getOhsomeMetadataResponse()?.extractRegion.temporalExtent.toTimestamp ?? "";
+    this.minDate = this.metadataProvider.getOhsomeMetadataResponse()?.temporalExtent?.start ?? "";
+    this.maxDate = this.metadataProvider.getOhsomeMetadataResponse()?.temporalExtent?.end ?? "";
     this.start = Utils.loadEnv('startDate', '');
     this.end = Utils.loadEnv('endDate', this.maxDate);
     this.period = Utils.loadEnv('period', this.period);

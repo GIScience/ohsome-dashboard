@@ -12,7 +12,6 @@ import {NgClass, ViewportScroller} from '@angular/common';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
 import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
-import {OhsomeApi} from '@giscience/ohsome-js-utils';
 import {featureCollection} from '@turf/helpers';
 import Utils from '../../../utils';
 import {SafeUrl} from '@angular/platform-browser';

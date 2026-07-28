@@ -3,6 +3,8 @@
 // `ng build --configuration=production` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `angular.json`.
 
+import bboxPolygon from '@turf/bbox-polygon';
+
 export const environment = {
   production: false,
 
@@ -31,6 +33,7 @@ export const environment = {
   zoomLevel : 10,
   mapCenter : {lat: 49.41, lng: 8.68},
   mapCenterFromPoly : false,
+  maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
   // boundaryType : 'admin',
   // bpolys : 'Cyclone Idai Region:35.2880804,-20.7920609,35.0134222,-20.1075181,' +
   //   '39.4518933,-17.1617754,38.6389050,-15.4324902,' +

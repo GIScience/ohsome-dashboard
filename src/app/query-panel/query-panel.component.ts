@@ -68,7 +68,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     return isQueryMode(backendParam) ? backendParam : 'ohsomeApi';
   });
 
-  public readonly hashParams: URLSearchParams;
+  public readonly initialHashParams: URLSearchParams;
 
   // default map settings
   public maskPoly;
@@ -87,15 +87,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   private _selectedNames: string[] = [];
 
-  // public activeQueryMode: QueryMode = 'ohsomeApi';
-
   private formChangesSubscription: Subscription;
 
   constructor() {
-    const spatialExtent = this.ohsomeApiMetadataProviderService
-        .getOhsomeMetadataResponse()
-        ?.extractRegion.spatialExtent
-      ?? bboxPolygon([-180, -90, 180, 90]).geometry;
+    const spatialExtent = environment.maskPoly ?? bboxPolygon([-180, -90, 180, 90]).geometry;
     this.maskPoly = feature(spatialExtent);
 
 
@@ -110,18 +105,13 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     //precedence: hashParams over environment over default
 
     // settings from URL hashparams
-    // this.hashParams = this.urlHashParamsProviderService.getHashURLSearchParams();
-    this.hashParams = this.stateService.initialHashParams;
-    console.log("QP constructor hashParams: " + this.hashParams);
-
-    // settings from URL hashparams: activate the correct query panel (ohsome or quality API)
-    const backendValue = this.hashParams.get('backend');
-    // this.activeQueryMode = (backendValue === 'ohsomeApi' || backendValue === 'oqtApi') ? backendValue : 'ohsomeApi';
+    this.initialHashParams = this.stateService.initialHashParams;
+    console.log("QP constructor hashParams: " + this.initialHashParams);
 
     // settings from hash: map setttings for ohsomeApi AND oqtApi
-    this.bboxes = Utils.getFromParamsOrDefault(this.hashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
-    this.bpolys = Utils.getFromParamsOrDefault(this.hashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
-    this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
+    this.bboxes = Utils.getFromParamsOrDefault(this.initialHashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
+    this.bpolys = Utils.getFromParamsOrDefault(this.initialHashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
+    this._boundaryType = this.getBoundaryTypeFromHashParams(this.initialHashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
 
     this.mapOptions = {
       center: this.mapCenter,
@@ -132,7 +122,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       userDefinedPolygonLayers: this.userDefinedPolygonLayers
     }
 
-    const ids = this.hashParams.get('adminids')?.split(',').map(Number);
+    const ids = this.initialHashParams.get('adminids')?.split(',').map(Number);
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
       .subscribe({
         next: (featureCollectionOrEmpty: string) => {
