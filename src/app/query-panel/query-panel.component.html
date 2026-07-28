@@ -42,7 +42,7 @@
       <div class="ui tab secondary segment" data-tab="tab-ohsome-api"
            [ngClass]="queryModeSignal() === 'ohsomeApi' ? 'active' : ''">
         @if (queryModeSignal() === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-          <app-ohsome-api-query-form [hashParams]=hashParams></app-ohsome-api-query-form>
+          <app-ohsome-api-query-form [hashParams]=initialHashParams></app-ohsome-api-query-form>
         }
         @if (queryModeSignal() === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
           <div class="ui one column grid">
