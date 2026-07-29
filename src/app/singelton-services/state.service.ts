@@ -9,6 +9,7 @@ import {linkField} from '../shared/utils/form.utils';
 interface StateParams {
   showWelcomeScreen: boolean;
   welcomeTab: string;
+  firstForm: boolean;
   appLanguage: string;
   queryMode: QueryMode;
 }
@@ -40,6 +41,7 @@ export class StateService {
       "topic-title": '',
       "topic-filter": '',
       "indicators": Utils.getFromParamsOrDefault(this.initialHashParams, 'indicators', ['mapping-saturation']),
+      "adminids": Utils.getFromParamsOrDefault(this.initialHashParams, 'adminids', ''),
     },
     {
       equal: (a, b) => {
@@ -51,10 +53,11 @@ export class StateService {
   private readonly initialState: StateParams = {
     showWelcomeScreen: false,
     welcomeTab: 'intro',
+    firstForm: true,
     appLanguage: 'en',
     queryMode: StateService.getInitialQueryMode(this.initialHashParams),
-
   };
+
   // Private signal to hold the current state
   private readonly _appState = signal<StateParams>(
     this.initialState,

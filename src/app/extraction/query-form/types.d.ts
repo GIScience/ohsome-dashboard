@@ -14,6 +14,7 @@ interface ExtractionFormData extends SharedFormData {
 
 interface QualityFormData extends SharedFormData {
   indicators: string[];
+  adminids: string;
 }
 
 export {

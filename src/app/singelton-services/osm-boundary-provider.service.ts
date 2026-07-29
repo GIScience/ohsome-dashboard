@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpContext} from '@angular/common/http';
 import {FeatureCollection} from 'geojson';
@@ -21,13 +21,13 @@ export class OsmBoundaryProviderService {
 
     const idList = ids.join(',');
     const url = `${OHSOME_BOUNDARY_WFS_URL}&CQL_FILTER="id" IN (${idList})`;
-    return this.http.get<FeatureCollection>(url,{
+    return this.http.get<FeatureCollection>(url, {
       context: new HttpContext().set(SKIP_AUTH, true)
     }).pipe(map(featureCollection => {
-      featureCollection.features.forEach( (feature, index)=> {
+      featureCollection.features.forEach((feature, index) => {
         feature['id'] += '-_-' + (feature.properties?.['display_name'] || `area${index}`).replace(/ /g, '__');
       });
-      return JSON.stringify(featureCollection)
+      return JSON.stringify(featureCollection);
     }));
   }
 }

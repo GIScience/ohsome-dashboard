@@ -5,7 +5,7 @@ import {
   computed,
   inject,
   OnDestroy,
-  OnInit,
+  OnInit, signal,
   ViewChild
 } from '@angular/core';
 import {FormsModule, NgForm} from '@angular/forms';
@@ -79,7 +79,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   public bboxes = '';
   public bcircles = '';
   public bpolys = '';
-  private _adminBoundaries = ''; //contains the current FeatureCollection from ngModel
+  protected adminBoundaries = signal<string>(''); //contains the current FeatureCollection from ngModel
+  //TODO shoud be stored in app state
   private _boundaryType: BoundaryType = 'admin';
   public userDefinedPolygonLayers: Userlayer[] = [];
 
@@ -126,15 +127,17 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
       .subscribe({
         next: (featureCollectionOrEmpty: string) => {
-          this.adminBoundaries = featureCollectionOrEmpty;
+          this.adminBoundaries.set(featureCollectionOrEmpty);
 
           // immediately trigger the query if there are hashparams
-          if (window.location.hash) {
+          if (this.stateService.appState().firstForm) {
+            this.stateService.updatePartialState({firstForm: false});
             setTimeout(() => {
+              console.log("FORM VALID", this.form.form.valid)
               if (this.form.form.valid) {
                 this.onSubmit();
               }
-            });
+            }, 1000);
           }
         }
       });
@@ -199,14 +202,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.zoom = this.mapInput.map.getZoom();
     this.mapOptions = {...this.mapOptions, center: this.mapInput.map.getCenter(), zoom: this.mapInput.map.getZoom()};
     this._boundaryType = value;
-  }
-
-  get adminBoundaries(): string {
-    return this._adminBoundaries;
-  }
-
-  set adminBoundaries(value: string) {
-    this._adminBoundaries = value;
   }
 
   get selectedNames(): string[] {
@@ -293,12 +288,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   removeAdminBoundary(event: MouseEvent) {
     const featureIndex = event.currentTarget?.['dataset']['featureIndex'];
-    const featureCollection = JSON.parse(this.adminBoundaries);
+    const featureCollection = JSON.parse(this.adminBoundaries());
     featureCollection.features.splice(featureIndex, 1);
     if (featureCollection.features.length === 0) {
-      this.adminBoundaries = '';
+      this.adminBoundaries.set('');
     } else {
-      this.adminBoundaries = JSON.stringify(featureCollection);
+      this.adminBoundaries.set(JSON.stringify(featureCollection));
     }
 
   }
@@ -309,7 +304,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
 
     if (this.boundaryType === 'admin') {
-      this.adminBoundaries = '';
+      this.adminBoundaries.set('');
     }
 
     this.form.controls['bboxes']?.setValue('');

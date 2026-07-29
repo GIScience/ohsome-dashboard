@@ -76,10 +76,19 @@ export class ExtractionQueryFormComponent {
 
   constructor() {
     console.log("Extraction Query Form constructor");
+    // immediately trigger the query if there are hashparams
+    if (this.stateService.appState().firstForm) {
+      this.stateService.updatePartialState({firstForm: false});
+      setTimeout(() => {
+        if (this.extractionForm().valid()) {
+          this.onSubmit(null);
+        }
+      }, 1000);
+    }
   }
 
-  async onSubmit(event: Event) {
-    event.preventDefault();
+  async onSubmit(event: Event | null) {
+    event?.preventDefault();
     const mapDataUrl = await this.getImageUrlFromMap();
 
     const formValues = {...this.extractionForm().value(), mapDataUrl};
