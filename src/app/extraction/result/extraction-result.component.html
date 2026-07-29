@@ -15,6 +15,7 @@
               {{ topics[formValues().topic].name }}
             </span>
       }
+      <div class="ui item"><i class="clock icon"></i>{{ utcTimestamp() }} ({{ utcIsoTimestamp() }})</div>
 
 
       <!--      @if (formValues['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {-->
@@ -62,7 +63,7 @@
   </div>
 </div>
 
-<div class="ui bottom attached segment">
+<div class="result ui bottom attached segment">
   <div class="ui grid">
     <!--    <div class="four wide column">-->
 
@@ -77,14 +78,16 @@
       <div class="ui centered stackable cards">
         <div class="card">
           <div class="ui image aoi-thumbnail">
-            <img [src]="formValues()['mapDataUrl']">
+            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">
           </div>
         </div>
 
         <div class="card">
           <div class="content">
+            <!--            TODO store logos locally-->
             <div class="center aligned header">Geo <img class="tiny ui image"
-                                                        src="https://www.apache.org/logos/res/parquet/default.png">
+                                                        src="https://www.apache.org/logos/res/parquet/default.png"
+                                                        alt="Apache Parquet Logo">
             </div>
             <div class="center aligned meta">Storage, Exchange & Analysis</div>
             <div class="description">
@@ -97,15 +100,17 @@
                target="_blank"><i
               class="download icon"></i>Download Parquet</a>
           </div>
-<!--          <a class="ui bottom attached blue button" [href]="getDownloadUrl('parquet')" download="result.parquet"-->
-<!--             target="_blank"><i-->
-<!--            class="download icon"></i>Download Parquet</a>-->
+          <!--          <a class="ui bottom attached blue button" [href]="getDownloadUrl('parquet')" download="result.parquet"-->
+          <!--             target="_blank"><i-->
+          <!--            class="download icon"></i>Download Parquet</a>-->
         </div>
 
         <div class="card">
           <div class="content">
+            <!--            TODO store logos locally-->
             <div class="center aligned header">Geo <img class="tiny ui image"
-                                                        src="https://www.apache.org/logos/res/arrow/arrow.png"></div>
+                                                        src="https://www.apache.org/logos/res/arrow/arrow.png"
+                                                        alt="Apache Arrow Logo"></div>
             <div class="center aligned meta">In-memory processing</div>
             <div class="description">
               Choose this if you want to stream the data directly in software like pyarrow with maximum
@@ -118,9 +123,9 @@
               class="download icon"></i>Download
               Arrow</a>
           </div>
-<!--          <a class="ui bottom attached blue button" [href]="getDownloadUrl('arrow')" download="result.arrow"><i-->
-<!--            class="download icon"></i>Download-->
-<!--            Arrow</a>-->
+          <!--          <a class="ui bottom attached blue button" [href]="getDownloadUrl('arrow')" download="result.arrow"><i-->
+          <!--            class="download icon"></i>Download-->
+          <!--            Arrow</a>-->
         </div>
       </div>
     </div>

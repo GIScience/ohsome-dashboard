@@ -1,8 +1,19 @@
-import {Component, ComponentRef, computed, inject, input, OnDestroy} from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  ComponentRef,
+  computed,
+  ElementRef,
+  HostBinding,
+  inject,
+  input,
+  OnDestroy
+} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ExtractionFormData} from '../query-form/types';
 import {paths} from '../../shared/ohsome-api-v2-types';
 import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provider.service';
+import {ViewportScroller} from '@angular/common';
 
 @Component({
   selector: 'app-extraction-result',
@@ -11,15 +22,36 @@ import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provid
   styleUrl: './extraction-result.component.css',
 })
 export class ExtractionResultComponent implements OnDestroy {
+  viewportScroller = inject(ViewportScroller);
+  elementRef = inject(ElementRef);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
   topics = this.oqtApiMetadataProviderService.getOqtApiMetadata().result.topics;
 
+  @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   componentRef: ComponentRef<ExtractionResultComponent>;
   formValues = input.required<ExtractionFormData>();
 
-  private downloadParams = computed(()=>{
+  utcIsoTimestamp = computed(() => {
+    return this.formValues().timestamp + 'Z';
+  })
+  utcTimestamp = computed(() => {
+    return new Date(this.formValues().timestamp).toUTCString();
+  })
+  //localTimestamp
+  //new Date(this.utcIsoTimestamp()).toLocaleString() + ` (${Intl.DateTimeFormat().resolvedOptions().timeZone})`
+
+
+  private downloadParams = computed(() => {
     return this.buildDownloadParams(this.formValues());
   })
+
+  constructor() {
+    this.viewportScroller.setOffset([0, 100]);
+
+    afterNextRender(() => {
+      this.viewportScroller.scrollToAnchor(this.divId);
+    })
+  }
 
   getDownloadUrl(format: 'parquet' | 'arrow') {
     // normalize trailing slash
@@ -38,7 +70,7 @@ export class ExtractionResultComponent implements OnDestroy {
 
   buildDownloadParams(formValues: ExtractionFormData) {
     type ExtractionQueryParams = paths['/extraction/features.parquet']['get']['parameters']['query'];
-    const params:ExtractionQueryParams = {
+    const params: ExtractionQueryParams = {
       aoi: formValues.aoi as string,
       clip: formValues.clip,
       timestamp: formValues.timestamp,
@@ -58,4 +90,5 @@ export class ExtractionResultComponent implements OnDestroy {
   }
 
   protected readonly environment = environment;
+  protected readonly Intl = Intl;
 }

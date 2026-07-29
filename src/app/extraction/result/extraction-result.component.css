@@ -1,4 +1,10 @@
+.result {
+  margin-bottom: 1rem !important;
+  background-color: whitesmoke;
+}
+
 #header #leftMenu {
   margin-left: 1rem;
   overflow: hidden;
 }
+
