@@ -1,4 +1,6 @@
 // until v2 is released, this will be the config for our NEXT dashboard
+import bboxPolygon from '@turf/bbox-polygon';
+
 export const environment = {
   production: true,
 
@@ -24,6 +26,7 @@ export const environment = {
   zoomLevel : 2,
   mapCenter : {lat: 0.0, lng: 0.0},
   mapCenterFromPoly : false,
+  maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
 
   //ohsomeAPI options
   selectedFilter : `natural=tree and type:node`,

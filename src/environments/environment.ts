@@ -11,6 +11,7 @@ export const environment = {
   //ohsomeAPI (osm history stats from OSHDB)
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
   ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
+  // ohsomeApiRootUrl : 'https://staging-ohsome-api.heigitk8s.de',
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
@@ -53,6 +54,6 @@ export const environment = {
   // userManagement
   appwriteEndpoint: 'https://api.account.heigit.org',
   appwriteProjectId: '6a158c93000c7437fe54',
-  accountFrontendUrl: "https://account.heigit.org",
+  accountFrontendUrl: "https://dev.account.heigit.org",
   skipAppwriteAPIKey: ""
 };
