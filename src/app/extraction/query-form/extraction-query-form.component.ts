@@ -15,6 +15,7 @@ import Utils from '../../../utils';
 import {BoundaryInputComponent} from '../../shared/components/boundary-input/boundary-input.component';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
+import {toPng} from 'html-to-image';
 
 @Component({
   selector: 'app-extraction-query-form',
@@ -77,14 +78,24 @@ export class ExtractionQueryFormComponent {
     console.log("Extraction Query Form constructor");
   }
 
-  onSubmit(event: Event) {
+  async onSubmit(event: Event) {
     event.preventDefault();
+    const mapDataUrl = await this.getImageUrlFromMap();
+
+    const formValues = {...this.extractionForm().value(), mapDataUrl};
+
     submit(this.extractionForm, async () => {
       console.log('Create Extraction Asset', event);
       // Add logic here
       console.log("EXTRACTION FORM", this.extractionForm())
-      this.dataservice.pushFormValues(this.extractionForm().value(), 'admin')
+      this.dataservice.pushFormValues(formValues, 'admin')
     });
+  }
+
+  async getImageUrlFromMap() {
+    const node = document.querySelector<HTMLDivElement>('#boundaryMap');
+    if (!node) return '';
+    return await toPng(node);
   }
 
   static buildInitialModel(initialHashParams: URLSearchParams): ExtractionFormData {

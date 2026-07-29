@@ -172,6 +172,8 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     let commonBounds: LatLngBounds | null = null;
 
     if (this.interactionType == 'bbox') {
+      if (value !== '') this.map.pm.disableDraw('Rectangle');
+
       const bboxes = new OhsomeApiRequest.Bboxes().parse(value);
       bboxes.boundaries.forEach(bbox => {
         const geom = bbox.geometry;
@@ -188,6 +190,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         commonBounds = (commonBounds) ? commonBounds.extend(rect.getBounds()) : new LatLngBounds(rect.getBounds().getSouthEast(), rect.getBounds().getNorthWest());
       });
     } else if (this.interactionType == 'bcircle') {
+      if (value !== '') this.map.pm.disableDraw('Circle');
       const bcircles = new OhsomeApiRequest.Bcircles().parse(value);
       bcircles.boundaries.forEach(bcircle => {
         console.log('updateMapFromValue::bcircle', bcircle.geometry, bcircle.lng, bcircle.lat, bcircle.radius);
@@ -205,6 +208,7 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : new LatLngBounds(cirle.getBounds().getSouthEast(), cirle.getBounds().getNorthWest());
       });
     } else /*if (this.options.type == "bpoly")*/ {
+      if (value !== '') this.map.pm.disableDraw('Polygon');
       const bpolys = new OhsomeApiRequest.Bpolys().parse(value);
       bpolys.boundaries.forEach(bpoly => {
         console.log('updateMapFromValue::bpoly', bpoly.geometry);
