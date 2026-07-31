@@ -24,6 +24,7 @@ export class AppComponent implements AfterViewInit {
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
   protected stateService = inject(StateService);
+  protected authService = inject(AuthService);
 
   title = 'ohsome dashboard';
   public hasAnnouncement: boolean;
@@ -52,6 +53,12 @@ export class AppComponent implements AfterViewInit {
       selectOnKeydown: false,
       onChange: (language) => this.switchLanguage(language)
     });
+
+    $('app-root #profileSelector').dropdown({
+      selectOnKeydown: false,
+      action: 'hide'
+    });
+
   }
 
   private handleAnnouncementClose() {
@@ -69,4 +76,5 @@ export class AppComponent implements AfterViewInit {
     location.href = `../${selectedLanguage}/#${this.urlHashParamsProviderService.getHashURLSearchParams().toString()}`;
   }
 
+  protected readonly environment = environment;
 }

@@ -15,6 +15,26 @@
           <a class="item" data-value="en">English</a>
         </div>
       </div>
+      <div id="profileSelector" class="ui dropdown item">
+        <i class="user icon" [ngClass]="authService.isAnon() ? 'blue outline' : 'blue'"></i>
+        @if (authService.isAnon()) {
+          <div class="text" i18n>Profile</div>
+        } @else {
+          <div class="text">{{authService.user().name}}</div>
+        }
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          @if (authService.isAnon()){
+            <div class="item" (click)="authService.login()"><i class="sign-in icon"></i>Login</div>
+            <div class="item" (click)="authService.register()"><i class="user plus icon"></i>Register</div>
+          }
+          @if (!authService.isAnon()){
+            <div class="item" (click)="authService.logout()">Logout</div>
+            <a class="item" [href]="environment.accountFrontendUrl" target="_blank">Account Info</a>
+          }
+
+        </div>
+      </div>
       <div class="link item"><a href="https://heigit.org" target="_blank">
         <img class="ui image" src="assets/images/HeiGIT_Logo_only.svg" alt="HeiGIT Logo">
       </a></div>
