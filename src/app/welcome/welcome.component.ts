@@ -20,8 +20,8 @@ import {
   SortModule,
   Tabulator
 } from 'tabulator-tables';
-import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
-import {MetadataResponseJSON} from '../oqapi/types/MetadataResponseJSON';
+import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
+import {MetadataResponseJSON} from '../02_quality/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import {QueryMode} from '../shared/shared-types';

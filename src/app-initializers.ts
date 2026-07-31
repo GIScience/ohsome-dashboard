@@ -1,4 +1,4 @@
-import {OqtApiMetadataProviderService} from './app/oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from './app/02_quality/oqt-api-metadata-provider.service';
 import {catchError, EMPTY} from 'rxjs';
 import {OhsomeApiMetadataProviderService} from './app/ohsomeapi/ohsome-api-metadata-provider.service';
 import {PRISM_LANGUAGE_OHSOME_FILTER} from './prism-language-ohsome-filter';

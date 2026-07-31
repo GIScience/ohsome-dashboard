@@ -6,7 +6,7 @@ import OhsomeApiMetadataProviderServiceMock from '../ohsomeapi/ohsome-api-metada
 import {OshdbModule} from '../ohsomeapi/oshdb.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient} from '@angular/common/http';
-import {OqtModule} from '../oqapi/oqt.module';
+import {OqtModule} from '../02_quality/oqt.module';
 import {beforeEach, describe, expect, it} from 'vitest';
 
 describe('QueryPanelComponent', () => {

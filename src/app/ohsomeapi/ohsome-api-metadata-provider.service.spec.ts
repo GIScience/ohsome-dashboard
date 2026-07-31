@@ -14,7 +14,7 @@ describe('OhsomeApiMetadataProviderService', () => {
 
   beforeEach(() => {
     const spy = {
-      get: vi.fn().mockName("OhsomeApiService.get"),
+      metadata: vi.fn().mockName("OhsomeApiService.metadata"),
       getOhsomeApiAnnouncement: vi.fn().mockName("OhsomeApiService.getOhsomeApiAnnouncement")
     };
     TestBed.configureTestingModule({

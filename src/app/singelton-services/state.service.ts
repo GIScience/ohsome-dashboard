@@ -1,10 +1,11 @@
 import {computed, effect, Service, signal} from '@angular/core';
 import {isQueryMode, QueryMode} from '../shared/shared-types';
 import equal from 'fast-deep-equal/es6';
-import {ExtractionFormData, QualityFormData} from '../extraction/query-form/types';
+import {ExtractionFormData, QualityFormData, StatsFormData} from '../03_extraction/query-form/types';
 import Utils from '../../utils';
-import {ExtractionQueryFormComponent} from '../extraction/query-form/extraction-query-form.component';
+import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
 import {linkField} from '../shared/utils/form.utils';
+import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
 
 interface StateParams {
   showWelcomeScreen: boolean;
@@ -25,14 +26,16 @@ export class StateService {
     'topic-filter': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-filter', '')),
   };
 
-  extractionFormModel = signal<ExtractionFormData>(
-    ExtractionQueryFormComponent.buildInitialModel(this.initialHashParams),
+
+  statsFormModel = signal<StatsFormData>(
+    StatsQueryFormComponent.buildInitialModel(this.initialHashParams),
     {
       equal: (a, b) => {
         return equal(a, b);
       }
     });
 
+// todo remove legacy form Model
   legacyFormModel = signal<any | null>(null);
 
   qualityFormModel = signal<QualityFormData>(
@@ -49,6 +52,14 @@ export class StateService {
       }
     }
   );
+
+  extractionFormModel = signal<ExtractionFormData>(
+    ExtractionQueryFormComponent.buildInitialModel(this.initialHashParams),
+    {
+      equal: (a, b) => {
+        return equal(a, b);
+      }
+    });
 
   private readonly initialState: StateParams = {
     showWelcomeScreen: this.initialHashParams.size === 0,
@@ -77,31 +88,18 @@ export class StateService {
 
   constructor() {
     console.log("StateService constructor");
-    console.log(this.sharedFormSignals);
-    linkField(this.extractionFormModel, 'topic', this.sharedFormSignals['topic']);
-    linkField(this.extractionFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
-    linkField(this.extractionFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
+    linkField(this.statsFormModel, 'topic', this.sharedFormSignals['topic']);
+    linkField(this.statsFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
+    linkField(this.statsFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
+
     linkField(this.qualityFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.qualityFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.qualityFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
 
+    linkField(this.extractionFormModel, 'topic', this.sharedFormSignals['topic']);
+    linkField(this.extractionFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
+    linkField(this.extractionFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
 
-    // Do not create a dependency in UrlHashParamsProviderService
-    // const initialHashParams = new URLSearchParams(globalThis.location.hash.slice(1));
-    // without permalink params, welcomeScreen should be shown
-    // this.updatePartialState({showWelcomeScreen: initialHashParams.size === 0});
-    //
-    // // initialize queryMode (old :backend) to choose form tab
-    // // Do not create a dependency in UrlHashParamsProviderService
-    // const backendParam = initialHashParams.get('backend');
-    // const queryMode = isQueryMode(backendParam) ? backendParam : 'ohsomeApi';
-    // this.updatePartialState({queryMode});
-    //
-    // // initialize shared form fields, other form fields are initialized in their respective component
-    // // const initialTopic = isTopic(initialHashParams.get('topic'), this.oqtApiMetadataProviderService);
-    // if (initialHashParams.has('topic')) this.sharedFormSignals.topic.set(<string>initialHashParams.get('topic'));
-    // if (initialHashParams.has('topic-title')) this.sharedFormSignals.customTopicTitle.set(<string>initialHashParams.get('topic-title'));
-    // if (initialHashParams.has('topic-filter')) this.sharedFormSignals.customTopicFilter.set(<string>initialHashParams.get('topic-filter'));
 
     effect(() => {
       console.log("App state changed", this.appState());

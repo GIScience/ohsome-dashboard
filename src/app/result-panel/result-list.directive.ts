@@ -1,8 +1,8 @@
 import {ComponentRef, Directive, OnInit, ViewContainerRef, inject} from '@angular/core';
 import {ResultComponent} from '../ohsomeapi/result/result.component';
 import {DataService} from '../singelton-services/data.service';
-import {OqtResultComponent} from '../oqapi/result/oqt-result.component';
-import {ExtractionResultComponent} from '../extraction/result/extraction-result.component';
+import {OqtResultComponent} from '../02_quality/result/oqt-result.component';
+import {ExtractionResultComponent} from '../03_extraction/result/extraction-result.component';
 
   @Directive({
     selector: '[appResultList]'
@@ -20,6 +20,7 @@ import {ExtractionResultComponent} from '../extraction/result/extraction-result.
     ngOnInit() {
       this.dataService.currentFormValues.subscribe(result => {
         const backend = result.formValues.backend;
+
         switch (backend) {
           case 'ohsomeApi':
             this.createResultComponent(result);

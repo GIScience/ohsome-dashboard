@@ -1,7 +1,7 @@
 import {Component, computed, inject} from '@angular/core';
-import {form, FormField, required, submit, validate} from '@angular/forms/signals';
+import {form, FormField, submit, validate} from '@angular/forms/signals';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
-import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {FormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {
@@ -16,6 +16,7 @@ import {BoundaryInputComponent} from '../../shared/components/boundary-input/bou
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
 import {toPng} from 'html-to-image';
+import {AuthService} from '../../singelton-services/auth.service';
 
 @Component({
   selector: 'app-extraction-query-form',
@@ -36,6 +37,7 @@ export class ExtractionQueryFormComponent {
   stateService = inject(StateService);
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
   ohsomeQualityApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  authService = inject(AuthService);
   dataservice = inject(DataService);
 
   topics = this.ohsomeQualityApiMetadataProviderService.getOqtApiMetadata().result.topics;
@@ -43,15 +45,20 @@ export class ExtractionQueryFormComponent {
   // this info survives component recreation in state service
   extractionFormModel = this.stateService.extractionFormModel;
 
-  extractionForm = form(this.extractionFormModel, (schemaPath)=>{
-    required(schemaPath.aoi);
-    validate(schemaPath.aoi, ({ value }) => {
+  extractionForm = form(this.extractionFormModel, (schemaPath) => {
+    // required(schemaPath['topic-filter'], {message: ' An ohsome filter is required.'});
+    validate(schemaPath.aoi, ({value}) => {
       console.log("VALIDATOR", value());
-      const numberOfShapes = value().toString().split('|').length;
+      const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
       return numberOfShapes !== 1
-        ? { kind: 'singleBboxRequired', message: 'A single bounding box is required.' }
+        ? {kind: 'singleBboxRequired', message: ' A single bounding box is required.'}
         : null;
     });
+    validate(schemaPath, () => {
+      return this.authService.isAnon()
+        ? {kind: 'signInRequire', message: " You need to be signed in."}
+        : null;
+    })
   });
 
   protected boundaryType: string;
@@ -74,6 +81,7 @@ export class ExtractionQueryFormComponent {
     zoom: environment.zoomLevel ?? 5,
   };
 
+
   constructor() {
     console.log("Extraction Query Form constructor");
     // immediately trigger the query if there are hashparams
@@ -83,7 +91,7 @@ export class ExtractionQueryFormComponent {
         if (this.extractionForm().valid()) {
           this.onSubmit(null);
         }
-      }, 1000);
+      }, 1500);
     }
   }
 
@@ -91,13 +99,13 @@ export class ExtractionQueryFormComponent {
     event?.preventDefault();
     const mapDataUrl = await this.getImageUrlFromMap();
 
-    const formValues = {...this.extractionForm().value(), mapDataUrl};
+    const formValues = {...this.extractionForm().value(), backend: 'extraction', mapDataUrl};
 
     submit(this.extractionForm, async () => {
       console.log('Create Extraction Asset', event);
       // Add logic here
       console.log("EXTRACTION FORM", this.extractionForm())
-      this.dataservice.pushFormValues(formValues, 'admin')
+      this.dataservice.pushFormValues(formValues, 'bbox')
     });
   }
 
@@ -122,7 +130,6 @@ export class ExtractionQueryFormComponent {
   }
 
   protected setCustomTopic() {
-    // this.extractionForm.topic().value.set('custom-topic');
     this.extractionFormModel.update((old) => {
       const oldTopic = this.ohsomeQualityApiMetadataProviderService.getOqtApiMetadata().result.topics[old.topic];
       return {

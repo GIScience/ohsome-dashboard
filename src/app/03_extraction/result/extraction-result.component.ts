@@ -6,13 +6,12 @@ import {
   ElementRef,
   HostBinding,
   inject,
-  input,
-  OnDestroy
+  input
 } from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ExtractionFormData} from '../query-form/types';
 import {paths} from '../../shared/ohsome-api-v2-types';
-import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {ViewportScroller} from '@angular/common';
 
 @Component({
@@ -21,7 +20,7 @@ import {ViewportScroller} from '@angular/common';
   templateUrl: './extraction-result.component.html',
   styleUrl: './extraction-result.component.css',
 })
-export class ExtractionResultComponent implements OnDestroy {
+export class ExtractionResultComponent {
   viewportScroller = inject(ViewportScroller);
   elementRef = inject(ElementRef);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
@@ -64,7 +63,7 @@ export class ExtractionResultComponent implements OnDestroy {
     return new URL(pathUrl).toString();
   }
 
-  ngOnDestroy(): void {
+  close(): void {
     this.componentRef.destroy();
   }
 

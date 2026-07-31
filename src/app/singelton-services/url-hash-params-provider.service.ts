@@ -10,6 +10,7 @@ export class UrlHashParamsProviderService {
     const backend = this.stateService.appState().queryMode;
 
     // url params from forms
+    const statsForm = structuredClone(this.stateService.statsFormModel());
     const extractionForm = structuredClone(this.stateService.extractionFormModel());
     // more form models TODO remove legacy form use quality form only
     const legacyForm = structuredClone(this.stateService.legacyFormModel()) ?? {};
@@ -18,6 +19,8 @@ export class UrlHashParamsProviderService {
     let activeForm;
     switch (backend) {
       case "ohsomeApi":
+        activeForm = statsForm;
+        break;
       case "oqtApi":
         activeForm = {...qualityForm, ...legacyForm};
         break;
@@ -58,8 +61,8 @@ export class UrlHashParamsProviderService {
 
   constructor() {
     console.log("UrlHashParamsProviderService constructor");
-    this.initHashParamsStore()
-    // this.updateHashParamsStoreFromUrl();
+    this.initHashParamsStore();
+
 
     effect(() => {
       this.setHashParams(this.relevantState())

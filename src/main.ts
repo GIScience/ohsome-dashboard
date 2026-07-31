@@ -3,10 +3,10 @@ import {importProvidersFrom, inject, provideAppInitializer} from "@angular/core"
 import {bootstrapApplication, BrowserModule} from '@angular/platform-browser';
 import {StateService} from "./app/singelton-services/state.service";
 import {OhsomeApiMetadataProviderService} from "./app/ohsomeapi/ohsome-api-metadata-provider.service";
-import {OqtApiMetadataProviderService} from "./app/oqapi/oqt-api-metadata-provider.service";
+import {OqtApiMetadataProviderService} from "./app/02_quality/oqt-api-metadata-provider.service";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {OshdbModule} from "./app/ohsomeapi/oshdb.module";
-import {OqtModule} from "./app/oqapi/oqt.module";
+import {OqtModule} from "./app/02_quality/oqt.module";
 import {AppComponent} from "./app/app.component";
 import {AuthService} from "./app/singelton-services/auth.service";
 import {

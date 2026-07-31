@@ -108,6 +108,24 @@
         Download Asset<i
           class="download icon"></i>
       </button>
+      @if (extractionForm().invalid()) {
+        <div class="ui left pointing red basic label">
+          @for (error of extractionForm().errorSummary(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+      @if (authService.isAnon()){
+        <div class="ui message">
+          To download OSM Data you need to &nbsp;&nbsp;
+          <div class="ui buttons">
+            <button type="button" class="ui blue button" (click)="authService.login()"><i class="sign-in icon"></i>Login</button>
+            <div class="or"></div>
+            <button type="button" class="ui blue button" (click)="authService.register()"><i class="user plus icon"></i>Register</button>
+          </div>
+          &nbsp;&nbsp; to a free HeiGIT user account!
+        </div>
+      }
     </div>
   </div>
 

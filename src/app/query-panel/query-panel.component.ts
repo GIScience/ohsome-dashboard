@@ -25,7 +25,7 @@ import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, isQueryMode, QueryMode, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
-import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
@@ -36,7 +36,7 @@ import {NgClass} from '@angular/common';
 import {
   OhsomeApiQueryFormComponent
 } from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
-import {OqtApiQueryFormComponent} from '../oqapi/query-form/oqt-api-query-form/oqt-api-query-form.component';
+import {OqtApiQueryFormComponent} from '../02_quality/query-form/oqt-api-query-form/oqt-api-query-form.component';
 import {AuthService} from "../singelton-services/auth.service";
 import {StateService} from '../singelton-services/state.service';
 

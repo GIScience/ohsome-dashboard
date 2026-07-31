@@ -3,8 +3,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ExtractionQueryFormComponent} from './extraction-query-form.component';
 
 import {beforeEach, describe, expect, it} from 'vitest';
-import {OqtApiMetadataProviderService} from '../../oqapi/oqt-api-metadata-provider.service';
-import OqtApiMetadataProviderServiceMock from '../../oqapi/oqt-api-metadata-provider.service.mock';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
+import OqtApiMetadataProviderServiceMock from '../../02_quality/oqt-api-metadata-provider.service.mock';
 
 describe('ExtractionQueryFormComponent', () => {
   let component: ExtractionQueryFormComponent;

@@ -52,9 +52,12 @@
 }
 
 <div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
+<!-- user: {{authService.user().name}} | isAnon: {{authService.isAnon()}} | key: {{ authService.key() | json}}-->
   <!-- Query mode Menu  -->
-  q: {{ stateService.qualityFormModel() | json}} <br>
-  l: {{ stateService.legacyFormModel()  | json}}
+<!--  TODO remove-->
+<!--  q: {{ stateService.qualityFormModel() | json }} <br>-->
+<!--  l: {{ stateService.legacyFormModel()  | json }} <br>-->
+<!--  e: {{ stateService.extractionFormModel() | json }}-->
   <h3>Select a type of ohsome query:</h3>
   <div class="ui three inverted labeled item tabs menu" style="background-color: #3E6184">
 
@@ -77,7 +80,10 @@
 
   </div>
 
-  @if (['ohsomeApi', 'oqtApi'].includes(queryModeSignal())) {
+  @if (queryModeSignal() === 'ohsomeApi') {
+    <app-stats-query-form></app-stats-query-form>
+  }
+  @if (queryModeSignal() === 'oqtApi') {
     <app-query-panel></app-query-panel>
   }
   @if (queryModeSignal() === 'extraction') {

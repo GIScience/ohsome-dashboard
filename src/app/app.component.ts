@@ -1,14 +1,17 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import packageJson from '../../package.json';
-import {OqtApiMetadataProviderService} from './oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from './02_quality/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
-import {JsonPipe, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-import {ExtractionQueryFormComponent} from './extraction/query-form/extraction-query-form.component';
+import {ExtractionQueryFormComponent} from './03_extraction/query-form/extraction-query-form.component';
+import {AuthService} from './singelton-services/auth.service';
+import {environment} from '../environments/environment';
+import {StatsQueryFormComponent} from './01_stats/query-form/stats-query-form.component';
 
 declare const $: any;
 
@@ -17,7 +20,7 @@ declare const $: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, ExtractionQueryFormComponent, JsonPipe]
+  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, ExtractionQueryFormComponent, StatsQueryFormComponent]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);
