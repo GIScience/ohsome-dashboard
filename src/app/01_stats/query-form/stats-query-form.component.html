@@ -1,0 +1,141 @@
+<form class="ui stackable celled grid container form" (submit)="onSubmit($event)">
+
+  <div class="row">
+    <!--column 1-->
+
+    <!-- Topic -->
+    <div id="col1" class="eight wide tablet six wide computer column">
+      <!--      <div class="row">-->
+      <h4 id="topicHeading" class="ui header" i18n><i class="filter icon"></i>Topic</h4>
+
+      <div class="editable-topic">
+        <div class="field">
+
+          <!--          [value]="stateService.sharedFormSignals.topic()"
+                      (valueChange)="stateService.sharedFormSignals.topic.set( $event.toString() )"-->
+          <app-sui-multi-select-search-dropdown
+            [multiple]="false"
+            [searchable]="true"
+            [formField]="statsForm.topic"
+            [options]="{fullTextSearch: 'exact'}"
+            [selectOptions]="topics | keyvalue">
+          </app-sui-multi-select-search-dropdown>
+        </div>
+        <button type="button" class="ui blue icon button"
+                data-tooltip="Edit the topic filter."
+                data-inverted
+                [class.disabled]="statsForm.topic().value() === 'custom-topic'"
+                (click)="setCustomTopic()"
+                i18n-data-tooltip
+        >
+          <i class="edit icon"></i>
+        </button>
+      </div>
+      <div id="topic-description">
+        {{ topics[statsForm.topic().value()].description }}
+      </div>
+
+      <div class="ui items" id="topic-details"
+           [class.highlight-topic-details]="statsForm.topic().value() === 'custom-topic'">
+
+        @if (statsForm.topic().value() === 'custom-topic') {
+          <div class="item">
+            <div class="content">
+              <label for="topic-title" i18n>Custom topic title:</label>
+              <input type="text" id="topic-title"
+                     placeholder="Enter your Topic Title"
+                     [formField]="statsForm['topic-title']"
+                     i18n-placeholder
+              >
+            </div>
+          </div>
+        }
+
+
+
+        <!-- Filter -->
+        <span i18n><a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
+              of the topic:</span>
+        @if (statsForm.topic().value() === 'custom-topic') {
+          <app-prism-editor id="topicFilter"
+                            [formField]="statsForm['topic-filter']"
+                            [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
+                            [backgroundColor]="'#FFFFFF'"
+          >
+          </app-prism-editor>
+        } @else {
+          <app-prism-editor id="topicFilter"
+                            [readonly]="true"
+                            [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
+                            [backgroundColor]="'#F3F4F5'"
+                            [value]="filterFromTopic()"
+          >
+          </app-prism-editor>
+        }
+      </div>
+
+<!--      <div class="ui divider"></div>-->
+<!--      &lt;!&ndash; Clip &ndash;&gt;-->
+<!--      <h4 class="ui header"><i class="cut icon"></i>Clip</h4>-->
+<!--      <div class="ui toggle checkbox">-->
+<!--        <input type="checkbox" [formField]="extractionForm.clip">-->
+<!--        <label>Clip geometries at area-of-interest boundary</label>-->
+<!--      </div>-->
+
+      <div class="ui divider"></div>
+      <!-- measure -->
+<!--      <div class="row">-->
+        <div class="column">
+          <h4 class="ui header" i18n><i class="expand icon"></i>Measure</h4>
+          <div class="four inline fields">
+            @for (option of measureOptions; track option) {
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="statsForm.measure">
+                  <label [for]="'measure' + option.value" style="white-space: nowrap;">{{option.label}}</label>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!--    <div *ngIf="measure.valid" class="ui small negative icon message">-->
+          <!--      <i class="minus circle icon"></i>-->
+          <!--      Please choose an option-->
+          <!--    </div>-->
+        </div>
+<!--      </div>-->
+
+      <!-- Time -->
+      <div class="ui divider"></div>
+      <h4 class="ui header"><i class="calendar icon"></i>Date and Time Range</h4>
+      <div class="two fields">
+        <div class="field"><label>Start<input type="datetime-local" [formField]="statsForm.start"></label></div>
+        <div class="field"><label>End<input type="datetime-local" [formField]="statsForm.end"></label></div>
+      </div>
+      <div class="field">
+        <label>Interval<select [formField]="statsForm.interval"><option value="P1M" selected>monthly</option></select></label>
+      </div>
+
+    </div> <!-- End column 1-->
+
+
+    <!--column 2-->
+    <div id="col2" class="eight wide tablet ten wide computer column">
+      <h4 class="ui header" i18n>Area of interest: Choose a bounding box</h4>
+      <app-boundary-input
+        [interactionType]="'bbox'"
+        [options]="mapOptions"
+        [formField]="statsForm.aoi">
+      </app-boundary-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="sixteen wide column">
+      <button [disabled]="statsForm().invalid()" class="ui green  right labeled icon button" type="submit">Run Query<i
+          class="play icon"></i>
+      </button>
+    </div>
+  </div>
+
+</form>
