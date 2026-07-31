@@ -213,6 +213,11 @@
             "coverage": {
               "watch": false,
               "coverage": true
+            },
+            "integration": {
+              "tsConfig": "integration-tests/tsconfig.json",
+              "include": ["../integration-tests/specs/**/*.int-test.ts"],
+              "watch": false
             }
           }
         },

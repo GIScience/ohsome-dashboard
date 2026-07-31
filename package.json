@@ -14,6 +14,7 @@
     "test:ci-node26fix": "NODE_OPTIONS=--no-webstorage ng test --configuration=ci",
     "test:chrome": "ng test --browsers=chrome",
     "test:chrome-headless": "ng test --browsers=chromeHeadless --watch=false",
+    "test:integration": "ng test --configuration=integration",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "extract-i18n": " ng extract-i18n --format json --output-path src/locale --out-file messages-source.en.json",
