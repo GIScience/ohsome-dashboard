@@ -4,10 +4,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {
-    SuiMultiSelectSearchDropdownComponent
+  SuiMultiSelectSearchDropdownComponent
 } from '../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
-import {form, FormField, required, submit, validate} from '@angular/forms/signals';
-import {ExtractionFormData, StatsFormData} from '../../03_extraction/query-form/types';
+import {form, FormField, required, submit} from '@angular/forms/signals';
+import {StatsFormData} from '../../03_extraction/query-form/types';
 import Utils from '../../../utils';
 import {DataService} from '../../singelton-services/data.service';
 import {StateService} from '../../singelton-services/state.service';

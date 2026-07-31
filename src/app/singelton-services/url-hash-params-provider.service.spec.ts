@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {UrlHashParamsProviderService} from './url-hash-params-provider.service';
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {afterEach, beforeEach, describe, expect, it} from "vitest";
 import {StateService} from './state.service';
 
 describe('UrlHashParamsProviderService', () => {
