@@ -51,7 +51,7 @@ export class StateService {
   );
 
   private readonly initialState: StateParams = {
-    showWelcomeScreen: false,
+    showWelcomeScreen: this.initialHashParams.size === 0,
     welcomeTab: 'intro',
     firstForm: true,
     appLanguage: 'en',
@@ -106,20 +106,9 @@ export class StateService {
     effect(() => {
       console.log("App state changed", this.appState());
     });
-    // effect(() => {
-    //   console.log("StateService changes HashParams", this.queryModeSignal())
-    //   // TODO handle all url params here (that are not part of the query?)
-    //   this.urlHashParamsProviderService.updateHashParam('backend', this.queryModeSignal());
-    // })
-  }
-
-  init() {
-    console.log("init", this.initialHashParams.toString());
-
-    // without permalink params, welcomeScreen should be shown
-    this.updatePartialState({showWelcomeScreen: this.initialHashParams.size === 0});
 
   }
+
 
   static getInitialQueryMode = (initialHashParams: URLSearchParams) => {
     // initialize queryMode (old :backend) to choose form tab

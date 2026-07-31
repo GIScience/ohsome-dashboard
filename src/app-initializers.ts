@@ -36,13 +36,6 @@ export function oqtApiAttributeProviderFactory(provider: OqtApiMetadataProviderS
   )
 }
 
-// export function urlHashParamsProviderFactory(provider: UrlHashParamsProviderService) {
-//   return () => {
-//     console.log("urlHashParamsProviderFactory");
-//     return provider.updateHashParamsStoreFromUrl();
-//   }
-// }
-
 export function translationsInitializerFactory(provider: StateService) {
   return async () => {
 

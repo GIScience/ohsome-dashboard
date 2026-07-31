@@ -1,5 +1,5 @@
 /// <reference types="@angular/localize" />
-import {importProvidersFrom, inject, provideAppInitializer, provideEnvironmentInitializer} from "@angular/core";
+import {importProvidersFrom, inject, provideAppInitializer} from "@angular/core";
 import {bootstrapApplication, BrowserModule} from '@angular/platform-browser';
 import {StateService} from "./app/singelton-services/state.service";
 import {OhsomeApiMetadataProviderService} from "./app/ohsomeapi/ohsome-api-metadata-provider.service";
@@ -19,20 +19,11 @@ import {
 } from './app-initializers';
 import {authInterceptor} from './app/interceptors/auth.interceptor';
 import {timeoutInterceptor} from './app/interceptors/timeout.interceptor';
-import {setHashParamsFromUrl} from './env-initializers';
 
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, OshdbModule, OqtModule),
-    provideEnvironmentInitializer(()=>{
-      const initializerFn = (setHashParamsFromUrl)(inject(StateService));
-      return initializerFn();
-    }),
-    // provideAppInitializer(() => {
-    //   const initializerFn = (urlHashParamsProviderFactory)(inject(UrlHashParamsProviderService));
-    //   return initializerFn();
-    // }),
     provideAppInitializer(() => {
       const initializerFn = (translationsInitializerFactory)(inject(StateService));
       return initializerFn();
