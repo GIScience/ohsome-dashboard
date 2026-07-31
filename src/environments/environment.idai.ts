@@ -28,6 +28,7 @@ export const environment = {
   appwriteEndpoint: '',
   appwriteProjectId: '',
   accountFrontendUrl: '',
+  cookieUrl: 'https://cookie.api.account.heigit.org',
   skipAppwriteAPIKey: ''
 };
 

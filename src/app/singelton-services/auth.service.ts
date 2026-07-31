@@ -33,6 +33,7 @@ export class AuthService {
             throw e;
           })
         );
+        if(!this.isAnon()) {this.refreshCookie();}
         return user;
       })
       .catch(async e => {
@@ -99,5 +100,16 @@ export class AuthService {
   register() {
     const currentUrl = window.location.href;
     window.location.href = `${environment.accountFrontendUrl}/signup?redirect=${encodeURIComponent(currentUrl)}`;
+  }
+
+  async refreshCookie() {
+    const jwt = await account.createJWT();
+    fetch(environment.cookieUrl, {
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify({
+        'body_jwt': jwt.jwt,
+      }),
+    });
   }
 }

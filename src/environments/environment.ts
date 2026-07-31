@@ -52,8 +52,14 @@ export const environment = {
   viewUpdateTime : false,
 
   // userManagement
+  // appwriteEndpoint: 'https://staging.api.account.heigit.org',
+  // appwriteProjectId: '66cef0a9000b0675681b', //dev on staging
+  // accountFrontendUrl: "https://staging.account.heigit.org",
+  // skipAppwriteAPIKey: "",
+
   appwriteEndpoint: 'https://api.account.heigit.org',
-  appwriteProjectId: '6a158c93000c7437fe54',
+  appwriteProjectId: '6a158c93000c7437fe54', //dev on prod
   accountFrontendUrl: "https://dev.account.heigit.org",
-  skipAppwriteAPIKey: ""
+  cookieUrl: 'https://cookie-dev.api.account.heigit.org',
+  skipAppwriteAPIKey: "",
 };

@@ -37,7 +37,8 @@ export const environment = {
 
   // userManagement
   appwriteEndpoint: 'https://api.account.heigit.org',
-  appwriteProjectId: '6a158c93000c7437fe54',
+  appwriteProjectId: '6751abc5002d7cdf3ab7', //prod on prod
   accountFrontendUrl: "https://account.heigit.org",
+  cookieUrl: 'https://cookie.api.account.heigit.org',
   skipAppwriteAPIKey: ""
 };
