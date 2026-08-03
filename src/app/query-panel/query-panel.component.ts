@@ -72,10 +72,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   // default map settings
   public maskPoly;
-  public zoom = environment.zoomLevel;
+  public zoom = environment.mapOptions.zoom;
   public minZoom = 0;
   public maxBounds: LatLngBoundsExpression = [[-90, -180], [90, 180]];
-  public mapCenter = environment.mapCenter;
+  public mapCenter = environment.mapOptions.center;
   public bboxes = '';
   public bcircles = '';
   public bpolys = '';
@@ -91,12 +91,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   private formChangesSubscription: Subscription;
 
   constructor() {
-    const spatialExtent = environment.maskPoly ?? bboxPolygon([-180, -90, 180, 90]).geometry;
-    this.maskPoly = feature(spatialExtent);
+    const spatialExtent = environment.mapOptions.maskPoly ?? bboxPolygon([-180, -90, 180, 90]).geometry;
+    this.maskPoly = spatialExtent;
 
 
     // Code is not necessary for global dataset
-    if (environment.mapCenterFromPoly && typeof this.maskPoly === 'object') {
+    if (environment.mapOptions.mapCenterFromPoly && typeof this.maskPoly === 'object') {
       const _envelope: Feature<Polygon> = envelope(this.maskPoly);
       const _center = centroid(_envelope);
       const _coord = getCoord(_center);

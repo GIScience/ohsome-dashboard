@@ -1,6 +1,6 @@
-import bboxPolygon from '@turf/bbox-polygon';
+import {AppEnvironment} from '../app/shared/shared-types';
 
-export const environment = {
+export const environment: AppEnvironment = {
   production: true,
 
   //ohsomeAPI (osm history stats from OSHDB)
@@ -23,16 +23,22 @@ export const environment = {
   announcementUrl: 'https://dashboard.ohsome.org/statuspage',
 
   //map options
-  zoomLevel : 2,
-  mapCenter : {lat: 0.0, lng: 0.0},
-  mapCenterFromPoly : false,
-  maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
+  mapOptions: {
+    zoom: 2,
+    center: {lat: 0.0, lng: 0.0},
+    mapCenterFromPoly : false,
+  },
+
+  // zoomLevel : 2,
+  // mapCenter : {lat: 0.0, lng: 0.0},
+  // mapCenterFromPoly : false,
+  // maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
 
   //ohsomeAPI options
-  selectedFilter : `natural=tree and type:node`,
-  selectedKey : 'natural',
-  selectedValue : 'tree',
-  selectedTypes : ['node'],
+  // selectedFilter : `natural=tree and type:node`,
+  // selectedKey : 'natural',
+  // selectedValue : 'tree',
+  // selectedTypes : ['node'],
   period : 'P1M',
 
   // userManagement

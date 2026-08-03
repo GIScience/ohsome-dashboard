@@ -12,12 +12,18 @@ export default class Utils {
     return label.replace(/__/g, ' ');
   }
 
-  static loadEnv(name, defaultValue) {
-    if (name in environment && environment[name] !== '') {
-      return environment[name];
-    } else {
-      return defaultValue;
-    }
+  static loadEnv<T>(name: string, defaultValue: T): T {
+    const value = this.getObjectProperty<T>(environment, name);
+
+    return value !== undefined && value !== ''
+      ? value
+      : defaultValue;
+  }
+
+  static getObjectProperty<T = unknown>(obj: unknown, path: string): T | undefined {
+    return path
+      .split('.')
+      .reduce<any>((o, key) => o?.[key], obj);
   }
 
   static setObjectProperty(obj = {}, path, val) {

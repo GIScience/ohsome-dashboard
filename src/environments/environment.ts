@@ -3,9 +3,9 @@
 // `ng build --configuration=production` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `angular.json`.
 
-import bboxPolygon from '@turf/bbox-polygon';
+import {AppEnvironment} from '../app/shared/shared-types';
 
-export const environment = {
+export const environment: AppEnvironment =  {
   production: false,
 
   //ohsomeAPI (osm history stats from OSHDB)
@@ -31,10 +31,22 @@ export const environment = {
   announcementUrl: 'https://dashboard.ohsome.org/statuspage',
 
   //map options
-  zoomLevel : 10,
-  mapCenter : {lat: 49.41, lng: 8.68},
-  mapCenterFromPoly : false,
-  maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
+  mapOptions: {
+    zoom: 10,
+    center: {lat: 49.41, lng: 8.68},
+    mapCenterFromPoly: false,
+    //maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
+    // minZoom
+    // maxZoom
+    // maxBounds
+    // label
+  },
+
+  // zoomLevel : 10,
+  // mapCenter : {lat: 49.41, lng: 8.68},
+  // mapCenterFromPoly : false,
+  // maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
+
   // boundaryType : 'admin',
   // bpolys : 'Cyclone Idai Region:35.2880804,-20.7920609,35.0134222,-20.1075181,' +
   //   '39.4518933,-17.1617754,38.6389050,-15.4324902,' +
@@ -42,10 +54,10 @@ export const environment = {
   //   '31.7284936,-22.0652577,35.2880804,-20.7920609', // idai hotosm project polygon
 
   //ohsomeAPI options
-  selectedFilter : `building=* and building!=no and geometry:polygon`,
-  selectedKey : 'historic',
-  selectedValue : '',
-  selectedTypes : ['node', 'way'],
+  // selectedFilter : `building=* and building!=no and geometry:polygon`,
+  // selectedKey : 'historic',
+  // selectedValue : '',
+  // selectedTypes : ['node', 'way'],
   // startDate : '2019-03-01',
   // endDate : '2020-03-01',
   period : 'P1M',

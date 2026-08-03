@@ -1,6 +1,28 @@
 import {Feature, FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import * as L from 'leaflet';
 
+interface AppEnvironment {
+  production: boolean;
+  oshdbRestApiRootUrl : string;
+  ohsomeApiRootUrl : string;
+  oqtApiRootUrl: string;
+  oqtApiProject: string; //take from OpenApiSpec
+  defaultTopicKey: string; //take from OpenApiSpec
+  ohsomeBoundaryWFSUrl: string;
+  ohsomeBoundaryWMSUrl: string;
+  ohsomeBoundaryWMSLayer: string;
+  announcementUrl: string;
+  mapOptions: BoundaryInputComponentOptions & {
+    mapCenterFromPoly: boolean;
+  };
+  period: string; //ISO8601 period
+  viewUpdateTime?: boolean;
+  appwriteEndpoint: string;
+  appwriteProjectId: string;
+  accountFrontendUrl: string;
+  cookieUrl: string;
+  skipAppwriteAPIKey: string;
+}
 
 const QUERY_MODES = ['ohsomeApi', 'oqtApi', 'extraction'] as const;
 
@@ -31,10 +53,10 @@ interface Userlayer {
 }
 
 // determines which map will be instantiated
-type BoundaryType = 'admin' | 'bbox' | 'bcircle' | 'bpoly';
+type BoundaryType = 'admin' | 'bbox' | 'bpoly';
 
 // determines which drawing interaction will be available when instantiating the BoundaryInputComponent
-type BoundaryInputComponentInteractionType = 'bbox' | 'bcircle' | 'bpoly';
+type BoundaryInputComponentInteractionType = 'bbox' | 'bpoly';
 
 interface BoundaryInputComponentOptions {
   label?: string | boolean;
@@ -53,6 +75,7 @@ type RequiredAndDefined<T> = {
 };
 
 export {
+  AppEnvironment,
   QueryMode,
   isQueryMode,
   isTopic,

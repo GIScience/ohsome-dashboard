@@ -70,7 +70,7 @@ export class OhsomeApiQueryFormComponent implements OnInit/*, AfterViewInit*/ {
     // fill form with supplied hashParams
     this.time = this.hashParams.get('time') ?? `${this.start}/${this.end}/${this.period}`;
 
-    this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', environment.selectedFilter);
+    this.selectedFilter = Utils.getFromParamsOrDefault(this.hashParams, 'filter', 'tree');
     this.measure = Utils.getFromParamsOrDefault(this.hashParams, 'measure', this.measureOptions[0].value);
     this.groupBy = Utils.getFromParamsOrDefault(this.hashParams, 'groupBy', 'none');
     this.groupByKeys = Utils.getFromParamsOrDefault(this.hashParams, 'groupByKeys', '');
