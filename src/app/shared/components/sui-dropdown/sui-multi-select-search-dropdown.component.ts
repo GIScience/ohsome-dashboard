@@ -1,169 +1,175 @@
-import { AfterViewInit, Component, ElementRef, forwardRef, Input, NgZone, signal, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
-  ControlValueAccessor,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ReactiveFormsModule,
-  ValidationErrors
-} from '@angular/forms';
-import {KeyValue} from '@angular/common';
-import Utils from '../../../../utils';
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  model,
+  NgZone,
+  ViewChild
+} from '@angular/core';
 
+
+import Utils from '../../../../utils';
+import {FormValueControl} from '@angular/forms/signals';
+import {KeyValue} from '@angular/common';
 
 declare const $: any;
 
+type DropdownValue = string | string[];
+
 @Component({
   selector: 'app-sui-multi-select-search-dropdown',
-  imports: [
-    ReactiveFormsModule
-  ],
   templateUrl: './sui-multi-select-search-dropdown.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
-      multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => SuiMultiSelectSearchDropdownComponent),
-      multi: true
-    }
-  ]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SuiMultiSelectSearchDropdownComponent implements ControlValueAccessor, AfterViewInit {
+export class SuiMultiSelectSearchDropdownComponent
+  implements FormValueControl<DropdownValue> {
+
   private readonly ngZone = inject(NgZone);
 
+  @ViewChild('dropdown')
+  dropdown!: ElementRef;
 
-  @ViewChild("dropdown", {static: false}) dropdown: ElementRef;
-  // see https://semantic-ui.com/modules/dropdown.html#/settings for properties that you can set in options
-  @Input() options: object = {};
-  @Input() selectOptions!: Array<KeyValue<string, {name:string, selected?:boolean}>>;
-  @Input() multiple: boolean = false;
-  @Input() searchable: boolean = true;
-  required = signal(false);
-  private suppressChange: boolean = false;
+  value = model<DropdownValue>('');
 
-  // selectedAttributeKeys
-  // depending on single or multi select mode value is sting or string[]
-  value: string |string[];
+  disabled = input(false);
 
-  // initial state
-  touched = false;
+  options = input<object>({});
+  selectOptions = input<Array<KeyValue<string, {
+    name: string;
+    selected?: boolean;
+  }>>>([]);
 
-  disabled = false;
+  multiple = input(false);
+  searchable = input(true);
 
-  // CVA handler
-  onChange = (value: typeof this.value) => {
-    console.log("ONCHANGE", value);
-  };
+  required = input(false);
 
-  onTouched = () => {
-  };
+  private suppressChange = false;
+  private initialized = false;
 
 
-  // CVA methods
+  constructor() {
+    afterRenderEffect(() => {
 
-  // notify the parent, when the user changes the value
-  registerOnChange(onChange: (value: typeof this.value) => void) {
-    this.onChange = onChange;
-  }
+      // ViewChild is available here
+      if (!this.initialized && this.dropdown) {
+        this.initDropdown();
+        this.initialized = true;
 
-  registerOnTouched(onTouched: () => void) {
-    this.onTouched = onTouched;
-  }
+        this.updateDropdown(this.value());
+      }
 
-  setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
-  }
+    });
 
-  // form writes value to this component
-  writeValue(value: string[]): void {
-    this.value = value;
-    this.updateDropdown(value);
-  }
 
-  // TODO implement this onBlur
-  // markAsTouched() {
-  //   if (!this.touched) {
-  //     this.onTouched();
-  //     this.touched = true;
-  //   }
-  // }
+    // synchronize form -> widget
+    effect(() => {
+      const value = this.value()
 
-  ngAfterViewInit(): void {
-    this.initDropdown();
+      if (!this.initialized) {
+        return;
+      }
+      console.log('effect', value);
+      this.updateDropdown(value);
+
+    });
   }
 
 
-  initDropdown(): void {
-    const options: object = {...this.options,...{
-        onChange: (value:string | string[]) => {
-          // avoid firing useless change events:
-          // - values did not change
-          // - in single selection mode: empty field not allows
+  private initDropdown(): void {
 
-          let shouldFire = !this.suppressChange  && value != undefined;
-          const isCleared =
-            value === undefined ||
-            (typeof value === 'string' && value.trim() === '') ||
-            (Array.isArray(value) && value.length === 0);
+    const options = {
+      ...this.options(),
 
-          if (isCleared && shouldFire) {
-            if (this.value !== null) {
-              if (typeof value === 'string') {
-                this.value = "";
-                this.onChange("");
-              } else if (Array.isArray(value)) {
-                this.value = [""];
-                this.onChange([""]);
-              }
-            }
-            return;
-          }
+      onChange: (value: DropdownValue) => {
 
-          if (this.multiple){
-            value = value as string[];
-            this.value = this.value as string[];
-            shouldFire = shouldFire && !Utils.arraysEqualUnordered(this.value, value);
-          } else {
-            value = value as string;
-            shouldFire = shouldFire && value.trim() !== '' && this.value != value;
-          }
-
-          if (shouldFire) {
-            this.value = value;
-            this.onChange(value);
-          }
+        if (this.suppressChange) {
+          return;
         }
-      }};
+
+        const empty =
+          value === undefined ||
+          value === '' ||
+          (Array.isArray(value) && value.length === 0);
+
+
+        if (empty) {
+          this.value.set(this.multiple() ? [] : '');
+          return;
+        }
+
+
+        if (this.multiple()) {
+
+          const oldValue = this.value();
+
+          const oldArray = Array.isArray(oldValue)
+            ? oldValue
+            : [];
+
+          const newArray = value as string[];
+
+          if (!Utils.arraysEqualUnordered(oldArray, newArray)) {
+            this.value.set(newArray);
+          }
+
+        } else {
+
+          const newValue = value as string;
+
+          if (newValue !== this.value()) {
+            this.value.set(newValue);
+          }
+
+        }
+      }
+    };
+
 
     this.ngZone.runOutsideAngular(() => {
       $(this.dropdown.nativeElement)
         .dropdown(options);
-    })
-
+    });
   }
 
-  updateDropdown(value: string[]) {
+
+  private updateDropdown(value: DropdownValue): void {
 
     this.ngZone.runOutsideAngular(() => {
+
       this.suppressChange = true;
-      $(this.dropdown.nativeElement).dropdown('clear');
+
+      // $(this.dropdown.nativeElement)
+      //   .dropdown('clear');
+
+
+      if (value !== undefined && value !== null) {
+        // queueMicrotask(() => {
+          $(this.dropdown.nativeElement)
+            .dropdown('set exactly', value);
+        // });
+      }
+
       this.suppressChange = false;
-      setTimeout(() => {
-        $(this.dropdown.nativeElement).dropdown('set exactly', value);
-      })
-    })
+
+    });
   }
 
-  // Validator implementation, so you can set "required" attribute on the HTMLElement
-  validate(): ValidationErrors | null {
-    if (this.required() && !this.value) {
-      return {required: true};
-    }
-    return null;
-  }
-
+  // TODO not needed anymore?
+  // validate() {
+  //   const value = this.value();
+  //
+  //   const empty =
+  //     value === '' ||
+  //     value == null ||
+  //     (Array.isArray(value) && value.length === 0);
+  //
+  //   return this.required() && empty
+  //     ? {required: true}
+  //     : null;
+  // }
 }

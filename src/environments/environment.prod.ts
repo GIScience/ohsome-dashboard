@@ -1,9 +1,12 @@
 // until v2 is released, this will be the config for our NEXT dashboard
-export const environment = {
+import {AppEnvironment} from '../app/shared/shared-types';
+
+export const environment: AppEnvironment = {
   production: true,
 
   //ohsomeAPI (osm history stats from OSHDB)
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
+  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
 
   //oqtApi (ohsome quality analyst)
   oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
@@ -20,20 +23,27 @@ export const environment = {
   announcementUrl: 'https://dashboard.ohsome.org/statuspage',
 
   //map options
-  zoomLevel : 2,
-  mapCenter : {lat: 0.0, lng: 0.0},
-  mapCenterFromPoly : false,
-
-  //ohsomeAPI options
-  selectedFilter : `natural=tree and type:node`,
-  selectedKey : 'natural',
-  selectedValue : 'tree',
-  selectedTypes : ['node'],
+  mapOptions: {
+    zoom: 2,
+    center: {lat: 0.0, lng: 0.0},
+    mapCenterFromPoly : false,
+  },
+  // zoomLevel : 2,
+  // mapCenter : {lat: 0.0, lng: 0.0},
+  // mapCenterFromPoly : false,
+  // maskPoly: bboxPolygon([-180, -90, 180, 90]).geometry,
+  //
+  // //ohsomeAPI options
+  // selectedFilter : `natural=tree and type:node`,
+  // selectedKey : 'natural',
+  // selectedValue : 'tree',
+  // selectedTypes : ['node'],
   period : 'P1M',
 
   // userManagement
   appwriteEndpoint: 'https://api.account.heigit.org',
-  appwriteProjectId: '6751abc5002d7cdf3ab7',
+  appwriteProjectId: '6751abc5002d7cdf3ab7', //prod on prod
   accountFrontendUrl: "https://account.heigit.org",
+  cookieUrl: 'https://cookie.api.account.heigit.org',
   skipAppwriteAPIKey: ""
 };

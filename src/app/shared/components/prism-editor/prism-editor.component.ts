@@ -18,7 +18,8 @@ import {PRISM_LANGUAGE_OHSOME_FILTER} from '../../../../prism-language-ohsome-fi
   selector: 'app-prism-editor',
   imports: [],
   changeDetection: ChangeDetectionStrategy.Eager,
-  templateUrl: './prism-editor.component.html'
+  templateUrl: './prism-editor.component.html',
+  styleUrl: './prism-editor.component.css'
 })
 
 export class PrismEditorComponent implements OnInit, OnChanges {

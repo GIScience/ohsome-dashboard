@@ -1,21 +1,20 @@
-import { Injectable, inject } from '@angular/core';
-import {OhsomeApi} from '@giscience/ohsome-js-utils';
-import {OhsomeApiService} from './ohsome-api.service';
+import {inject, Injectable} from '@angular/core';
 import {catchError, Observable, of, retry, tap, throwError} from 'rxjs';
-import MetadataResponse = OhsomeApi.v1.response.MetadataResponse;
+import {OhsomeApiV2Service} from './ohsome-api-v2.service';
+import {components} from '../shared/ohsome-api-v2-types';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class OhsomeApiMetadataProviderService {
-  private ohsomeApiService = inject(OhsomeApiService);
+  private ohsomeApiService = inject(OhsomeApiV2Service);
 
-  private ohsomeMetadataResponse: MetadataResponse;
+  private ohsomeMetadataResponse: components['schemas']['MetadataResponseModel'];
   private ohsomeApiAnnouncement = '';
   public ohsomeApiAvailable = false;
 
-  public getOhsomeMetadataResponse(): MetadataResponse | undefined {
+  public getOhsomeMetadataResponse(): components['schemas']['MetadataResponseModel'] | undefined {
     return this.ohsomeMetadataResponse;
   }
 
@@ -27,19 +26,15 @@ export class OhsomeApiMetadataProviderService {
     return this.ohsomeApiAnnouncement;
   }
 
-  loadOhsomeMetadata(): Observable<MetadataResponse> {
+  loadOhsomeMetadata(): Observable<components['schemas']['MetadataResponseModel']> {
     // return of(ohsomeApiMetadataResponse)
-    return this.ohsomeApiService.get<MetadataResponse>('metadata')
+    return this.ohsomeApiService.metadata()
       .pipe(
         retry({count: 2, delay: 2000, resetOnSuccess: true}),
         tap((response) => {
           // add custom logic here
-          if (MetadataResponse.isMetadataResponseJSON(response)) {
-            this.ohsomeMetadataResponse = new MetadataResponse(response);
-            this.ohsomeApiAvailable = true;
-          } else {
-            this.ohsomeApiAvailable = false;
-          }
+          this.ohsomeMetadataResponse = response;
+          this.ohsomeApiAvailable = true;
         }),
         catchError((error) => {
           this.ohsomeApiAvailable = false;

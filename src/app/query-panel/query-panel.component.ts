@@ -1,5 +1,15 @@
-import { AfterViewChecked, Component, computed, effect, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { NgForm, FormsModule } from '@angular/forms';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild
+} from '@angular/core';
+import {FormsModule, NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
 import envelope from '@turf/envelope';
@@ -12,33 +22,34 @@ import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
-import {feature} from '@turf/helpers';
-import {BoundaryInputComponentOptions, BoundaryType, Userlayer} from '../shared/shared-types';
+import {BoundaryInputComponentOptions, BoundaryType, isQueryMode, QueryMode, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
-import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
+import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
-import { AtLeastOneCheckboxCheckedDirective } from '../shared/directives/validation/at-least-one-checkbox-checked.directive';
-import { NgClass } from '@angular/common';
-import { OhsomeApiQueryFormComponent } from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
-import { OqtApiQueryFormComponent } from '../oqapi/query-form/oqt-api-query-form/oqt-api-query-form.component';
+import {NgClass} from '@angular/common';
+import {OqtApiQueryFormComponent} from '../02_quality/query-form/oqt-api-query-form/oqt-api-query-form.component';
 import {AuthService} from "../singelton-services/auth.service";
+import {StateService} from '../singelton-services/state.service';
+import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
+import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
 
 @Component({
-    selector: 'app-query-panel',
-    templateUrl: './query-panel.component.html',
-    styleUrls: ['./query-panel.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule, AtLeastOneCheckboxCheckedDirective, NgClass, OhsomeApiQueryFormComponent, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent]
+  selector: 'app-query-panel',
+  templateUrl: './query-panel.component.html',
+  styleUrls: ['./query-panel.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);
   protected authService = inject(AuthService);
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
-  private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  protected urlHashParamsProviderService = inject(UrlHashParamsProviderService);
+  protected stateService = inject(StateService);
   private osmBoundaryProviderService = inject(OsmBoundaryProviderService);
 
 
@@ -48,21 +59,24 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   mapInput: BoundarySelectInputComponent | BoundaryInputComponent;
 
   // settings from hash
-  backendParamSignal = computed(() => {
-    return this.urlHashParamsProviderService.currentHashParams().get('backend') ?? 'ohsomeApi';
+  queryModeSignal = computed<QueryMode>((): QueryMode => {
+    const backendParam = this.stateService.appState().queryMode ?? 'ohsomeApi';
+    return isQueryMode(backendParam) ? backendParam : 'ohsomeApi';
   });
-  public readonly hashParams: URLSearchParams;
+
+  public readonly initialHashParams: URLSearchParams;
 
   // default map settings
   public maskPoly;
-  public zoom = environment.zoomLevel;
+  public zoom = environment.mapOptions.zoom;
   public minZoom = 0;
   public maxBounds: LatLngBoundsExpression = [[-90, -180], [90, 180]];
-  public mapCenter = environment.mapCenter;
+  public mapCenter = environment.mapOptions.center;
   public bboxes = '';
   public bcircles = '';
   public bpolys = '';
-  private _adminBoundaries = ''; //contains the current FeatureCollection from ngModel
+  protected adminBoundaries = signal<string>(''); //contains the current FeatureCollection from ngModel
+  //TODO shoud be stored in app state
   private _boundaryType: BoundaryType = 'admin';
   public userDefinedPolygonLayers: Userlayer[] = [];
 
@@ -70,28 +84,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   private _selectedNames: string[] = [];
 
-  public activeBackend: 'ohsomeApi' | 'oqtApi' = 'ohsomeApi';
-
   private formChangesSubscription: Subscription;
 
   constructor() {
-
-    // react on updates in the URLHashParamsProviderService
-    effect(() => {
-      const newBackend = this.backendParamSignal();
-      this.setWhichApi(newBackend);
-    });
-
-
-    const spatialExtent = this.ohsomeApiMetadataProviderService
-        .getOhsomeMetadataResponse()
-        ?.extractRegion.spatialExtent
-      ?? bboxPolygon([-180, -90, 180, 90]).geometry;
-    this.maskPoly = feature(spatialExtent);
+    const spatialExtent = environment.mapOptions.maskPoly ?? bboxPolygon([-180, -90, 180, 90]).geometry;
+    this.maskPoly = spatialExtent;
 
 
     // Code is not necessary for global dataset
-    if (environment.mapCenterFromPoly && typeof this.maskPoly === 'object') {
+    if (environment.mapOptions.mapCenterFromPoly && typeof this.maskPoly === 'object') {
       const _envelope: Feature<Polygon> = envelope(this.maskPoly);
       const _center = centroid(_envelope);
       const _coord = getCoord(_center);
@@ -101,17 +102,13 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     //precedence: hashParams over environment over default
 
     // settings from URL hashparams
-    this.hashParams = this.urlHashParamsProviderService.getHashURLSearchParams();
-
-    // settings from URL hashparams: activate the correct query panel (ohsome or quality API)
-    const backendValue = this.hashParams.get('backend');
-    this.activeBackend = (backendValue === 'ohsomeApi' || backendValue === 'oqtApi') ? backendValue : 'ohsomeApi';
+    this.initialHashParams = this.stateService.initialHashParams;
+    console.log("QP constructor hashParams: " + this.initialHashParams);
 
     // settings from hash: map setttings for ohsomeApi AND oqtApi
-    this.bboxes = Utils.getFromParamsOrDefault(this.hashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
-    this.bcircles = Utils.getFromParamsOrDefault(this.hashParams, 'bcircles', Utils.loadEnv('bcircles', this.bcircles));
-    this.bpolys = Utils.getFromParamsOrDefault(this.hashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
-    this._boundaryType = this.getBoundaryTypeFromHashParams(this.hashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
+    this.bboxes = Utils.getFromParamsOrDefault(this.initialHashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
+    this.bpolys = Utils.getFromParamsOrDefault(this.initialHashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
+    this._boundaryType = this.getBoundaryTypeFromHashParams(this.initialHashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
 
     this.mapOptions = {
       center: this.mapCenter,
@@ -122,19 +119,21 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       userDefinedPolygonLayers: this.userDefinedPolygonLayers
     }
 
-    const ids = this.hashParams.get('adminids')?.split(',').map(Number);
+    const ids = this.initialHashParams.get('adminids')?.split(',').map(Number);
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
       .subscribe({
         next: (featureCollectionOrEmpty: string) => {
-          this.adminBoundaries = featureCollectionOrEmpty;
+          this.adminBoundaries.set(featureCollectionOrEmpty);
 
           // immediately trigger the query if there are hashparams
-          if (window.location.hash) {
+          if (this.stateService.appState().firstForm) {
+            this.stateService.updatePartialState({firstForm: false});
             setTimeout(() => {
+              console.log("FORM VALID", this.form.form.valid)
               if (this.form.form.valid) {
                 this.onSubmit();
               }
-            });
+            }, 1000);
           }
         }
       });
@@ -157,10 +156,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   ngOnInit() {
     // runs on every form change
+    // TODO remove
     this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
       const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
-      this.urlHashParamsProviderService.setHashParams(permalinkParams);
-    })
+      // old way
+      //  this.urlHashParamsProviderService.setHashParams(permalinkParams);
+      // new way
+      this.stateService.legacyFormModel.set(permalinkParams);
+    });
+
   }
 
   ngOnDestroy() {
@@ -177,8 +181,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     let boundaryType: BoundaryType | undefined = undefined;
     if (hashParams.get('bboxes')) {
       boundaryType = 'bbox';
-    } else if (hashParams.get('bcircles')) {
-      boundaryType = 'bcircle';
     } else if (hashParams.get('bpolys')) {
       boundaryType = 'bpoly';
     } else if (hashParams.get('adminids')) {
@@ -196,14 +198,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.zoom = this.mapInput.map.getZoom();
     this.mapOptions = {...this.mapOptions, center: this.mapInput.map.getCenter(), zoom: this.mapInput.map.getZoom()};
     this._boundaryType = value;
-  }
-
-  get adminBoundaries(): string {
-    return this._adminBoundaries;
-  }
-
-  set adminBoundaries(value: string) {
-    this._adminBoundaries = value;
   }
 
   get selectedNames(): string[] {
@@ -256,7 +250,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
 
     // transform indicator checkboxes to list
-    if (this.activeBackend === 'oqtApi') {
+    if (this.queryModeSignal() === 'oqtApi') {
       //get indicators to be queried
       const potentialIndicators = Object.keys(this.oqtApiMetadataProviderService.getOqtApiMetadata().result.indicators);
       const indicatorsToBeQueried: string[] = [];
@@ -283,26 +277,29 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   onSubmit() {
     console.log('Form Value', this.form.value);
-    const permalinkParams = this.getPermalinkParamsFromFormValues(this.form.value);
-    console.log("ONSUBMIT QueryPanel permalinkparams", permalinkParams);
-    this.dataService.pushFormValues(this.form.value, this._boundaryType);
-  }
+    const queryPanelFormValue = structuredClone(this.form.value);
+    let formValue = queryPanelFormValue;
 
-  setWhichApi(activeApi: string | null): void {
-    this.activeBackend = (activeApi === 'ohsomeApi' || activeApi === 'oqtApi')? activeApi : 'ohsomeApi';
-    if (activeApi === 'oqtApi' && this.boundaryType === 'bcircle') {
-      this.boundaryType = 'admin';
+    //here we merge old style ngmodel form values with new signal form values
+    const queryMode = this.stateService.queryModeSignal();
+    switch (queryMode) {
+      case "ohsomeApi":
+        formValue = {...formValue, ...this.stateService.statsFormModel()};
+        break;
+      case "extraction":
+        formValue = {...formValue, ...this.stateService.extractionFormModel()};
     }
+    this.dataService.pushFormValues(formValue, this._boundaryType);
   }
 
   removeAdminBoundary(event: MouseEvent) {
     const featureIndex = event.currentTarget?.['dataset']['featureIndex'];
-    const featureCollection = JSON.parse(this.adminBoundaries);
+    const featureCollection = JSON.parse(this.adminBoundaries());
     featureCollection.features.splice(featureIndex, 1);
     if (featureCollection.features.length === 0) {
-      this.adminBoundaries = '';
+      this.adminBoundaries.set('');
     } else {
-      this.adminBoundaries = JSON.stringify(featureCollection);
+      this.adminBoundaries.set(JSON.stringify(featureCollection));
     }
 
   }
@@ -313,11 +310,10 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
 
     if (this.boundaryType === 'admin') {
-      this.adminBoundaries = '';
+      this.adminBoundaries.set('');
     }
 
     this.form.controls['bboxes']?.setValue('');
-    this.form.controls['bcircles']?.setValue('');
     this.form.controls['bpolys']?.setValue('');
   }
 

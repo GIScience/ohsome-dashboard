@@ -2,14 +2,17 @@ import {TestBed} from '@angular/core/testing';
 
 import {UrlHashParamsProviderService} from './url-hash-params-provider.service';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
+import {StateService} from './state.service';
 
 describe('UrlHashParamsProviderService', () => {
   let service: UrlHashParamsProviderService;
+  let stateService: StateService;
   let originalHash: string;
 
   beforeEach(() => {
     originalHash = globalThis.location.hash; // save before test
     TestBed.configureTestingModule({});
+    stateService = TestBed.inject(StateService);
     service = TestBed.inject(UrlHashParamsProviderService);
     globalThis.location.hash = ''; // clean start
   });
@@ -22,27 +25,17 @@ describe('UrlHashParamsProviderService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update internal signal based on globalThis.location.hash', () => {
-    globalThis.location.hash = 'foo=bar&baz=qux';
-
-    service.updateHashParamsStoreFromUrl();
-
-    const params = service.currentHashParams();
-    expect(params.get('foo')).toBe('bar');
-    expect(params.get('baz')).toBe('qux');
-  });
-
-  it('should return URLSearchParams, updating from URL if needed', () => {
-    globalThis.location.hash = 'alpha=beta';
-
+  it('should update internal signal based on relevant app state', async () => {
+    stateService.updatePartialState({queryMode:'extraction'});
+    TestBed.tick();
     const params = service.getHashURLSearchParams();
-
-    expect(params.get('alpha')).toBe('beta');
+    console.log(">>>>>>>>>>>>", params)
+    expect(params.get('backend')).toBe('extraction');
   });
 
   it('should completely exchange params: update currentHashParams signal and globalThis.location.hash', () => {
     globalThis.location.hash = 'alpha=beta';
-    service.updateHashParamsStoreFromUrl();
+    // service.updateHashParamsStoreFromUrl();
 
     service.setHashParams({ foo: 'bar', baz: 'qux' });
 

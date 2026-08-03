@@ -1,12 +1,9 @@
 import {NgModule} from '@angular/core';
-import {OhsomeApiService} from './ohsome-api.service';
-import {SimpleChartComponent} from './result/simple-chart/simple-chart.component';
-import {SimpleGroupbyResultComponent} from './result/simple-groupby-result/simple-groupby-result.component';
-import {SimpleResultComponent} from './result/simple-result/simple-result.component';
+import {SimpleChartComponent} from '../01_stats/result/simple-chart/simple-chart.component';
+import {SimpleGroupbyResultComponent} from '../01_stats/result/simple-groupby-result/simple-groupby-result.component';
 import {NgDatePipesModule} from 'ngx-pipes';
 import {TimePeriodPickerInputComponent} from './query-form/time-period-picker-input/time-period-picker-input.component';
 import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/ohsome-api-query-form.component';
-
 
 
 @NgModule({
@@ -14,7 +11,6 @@ import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/oh
     NgDatePipesModule,
     SimpleChartComponent,
     SimpleGroupbyResultComponent,
-    SimpleResultComponent,
     TimePeriodPickerInputComponent,
     OhsomeApiQueryFormComponent,
 ],
@@ -22,11 +18,10 @@ import {OhsomeApiQueryFormComponent} from './query-form/ohsome-api-query-form/oh
         OhsomeApiQueryFormComponent,
         SimpleChartComponent,
         SimpleGroupbyResultComponent,
-        SimpleResultComponent,
     ],
     providers: [
-        OhsomeApiService,
     ]
 })
+//TODO remove OSHDB Module completely, first remove from tests
 export class OshdbModule {
 }

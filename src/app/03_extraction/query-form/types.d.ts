@@ -1,0 +1,36 @@
+import {AOIData} from '../../shared/components/aoi-input/aoi-input.component';
+import {components} from '../../shared/ohsome-api-v2-types';
+
+interface SharedFormData {
+  topic: string;
+  "topic-title": string;
+  "topic-filter": string;
+}
+
+interface StatsFormData extends SharedFormData {
+  aoi: AOIData;
+  // time: string; //start/end/interval
+  start: string;
+  end: string;
+  interval: string;
+  measure: components['schemas']['MeasureRequestModel'];
+  groupByTagKey: string;
+}
+
+interface QualityFormData extends SharedFormData {
+  indicators: string[];
+  adminids: string;
+}
+
+interface ExtractionFormData extends SharedFormData {
+  aoi: AOIData;
+  clip: boolean;
+  timestamp: string;
+}
+
+export {
+  SharedFormData,
+  StatsFormData,
+  QualityFormData,
+  ExtractionFormData,
+}

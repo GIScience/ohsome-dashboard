@@ -3,19 +3,27 @@ import {environment} from './environments/environment';
 
 export default class Utils {
   static sanitizeLabel(label) {
-    if (label == undefined) { return ''}
+    if (label == undefined) {
+      return ''
+    }
     if (label.includes('-_-')) {
       label = label.split('-_-')[1];
     }
     return label.replace(/__/g, ' ');
   }
 
-  static loadEnv(name, defaultValue) {
-    if (name in environment && environment[name] !== '') {
-      return environment[name];
-    } else {
-      return defaultValue;
-    }
+  static loadEnv<T>(name: string, defaultValue: T): T {
+    const value = this.getObjectProperty<T>(environment, name);
+
+    return value !== undefined && value !== ''
+      ? value
+      : defaultValue;
+  }
+
+  static getObjectProperty<T = unknown>(obj: unknown, path: string): T | undefined {
+    return path
+      .split('.')
+      .reduce<any>((o, key) => o?.[key], obj);
   }
 
   static setObjectProperty(obj = {}, path, val) {
@@ -24,12 +32,15 @@ export default class Utils {
     keys.reduce((o, k) => o[k] ??= {}, obj)[last] = val
   }
 
-  static getFromParamsOrDefault(params: URLSearchParams, key: string, def: string): string {
+  static getFromParamsOrDefault<T>(params: URLSearchParams, key: string, def: T): T {
     if (!params.has(key)) {
       return def;
-    } else {
-      return params.get(key) || '';
     }
+    if (Array.isArray(def)) {
+      return (params.get(key)?.split(",") || []) as T;
+    }
+    // if (typeof def === 'string')
+    return (params.get(key) || '') as T;
   }
 
   // helper function which calculates a matching start date for a given end date and peri od
@@ -47,7 +58,7 @@ export default class Utils {
     return moment(time).subtract(multiplePeriod).toISOString();
   }
 
-  static async wait(ms:number): Promise<void> {
+  static async wait(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -65,4 +76,25 @@ export default class Utils {
     }
     return true;
   }
+
+  static getUnitByMeasure(measure: string): string {
+
+    const units: { [measure: string]: string } = {
+      'count': '',
+      'length': 'm',
+      'area': 'm²'
+    }
+
+    const unit = units[measure];
+    if (unit == undefined) throw new TypeError(`${measure} has no known unit.`)
+
+    return unit;
+  }
+
+  static capitalizeFirstLetter(str: string): string {
+    if (str.trim() === "") return str.trim();
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
 }
+

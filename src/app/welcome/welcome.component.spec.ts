@@ -1,11 +1,11 @@
-import {beforeEach, describe, expect, it, vi, type Mock} from "vitest";
+import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WelcomeComponent} from './welcome.component';
 import {provideHttpClient} from '@angular/common/http';
-import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
-import OqtApiMetadataProviderServiceMock from '../oqapi/oqt-api-metadata-provider.service.mock';
-import {oqtApiMetadataResponseMock} from '../oqapi/oqt-api-metadata.response.mock';
+import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
+import OqtApiMetadataProviderServiceMock from '../02_quality/oqt-api-metadata-provider.service.mock';
+import {oqtApiMetadataResponseMock} from '../02_quality/oqt-api-metadata.response.mock';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import UrlHashParamsProviderServiceMock from '../singelton-services/url-hash-params-provider.service.mock';
 import Utils from '../../utils';
@@ -71,7 +71,7 @@ describe('WelcomeComponent', () => {
       vi.spyOn($.fn, 'modal').mockReturnValue(undefined);
 
       component.linkTo('oqtApi');
-      expect(UrlHashParamsProviderServiceMock.setHashParams).toHaveBeenCalledWith({backend: 'oqtApi'});
+      expect(component.stateService.appState().queryMode).toBe('oqtApi');
       expect($('#welcome').modal).toHaveBeenCalledWith('hide');
     });
   });
@@ -103,17 +103,17 @@ describe('WelcomeComponent', () => {
     it('should update urlHashParams for backend oqtApi', () => {
 
       //prepare current form tab is oqtApi
-      ((component as any).urlHashParamsService.getHashURLSearchParams as Mock).mockReturnValue(new URLSearchParams({backend: 'oqtApi'}));
+      component.stateService.updatePartialState({queryMode: 'oqtApi'});
+
 
       // execute test
       component.onTopicCatalogRowClick(fakeEvent, fakeRow);
 
       //evaluate
       // if current form is based on backend=oqtApi, DO preserve other params when switching to oqapi topic
-      expect((component as any).urlHashParamsService.updateHashParams).toHaveBeenCalledWith({
-        backend: 'oqtApi',
-        topic: 'TOPIC_123'
-      });
+      expect(component.stateService.appState().queryMode).toBe('oqtApi');
+      expect(component.stateService.sharedFormSignals.topic()).toBe('TOPIC_123');
+
       expect((component as any).urlHashParamsService.setHashParams).not.toHaveBeenCalled();
 
     });
@@ -121,17 +121,16 @@ describe('WelcomeComponent', () => {
     it('should set urlHashParams for backend ohsomeApi', () => {
 
       //prepare current form tab is ohsomeApi
-      ((component as any).urlHashParamsService.getHashURLSearchParams as Mock).mockReturnValue(new URLSearchParams({backend: 'ohsomeApi'}));
+      component.stateService.updatePartialState({queryMode: 'ohsomeApi'});
 
       // execute test
       component.onTopicCatalogRowClick(fakeEvent, fakeRow);
 
       //evaluate
       // if current form is based on backend=ohsomeApi, DO NOT preserve other params when switching to oqapi topic
-      expect((component as any).urlHashParamsService.setHashParams).toHaveBeenCalledWith({
-        backend: 'oqtApi',
-        topic: 'TOPIC_123'
-      });
+      expect(component.stateService.appState().queryMode).toBe('oqtApi');
+      expect(component.stateService.sharedFormSignals.topic()).toBe('TOPIC_123');
+
       expect((component as any).urlHashParamsService.updateHashParams).not.toHaveBeenCalled();
 
     });

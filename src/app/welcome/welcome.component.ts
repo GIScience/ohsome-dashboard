@@ -20,10 +20,11 @@ import {
   SortModule,
   Tabulator
 } from 'tabulator-tables';
-import {OqtApiMetadataProviderService} from '../oqapi/oqt-api-metadata-provider.service';
-import {MetadataResponseJSON} from '../oqapi/types/MetadataResponseJSON';
+import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
+import {MetadataResponseJSON} from '../02_quality/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
+import {QueryMode} from '../shared/shared-types';
 
 declare const $: any;
 
@@ -145,12 +146,11 @@ export class WelcomeComponent {
   }
 
   onTopicCatalogRowClick = (e: UIEvent, row: RowComponent) => {
-    const d = row.getData();
-    const currentBackend = this.urlHashParamsService.getHashURLSearchParams().get('backend');
-    if (currentBackend === 'oqtApi') {
-      this.urlHashParamsService.updateHashParams({backend: 'oqtApi', topic: d['id']});
-    } else {
-      this.urlHashParamsService.setHashParams({backend: 'oqtApi', topic: d['id']});
+    const rowData = row.getData();
+    const currentBackend = this.stateService.queryModeSignal();
+    this.stateService.sharedFormSignals.topic.set(rowData['id']);
+    if (currentBackend !== 'oqtApi') {
+      this.stateService.updatePartialState({queryMode: 'oqtApi'});
     }
     $('#welcome').modal('hide');
   };
@@ -209,8 +209,9 @@ export class WelcomeComponent {
 
   }
 
-  linkTo(backend: 'ohsomeApi' | 'oqtApi') {
-    this.urlHashParamsService.setHashParams({backend: backend});
+  linkTo(queryMode: QueryMode) {
+    // this.urlHashParamsService.setHashParams({backend: backend});
+    this.stateService.updatePartialState({queryMode});
     $('#welcome').modal('hide');
   }
 }

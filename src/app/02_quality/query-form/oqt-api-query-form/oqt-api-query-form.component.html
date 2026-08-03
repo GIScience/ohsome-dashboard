@@ -1,0 +1,175 @@
+<div class="ui one column grid">
+  <!-- Identifier to distinguish ohsome query from oqt query -->
+  <input type="hidden" name="backend" value="oqtApi" ngModel="oqtApi">
+  <div class="row">
+    <div class="column">
+      <!-- TODO: maybe feature-toggle with project (only show non-core projects explicitly)? -->
+      <!-- 1. Topic or AOI-->
+      <h4 id="topicHeading" class="ui header" i18n><i class="filter icon"></i>Topic</h4>
+      <button type="button" id="searchTopicBtn" class="ui right floated basic button" tabindex="0"
+              (click)="stateService.updatePartialState({showWelcomeScreen: true, welcomeTab: 'topicCatalog'})" i18n>
+        <i class="icon search"></i>
+        Search Topic Catalog
+      </button>
+
+      <div class="ui basic segment">
+      <div class="ui items">
+        <div class="item">
+          <div class="editable-topic">
+            <div class="field">
+              <app-sui-multi-select-search-dropdown #searchSelectTopic
+                                                    [required]="true"
+                                                    [multiple]="false"
+                                                    name="topic"
+                                                    [(ngModel)]="selectedTopicKey"
+                                                    [options]="{fullTextSearch: 'exact'}"
+                                                    [selectOptions]="topics | keyvalue">
+              </app-sui-multi-select-search-dropdown>
+            </div>
+            <button type="button" class="ui blue icon button"
+                    data-tooltip="Edit the topic filter."
+                    data-inverted
+                    [class.disabled]="selectedTopicKey === 'custom-topic'"
+                    (click)="setCustomTopic()"
+                    i18n-data-tooltip
+            >
+              <i class="edit icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+<!--      <div class="ui basic segment">-->
+        <div class="ui items" id="topic-details" [class.highlight-topic-details]="selectedTopicKey === 'custom-topic'">
+          <div class="item">
+            <div class="content">
+              {{ topics[selectedTopicKey].description }}
+            </div>
+          </div>
+          <!--name="topic-title"-->
+          <!--required-->
+<!--          [ngModel]="qualityForm['topic-title']().value()"-->
+          @if (selectedTopicKey === 'custom-topic') {
+            <div class="item">
+              <div class="content">
+                <label for="topic-title" i18n>Custom topic title:</label>
+                <input type="text" id="topic-title"
+                       placeholder="Enter your Topic Title"
+                       [formField]="qualityForm['topic-title']"
+                       i18n-placeholder
+                >
+                <input type="hidden"
+                       name="topic-title"
+                       [ngModel]="qualityForm['topic-title']().value()"
+                       required
+                >
+<!--                <input type="text" id="topic-title"-->
+<!--                       name="topic-title"-->
+<!--                       placeholder="Enter your Topic Title"-->
+<!--                       [ngModel]="topicTitleDefinition()"-->
+<!--                       (ngModelChange)="setCustomTopicTitleDefinition($event)"-->
+<!--                       required-->
+<!--                       i18n-placeholder-->
+<!--                >-->
+              </div>
+            </div>
+          }
+          <div class="item">
+            <div class="content">
+              <span i18n><a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">ohsome filter</a> definition
+              of the topic:</span>
+              @if (selectedTopicKey === 'custom-topic') {
+                <app-prism-editor id="topicFilter"
+                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"
+                                  [formField]="qualityForm['topic-filter']"
+                ></app-prism-editor>
+<!--                <app-prism-editor id="topicFilter" [readonly]="false"-->
+<!--                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"-->
+<!--                                  [value]="topicFilterDefinition()"-->
+<!--                                  (valueChange)="setCustomTopicFilterDefinition($event)"-->
+<!--                ></app-prism-editor>-->
+                <input type="hidden" id="topic-filter"
+                       name="topic-filter"
+                       [ngModel]="qualityForm['topic-filter']().value()"
+                       required>
+              } @else {
+                <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
+                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
+                                  [backgroundColor]="'#f9f9f9'"
+                ></app-prism-editor>
+              }
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Set of indicators -->
+      <div class="ui divider"></div>
+      <h4 class="ui header" i18n><i class="chart line icon"></i>Quality Indicators</h4>
+      <!-- display all indicators_ always -->
+      <!-- disable unavailable indicators_ (sort by availability?) -->
+
+      <!-- grouping indicators with ngModelGroup="indicators" does not work properly. Work around -> handle flat indicators in result   -->
+      @for (qualityDimension of currentQualityDimensions; track qualityDimension) {
+        <div id="indicatorGroup">
+          <div class="ui secondary segment">
+            <div class="ui small header quality-dimension">{{ qualityDimensions[qualityDimension].name }}</div>
+            <div class="ui divided items">
+              <!-- individual indicators start -->
+              @for (indicator of topics[selectedTopicKey].qualityDimensions?.[qualityDimension]; track indicator) {
+                <div class="item">
+                  <app-simple-indicator
+                    [indicator]="indicator"
+                    [qualityDimension]="qualityDimension"
+                    (indicatorToggle)="onIndicatorToggle($event)"
+                  >
+                    @switch (indicator.key) {
+                      @case ("attribute-completeness") {
+                        @if (indicator.checked) {
+                          <app-attribute-completeness-attributes
+                            [selectedTopic]="topics[selectedTopicKey]"
+                            [hashParams]="hashParams"
+                            [indicatorKey]="indicator.key"
+                          ></app-attribute-completeness-attributes>
+                        }
+                      }
+                      @case ("land-cover-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-thematic-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-thematic-accuracy-indicator>
+                        }
+                      }
+                      @case ("roads-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-thematic-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-thematic-accuracy-indicator>
+                        }
+                      }
+                    }
+                  </app-simple-indicator>
+                </div>
+              }
+              <!-- individual indicators end -->
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Warning if a topic exists, but none of its indicators_ is available -->
+      @if (currentQualityDimensions.size === 0) {
+        <div class="ui small negative icon message" i18n>
+          <i class="minus circle icon"></i>Sorry, currently no indicators are available for this topic.
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+</div>

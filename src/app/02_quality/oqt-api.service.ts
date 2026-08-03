@@ -1,0 +1,81 @@
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpContext, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable,} from 'rxjs';
+import {AttributeResponseJSON, IndicatorResponseJSON} from './types/types';
+import {environment} from '../../environments/environment';
+import {BaseResponseJSON} from './types/BaseResponseJSON';
+import {MetadataResponseJSON} from './types/MetadataResponseJSON';
+import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
+import {StateService} from '../singelton-services/state.service';
+import {SKIP_AUTH} from '../interceptors/skip-auth.token';
+// import {oqtApiMetadataResponseMock} from './oqt-api-metadata.response.mock';
+// import {indicatorResponseMock} from './result/indicator.response.mock';
+
+const OQT_API_ROOT_URL = environment.oqtApiRootUrl;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OqtApiService {
+
+  OQT_API_PROJECT: string;
+
+  private stateService = inject(StateService);
+  private http = inject(HttpClient);
+  private static readonly DEFAULT_HTTP_CONTEXT = new HttpContext();
+
+  constructor() {
+    const project = null; //urlHashParamsProviderService.getHashURLSearchParams().get("project");
+    this.OQT_API_PROJECT = project || environment.oqtApiProject || 'core';
+  }
+
+  get(urlPath: string, queryParams = '', context: HttpContext = OqtApiService.DEFAULT_HTTP_CONTEXT): Observable<BaseResponseJSON> {
+    return this.http.get<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
+      {
+        params: new HttpParams({fromString: queryParams}),
+        responseType: 'json',
+        headers: new HttpHeaders({'Accept-Language': this.stateService.appState().appLanguage}),
+        context: context,
+      });
+  }
+
+  post(urlPath: string, body?: object | null, context: HttpContext = OqtApiService.DEFAULT_HTTP_CONTEXT): Observable<BaseResponseJSON> {
+    return this.http.post<BaseResponseJSON>(OQT_API_ROOT_URL + '/' + urlPath,
+      body,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json', 'accept': 'application/json',
+          'Accept-Language': this.stateService.appState().appLanguage,
+        }),
+        context: context,
+      });
+  }
+
+  getMetadata(): Observable<MetadataResponseJSON> {
+    // return of(oqtApiMetadataResponseMock);
+    return this.get(
+      'metadata',
+      `project=${this.OQT_API_PROJECT}`,
+      new HttpContext().set(SKIP_AUTH, true)) as Observable<MetadataResponseJSON>;
+  }
+
+  getIndicator(indicatorKey, body): Observable<IndicatorResponseJSON> {
+    // return of(indicatorResponseMock);
+    const path = `indicators/${indicatorKey}`;
+    return this.post(path, body);
+  }
+
+  getIndicatorCoverage(indicatorKey: string, inverse: boolean = false): Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>> {
+    const path = `metadata/indicators/${indicatorKey}/coverage`;
+    return this.get(path, `inverse=${inverse}`) as Observable<BaseResponseJSON & FeatureCollection<Polygon | MultiPolygon>>;
+  }
+
+  getAttributes(): Observable<AttributeResponseJSON> {
+    const path = `metadata/attributes`;
+    return this.get(
+      path,
+      '',
+      new HttpContext().set(SKIP_AUTH, true)
+    ) as Observable<AttributeResponseJSON>;
+  }
+}

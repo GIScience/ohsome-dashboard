@@ -1,33 +1,70 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {SuiMultiSelectSearchDropdownComponent} from './sui-multi-select-search-dropdown.component';
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {before} from 'node:test';
 
 describe('SuiDropdownComponent', () => {
-    let component: SuiMultiSelectSearchDropdownComponent;
-    let fixture: ComponentFixture<SuiMultiSelectSearchDropdownComponent>;
+  let component: SuiMultiSelectSearchDropdownComponent;
+  let fixture: ComponentFixture<SuiMultiSelectSearchDropdownComponent>;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [SuiMultiSelectSearchDropdownComponent]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SuiMultiSelectSearchDropdownComponent]
+    })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(SuiMultiSelectSearchDropdownComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+
+  it('updates dropdown when value changes', () => {
+
+    const setExactly = vi.fn();
+
+    (globalThis as any).$ = vi.fn(() => ({
+      dropdown: vi.fn((command, value) => {
+
+        if (command === 'set exactly') {
+          setExactly(value);
+        }
+
+      })
+    }));
+
+
+    component.value.set('bus-stops');
+
+    fixture.detectChanges();
+
+
+    expect(setExactly).toHaveBeenCalledWith('bus-stops');
+
+  });
+
+
+  it('updates value when dropdown changes', () => {
+    let dropdownOptions: any;
+    before(() => {
+      (globalThis as any).$ = vi.fn(() => ({
+        dropdown: vi.fn((options) => {
+          dropdownOptions = options;
         })
-            .compileComponents();
+      }));
+    (component as any).initDropdown()
+    })
 
-        fixture = TestBed.createComponent(SuiMultiSelectSearchDropdownComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    dropdownOptions.onChange('bus-stops');
 
-    it('should update the value when writeValue is called', async () => {
-        vi.spyOn(component, 'updateDropdown').mockReturnValue(undefined);
+    expect(component.value())
+      .toBe('bus-stops');
 
-        component.writeValue(['test value']);
-
-        expect(component.value).toEqual(['test value']);
-        expect(component.updateDropdown).toHaveBeenCalled();
-    });
+  });
 
 });
