@@ -8,10 +8,8 @@ import {NgClass} from '@angular/common';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-import {ExtractionQueryFormComponent} from './03_extraction/query-form/extraction-query-form.component';
 import {AuthService} from './singelton-services/auth.service';
 import {environment} from '../environments/environment';
-import {StatsQueryFormComponent} from './01_stats/query-form/stats-query-form.component';
 
 declare const $: any;
 
@@ -20,7 +18,7 @@ declare const $: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, ExtractionQueryFormComponent, StatsQueryFormComponent]
+  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);

@@ -1,14 +1,20 @@
-import {ComponentRef, Directive, OnInit, ViewContainerRef, inject} from '@angular/core';
+import {ComponentRef, Directive, inject, OnInit, ViewContainerRef} from '@angular/core';
 import {ResultComponent} from '../ohsomeapi/result/result.component';
 import {DataService} from '../singelton-services/data.service';
 import {OqtResultComponent} from '../02_quality/result/oqt-result.component';
 import {ExtractionResultComponent} from '../03_extraction/result/extraction-result.component';
+import {StateService} from '../singelton-services/state.service';
+import bbox from '@turf/bbox';
+import {flatCoordsToPolygon, parseBoundaryLists} from '../shared/utils/boundaries.utils';
+import bboxPolygon from '@turf/bbox-polygon';
+import {featureCollection} from '@turf/helpers';
 
-  @Directive({
+@Directive({
     selector: '[appResultList]'
   })
   export class ResultListDirective implements OnInit {
     private container = inject(ViewContainerRef);
+    private stateService = inject(StateService);
     private dataService = inject(DataService);
 
     private resultItem: ComponentRef<ResultComponent>;
@@ -19,8 +25,7 @@ import {ExtractionResultComponent} from '../03_extraction/result/extraction-resu
 
     ngOnInit() {
       this.dataService.currentFormValues.subscribe(result => {
-        const backend = result.formValues.backend;
-
+        const backend = this.stateService.queryModeSignal();
         switch (backend) {
           case 'ohsomeApi':
             this.createResultComponent(result);
@@ -51,6 +56,28 @@ import {ExtractionResultComponent} from '../03_extraction/result/extraction-resu
     }
 
     private createExtractionComponent(result) {
+
+      // transform boundary to bbox for aoi
+      switch (result.boundaryType) {
+        case 'admin':
+          const fc = JSON.parse(result.formValues.bpolys);
+          console.log('featureCollection', fc);
+          result.formValues.aoi = bbox(fc).join(',');
+          break;
+        case 'bbox':
+          const bboxValueIds = parseBoundaryLists(result.formValues.bboxes);
+          // @ts-ignore
+          result.formValues.aoi = bbox(featureCollection(bboxValueIds.values.map(bboxPolygon))).join(',');
+          break;
+        case 'bpoly':
+          const bpolyValueIds = parseBoundaryLists(result.formValues.bpolys);
+          // @ts-ignore
+          result.formValues.aoi = bbox(featureCollection(bpolyValueIds.values.map(flatCoordsToPolygon))).join(',');
+          break;
+        default:
+          console.log("create extraction result, boundary type conversion not implemented", result.boundaryType);
+      }
+
       const extractionResultItem = this.container.createComponent(ExtractionResultComponent, {index: 0});
       extractionResultItem.setInput('formValues', result.formValues);
       extractionResultItem.instance.componentRef = extractionResultItem;

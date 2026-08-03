@@ -12,10 +12,13 @@ describe('ResultComponent', () => {
   let fixture: ComponentFixture<ResultComponent>;
 
   const formValuesMock = {
-    filter: 'natural=* and type:node',
+    topic: 'custom-topic',
+    "topic-filter": 'natural=* and type:node',
     groupBy: 'none',
     bboxes: '8.9,48.8,9.0,48.9',
-    time: '/2026-01-01Z/P1Y'
+    start: '2025-01-01Z',
+    end: '2026-01-01Z',
+    interval: 'P1M'
   };
 
   beforeEach(async () => {

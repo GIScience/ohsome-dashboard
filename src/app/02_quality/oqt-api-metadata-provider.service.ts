@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {OqtApiService} from './oqt-api.service';
 import {catchError, firstValueFrom, retry, tap, throwError} from 'rxjs';
 import {MetadataResponseJSON} from './types/MetadataResponseJSON';
 import {Userlayer} from '../shared/shared-types';
-import {AttributeResponseJSON } from './types/types';
+import {AttributeResponseJSON} from './types/types';
 
 @Injectable({
   providedIn: 'root'
@@ -111,12 +111,13 @@ export class OqtApiMetadataProviderService {
           return throwError(() => new Error('Ohsome Quality Analyst Service did not respond with a metadata response.'));
         })
       );
-    }
+  }
 
   cachedData: Record<string, Promise<Userlayer>> = {};
+
   async getIndicatorCoverage(indicatorKey: string): Promise<Userlayer> {
     // Return cached or in-progress promise immediately
-    if ( this.cachedData[indicatorKey] === undefined ) {
+    if (this.cachedData[indicatorKey] === undefined) {
       // Start the download and store the in-progress Promise
       this.cachedData[indicatorKey] = (async () => {
         try {
@@ -129,7 +130,7 @@ export class OqtApiMetadataProviderService {
             name: indicatorKey,
             title: 'Coverage of reference data',
             data: coverageGeoJSON,
-            style: { color: '#000', stroke: false },
+            style: {color: '#000', stroke: false},
           }) as Userlayer;
         } catch (error) {
           console.error('Error downloading file:', error);
@@ -143,6 +144,9 @@ export class OqtApiMetadataProviderService {
     return this.cachedData[indicatorKey];
   }
 
+  getTopicFilter(topic: string) {
+    return this.getOqtApiMetadata().result.topics[topic].filter;
+  }
 }
 
 

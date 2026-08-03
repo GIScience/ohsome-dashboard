@@ -19,13 +19,13 @@ export class UrlHashParamsProviderService {
     let activeForm;
     switch (backend) {
       case "ohsomeApi":
-        activeForm = statsForm;
+        activeForm = {...statsForm, ...legacyForm};
         break;
       case "oqtApi":
         activeForm = {...qualityForm, ...legacyForm};
         break;
       case "extraction":
-        activeForm = extractionForm;
+        activeForm = {...extractionForm, ...legacyForm};
     }
     if(!activeForm) {return {backend}}
     //exclude empty url params

@@ -5,7 +5,8 @@ import {
   computed,
   inject,
   OnDestroy,
-  OnInit, signal,
+  OnInit,
+  signal,
   ViewChild
 } from '@angular/core';
 import {FormsModule, NgForm} from '@angular/forms';
@@ -21,7 +22,6 @@ import {environment} from '../../environments/environment';
 import {BoundarySelectInputComponent} from '../shared/components/boundary-select-input/boundary-select-input.component';
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
-import {feature} from '@turf/helpers';
 import {BoundaryInputComponentOptions, BoundaryType, isQueryMode, QueryMode, Userlayer} from '../shared/shared-types';
 import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
@@ -29,23 +29,19 @@ import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-prov
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
 import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
-import {
-  AtLeastOneCheckboxCheckedDirective
-} from '../shared/directives/validation/at-least-one-checkbox-checked.directive';
 import {NgClass} from '@angular/common';
-import {
-  OhsomeApiQueryFormComponent
-} from '../ohsomeapi/query-form/ohsome-api-query-form/ohsome-api-query-form.component';
 import {OqtApiQueryFormComponent} from '../02_quality/query-form/oqt-api-query-form/oqt-api-query-form.component';
 import {AuthService} from "../singelton-services/auth.service";
 import {StateService} from '../singelton-services/state.service';
+import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
+import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
 
 @Component({
   selector: 'app-query-panel',
   templateUrl: './query-panel.component.html',
   styleUrls: ['./query-panel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, AtLeastOneCheckboxCheckedDirective, NgClass, OhsomeApiQueryFormComponent, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent]
+  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);
@@ -281,9 +277,19 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   onSubmit() {
     console.log('Form Value', this.form.value);
-    const permalinkParams = this.getPermalinkParamsFromFormValues(this.form.value);
-    console.log("ONSUBMIT QueryPanel permalinkparams", permalinkParams);
-    this.dataService.pushFormValues(this.form.value, this._boundaryType);
+    const queryPanelFormValue = structuredClone(this.form.value);
+    let formValue = queryPanelFormValue;
+
+    //here we merge old style ngmodel form values with new signal form values
+    const queryMode = this.stateService.queryModeSignal();
+    switch (queryMode) {
+      case "ohsomeApi":
+        formValue = {...formValue, ...this.stateService.statsFormModel()};
+        break;
+      case "extraction":
+        formValue = {...formValue, ...this.stateService.extractionFormModel()};
+    }
+    this.dataService.pushFormValues(formValue, this._boundaryType);
   }
 
   removeAdminBoundary(event: MouseEvent) {
@@ -308,7 +314,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
 
     this.form.controls['bboxes']?.setValue('');
-    this.form.controls['bcircles']?.setValue('');
     this.form.controls['bpolys']?.setValue('');
   }
 

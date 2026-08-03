@@ -12,7 +12,6 @@ import {StateService} from '../../singelton-services/state.service';
 import {OhsomeApiMetadataProviderService} from '../../ohsomeapi/ohsome-api-metadata-provider.service';
 import {ExtractionFormData} from './types';
 import Utils from '../../../utils';
-import {BoundaryInputComponent} from '../../shared/components/boundary-input/boundary-input.component';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
 import {toPng} from 'html-to-image';
@@ -25,8 +24,7 @@ import {AuthService} from '../../singelton-services/auth.service';
     FormField,
     KeyValuePipe,
     SuiMultiSelectSearchDropdownComponent,
-    FormsModule,
-    BoundaryInputComponent
+    FormsModule
   ],
   templateUrl: './extraction-query-form.component.html',
   styleUrl: './extraction-query-form.component.css',
@@ -47,13 +45,13 @@ export class ExtractionQueryFormComponent {
 
   extractionForm = form(this.extractionFormModel, (schemaPath) => {
     // required(schemaPath['topic-filter'], {message: ' An ohsome filter is required.'});
-    validate(schemaPath.aoi, ({value}) => {
-      console.log("VALIDATOR", value());
-      const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
-      return numberOfShapes !== 1
-        ? {kind: 'singleBboxRequired', message: ' A single bounding box is required.'}
-        : null;
-    });
+    // validate(schemaPath.aoi, ({value}) => {
+    //   console.log("VALIDATOR", value());
+    //   const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
+    //   return numberOfShapes !== 1
+    //     ? {kind: 'singleBboxRequired', message: ' A single bounding box is required.'}
+    //     : null;
+    // });
     validate(schemaPath, () => {
       return this.authService.isAnon()
         ? {kind: 'signInRequire', message: " You need to be signed in."}
@@ -77,8 +75,8 @@ export class ExtractionQueryFormComponent {
   });
 
   protected mapOptions: BoundaryInputComponentOptions = {
-    center: environment.mapCenter ?? {lat: 0, lng: 0},
-    zoom: environment.zoomLevel ?? 5,
+    center: environment.mapOptions.center ?? {lat: 0, lng: 0},
+    zoom: environment.mapOptions.zoom ?? 5,
   };
 
 
@@ -87,11 +85,12 @@ export class ExtractionQueryFormComponent {
     // immediately trigger the query if there are hashparams
     if (this.stateService.appState().firstForm) {
       this.stateService.updatePartialState({firstForm: false});
-      setTimeout(() => {
-        if (this.extractionForm().valid()) {
-          this.onSubmit(null);
-        }
-      }, 1500);
+      // TODO submit parent query form
+      // setTimeout(() => {
+      //   if (this.extractionForm().valid()) {
+      //     this.onSubmit(null);
+      //   }
+      // }, 1500);
     }
   }
 
@@ -123,7 +122,7 @@ export class ExtractionQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: initialHashParams.get('aoi') ?? '',
+      aoi: initialHashParams.get('aoi') ?? '', // todo remove
       clip: initialHashParams.get('clip')?.toLowerCase() !== "false", //only "true" is true
       timestamp: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
     }

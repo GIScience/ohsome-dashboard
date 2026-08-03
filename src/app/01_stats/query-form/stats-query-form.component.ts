@@ -1,6 +1,5 @@
 import {Component, computed, inject} from '@angular/core';
-import {BoundaryInputComponent} from '../../shared/components/boundary-input/boundary-input.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ControlContainer, FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {
@@ -19,7 +18,6 @@ import {environment} from '../../../environments/environment';
 @Component({
   selector: 'app-stats-query-form',
   imports: [
-    BoundaryInputComponent,
     FormsModule,
     KeyValuePipe,
     PrismEditorComponent,
@@ -29,6 +27,7 @@ import {environment} from '../../../environments/environment';
   ],
   templateUrl: './stats-query-form.component.html',
   styleUrl: './stats-query-form.component.css',
+  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
 export class StatsQueryFormComponent {
 // urlHashParamsProviderService = inject(UrlHashParamsProviderService);
@@ -49,13 +48,13 @@ export class StatsQueryFormComponent {
   statsFormModel = this.stateService.statsFormModel;
 
   statsForm = form(this.statsFormModel, (schemaPath)=>{
-    required(schemaPath.aoi);
+    // required(schemaPath.aoi);
     required(schemaPath.measure);
   });
 
   protected mapOptions: BoundaryInputComponentOptions = {
-    center: environment.mapCenter ?? {lat: 0, lng: 0},
-    zoom: environment.zoomLevel ?? 5,
+    center: environment.mapOptions.center ?? {lat: 0, lng: 0},
+    zoom: environment.mapOptions.zoom ?? 5,
   };
 
   protected readonly filterFromTopic = computed(() => {
@@ -93,7 +92,7 @@ export class StatsQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: initialHashParams.get('aoi') ?? '',
+      aoi: initialHashParams.get('aoi') ?? '', //TODO remove
       // time: Utils.getFromParamsOrDefault(initialHashParams, 'time', `/${today}/P1M`),
       measure: Utils.getFromParamsOrDefault(initialHashParams, 'measure', `count`),
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),

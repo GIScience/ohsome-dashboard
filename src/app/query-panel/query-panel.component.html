@@ -1,5 +1,7 @@
 <form #f="ngForm" (ngSubmit)="onSubmit()" class="ui stackable   celled grid container form"
-      xmlns="http://www.w3.org/1999/html" appAtLeastOneOqtIndicatorCheckboxChecked style="background-color: unset">
+      xmlns="http://www.w3.org/1999/html" style="background-color: unset">
+  <!-- TODO only for oqt appAtLeastOneOqtIndicatorCheckboxChecked-->
+
   <!--  <div class="ui blue inverted three labeled item tabs menu">-->
 
   <!--    <a class="item" data-tab="tab-ohsome-api"-->
@@ -39,60 +41,76 @@
       <!--    </div>-->
       <!-- tab content -->
       <!--    OSM STATS-->
-      <div class="ui tab secondary segment" data-tab="tab-ohsome-api"
-           [ngClass]="queryModeSignal() === 'ohsomeApi' ? 'active' : ''">
-        @if (queryModeSignal() === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-          <app-ohsome-api-query-form [hashParams]=initialHashParams></app-ohsome-api-query-form>
-        }
-        @if (queryModeSignal() === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-          <div class="ui one column grid">
-            <div class="row">
-              <div class="column">
+      <!--      <div class="ui tab secondary segment" data-tab="tab-ohsome-api"-->
+      <!--           [ngClass]="queryModeSignal() === 'ohsomeApi' ? 'active' : ''">-->
+      @if (queryModeSignal() === 'ohsomeApi' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+        <app-stats-query-form></app-stats-query-form>
+      }
+      @if (queryModeSignal() === 'extraction' && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+        <app-extraction-query-form></app-extraction-query-form>
+      }
+
+      @if (authService.keyUnavailable()) {
+        <div class="ui one column grid">
+          <div class="row">
+            <div class="column">
+              <p i18n>Could not get valid key to access HeiGIT APIs</p>
+              <p i18n>Notify support(at)account.heigit.org if this error persists.</p>
+            </div>
+          </div>
+        </div>
+      }
+      <!--      </div>-->
+      <!--    OSM ANALYSIS-->
+      <!--      <div class="ui tab secondary segment" data-tab="tab-oqt-api"-->
+      <!--           [ngClass]="queryModeSignal() === 'oqtApi' ? 'active' : ''">-->
+      @if (queryModeSignal() === 'oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+        <app-oqt-api-query-form
+          (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
+      }
+      <!-- Error message -->
+      @if( !ohsomeApiMetadataProviderService.ohsomeApiAvailable){
+        <div class="ui one column grid">
+          <div class="row">
+            <div class="column">
+              @if (queryModeSignal() === 'ohsomeApi' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
                 <h4 class="ui header" i18n><i class="exclamation triangle icon"></i>OSM History Stats based on ohsome
+                API
+              </h4>
+              }
+              @if (queryModeSignal() === 'extraction' && !ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
+                <h4 class="ui header" i18n><i class="exclamation triangle icon"></i>OSM Data Extraction based on ohsome
                   API
                 </h4>
-                <p i18n>Sorry.</p>
-                <p i18n>This service is temporarily unavailable.</p>
-                <p i18n>Please try again later.</p>
-                <p i18n>Thanks for your patience.</p>
-              </div>
+              }
+              @if (queryModeSignal() === 'oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)) {
+                <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>OSM Quality Analyses based on ohsome quality API</h4>
+              }
+              <p i18n>Sorry.</p>
+              <p i18n>This service is temporarily unavailable.</p>
+              <p i18n>Please try again later.</p>
+              <p i18n>Thanks for your patience.</p>
             </div>
           </div>
-        }
-        @if (authService.keyUnavailable()) {
-          <div class="ui one column grid">
-            <div class="row">
-              <div class="column">
-                <p i18n>Could not get valid key to access HeiGIT APIs</p>
-                <p i18n>Notify support(at)account.heigit.org if this error persists.</p>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-      <!--    OSM ANALYSIS-->
-      <div class="ui tab secondary segment" data-tab="tab-oqt-api"
-           [ngClass]="queryModeSignal() === 'oqtApi' ? 'active' : ''">
-        @if (queryModeSignal() === 'oqtApi' && oqtApiMetadataProviderService.oqtApiAvailable && ohsomeApiMetadataProviderService.ohsomeApiAvailable) {
-          <app-oqt-api-query-form
-            (changeIndicatorCoverages)="onChangeIndicatorCoverages($event)"></app-oqt-api-query-form>
-        }
-        <!-- Error message -->
-        @if (queryModeSignal() === 'oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)) {
-          <div
-            class="ui one column grid">
-            <div class="row">
-              <div class="column">
-                <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>ohsome quality analyst</h4>
-                <p i18n>Sorry.</p>
-                <p i18n>This service is temporarily unavailable.</p>
-                <p i18n>Please try again later.</p>
-                <p i18n>Thanks for your patience.</p>
-              </div>
-            </div>
-          </div>
-        } <!-- End of Error message -->
-      </div>
+        </div>
+      }
+
+<!--      @if (queryModeSignal() === 'oqtApi' && (!oqtApiMetadataProviderService.oqtApiAvailable || !ohsomeApiMetadataProviderService.ohsomeApiAvailable)) {-->
+<!--        <div-->
+<!--          class="ui one column grid">-->
+<!--          <div class="row">-->
+<!--            <div class="column">-->
+<!--              <h4 class="ui header"><i class="exclamation triangle icon" i18n></i>ohsome quality analyst</h4>-->
+<!--              <p i18n>Sorry.</p>-->
+<!--              <p i18n>This service is temporarily unavailable.</p>-->
+<!--              <p i18n>Please try again later.</p>-->
+<!--              <p i18n>Thanks for your patience.</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      } -->
+      <!-- End of Error message -->
+      <!--      </div>--> <!--grey form background segment-->
 
       <!--      &lt;!&ndash; OSM Extraction &ndash;&gt;-->
       <!--      <div class="ui tab secondary segment" data-tab="tab-extraction"-->
@@ -208,12 +226,45 @@
   </div>
 
   <!--row 2-->
-  <div class="row">
-    <div class="sixteen wide column">
-      <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n><i
-        class="play icon"></i>Run
-        Query
-      </button>
+  @if (queryModeSignal() !== 'extraction') {
+    <div id="query-submit" class="row">
+      <div class="sixteen wide column">
+        <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n>
+          <i class="play icon"></i>Run Query
+        </button>
+      </div>
     </div>
-  </div>
+  } @else {
+    <div id="extraction-submit" class="row">
+      <div class="sixteen wide column">
+        <!--        <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">-->
+        <!--TODO validate extraction form: update aoi bbox on every from change-->
+        <button [disabled]="!f.valid" class="ui green  right labeled icon button" type="submit">
+          Create Download Asset<i class="download icon"></i>
+        </button>
+        <!--        @if (extractionForm().invalid()) {-->
+        <!--          <div class="ui left pointing red basic label">-->
+        <!--            @for (error of extractionForm().errorSummary(); track error.kind) {-->
+        <!--              <span>{{ error.message }}</span>-->
+        <!--            }-->
+        <!--          </div>-->
+        <!--        }-->
+        @if (authService.isAnon()) {
+          <div class="ui message">
+            To download OSM Data you need to &nbsp;&nbsp;
+            <div class="ui buttons">
+              <button type="button" class="ui blue button" (click)="authService.login()"><i class="sign-in icon"></i>Login
+              </button>
+              <div class="or"></div>
+              <button type="button" class="ui blue button" (click)="authService.register()"><i
+                class="user plus icon"></i>Register
+              </button>
+            </div>
+            &nbsp;&nbsp; to a free HeiGIT user account!
+          </div>
+        }
+      </div>
+    </div>
+  }
+
 </form>

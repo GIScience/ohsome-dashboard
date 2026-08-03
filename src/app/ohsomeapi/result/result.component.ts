@@ -23,6 +23,7 @@ import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 
 declare const $: any;
 
@@ -39,6 +40,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   private viewportScroller = inject(ViewportScroller);
   private sanitizer = inject(DomSanitizer);
+  private oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
 
   public componentRef;
@@ -136,7 +138,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   getData() {
     //new code starts here
     this.isLoading = true;
-    this.handler.execute(this.formValues, this.ohsomeApiV2, this.aoiPolygons).subscribe({
+    this.handler.execute(this.formValues, this.ohsomeApiV2, this.oqtApiMetadataProviderService, this.aoiPolygons).subscribe({
       next: (response) => {
         this.handlerComponent.set(this.handler.component);
         this.handlerInputs.set(this.handler.toInputs(response, this.formValues));
@@ -157,6 +159,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   }
 
+  //TODO cleanup
   private yAxesFormatter(value, index, values) {
     const unitFactor = this.UNITS[this.unit].factor;
     if (values[0] > unitFactor) {
@@ -166,6 +169,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
   }
 
+  //TODO cleanup
   // private labelFormatter(tooltipItem: ChartTooltipItem, data: ChartData) {
   private labelFormatter(tooltipItem: any, data: any) {
     const timestamp = (data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as ChartPoint).x;

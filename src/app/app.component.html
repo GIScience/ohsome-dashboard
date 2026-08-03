@@ -20,15 +20,15 @@
         @if (authService.isAnon()) {
           <div class="text" i18n>Profile</div>
         } @else {
-          <div class="text">{{authService.user().name}}</div>
+          <div class="text">{{ authService.user().name }}</div>
         }
         <i class="dropdown icon"></i>
         <div class="menu">
-          @if (authService.isAnon()){
+          @if (authService.isAnon()) {
             <div class="item" (click)="authService.login()"><i class="sign-in icon"></i>Login</div>
             <div class="item" (click)="authService.register()"><i class="user plus icon"></i>Register</div>
           }
-          @if (!authService.isAnon()){
+          @if (!authService.isAnon()) {
             <div class="item" (click)="authService.logout()">Logout</div>
             <a class="item" [href]="environment.accountFrontendUrl" target="_blank">Account Info</a>
           }
@@ -52,12 +52,12 @@
 }
 
 <div id="main" class="ui" [ngClass]="window.innerWidth < 768? '': 'container'">
-<!-- user: {{authService.user().name}} | isAnon: {{authService.isAnon()}} | key: {{ authService.key() | json}}-->
+  <!-- user: {{authService.user().name}} | isAnon: {{authService.isAnon()}} | key: {{ authService.key() | json}}-->
   <!-- Query mode Menu  -->
-<!--  TODO remove-->
-<!--  q: {{ stateService.qualityFormModel() | json }} <br>-->
-<!--  l: {{ stateService.legacyFormModel()  | json }} <br>-->
-<!--  e: {{ stateService.extractionFormModel() | json }}-->
+  <!--  TODO remove-->
+  <!--  q: {{ stateService.qualityFormModel() | json }} <br>-->
+  <!--  l: {{ stateService.legacyFormModel()  | json }} <br>-->
+  <!--  e: {{ stateService.extractionFormModel() | json }}-->
   <h3>Select a type of ohsome query:</h3>
   <div class="ui three inverted labeled item tabs menu" style="background-color: #3E6184">
 
@@ -80,16 +80,10 @@
 
   </div>
 
-  @if (queryModeSignal() === 'ohsomeApi') {
-    <app-stats-query-form></app-stats-query-form>
-  }
-  @if (queryModeSignal() === 'oqtApi') {
-    <app-query-panel></app-query-panel>
-  }
-  @if (queryModeSignal() === 'extraction') {
-    <app-extraction-query-form></app-extraction-query-form>
-  }
+  <app-query-panel></app-query-panel>
+
   <app-result-panel></app-result-panel>
+
 </div>
 
 <!-- footer -->

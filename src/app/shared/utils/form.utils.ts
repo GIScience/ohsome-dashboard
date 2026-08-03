@@ -1,4 +1,5 @@
 import {effect, Signal, untracked, WritableSignal} from '@angular/core';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 
 /**
  * with link field a form component can use one of its values and sync it with a centrally stored signal, which can be
@@ -63,4 +64,14 @@ export function derivedField<TModel extends object, K extends keyof TModel>(
       }
     });
   });
+}
+
+export function getFilterFromFormValues(formValues, oqtApiMetadataProviderService: OqtApiMetadataProviderService){
+    const topic = formValues.topic;
+
+    if (topic === 'custom-topic') return formValues["topic-filter"];
+
+    //if topic from ohsome-quality-api look it up
+    return oqtApiMetadataProviderService.getTopicFilter(topic);
+
 }

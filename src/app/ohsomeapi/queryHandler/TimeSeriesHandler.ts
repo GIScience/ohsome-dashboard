@@ -8,53 +8,59 @@ import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/bounda
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../shared/ohsome-api-v2-types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
+import {getFilterFromFormValues} from '../../shared/utils/form.utils';
 
 
 export interface QueryHandler<TResponse> {
-  matches: (formValues: FormValues) => boolean;
+  matches: (formValues: StatsFormValues) => boolean;
 
   component: Type<unknown>
 
-  execute(formValues: FormValues, api: any, aoiPolygons: Feature<Polygon | MultiPolygon>[]): Observable<TResponse>
+  execute(formValues: StatsFormValues, api: any, oqtApiMetadataProviderService: OqtApiMetadataProviderService, aoiPolygons: Feature<Polygon | MultiPolygon>[]): Observable<TResponse>
 
-  toInputs(response: TResponse, formValues: FormValues): Record<string, unknown>;
+  toInputs(response: TResponse, formValues: StatsFormValues): Record<string, unknown>;
 
   toCSV(response: TResponse): string;
 
-  toBoundaryLabel(formValues: FormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string;
+  toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string;
 
 }
 
-interface FormValues {
+interface StatsFormValues {
   filter: string;
   measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
   groupBy: string;
-  time: string;
+  start: string;
+  end: string;
+  interval: string;
   bpolys?: string;
   bbox?: string;
 }
 
 export const timeSeriesHandler: QueryHandler<any> = {
 
-  matches(formValues: FormValues): boolean {
+  matches(formValues: StatsFormValues): boolean {
     return ["none", undefined].includes(formValues.groupBy);
   },
 
   component: PlotlyChartComponent,
 
-  execute(formValues: FormValues, api: OhsomeApiV2Service): Observable<any> {
-    let [start, end, interval] = formValues.time.split("/");
+  execute(formValues: StatsFormValues, api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<any> {
+    // let [start, end, interval] = formValues;
     // handle null, undefined and empty string
-    start = start.trim() ? start : "earliest";
+    const start = formValues?.start?.trim() ? formValues.start : "earliest";
 
     const aoi = unionPolygonFeatures(toPolygonFeatures(formValues)).geometry as components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"];
 
+    const filter = getFilterFromFormValues(formValues, oqtApiMetadataProviderService);
+
     const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
-      filter: formValues.filter,
+      filter: filter,
       timeSeries: {
         start,
-        end,
-        interval
+        end: formValues.end,
+        interval: formValues.interval
       },
       aoi: aoi
     }
@@ -114,7 +120,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
     return Papa.unparse(data, unparseConfig);
   },
 
-  toBoundaryLabel(formValues: FormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string {
+  toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string {
     return String(unionPolygonFeatures(aoiPolygons).properties["display_name"])
   }
 

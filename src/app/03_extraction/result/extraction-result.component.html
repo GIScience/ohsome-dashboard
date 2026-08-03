@@ -37,11 +37,11 @@
 
 
     </div>
-    <!--    <div id="boundaryLabelsItem" class="ui item">-->
-    <!--      <i class="circle outline icon" title="selected areas"></i>-->
-    <!--      <span id="boundaryLabelsText"-->
-    <!--            title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>-->
-    <!--    </div>-->
+<!--        <div id="boundaryLabelsItem" class="ui item">-->
+<!--          <i class="circle outline icon" title="selected areas"></i>-->
+<!--          <span id="boundaryLabelsText"-->
+<!--                title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>-->
+<!--        </div>-->
     <!--  </div>-->
 
 
@@ -77,9 +77,14 @@
 
       <div class="ui centered stackable cards">
         <div class="card">
-          <div class="ui image aoi-thumbnail">
-            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">
+            <div class="content">
+              <div class="center aligned header">Extent</div>
+              <div class="center aligned meta">&nbsp;</div>
+            The download links will extract your requested data in a BBOX based on your selected area of interest.
           </div>
+<!--          <div class="ui image aoi-thumbnail">-->
+<!--            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">-->
+<!--          </div>-->
         </div>
 
         <div class="card">

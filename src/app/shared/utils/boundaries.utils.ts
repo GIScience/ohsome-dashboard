@@ -7,6 +7,46 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 const Bpolys = OhsomeApi.v1.request.Bpolys;
 
 /**
+ * parses bpolys or bboxes pipe separated strings to objects
+ * @param input
+ */
+export function parseBoundaryLists(
+  input: string,
+): { ids?: string[]; values: number[][] } {
+  const ids: string[] = [];
+
+  const values = input.split('|').map(entry => {
+    const colon = entry.indexOf(':');
+
+    if (colon != -1) {
+      ids.push(entry.substring(0, colon));
+      entry = entry.substring(colon + 1);
+    }
+
+    return entry.split(',').map(Number);
+  });
+
+  return {
+    values: values,
+    ids: ids.length ? ids : undefined,
+  };
+}
+
+/**
+ * Transforms a flat coordinate list like from bpolys into a GeoJson Polygon
+ * @param coords
+ */
+export function flatCoordsToPolygon(coords: number[]) {
+  const ring = Array.from(
+    { length: coords.length / 2 },
+    (_, i) => [coords[i * 2], coords[i * 2 + 1]] as [number, number]
+  );
+
+  return polygon([ring]);
+}
+
+
+/**
  * Builds the unified boundary feature from form values (bboxes / bpolys),
  */
 export function toPolygonFeatures(formValues: Partial<{

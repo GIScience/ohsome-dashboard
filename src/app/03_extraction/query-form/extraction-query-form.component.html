@@ -1,10 +1,10 @@
-<form class="ui stackable celled grid container form" (submit)="onSubmit($event)">
+<!--<form class="ui stackable celled grid container form" (submit)="onSubmit($event)">-->
 
-  <div class="row">
+<!--  <div class="row">-->
     <!--column 1-->
 
     <!-- Topic -->
-    <div id="col1" class="eight wide tablet six wide computer column">
+<!--    <div id="col1" class="eight wide tablet six wide computer column">-->
       <!--      <div class="row">-->
       <h4 id="topicHeading" class="ui header" i18n><i class="filter icon"></i>Topic</h4>
 
@@ -88,45 +88,46 @@
         <input type="datetime-local" [formField]="extractionForm.timestamp">
       </div>
 
-    </div> <!-- End column 1-->
+<!--    </div> &lt;!&ndash; End column 1&ndash;&gt;-->
 
 
     <!--column 2-->
-    <div id="col2" class="eight wide tablet ten wide computer column">
-      <h4 class="ui header" i18n>Area of interest: Choose a bounding box</h4>
-      <app-boundary-input
-        [interactionType]="'bbox'"
-        [options]="mapOptions"
-        [formField]="extractionForm.aoi">
-      </app-boundary-input>
-    </div>
-  </div>
+<!--    <div id="col2" class="eight wide tablet ten wide computer column">-->
+<!--      <h4 class="ui header" i18n>Area of interest: Choose a bounding box</h4>-->
+<!--      <app-boundary-input-->
+<!--        [interactionType]="'bbox'"-->
+<!--        [options]="mapOptions"-->
+<!--        [formField]="extractionForm.aoi">-->
+<!--      </app-boundary-input>-->
+<!--    </div>-->
 
-  <div class="row">
-    <div class="sixteen wide column">
-      <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">Create
-        Download Asset<i
-          class="download icon"></i>
-      </button>
-      @if (extractionForm().invalid()) {
-        <div class="ui left pointing red basic label">
-          @for (error of extractionForm().errorSummary(); track error.kind) {
-            <span>{{ error.message }}</span>
-          }
-        </div>
-      }
-      @if (authService.isAnon()){
-        <div class="ui message">
-          To download OSM Data you need to &nbsp;&nbsp;
-          <div class="ui buttons">
-            <button type="button" class="ui blue button" (click)="authService.login()"><i class="sign-in icon"></i>Login</button>
-            <div class="or"></div>
-            <button type="button" class="ui blue button" (click)="authService.register()"><i class="user plus icon"></i>Register</button>
-          </div>
-          &nbsp;&nbsp; to a free HeiGIT user account!
-        </div>
-      }
-    </div>
-  </div>
+<!--  </div> -- row-->
 
-</form>
+<!--  <div id="extraction-submit" class="row">-->
+<!--    <div class="sixteen wide column">-->
+<!--      <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">Create-->
+<!--        Download Asset<i-->
+<!--          class="download icon"></i>-->
+<!--      </button>-->
+<!--      @if (extractionForm().invalid()) {-->
+<!--        <div class="ui left pointing red basic label">-->
+<!--          @for (error of extractionForm().errorSummary(); track error.kind) {-->
+<!--            <span>{{ error.message }}</span>-->
+<!--          }-->
+<!--        </div>-->
+<!--      }-->
+<!--      @if (authService.isAnon()){-->
+<!--        <div class="ui message">-->
+<!--          To download OSM Data you need to &nbsp;&nbsp;-->
+<!--          <div class="ui buttons">-->
+<!--            <button type="button" class="ui blue button" (click)="authService.login()"><i class="sign-in icon"></i>Login</button>-->
+<!--            <div class="or"></div>-->
+<!--            <button type="button" class="ui blue button" (click)="authService.register()"><i class="user plus icon"></i>Register</button>-->
+<!--          </div>-->
+<!--          &nbsp;&nbsp; to a free HeiGIT user account!-->
+<!--        </div>-->
+<!--      }-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--</form>-->
