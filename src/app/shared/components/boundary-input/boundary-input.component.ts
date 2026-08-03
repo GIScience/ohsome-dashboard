@@ -189,24 +189,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
         ;
         commonBounds = (commonBounds) ? commonBounds.extend(rect.getBounds()) : new LatLngBounds(rect.getBounds().getSouthEast(), rect.getBounds().getNorthWest());
       });
-    } else if (this.interactionType == 'bcircle') {
-      if (value !== '') this.map.pm.disableDraw('Circle');
-      const bcircles = new OhsomeApiRequest.Bcircles().parse(value);
-      bcircles.boundaries.forEach(bcircle => {
-        console.log('updateMapFromValue::bcircle', bcircle.geometry, bcircle.lng, bcircle.lat, bcircle.radius);
-        const cirle = L.circle([bcircle.lat, bcircle.lng], {
-            radius: bcircle.radius,
-            bubblingMouseEvents: false
-          } as L.CircleOptions).addTo(this.bcircleLayersGroup)
-            .on('pm:edit', this.updateValueFromMap, this)
-            .on('click', () => {
-              if (!this.map.pm.globalRemovalModeEnabled()) {
-                this.map.pm.enableGlobalEditMode();
-              }
-            })
-        ;
-        commonBounds = (commonBounds) ? commonBounds.extend(cirle.getBounds()) : new LatLngBounds(cirle.getBounds().getSouthEast(), cirle.getBounds().getNorthWest());
-      });
     } else /*if (this.options.type == "bpoly")*/ {
       if (value !== '') this.map.pm.disableDraw('Polygon');
       const bpolys = new OhsomeApiRequest.Bpolys().parse(value);
