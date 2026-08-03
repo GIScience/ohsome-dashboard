@@ -75,47 +75,47 @@
   }
 
 
-<!--      <div class="ui divider"></div>-->
-<!--      &lt;!&ndash; Clip &ndash;&gt;-->
-<!--      <h4 class="ui header"><i class="cut icon"></i>Clip</h4>-->
-<!--      <div class="ui toggle checkbox">-->
-<!--        <input type="checkbox" [formField]="extractionForm.clip">-->
-<!--        <label>Clip geometries at area-of-interest boundary</label>-->
-<!--      </div>-->
+  <!--      <div class="ui divider"></div>-->
+  <!--      &lt;!&ndash; Clip &ndash;&gt;-->
+  <!--      <h4 class="ui header"><i class="cut icon"></i>Clip</h4>-->
+  <!--      <div class="ui toggle checkbox">-->
+  <!--        <input type="checkbox" [formField]="extractionForm.clip">-->
+  <!--        <label>Clip geometries at area-of-interest boundary</label>-->
+  <!--      </div>-->
 
-<!--<div class="ui divider"></div>-->
-<!-- measure -->
-<!--      <div class="row">-->
-<!--<div class="column">-->
+  <!--<div class="ui divider"></div>-->
+  <!-- measure -->
+  <!--      <div class="row">-->
+  <!--<div class="column">-->
   <h4 class="ui header" i18n><i class="expand icon"></i>Measure</h4>
   <div class="four inline fields">
-<!--    @if (statsForm.topic().value() === 'custom-topic') {-->
-      @for (option of measureOptions; track option) {
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="statsForm.measure">
-            <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>
-          </div>
+    <!--    @if (statsForm.topic().value() === 'custom-topic') {-->
+    @for (option of measureOptions; track option) {
+      <div class="field">
+        <div class="ui radio checkbox">
+          <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="statsForm.measure">
+          <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>
         </div>
-      }
-<!--    } @else {-->
-<!--      @for (option of measureOptions; track option) {-->
-<!--        <div class="field">-->
-<!--          <div class="ui radio checkbox">-->
-<!--            <input [id]="'measure' + option.value" type="radio" [value]="option.value"  [checked]="measureFromTopic()===option.value" disabled>-->
-<!--            <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      }-->
-<!--    }-->
+      </div>
+    }
+    <!--    } @else {-->
+    <!--      @for (option of measureOptions; track option) {-->
+    <!--        <div class="field">-->
+    <!--          <div class="ui radio checkbox">-->
+    <!--            <input [id]="'measure' + option.value" type="radio" [value]="option.value"  [checked]="measureFromTopic()===option.value" disabled>-->
+    <!--            <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      }-->
+    <!--    }-->
   </div>
 
   <!--    <div *ngIf="measure.valid" class="ui small negative icon message">-->
   <!--      <i class="minus circle icon"></i>-->
   <!--      Please choose an option-->
   <!--    </div>-->
-<!--</div> &lt;!&ndash;column&ndash;&gt;-->
-<!--      </div> &lt;!&ndash;row&ndash;&gt;-->
+  <!--</div> &lt;!&ndash;column&ndash;&gt;-->
+  <!--      </div> &lt;!&ndash;row&ndash;&gt;-->
 </div> <!--topic-details-->
 
 <!-- Time -->
@@ -132,6 +132,20 @@
 </div>
 
 <!--    </div> &lt;!&ndash; End column 1&ndash;&gt;-->
+
+<div class="ui divider"></div>
+<div  class="ui toggle checkbox">
+  <input type="checkbox" [checked]="groupByTag()" (change)="groupByTag.update((old)=>!old)">
+  <label>
+    Tag Value exploration
+  </label><br>
+</div>
+@if(groupByTag()){
+    <div class="field">
+      <input type="text" placeholder="Insert a Tag Key" [formField]="statsForm.groupByTagKey">
+      <p>Insert a tag-key to explore all tag-values used in the data specified by the given filter.</p>
+    </div>
+}
 
 <!--TODO cleanup-->
 <!--column 2-->

@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject} from '@angular/core';
+import {Component, computed, effect, inject, signal} from '@angular/core';
 import {ControlContainer, FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
@@ -51,7 +51,10 @@ export class StatsQueryFormComponent {
     // required(schemaPath.aoi);
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
+    required(schemaPath.groupByTagKey, {when: () => this.groupByTag()});
   });
+
+  groupByTag = signal<boolean>(!!Utils.getFromParamsOrDefault(this.stateService.initialHashParams, 'groupByTagKey', ''));
 
   protected mapOptions: BoundaryInputComponentOptions = {
     center: environment.mapOptions.center ?? {lat: 0, lng: 0},
@@ -66,14 +69,20 @@ export class StatsQueryFormComponent {
     return this.statsFormModel()['topic-filter'];
   });
 
-    constructor() {
-      effect(() => {
-        const topic = this.statsFormModel().topic;
-        if (topic !== 'custom-topic') {
-          this.statsForm.measure().value.set(this.ohsomeQualityApiMetadataProviderService.getTopicMeasure(topic));
-        }
-      });
-    }
+  constructor() {
+    effect(() => {
+      const topic = this.statsFormModel().topic;
+      if (topic !== 'custom-topic') {
+        this.statsForm.measure().value.set(this.ohsomeQualityApiMetadataProviderService.getTopicMeasure(topic));
+      }
+    });
+
+    effect(() => {
+      if (!this.groupByTag()) {
+        this.statsForm.groupByTagKey().value.set('');
+      }
+    });
+  }
 
   async onSubmit(event: Event | null) {
     event?.preventDefault();
@@ -102,6 +111,7 @@ export class StatsQueryFormComponent {
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),
       end: Utils.getFromParamsOrDefault(initialHashParams, 'end', today),
       interval: Utils.getFromParamsOrDefault(initialHashParams, 'interval', 'P1M'),
+      groupByTagKey: Utils.getFromParamsOrDefault(initialHashParams, 'groupByTagKey', ''),
     }
   }
 
@@ -124,4 +134,5 @@ export class StatsQueryFormComponent {
       }
     });
   }
+
 }

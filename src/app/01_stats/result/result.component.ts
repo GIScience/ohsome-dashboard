@@ -23,6 +23,7 @@ import {Feature, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
+import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 
 declare const $: any;
 
@@ -130,8 +131,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   queryHandlerRegistry = [
+    groupByTagHandler,
     timeSeriesHandler
-  ]
+  ];
 
 
   getData() {

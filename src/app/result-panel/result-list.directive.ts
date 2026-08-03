@@ -43,7 +43,7 @@ import {featureCollection} from '@turf/helpers';
 
     createResultComponent(result) {
       this.resultItem = this.container.createComponent(ResultComponent, {index: 0});
-      this.resultItem.instance.formValues = result.formValues;
+      this.resultItem.instance.formValues = {...result.formValues, ...this.stateService.statsFormModel()};
       this.resultItem.instance.boundaryType = result.boundaryType;
       this.resultItem.instance.componentRef = this.resultItem;
     }

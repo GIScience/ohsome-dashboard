@@ -10,62 +10,38 @@ import type {components, paths} from '../../shared/ohsome-api-v2-types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
+import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
+import {keys} from 'webdriverio/build/commands/browser/keys';
 
 
-export interface QueryHandler<TResponse> {
-  matches: (formValues: StatsFormValues) => boolean;
-
-  component: Type<unknown>
-
-  execute(formValues: StatsFormValues, api: any, oqtApiMetadataProviderService: OqtApiMetadataProviderService, aoiPolygons: Feature<Polygon | MultiPolygon>[]): Observable<TResponse>
-
-  toInputs(response: TResponse, formValues: StatsFormValues): Record<string, unknown>;
-
-  toCSV(response: TResponse): string;
-
-  toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string;
-
-}
-
-
-//TODO check if this is needed or can we use StatsFormData?
-export interface StatsFormValues {
-  filter: string;
-  measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
-  groupByTagKey: string;
-  start: string;
-  end: string;
-  interval: string;
-  bpolys?: string;
-  bbox?: string;
-}
-
-export const timeSeriesHandler: QueryHandler<any> = {
+export const groupByTagHandler: QueryHandler<any> = {
 
   matches(formValues: StatsFormValues): boolean {
-    console.log("GROUPBY", formValues);
-    return !formValues.groupByTagKey;
+    console.log("GROUPBY", formValues.groupByTagKey);
+    return !!formValues.groupByTagKey;
   },
 
   component: PlotlyChartComponent,
 
   execute(formValues: StatsFormValues, api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<any> {
-    // let [start, end, interval] = formValues;
-    // handle null, undefined and empty string
+
     const start = formValues?.start?.trim() ? formValues.start : "earliest";
 
     const aoi = unionPolygonFeatures(toPolygonFeatures(formValues)).geometry as components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"];
 
     const filter = getFilterFromFormValues(formValues, oqtApiMetadataProviderService);
 
+    const groupBy: components["schemas"]["GroupByTagModel"] = {type:'byTag', key: formValues.groupByTagKey};
+
     const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
-      filter: filter,
+      filter,
       timeSeries: {
         start,
         end: formValues.end,
         interval: formValues.interval
       },
-      aoi: aoi
+      aoi,
+      groupBy
     }
 
     return api.features(formValues.measure, body);
@@ -78,23 +54,31 @@ export const timeSeriesHandler: QueryHandler<any> = {
     const hasUnit = !!unit;
     if (hasUnit) yAxisText += ` [${unit}]`
 
+    const x = response.result.timestamp;
+    const length = x.length;
+    const traces = Object.entries(response.result.values).map(([key, value]) => {
+      return {
+        x,
+        y: value as number[],
+        name: key,
+        stackgroup: 'one',
+        mode: 'none'
+      }
+    }).sort((traceA, traceB) => traceB.y[length-1] - traceA.y[length-1]);
+
+
     return {
       "plotlyDataLayoutConfig": {
-        data: [
-          {
-            x: response.result.timestamp,
-            y: response.result.value
-          }
-        ],
+        data: traces,
         layout: {
-          hovermode: 'x',
+          hovermode: 'x unified',
           xaxis: {
             showspikes: true,            // Enable the spike line
             spikemode: 'across+marker',  // Draw across plot area AND show target marker
-            spikesnap: 'data',         // Snap the line directly to your mouse pointer
+            spikesnap: 'hovered data',         // Snap the line directly to your mouse pointer
             spikethickness: 1,           // Width of the line in pixels
             spikecolor: '#ff0000',       // Color of the line
-            spikedash: 'dash'
+            spikedash: 'dash',
           },
           yaxis: {
             title: {

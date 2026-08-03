@@ -14,6 +14,7 @@ interface StatsFormData extends SharedFormData {
   end: string;
   interval: string;
   measure: components['schemas']['MeasureRequestModel'];
+  groupByTagKey: string;
 }
 
 interface QualityFormData extends SharedFormData {
