@@ -9,11 +9,14 @@ const OqtApiMetadataProviderServiceMock = {
   'getAttributeName': vi.fn(),
   'getAttributeDescription': vi.fn(),
   'getAttributeFilter': vi.fn(),
+  'getTopicMeasure': vi.fn(),
+  'getTopicFilter': vi.fn()
 };
 
 OqtApiMetadataProviderServiceMock.loadOqtApiMetadata.mockReturnValue(of(oqtApiMetadataResponseMock))
 OqtApiMetadataProviderServiceMock.getOqtApiMetadata.mockReturnValue(oqtApiMetadataResponseMock);
 OqtApiMetadataProviderServiceMock.getAttributes.mockReturnValue(oqtAttributesResponseMock);
+OqtApiMetadataProviderServiceMock.getTopicMeasure.mockReturnValue('count');
 
 export default OqtApiMetadataProviderServiceMock;
 

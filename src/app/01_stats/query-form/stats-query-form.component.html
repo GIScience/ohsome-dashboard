@@ -73,7 +73,7 @@
     >
     </app-prism-editor>
   }
-</div>
+
 
 <!--      <div class="ui divider"></div>-->
 <!--      &lt;!&ndash; Clip &ndash;&gt;-->
@@ -83,28 +83,40 @@
 <!--        <label>Clip geometries at area-of-interest boundary</label>-->
 <!--      </div>-->
 
-<div class="ui divider"></div>
+<!--<div class="ui divider"></div>-->
 <!-- measure -->
 <!--      <div class="row">-->
-<div class="column">
+<!--<div class="column">-->
   <h4 class="ui header" i18n><i class="expand icon"></i>Measure</h4>
   <div class="four inline fields">
-    @for (option of measureOptions; track option) {
-      <div class="field">
-        <div class="ui radio checkbox">
-          <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="statsForm.measure">
-          <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>
+<!--    @if (statsForm.topic().value() === 'custom-topic') {-->
+      @for (option of measureOptions; track option) {
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="statsForm.measure">
+            <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>
+          </div>
         </div>
-      </div>
-    }
+      }
+<!--    } @else {-->
+<!--      @for (option of measureOptions; track option) {-->
+<!--        <div class="field">-->
+<!--          <div class="ui radio checkbox">-->
+<!--            <input [id]="'measure' + option.value" type="radio" [value]="option.value"  [checked]="measureFromTopic()===option.value" disabled>-->
+<!--            <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      }-->
+<!--    }-->
   </div>
 
   <!--    <div *ngIf="measure.valid" class="ui small negative icon message">-->
   <!--      <i class="minus circle icon"></i>-->
   <!--      Please choose an option-->
   <!--    </div>-->
-</div>
-<!--      </div>-->
+<!--</div> &lt;!&ndash;column&ndash;&gt;-->
+<!--      </div> &lt;!&ndash;row&ndash;&gt;-->
+</div> <!--topic-details-->
 
 <!-- Time -->
 <div class="ui divider"></div>

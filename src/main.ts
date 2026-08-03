@@ -5,7 +5,6 @@ import {StateService} from "./app/singelton-services/state.service";
 import {OhsomeApiMetadataProviderService} from "./app/ohsomeapi/ohsome-api-metadata-provider.service";
 import {OqtApiMetadataProviderService} from "./app/02_quality/oqt-api-metadata-provider.service";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
-import {OshdbModule} from "./app/ohsomeapi/oshdb.module";
 import {OqtModule} from "./app/02_quality/oqt.module";
 import {AppComponent} from "./app/app.component";
 import {AuthService} from "./app/singelton-services/auth.service";
@@ -23,7 +22,8 @@ import {timeoutInterceptor} from './app/interceptors/timeout.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(BrowserModule, OshdbModule, OqtModule),
+    //TODO remove OSHDBModule
+    importProvidersFrom(BrowserModule, /*OshdbModule,*/ OqtModule),
     provideAppInitializer(() => {
       const initializerFn = (translationsInitializerFactory)(inject(StateService));
       return initializerFn();

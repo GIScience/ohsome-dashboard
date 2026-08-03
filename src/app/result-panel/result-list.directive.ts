@@ -1,5 +1,5 @@
 import {ComponentRef, Directive, inject, OnInit, ViewContainerRef} from '@angular/core';
-import {ResultComponent} from '../ohsomeapi/result/result.component';
+import {ResultComponent} from '../01_stats/result/result.component';
 import {DataService} from '../singelton-services/data.service';
 import {OqtResultComponent} from '../02_quality/result/oqt-result.component';
 import {ExtractionResultComponent} from '../03_extraction/result/extraction-result.component';

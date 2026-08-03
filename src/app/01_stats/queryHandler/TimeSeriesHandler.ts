@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {OhsomeApiV2Service} from '../ohsome-api-v2.service';
+import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {Type} from '@angular/core';
 import Papa, {UnparseConfig} from "papaparse";
 import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-chart.component';
@@ -41,7 +41,8 @@ interface StatsFormValues {
 export const timeSeriesHandler: QueryHandler<any> = {
 
   matches(formValues: StatsFormValues): boolean {
-    return ["none", undefined].includes(formValues.groupBy);
+    console.log("GROUPBY", formValues.groupBy);
+    return ["none", "", undefined].includes(formValues.groupBy);
   },
 
   component: PlotlyChartComponent,

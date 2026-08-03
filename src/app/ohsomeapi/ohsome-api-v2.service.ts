@@ -3,6 +3,8 @@ import {HttpClient, HttpContext} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {SKIP_AUTH} from '../interceptors/skip-auth.token';
 import type {paths, components} from '../shared/ohsome-api-v2-types';
+// import {of} from 'rxjs';
+// import {ohsomeApiMetadataResponse} from './ohsome-api-metadata.response.mock';
 
 const OHSOME_API_ROOT_URL = environment.ohsomeApiRootUrl;
 
@@ -14,6 +16,7 @@ export class OhsomeApiV2Service {
   private OHSOME_API_ANNOUNCEMENT_URL: string = environment.announcementUrl;
 
   metadata() {
+    // return of(ohsomeApiMetadataResponse);
     return this.http.get<OhsomeApiGetMetadataResponse>(
       `${OHSOME_API_ROOT_URL}/metadata`,
       {context: new HttpContext().set(SKIP_AUTH, true)});

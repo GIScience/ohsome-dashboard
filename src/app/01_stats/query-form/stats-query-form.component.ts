@@ -1,11 +1,11 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, effect, inject} from '@angular/core';
 import {ControlContainer, FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {
   SuiMultiSelectSearchDropdownComponent
 } from '../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
-import {form, FormField, required, submit} from '@angular/forms/signals';
+import {disabled, form, FormField, required, submit} from '@angular/forms/signals';
 import {StatsFormData} from '../../03_extraction/query-form/types';
 import Utils from '../../../utils';
 import {DataService} from '../../singelton-services/data.service';
@@ -47,9 +47,10 @@ export class StatsQueryFormComponent {
   // this info survives component recreation in state service
   statsFormModel = this.stateService.statsFormModel;
 
-  statsForm = form(this.statsFormModel, (schemaPath)=>{
+  statsForm = form(this.statsFormModel, (schemaPath) => {
     // required(schemaPath.aoi);
     required(schemaPath.measure);
+    disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
   });
 
   protected mapOptions: BoundaryInputComponentOptions = {
@@ -59,16 +60,20 @@ export class StatsQueryFormComponent {
 
   protected readonly filterFromTopic = computed(() => {
     const topic = this.statsFormModel().topic;
-    console.log(topic);
-    {
-      if (topic !== 'custom-topic') {
-        const filter = this.ohsomeQualityApiMetadataProviderService.getOqtApiMetadata().result.topics[topic].filter;
-        return filter;
-      }
+    if (topic !== 'custom-topic') {
+      return this.ohsomeQualityApiMetadataProviderService.getTopicFilter(topic);
     }
-
     return this.statsFormModel()['topic-filter'];
   });
+
+    constructor() {
+      effect(() => {
+        const topic = this.statsFormModel().topic;
+        if (topic !== 'custom-topic') {
+          this.statsForm.measure().value.set(this.ohsomeQualityApiMetadataProviderService.getTopicMeasure(topic));
+        }
+      });
+    }
 
   async onSubmit(event: Event | null) {
     event?.preventDefault();
@@ -93,12 +98,19 @@ export class StatsQueryFormComponent {
       "topic-title": '',
       "topic-filter": '',
       aoi: initialHashParams.get('aoi') ?? '', //TODO remove
-      // time: Utils.getFromParamsOrDefault(initialHashParams, 'time', `/${today}/P1M`),
       measure: Utils.getFromParamsOrDefault(initialHashParams, 'measure', `count`),
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),
       end: Utils.getFromParamsOrDefault(initialHashParams, 'end', today),
       interval: Utils.getFromParamsOrDefault(initialHashParams, 'interval', 'P1M'),
     }
+  }
+
+  private getInitialMeasure() {
+    const initialTopic = this.stateService.sharedFormSignals.topic();
+    if (initialTopic !== 'custom-topic') {
+      return this.ohsomeQualityApiMetadataProviderService.getTopicMeasure(initialTopic);
+    }
+    throw "customtopic measure not yet implemented"
   }
 
   protected setCustomTopic() {

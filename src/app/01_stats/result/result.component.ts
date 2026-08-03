@@ -16,14 +16,13 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
-import {OshdbModule} from '../oshdb.module';
 import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
-import {OhsomeApiV2Service} from '../ohsome-api-v2.service';
+import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
+import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
-import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 
 declare const $: any;
 
@@ -31,8 +30,8 @@ declare const $: any;
   selector: 'app-result',
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [NgClass, /*SimpleGroupbyResultComponent,*/ OshdbModule, JsonPipe, NgComponentOutlet]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgClass, /*SimpleGroupbyResultComponent,*/ /*OshdbModule,*/ JsonPipe, NgComponentOutlet]
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);

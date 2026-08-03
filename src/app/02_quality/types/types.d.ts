@@ -10,7 +10,7 @@ interface RawTopicMetadata {
   name: string;
   description: string;
   endpoint: string;
-  aggregationType: string;
+  aggregationType: 'count' | 'length' | 'area';
   projects: string[];
   filter: string;
   ratioFilter?: string | null;

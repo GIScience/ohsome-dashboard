@@ -147,6 +147,11 @@ export class OqtApiMetadataProviderService {
   getTopicFilter(topic: string) {
     return this.getOqtApiMetadata().result.topics[topic].filter;
   }
+
+  getTopicMeasure(topic: string) {
+    return this.getOqtApiMetadata().result.topics[topic].aggregationType;
+  }
+
 }
 
 

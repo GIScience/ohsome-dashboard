@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ResultComponent} from './result.component';
-import {OshdbModule} from '../oshdb.module';
+import {OshdbModule} from '../../ohsomeapi/oshdb.module';
 import {provideHttpClient} from '@angular/common/http';
-import {OhsomeApiMetadataProviderService} from '../ohsome-api-metadata-provider.service';
-import OhsomeApiMetadataProviderServiceMock from '../ohsome-api-metadata-provider.service.mock';
+import {OhsomeApiMetadataProviderService} from '../../ohsomeapi/ohsome-api-metadata-provider.service';
+import OhsomeApiMetadataProviderServiceMock from '../../ohsomeapi/ohsome-api-metadata-provider.service.mock';
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 describe('ResultComponent', () => {

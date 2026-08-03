@@ -32,7 +32,7 @@
   <div class="ui item">
     <i class="expand icon" title="measure"></i>{{formValues?.measure}}
   </div>
-  @if (formValues?.groupBy !== 'none') {
+  @if (!["none", "", undefined].includes(formValues?.groupBy) ) {
     <div class="ui item">
       <i class="list icon" title="group By"></i>{{formValues?.groupBy}}
     </div>
