@@ -237,6 +237,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/extraction/collections_members.parquet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download collections members.
+         * @description Returns relations (not tagged as `type=multipolygon` or `type=boundary`) members.For each relation all members features are returned row by row.
+         */
+        get: operations["get_features_collections_members_extract_extraction_collections_members_parquet_get"];
+        put?: never;
+        /**
+         * Download collections members.
+         * @description Returns relations (not tagged as `type=multipolygon` or `type=boundary`) members.For each relation all members features are returned row by row.
+         */
+        post: operations["post_features_collections_members_extract_extraction_collections_members_parquet_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -347,7 +371,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -358,6 +382,16 @@ export interface components {
              */
             attribution: components["schemas"]["Attribution"];
             filter: components["schemas"]["OhsomeFilter"];
+        };
+        /** GroupByTagModel */
+        GroupByTagModel: {
+            /**
+             * Type
+             * @constant
+             */
+            type: "byTag";
+            /** Key */
+            key: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -394,7 +428,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -470,18 +504,25 @@ export interface components {
             number,
             number
         ];
-        /** SnapshotColumns */
-        SnapshotColumns: {
+        /** SnapshotColumnsGrouped */
+        SnapshotColumnsGrouped: {
             /** Timestamp */
             timestamp: string[];
             /** Value */
             value: number[];
+            /**
+             * Values
+             * @example null
+             */
+            values?: {
+                [key: string]: number[];
+            } | null;
         };
         /** SnapshotColumnsResponseModel */
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -491,7 +532,7 @@ export interface components {
              *     }
              */
             attribution: components["schemas"]["Attribution"];
-            result: components["schemas"]["SnapshotColumns"];
+            result: components["schemas"]["SnapshotColumnsGrouped"];
         };
         /** SnapshotRow */
         SnapshotRow: {
@@ -503,11 +544,23 @@ export interface components {
              */
             timestamp: string;
         };
+        /** SnapshotRowGroupedByTag */
+        SnapshotRowGroupedByTag: {
+            /** Value */
+            value: number;
+            /**
+             * Timestamp
+             * Format: date-time
+             */
+            timestamp: string;
+            /** Tagvalue */
+            tagvalue: string;
+        };
         /** SnapshotsResponseModel */
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -518,7 +571,7 @@ export interface components {
              */
             attribution: components["schemas"]["Attribution"];
             /** Result */
-            result: components["schemas"]["SnapshotRow"][];
+            result: (components["schemas"]["SnapshotRow"] | components["schemas"]["SnapshotRowGroupedByTag"])[];
         };
         /** TimeBinColumns */
         TimeBinColumns: {
@@ -570,7 +623,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -606,7 +659,7 @@ export interface components {
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+5cc2f7b
+             * @default 2.0.0a5+31c22be
              */
             apiVersion: string;
             /**
@@ -643,6 +696,11 @@ export interface components {
         };
         /** TimeSeriesRequestParametersModel */
         TimeSeriesRequestParametersModel: {
+            /**
+             * @description (experimental, optional), if given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
+             * @example null
+             */
+            groupBy?: components["schemas"]["GroupByTagModel"] | null;
             /** @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
             timeSeries: components["schemas"]["TimeIntervalRequestModel"];
             /**
@@ -825,7 +883,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+5cc2f7b
+                     * @example # apiVersion: 2.0.0a5+31c22be
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -898,7 +956,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+5cc2f7b
+                     * @example # apiVersion: 2.0.0a5+31c22be
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -975,7 +1033,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+5cc2f7b
+                     * @example # apiVersion: 2.0.0a5+31c22be
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1166,6 +1224,73 @@ export interface operations {
         };
     };
     post_features_collections_extract_extraction_collections_parquet_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionsExtractionRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_features_collections_members_extract_extraction_collections_members_parquet_get: {
+        parameters: {
+            query: {
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
+                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
+                timestamp?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                filter: components["schemas"]["OhsomeFilter"];
+                /** @description Area of interest as Bounding Box. */
+                aoi: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_features_collections_members_extract_extraction_collections_members_parquet_post: {
         parameters: {
             query?: never;
             header?: never;
