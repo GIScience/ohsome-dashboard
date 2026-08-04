@@ -64,6 +64,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     return isQueryMode(backendParam) ? backendParam : 'ohsomeApi';
   });
 
+  isValidCurrentForm = this.stateService.isValidCurrentForm;
+
   public readonly initialHashParams: URLSearchParams;
 
   // default map settings

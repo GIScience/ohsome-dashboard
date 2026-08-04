@@ -1,5 +1,5 @@
-import {Component, computed, inject} from '@angular/core';
-import {form, FormField, submit, validate} from '@angular/forms/signals';
+import {Component, computed, effect, inject} from '@angular/core';
+import {form, FormField, required, submit, validate} from '@angular/forms/signals';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {FormsModule} from '@angular/forms';
@@ -44,7 +44,10 @@ export class ExtractionQueryFormComponent {
   extractionFormModel = this.stateService.extractionFormModel;
 
   extractionForm = form(this.extractionFormModel, (schemaPath) => {
-    // required(schemaPath['topic-filter'], {message: ' An ohsome filter is required.'});
+    required(schemaPath['topic-filter'], {
+      when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
+      message: ' An ohsome filter is required.'
+    });
     // validate(schemaPath.aoi, ({value}) => {
     //   console.log("VALIDATOR", value());
     //   const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
@@ -58,6 +61,8 @@ export class ExtractionQueryFormComponent {
         : null;
     })
   });
+
+  isValidExtractionForm = this.stateService.isValidExtractionForm;
 
   protected boundaryType: string;
 
@@ -92,6 +97,10 @@ export class ExtractionQueryFormComponent {
       //   }
       // }, 1500);
     }
+
+    effect(() => {
+      this.isValidExtractionForm.set(this.extractionForm().valid());
+    });
   }
 
   async onSubmit(event: Event | null) {

@@ -59,10 +59,18 @@ export class StatsQueryFormComponent {
 
   statsForm = form(this.statsFormModel, (schemaPath) => {
     // required(schemaPath.aoi);
+    required(schemaPath['topic-filter'], {
+      when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
+      message: ' An ohsome filter is required.'
+    });
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
     required(schemaPath.groupByTagKey, {when: () => this.groupByTag()});
   });
+
+  isValidStatsForm = this.stateService.isValidStatsForm;
+
+
 
   groupByTag = signal<boolean>(!!Utils.getFromParamsOrDefault(this.stateService.initialHashParams, 'groupByTagKey', ''));
 
@@ -91,6 +99,10 @@ export class StatsQueryFormComponent {
       if (!this.groupByTag()) {
         this.statsForm.groupByTagKey().value.set('');
       }
+    });
+
+    effect(() => {
+      this.isValidStatsForm.set(this.statsForm().valid());
     });
   }
 

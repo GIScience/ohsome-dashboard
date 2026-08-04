@@ -61,6 +61,15 @@ export class StateService {
       }
     });
 
+  isValidStatsForm = signal<boolean>(false);
+  isValidExtractionForm = signal<boolean>(false);
+  isValidCurrentForm = computed<boolean>(()=>{
+    const isValidStatsForm = this.isValidStatsForm();
+    const isValidExtractionForm = this.isValidExtractionForm();
+    return (this.queryModeSignal() === 'ohsomeApi')? isValidStatsForm: isValidExtractionForm;
+  })
+
+
   private readonly initialState: StateParams = {
     showWelcomeScreen: this.initialHashParams.size === 0,
     welcomeTab: 'intro',

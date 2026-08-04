@@ -229,7 +229,7 @@
   @if (queryModeSignal() !== 'extraction') {
     <div id="query-submit" class="row">
       <div class="sixteen wide column">
-        <button [disabled]="!f.valid" type="submit" class="ui green right labeled icon button" i18n>
+        <button [disabled]="!(f.valid && isValidCurrentForm())" type="submit" class="ui green right labeled icon button" i18n>
           <i class="play icon"></i>Run Query
         </button>
       </div>
@@ -239,7 +239,7 @@
       <div class="sixteen wide column">
         <!--        <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">-->
         <!--TODO validate extraction form: update aoi bbox on every from change-->
-        <button [disabled]="!f.valid" class="ui green  right labeled icon button" type="submit">
+        <button [disabled]="!(f.valid && isValidCurrentForm())" class="ui green  right labeled icon button" type="submit">
           Create Download Asset<i class="download icon"></i>
         </button>
         <!--        @if (extractionForm().invalid()) {-->
