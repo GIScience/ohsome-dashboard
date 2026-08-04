@@ -44,6 +44,16 @@ export class StatsQueryFormComponent {
     {value: 'area', label: $localize`area`}
   ];
 
+  // Period
+  protected periodOptions: { value: string, label: string }[] = [
+    {value: 'PT1H', label: $localize`hourly`},
+    {value: 'P1D', label: $localize`daily`},
+    {value: 'P1W', label: $localize`weekly`},
+    {value: 'P1M', label: $localize`monthly`},
+    {value: 'P3M', label: $localize`quarterly`},
+    {value: 'P1Y', label: $localize`yearly`},
+  ];
+
   // this info survives component recreation in state service
   statsFormModel = this.stateService.statsFormModel;
 

@@ -127,24 +127,26 @@
 </div>
 <div class="field">
   <label>Interval<select [formField]="statsForm.interval">
-    <option value="P1M" selected>monthly</option>
+    @for (option of periodOptions; track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
   </select></label>
 </div>
 
 <!--    </div> &lt;!&ndash; End column 1&ndash;&gt;-->
 
 <div class="ui divider"></div>
-<div  class="ui toggle checkbox">
+<div class="ui toggle checkbox">
   <input type="checkbox" [checked]="groupByTag()" (change)="groupByTag.update((old)=>!old)">
   <label>
     Tag Value exploration
   </label><br>
 </div>
-@if(groupByTag()){
-    <div class="field">
-      <input type="text" placeholder="Insert a Tag Key" [formField]="statsForm.groupByTagKey">
-      <p>Insert a tag-key to explore all tag-values used in the data specified by the given filter.</p>
-    </div>
+@if (groupByTag()) {
+  <div class="field">
+    <input type="text" placeholder="Insert a Tag Key" [formField]="statsForm.groupByTagKey">
+    <p>Insert a tag-key to explore all tag-values used in the data specified by the given filter.</p>
+  </div>
 }
 
 <!--TODO cleanup-->
