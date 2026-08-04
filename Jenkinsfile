@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'worker'
+    label 'xlarge'
   }
   options {
     timeout(time: 30, unit: 'MINUTES')
