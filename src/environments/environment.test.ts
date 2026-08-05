@@ -39,7 +39,7 @@ export const environment: AppEnvironment = {
   // selectedKey : 'natural',
   // selectedValue : 'tree',
   // selectedTypes : ['node'],
-  period : 'P1M',
+  interval : 'P1Y',
 
   // userManagement
   appwriteEndpoint: 'https://api.account.heigit.org',

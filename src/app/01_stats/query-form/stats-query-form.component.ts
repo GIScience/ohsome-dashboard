@@ -132,7 +132,7 @@ export class StatsQueryFormComponent {
       measure: Utils.getFromParamsOrDefault(initialHashParams, 'measure', `count`),
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),
       end: Utils.getFromParamsOrDefault(initialHashParams, 'end', today),
-      interval: Utils.getFromParamsOrDefault(initialHashParams, 'interval', 'P1M'),
+      interval: Utils.getFromParamsOrDefault(initialHashParams, 'interval',Utils.loadEnv('interval', 'P1M')),
       groupByTagKey: Utils.getFromParamsOrDefault(initialHashParams, 'groupByTagKey', ''),
     }
   }

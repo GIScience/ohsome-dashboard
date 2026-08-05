@@ -59,7 +59,7 @@ export class OhsomeApiQueryFormComponent implements OnInit/*, AfterViewInit*/ {
     this.maxDate = this.metadataProvider.getOhsomeMetadataResponse()?.temporalExtent?.end ?? "";
     this.start = Utils.loadEnv('startDate', '');
     this.end = Utils.loadEnv('endDate', this.maxDate);
-    this.period = Utils.loadEnv('period', this.period);
+    this.period = Utils.loadEnv('interval', this.period);
   }
 
   getMaxDateAsDate() {

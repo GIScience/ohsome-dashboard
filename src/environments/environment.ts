@@ -60,7 +60,7 @@ export const environment: AppEnvironment =  {
   // selectedTypes : ['node', 'way'],
   // startDate : '2019-03-01',
   // endDate : '2020-03-01',
-  period : 'P1M',
+  interval : 'P1Y',
   viewUpdateTime : false,
 
   // userManagement

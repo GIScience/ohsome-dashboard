@@ -15,7 +15,7 @@ interface AppEnvironment {
   mapOptions: BoundaryInputComponentOptions & {
     mapCenterFromPoly: boolean;
   };
-  period: string; //ISO8601 period
+  interval: string; //ISO8601 period
   viewUpdateTime?: boolean;
   appwriteEndpoint: string;
   appwriteProjectId: string;
