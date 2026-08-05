@@ -5,7 +5,12 @@ import {OqtResultComponent} from '../02_quality/result/oqt-result.component';
 import {ExtractionResultComponent} from '../03_extraction/result/extraction-result.component';
 import {StateService} from '../singelton-services/state.service';
 import bbox from '@turf/bbox';
-import {flatCoordsToPolygon, parseBoundaryLists} from '../shared/utils/boundaries.utils';
+import {
+  flatCoordsToPolygon,
+  parseBoundaryLists,
+  toPolygonFeatures,
+  unionPolygonFeatures
+} from '../shared/utils/boundaries.utils';
 import bboxPolygon from '@turf/bbox-polygon';
 import {featureCollection} from '@turf/helpers';
 
@@ -43,7 +48,7 @@ import {featureCollection} from '@turf/helpers';
 
     createResultComponent(result) {
       this.resultItem = this.container.createComponent(ResultComponent, {index: 0});
-      this.resultItem.instance.formValues = {...result.formValues, ...this.stateService.statsFormModel()};
+      this.resultItem.setInput('formValues', {...result.formValues, ...this.stateService.statsFormModel()}) ;
       this.resultItem.instance.boundaryType = result.boundaryType;
       this.resultItem.instance.componentRef = this.resultItem;
     }
@@ -57,26 +62,30 @@ import {featureCollection} from '@turf/helpers';
 
     private createExtractionComponent(result) {
 
-      // transform boundary to bbox for aoi
-      switch (result.boundaryType) {
-        case 'admin':
-          const fc = JSON.parse(result.formValues.bpolys);
-          console.log('featureCollection', fc);
-          result.formValues.aoi = bbox(fc).join(',');
-          break;
-        case 'bbox':
-          const bboxValueIds = parseBoundaryLists(result.formValues.bboxes);
-          // @ts-ignore
-          result.formValues.aoi = bbox(featureCollection(bboxValueIds.values.map(bboxPolygon))).join(',');
-          break;
-        case 'bpoly':
-          const bpolyValueIds = parseBoundaryLists(result.formValues.bpolys);
-          // @ts-ignore
-          result.formValues.aoi = bbox(featureCollection(bpolyValueIds.values.map(flatCoordsToPolygon))).join(',');
-          break;
-        default:
-          console.log("create extraction result, boundary type conversion not implemented", result.boundaryType);
-      }
+      const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(result.formValues));
+      result.formValues.aoi = bbox(unifiedFeature);
+      result.formValues.originalAoi = unifiedFeature;
+
+      // // transform boundary to bbox for aoi
+      // switch (result.boundaryType) {
+      //   case 'admin':
+      //     const fc = JSON.parse(result.formValues.bpolys);
+      //     console.log('featureCollection', fc);
+      //     result.formValues.aoi = bbox(fc).join(',');
+      //     break;
+      //   case 'bbox':
+      //     const bboxValueIds = parseBoundaryLists(result.formValues.bboxes);
+      //     // @ts-ignore
+      //     result.formValues.aoi = bbox(featureCollection(bboxValueIds.values.map(bboxPolygon))).join(',');
+      //     break;
+      //   case 'bpoly':
+      //     const bpolyValueIds = parseBoundaryLists(result.formValues.bpolys);
+      //     // @ts-ignore
+      //     result.formValues.aoi = bbox(featureCollection(bpolyValueIds.values.map(flatCoordsToPolygon))).join(',');
+      //     break;
+      //   default:
+      //     console.log("create extraction result, boundary type conversion not implemented", result.boundaryType);
+      // }
 
       const extractionResultItem = this.container.createComponent(ExtractionResultComponent, {index: 0});
       extractionResultItem.setInput('formValues', result.formValues);

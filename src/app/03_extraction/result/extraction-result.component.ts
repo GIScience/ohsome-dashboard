@@ -13,6 +13,7 @@ import {ExtractionFormData} from '../query-form/types';
 import {paths} from '../../shared/ohsome-api-v2-types';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {ViewportScroller} from '@angular/common';
+import {Feature, MultiPolygon, Polygon} from 'geojson';
 
 @Component({
   selector: 'app-extraction-result',
@@ -28,7 +29,7 @@ export class ExtractionResultComponent {
 
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   componentRef: ComponentRef<ExtractionResultComponent>;
-  formValues = input.required<ExtractionFormData>();
+  formValues = input.required<ExtractionFormData & { originalAoi: Feature<Polygon | MultiPolygon> }>();
 
   utcIsoTimestamp = computed(() => {
     return this.formValues().timestamp + 'Z';
@@ -85,7 +86,15 @@ export class ExtractionResultComponent {
       return formValues['topic-filter']
     }
 
-    return this.oqtApiMetadataProviderService.getOqtApiMetadata().result.topics[formValues.topic].filter ?? '';
+    return this.oqtApiMetadataProviderService.getTopicFilter(formValues.topic) ?? '';
+  }
+
+  getAoiLabel(): string {
+    const label = this.formValues().originalAoi.properties?.['display_name'];
+    if (!label) {
+      return '';
+    }
+    return `BBOX of ${label}`;
   }
 
   protected readonly environment = environment;

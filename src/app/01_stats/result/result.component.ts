@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
-  inject,
+  inject, input,
   OnInit,
   signal,
   Type
@@ -40,15 +40,15 @@ export class ResultComponent implements OnInit, AfterViewInit {
   private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   private viewportScroller = inject(ViewportScroller);
   private sanitizer = inject(DomSanitizer);
-  private oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
 
   public componentRef;
   public moment = moment;
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  public title = '';
+  // public title = '';
   public unit = '';
-  public formValues: any;
+  public formValues = input.required<any>();
   public boundaryType: string;
   private data: any;
   public response: Response;
@@ -88,20 +88,19 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    const handler = this.queryHandlerRegistry.find(h => h.matches(this.formValues));
+    const handler = this.queryHandlerRegistry.find(h => h.matches(this.formValues()));
     if (!handler) {
       throw new Error('No ResultHandler matches the current form values');
     }
     this.handler = handler as QueryHandler<any>;
 
     //create boundary feautures as geojson
-    this.aoiPolygons = toPolygonFeatures(this.formValues);
+    this.aoiPolygons = toPolygonFeatures(this.formValues());
 
-
-    // console.log('result', this.formValues);
+    // console.log('result', this.formValues());
     this.permalink = this.getPermalink();
-    this.setTitle();
-    this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues.measure);
+    // this.setTitle();
+    this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues().measure);
 
     this.getData();
     this.changeDetectorRef.detectChanges();
@@ -117,18 +116,18 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   // Set the chart legend title
-  setTitle() {
-    //simple filter
-    if (this.formValues.keys) {
-      // simple request
-      this.title = `${(this.formValues.keys) ? this.formValues.keys : '*'}=${(this.formValues.values) ? this.formValues.values : '*'}`;
-    } else if (this.formValues.filter) {
-      const filter = this.formValues.filter;
-      //limit string length to a maximum
-      const maxLength = 80;
-      this.title = (filter.length > maxLength) ? `${filter.slice(0, maxLength)} ...` : filter;
-    }
-  }
+  // setTitle() {
+  //   //simple filter
+  //   if (this.formValues.keys) {
+  //     // simple request
+  //     this.title = `${(this.formValues.keys) ? this.formValues.keys : '*'}=${(this.formValues.values) ? this.formValues.values : '*'}`;
+  //   } else if (this.formValues.filter) {
+  //     const filter = this.formValues.filter;
+  //     //limit string length to a maximum
+  //     const maxLength = 80;
+  //     this.title = (filter.length > maxLength) ? `${filter.slice(0, maxLength)} ...` : filter;
+  //   }
+  // }
 
   queryHandlerRegistry = [
     groupByTagHandler,
@@ -139,10 +138,10 @@ export class ResultComponent implements OnInit, AfterViewInit {
   getData() {
     //new code starts here
     this.isLoading = true;
-    this.handler.execute(this.formValues, this.ohsomeApiV2, this.oqtApiMetadataProviderService, this.aoiPolygons).subscribe({
+    this.handler.execute(this.formValues(), this.ohsomeApiV2, this.oqtApiMetadataProviderService, this.aoiPolygons).subscribe({
       next: (response) => {
         this.handlerComponent.set(this.handler.component);
-        this.handlerInputs.set(this.handler.toInputs(response, this.formValues));
+        this.handlerInputs.set(this.handler.toInputs(response, this.formValues()));
         this.data = response;
         this.changeDetectorRef.detectChanges();
       },
@@ -196,8 +195,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
 
   getSelectedNames(): string {
-
-    return this.handler.toBoundaryLabel(this.formValues, this.aoiPolygons);
+    return this.handler.toBoundaryLabel(this.formValues(), this.aoiPolygons);
   }
 
   // for download links

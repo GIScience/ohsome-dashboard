@@ -15,7 +15,7 @@
               {{ topics[formValues().topic].name }}
             </span>
       }
-      <div class="ui item"><i class="clock icon"></i>{{ utcTimestamp() }} ({{ utcIsoTimestamp() }})</div>
+      <div class="ui item"><i class="clock icon"></i>{{ utcIsoTimestamp() }}</div>
 
 
       <!--      @if (formValues['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {-->
@@ -37,6 +37,14 @@
 
 
     </div>
+
+    @if (getAoiLabel() !== '') {
+      <div id="boundaryLabelsItem" class="ui item">
+        <i class="circle outline icon" title="selected areas"></i>
+        <span id="boundaryLabelsText" title="{{getAoiLabel()}}">{{ getAoiLabel() }}</span>
+      </div>
+    }
+
 <!--        <div id="boundaryLabelsItem" class="ui item">-->
 <!--          <i class="circle outline icon" title="selected areas"></i>-->
 <!--          <span id="boundaryLabelsText"-->

@@ -47,7 +47,7 @@ export function flatCoordsToPolygon(coords: number[]) {
 
 
 /**
- * Builds the unified boundary feature from form values (bboxes / bpolys),
+ * Normalizes form values (bboxes / bpolys) to boundary GeoJSON Feature[] with own or artificial ids for labelling
  */
 export function toPolygonFeatures(formValues: Partial<{
   bpolys?: string;
@@ -87,7 +87,7 @@ export function toPolygonFeatures(formValues: Partial<{
       return features;
     } else {
       // geojson
-      const features = JSON.parse(bpolys).features as Feature<MultiPolygon>[];
+      const features = JSON.parse(bpolys).features as Feature<Polygon | MultiPolygon>[];
       return features;
     }
   }
@@ -133,6 +133,11 @@ function getLabel(feature, defaultValue) {
   return getAvailablePropertyOrId(feature, ["display_name"], defaultValue);
 }
 
+
+/**
+ * Union features to a single feature with unioned label (display_name)
+ * @param features use output of toPolygonFeatures()
+ */
 export function unionPolygonFeatures(
   features: Feature<Polygon | MultiPolygon>[]
 ): Feature<Polygon | MultiPolygon, { id: any, display_name: string }> {

@@ -144,6 +144,10 @@ export class OqtApiMetadataProviderService {
     return this.cachedData[indicatorKey];
   }
 
+  getTopicName(topic: string) {
+    return this.getOqtApiMetadata().result.topics[topic].name;
+  }
+
   getTopicFilter(topic: string) {
     return this.getOqtApiMetadata().result.topics[topic].filter;
   }
