@@ -37,7 +37,7 @@ describe('ResultComponent', () => {
     fixture = TestBed.createComponent(ResultComponent);
 
     component = fixture.componentInstance;
-    component.formValues = formValuesMock;
+    fixture.componentRef.setInput('formValues', formValuesMock);
     component.boundaryType = 'bpoly';
     fixture.detectChanges();
 
