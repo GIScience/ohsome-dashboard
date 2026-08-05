@@ -10,6 +10,7 @@ import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {AuthService} from './singelton-services/auth.service';
 import {environment} from '../environments/environment';
+import {CopyPermalinkModalComponent} from './copy-permalink-modal/copy-permalink-modal.component';
 
 declare const $: any;
 
@@ -18,7 +19,7 @@ declare const $: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent]
+  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, CopyPermalinkModalComponent]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);

@@ -7,12 +7,18 @@ import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extracti
 import {linkField} from '../shared/utils/form.utils';
 import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
 
+interface PermalinkDialogState {
+  open: boolean;
+  permalink: string | null;
+}
+
 interface StateParams {
   showWelcomeScreen: boolean;
   welcomeTab: string;
   firstForm: boolean;
   appLanguage: string;
   queryMode: QueryMode;
+  permalinkDialog: PermalinkDialogState;
 }
 
 @Service()
@@ -84,6 +90,7 @@ export class StateService {
     firstForm: true,
     appLanguage: 'en',
     queryMode: StateService.getInitialQueryMode(this.initialHashParams),
+    permalinkDialog: {open: false, permalink: null}
   };
 
   // Private signal to hold the current state
@@ -95,13 +102,12 @@ export class StateService {
       }
     }
   );
-  //TODO add equality fucntion
 
   // Public readonly signal for components to read
   public readonly appState = this._appState.asReadonly();
 
   public queryModeSignal = computed(() => this.appState().queryMode);
-
+  readonly permalinkDialog = computed(() => this._appState().permalinkDialog);
 
   constructor() {
     console.log("StateService constructor");
@@ -137,6 +143,18 @@ export class StateService {
       ...currentState,
       ...partialState
     }));
+  }
+
+  openPermalinkDialog(permalink: string): void {
+    this.updatePartialState({
+      permalinkDialog: {open: true, permalink}
+    });
+  }
+
+  closePermalinkDialog(): void {
+    this.updatePartialState({
+      permalinkDialog: {open: false, permalink: null}
+    });
   }
 
 

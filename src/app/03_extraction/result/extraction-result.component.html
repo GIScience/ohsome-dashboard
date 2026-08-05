@@ -45,11 +45,11 @@
       </div>
     }
 
-<!--        <div id="boundaryLabelsItem" class="ui item">-->
-<!--          <i class="circle outline icon" title="selected areas"></i>-->
-<!--          <span id="boundaryLabelsText"-->
-<!--                title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>-->
-<!--        </div>-->
+    <!--        <div id="boundaryLabelsItem" class="ui item">-->
+    <!--          <i class="circle outline icon" title="selected areas"></i>-->
+    <!--          <span id="boundaryLabelsText"-->
+    <!--                title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>-->
+    <!--        </div>-->
     <!--  </div>-->
 
 
@@ -65,8 +65,8 @@
     <!--    </div>-->
 
     <!-- Permalink -->
-    <!--        <a class="ui link item" [href]="permalink" (click)="showPermalink($event)"><i-->
-    <!--          class="share icon" title="Share"></i></a>-->
+    <a class="ui link item" [href]="permalink" (click)="showPermalink($event)"><i
+      class="share icon" title="Share"></i></a>
     <a class="ui link item" (click)="close()"><i class="large close icon"></i></a>
   </div>
 </div>
@@ -85,14 +85,14 @@
 
       <div class="ui centered stackable cards">
         <div class="card">
-            <div class="content">
-              <div class="center aligned header">Extent</div>
-              <div class="center aligned meta">&nbsp;</div>
+          <div class="content">
+            <div class="center aligned header">Extent</div>
+            <div class="center aligned meta">&nbsp;</div>
             The download links will extract your requested data in a BBOX based on your selected area of interest.
           </div>
-<!--          <div class="ui image aoi-thumbnail">-->
-<!--            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">-->
-<!--          </div>-->
+          <!--          <div class="ui image aoi-thumbnail">-->
+          <!--            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">-->
+          <!--          </div>-->
         </div>
 
         <div class="card">
@@ -109,13 +109,12 @@
             </div>
           </div>
           <div class="center aligned extra content">
-            <a class="ui blue button" [href]="getDownloadUrl('parquet')" download="result.parquet"
-               target="_blank"><i
-              class="download icon"></i>Download Parquet</a>
+            <a class="ui blue button" [href]="getDownloadUrl('parquet')"
+               download
+               target="_blank">
+              <i class="download icon"></i>Download Parquet
+            </a>
           </div>
-          <!--          <a class="ui bottom attached blue button" [href]="getDownloadUrl('parquet')" download="result.parquet"-->
-          <!--             target="_blank"><i-->
-          <!--            class="download icon"></i>Download Parquet</a>-->
         </div>
 
         <div class="card">

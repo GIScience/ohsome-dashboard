@@ -4,7 +4,8 @@ import {
   ChangeDetectorRef,
   Component,
   HostBinding,
-  inject, input,
+  inject,
+  input,
   OnInit,
   signal,
   Type
@@ -15,15 +16,15 @@ import {ChartPoint} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
-import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
 import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
+import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
+import {StateService} from '../../singelton-services/state.service';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
-import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 
 declare const $: any;
 
@@ -37,10 +38,10 @@ declare const $: any;
 export class ResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
   private ohsomeApiV2 = inject(OhsomeApiV2Service)
-  private urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   private viewportScroller = inject(ViewportScroller);
   private sanitizer = inject(DomSanitizer);
   protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  stateService = inject(StateService);
 
 
   public componentRef;
@@ -52,7 +53,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
   public boundaryType: string;
   private data: any;
   public response: Response;
-  public permalink: SafeUrl;
+  // intit on creation
+  readonly permalink: string = window.location.href;
 
   public error: any;
   public isLoading = false;
@@ -97,8 +99,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
     //create boundary feautures as geojson
     this.aoiPolygons = toPolygonFeatures(this.formValues());
 
-    // console.log('result', this.formValues());
-    this.permalink = this.getPermalink();
     // this.setTitle();
     this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues().measure);
 
@@ -215,14 +215,9 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getPermalink(): SafeUrl {
-    return '#' + this.urlHashParamsProviderService.getHashURLSearchParams().toString();
-  }
-
   showPermalink(event): void {
     event.preventDefault();
-    $('#permalinkModal').modal('show');
-    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
+    this.stateService.openPermalinkDialog(this.permalink);
   }
 
   protected readonly GroupByResponse = GroupByResponse;

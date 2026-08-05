@@ -15,7 +15,6 @@ import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.servic
 import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
 import {featureCollection} from '@turf/helpers';
 import Utils from '../../../utils';
-import {SafeUrl} from '@angular/platform-browser';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
 import {IndicatorParams, Params} from '../types/types'
 import {IndicatorResultComponent} from './indicator-result/indicator-result.component';
@@ -25,8 +24,7 @@ import {
   thematicCategoryType
 } from '../query-form/oqt-api-query-form/thematic-accuracy-indicator/thematic-accuracy-indicator.constants';
 import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
-
-declare const $: any;
+import {StateService} from '../../singelton-services/state.service';
 
 @Component({
   selector: 'app-oqt-result',
@@ -40,6 +38,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   protected urlHashParamsProviderService = inject(UrlHashParamsProviderService);
   private viewportScroller = inject(ViewportScroller);
   protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  stateService = inject(StateService);
 
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   formValues = input.required<{
@@ -62,7 +61,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   boundaries: FeatureCollection<Polygon | MultiPolygon>;
 
-  permalink: SafeUrl;
+  // intit on creation
+  readonly permalink: string = window.location.href;
 
   thematicAccuracyCategories = categoryRegistry;
 
@@ -75,7 +75,6 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.permalink = this.getPermalink();
 
     // associate params from formValues to their indicator and store them in a list to be distributed into distict indicator requests
     this.indicatorList = this.createIndicatorListWithParams();
@@ -94,14 +93,9 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     this.componentRef.destroy();
   }
 
-  getPermalink(): SafeUrl {
-    return '#' + this.urlHashParamsProviderService.getHashURLSearchParams().toString();
-  }
-
-  showPermalink(event: MouseEvent): void {
+  showPermalink(event): void {
     event.preventDefault();
-    $('#permalinkModal').modal('show');
-    $('#permalink')[0].value = window.location.href.replace(window.location.hash, '') + this.permalink;
+    this.stateService.openPermalinkDialog(this.permalink);
   }
 
   createIndicatorListWithParams(): IndicatorParams[] {

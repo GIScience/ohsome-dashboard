@@ -1,0 +1,23 @@
+<dialog id="permalinkDialog" #permalinkDialog (close)="onNativeClose()" (cancel)="onNativeClose()" (click)="onClickOutsideClose($event)">
+  <button id="close-btn" type="button" (click)="stateService.closePermalinkDialog()">
+    <i class="close icon" ></i>
+  </button>
+  <br>
+  <div class="ui form">
+    <div class="field">
+      <label>Copy Permalink</label>
+      <div class="field-button">
+        <input type="text" id="permalink" #permalinkInput readonly (click)="permalinkInput.select()" [value]="dialogState().permalink">
+        @if (navigator.clipboard && window.isSecureContext){
+          <button #copyButton class="ui primary button" (click)="copyPermalink()"><i
+            class="copy icon"></i>&nbsp;Copy
+          </button>
+        } @else {
+          <button class="ui disabled button" disabled>Press Ctrl&#8209;C</button>
+        }
+      </div>
+    </div>
+
+  </div>
+
+</dialog>

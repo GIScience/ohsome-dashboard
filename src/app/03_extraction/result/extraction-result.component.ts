@@ -1,19 +1,12 @@
-import {
-  afterNextRender,
-  Component,
-  ComponentRef,
-  computed,
-  ElementRef,
-  HostBinding,
-  inject,
-  input
-} from '@angular/core';
+import {afterNextRender, Component, ComponentRef, computed, HostBinding, inject, input} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ExtractionFormData} from '../query-form/types';
 import {paths} from '../../shared/ohsome-api-v2-types';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {ViewportScroller} from '@angular/common';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
+import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
+import {StateService} from '../../singelton-services/state.service';
 
 @Component({
   selector: 'app-extraction-result',
@@ -23,20 +16,25 @@ import {Feature, MultiPolygon, Polygon} from 'geojson';
 })
 export class ExtractionResultComponent {
   viewportScroller = inject(ViewportScroller);
-  elementRef = inject(ElementRef);
   oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
+  stateService = inject(StateService);
+
   topics = this.oqtApiMetadataProviderService.getOqtApiMetadata().result.topics;
 
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
   componentRef: ComponentRef<ExtractionResultComponent>;
   formValues = input.required<ExtractionFormData & { originalAoi: Feature<Polygon | MultiPolygon> }>();
 
+  // intit on creation
+  readonly permalink: string = window.location.href;
+
   utcIsoTimestamp = computed(() => {
     return this.formValues().timestamp + 'Z';
-  })
-  utcTimestamp = computed(() => {
-    return new Date(this.formValues().timestamp).toUTCString();
-  })
+  });
+
+  // utcTimestamp = computed(() => {
+  //   return new Date(this.formValues().timestamp).toUTCString();
+  // })
   //localTimestamp
   //new Date(this.utcIsoTimestamp()).toLocaleString() + ` (${Intl.DateTimeFormat().resolvedOptions().timeZone})`
 
@@ -97,6 +95,9 @@ export class ExtractionResultComponent {
     return `BBOX of ${label}`;
   }
 
-  protected readonly environment = environment;
-  protected readonly Intl = Intl;
+  showPermalink(event): void {
+    event.preventDefault();
+    this.stateService.openPermalinkDialog(this.permalink);
+  }
+
 }
