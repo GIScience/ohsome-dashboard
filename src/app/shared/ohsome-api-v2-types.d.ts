@@ -313,6 +313,12 @@ export interface components {
             timestamp: string | "latest";
             /**
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
+             * @default *
+             * @example geometry:line
+             */
+            member_filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:relation and type=route and route=bus and service=night
              */
             filter: components["schemas"]["OhsomeFilter"];
@@ -371,7 +377,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -428,7 +434,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -522,7 +528,7 @@ export interface components {
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -560,7 +566,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -623,7 +629,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -659,7 +665,7 @@ export interface components {
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a5+31c22be
+             * @default 2.0.0a6+7e81112
              */
             apiVersion: string;
             /**
@@ -883,7 +889,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+31c22be
+                     * @example # apiVersion: 2.0.0a6+7e81112
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -956,7 +962,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+31c22be
+                     * @example # apiVersion: 2.0.0a6+7e81112
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1033,7 +1039,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a5+31c22be
+                     * @example # apiVersion: 2.0.0a6+7e81112
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1195,6 +1201,8 @@ export interface operations {
                 /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
                 timestamp?: string | "latest";
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                member_filter?: components["schemas"]["OhsomeFilter"];
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
                 aoi: string;
@@ -1261,6 +1269,8 @@ export interface operations {
                 clip?: boolean;
                 /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
                 timestamp?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                member_filter?: components["schemas"]["OhsomeFilter"];
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
