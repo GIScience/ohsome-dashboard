@@ -17,7 +17,7 @@ import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
 import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
-import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
+import {FeaturesError, OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
@@ -25,6 +25,7 @@ import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 import {StateService} from '../../singelton-services/state.service';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
+import {HttpErrorResponse} from '@angular/common/http';
 
 declare const $: any;
 
@@ -56,7 +57,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   // intit on creation
   readonly permalink: string = window.location.href;
 
-  public error: any;
+  public error: FeaturesError;
   public isLoading = false;
 
   public UNITS = {
@@ -129,7 +130,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   //   }
   // }
 
-  queryHandlerRegistry = [
+  queryHandlerRegistry: QueryHandler<unknown>[] = [
     groupByTagHandler,
     timeSeriesHandler
   ];
@@ -145,7 +146,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
         this.data = response;
         this.changeDetectorRef.detectChanges();
       },
-      error: (err) => {
+      error: (err: FeaturesError) => {
         this.isLoading = false;
         this.error = err;
         console.error(err);

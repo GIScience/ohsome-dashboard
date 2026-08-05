@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
+import {FeaturesRequestBody, FeaturesResponse, OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {Type} from '@angular/core';
 import Papa, {UnparseConfig} from "papaparse";
 import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-chart.component';
@@ -40,7 +40,7 @@ export interface StatsFormValues {
   bbox?: string;
 }
 
-export const timeSeriesHandler: QueryHandler<any> = {
+export const timeSeriesHandler: QueryHandler<FeaturesResponse> = {
 
   matches(formValues: StatsFormValues): boolean {
     console.log("GROUPBY", formValues);
@@ -49,7 +49,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
 
   component: PlotlyChartComponent,
 
-  execute(formValues: StatsFormValues, api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<any> {
+  execute(formValues: StatsFormValues, api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<FeaturesResponse> {
     // let [start, end, interval] = formValues;
     // handle null, undefined and empty string
     const start = formValues?.start?.trim() ? formValues.start : "earliest";
@@ -58,7 +58,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
 
     const filter = getFilterFromFormValues(formValues, oqtApiMetadataProviderService);
 
-    const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
+    const body: FeaturesRequestBody = {
       filter: filter,
       timeSeries: {
         start,
@@ -71,7 +71,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
     return api.features(formValues.measure, body);
   },
 
-  toInputs(response, formValues): {plotlyDataLayoutConfig: PlotlyDataLayoutConfig} {
+  toInputs(response: FeaturesResponse, formValues): { plotlyDataLayoutConfig: PlotlyDataLayoutConfig } {
 
     let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
@@ -108,7 +108,7 @@ export const timeSeriesHandler: QueryHandler<any> = {
   },
 // add layout and config props
 
-  toCSV(response: any): string {
+  toCSV(response: FeaturesResponse): string {
 
     const rows = response.result.timestamp.map((ts, i) => [ts, response.result.value[i]])
 

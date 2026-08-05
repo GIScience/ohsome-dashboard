@@ -1,14 +1,24 @@
 import {inject, Service} from '@angular/core';
-import {HttpClient, HttpContext} from '@angular/common/http';
+import {HttpClient, HttpContext, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {SKIP_AUTH} from '../interceptors/skip-auth.token';
-import type {paths, components} from '../shared/ohsome-api-v2-types';
+import type {paths, components, operations} from '../shared/ohsome-api-v2-types';
+import {catchError, throwError} from 'rxjs';
 // import {of} from 'rxjs';
 // import {ohsomeApiMetadataResponse} from './ohsome-api-metadata.response.mock';
 
 const OHSOME_API_ROOT_URL = environment.ohsomeApiRootUrl;
 
 type OhsomeApiGetMetadataResponse = paths['/metadata']['get']['responses']['200']['content']['application/json']
+
+type FeaturesOperation = operations['post_features_as_json_stats_features__measure__json_post'];
+export type FeaturesRequestBody = FeaturesOperation['requestBody']['content']['application/json'];
+export type FeaturesResponse    = FeaturesOperation['responses'][200]['content']['application/json'];
+export type FeaturesValidationError = FeaturesOperation['responses'][422]['content']['application/json'];
+export type FeaturesError =
+  | { kind: 'validation'; error: FeaturesValidationError }
+  | { kind: 'http'; error: HttpErrorResponse };
+
 
 @Service()
 export class OhsomeApiV2Service {
@@ -26,10 +36,22 @@ export class OhsomeApiV2Service {
     measure: components['schemas']['MeasureRequestModel'],
     body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json']
   ) {
-    return this.http.post(
+    return this.http.post<FeaturesResponse>(
       `${OHSOME_API_ROOT_URL}/stats/features/${measure}.json`,
       body
-    )
+    ).pipe(
+      catchError((err: HttpErrorResponse) => {
+        let featuresError: FeaturesError;
+        switch (err.status) {
+          case 422:
+            featuresError = {kind: 'validation', error: err.error as FeaturesValidationError};
+            break
+          default:
+            featuresError = { kind: 'http', error: err };
+        }
+        return throwError(() => featuresError);
+      })
+    );
   }
 
   getOhsomeApiAnnouncement() {

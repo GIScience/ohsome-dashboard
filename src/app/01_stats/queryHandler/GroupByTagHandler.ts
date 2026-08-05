@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
+import {FeaturesResponse, OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import Papa, {UnparseConfig} from "papaparse";
 import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-chart.component';
 import Utils from '../../../utils';
@@ -11,9 +11,9 @@ import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-p
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
 import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
 
+type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
 
-
-export const groupByTagHandler: QueryHandler<any> = {
+export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
   matches(formValues: StatsFormValues): boolean {
     console.log("GROUPBY", formValues.groupByTagKey);
@@ -46,17 +46,19 @@ export const groupByTagHandler: QueryHandler<any> = {
     return api.features(formValues.measure, body);
   },
 
-  toInputs(response, formValues): {plotlyDataLayoutConfig: PlotlyDataLayoutConfig} {
+  toInputs(response: FeaturesResponse, formValues): {plotlyDataLayoutConfig: PlotlyDataLayoutConfig} {
+
+    const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
 
     let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
     const hasUnit = !!unit;
     if (hasUnit) yAxisText += ` [${unit}]`
 
-    const x = response.result.timestamp;
+    const x = groupByResult.timestamp;
     const length = x.length;
 
-    const traces: Partial<PlotData>[] = Object.entries(response.result.values).map(([key, value]):Partial<PlotData> => {
+    const traces: Partial<PlotData>[] = Object.entries(groupByResult.values).map(([key, value]):Partial<PlotData> => {
       return {
         x,
         y: value as number[],

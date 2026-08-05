@@ -76,9 +76,31 @@
 
   <div [ngClass]="{'loading' : isLoading}" class="result ui bottom attached segment">
     <!-- Error -->
-    @if (!!error) {
-      <div class="ui segment">
-        <div>{{ error | json }}</div>
+<!--    @if (!!error) {-->
+<!--      <div class="ui segment">-->
+<!--        <div>{{ error | json }}</div>-->
+<!--      </div>-->
+<!--    }-->
+    <!--  error -->
+    @if (error) {
+      <div class="ui icon error message">
+        <i class="exclamation triangle icon"></i>
+        <div class="content">
+          <h3 class="header" i18n>Sorry, we were unable to process your query!</h3>
+          @if (error.kind === 'http'){
+            <h4>{{error.error.status}} {{error.error.name}}</h4>
+            <div>{{error.error.message}}</div>
+          }
+          @if (error.kind === 'validation') {
+            @for (detail of error.error.detail; track detail) {
+              <div>{{detail.msg}}</div>
+              @if (detail.loc){
+                <div>Location: {{detail.loc.toSpliced(0,1).join(' > ')}}</div>
+              }
+            }
+          }
+
+        </div>
       </div>
     }
 
