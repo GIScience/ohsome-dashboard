@@ -101,12 +101,20 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
   },
 // add layout and config props
 
-  toCSV(response: any): string {
+  toCSV(response: FeaturesResponse): string {
 
-    const rows = response.result.timestamp.map((ts, i) => [ts, response.result.value[i]])
+    const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
+
+    const rows = groupByResult.timestamp.map((ts, i) => {
+      const row = [ts, groupByResult.value[i]];
+      Object.keys(groupByResult.values).forEach((key)=>{
+        row.push(groupByResult.values[key][i]);
+      })
+      return row;
+    })
 
     const data = {
-      fields: ["timestamp", "value"],
+      fields: ["timestamp", "total", ...Object.keys(groupByResult.values)],
       data: rows
     }
 

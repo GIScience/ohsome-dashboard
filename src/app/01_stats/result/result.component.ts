@@ -11,7 +11,7 @@ import {
   Type
 } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {JsonPipe, NgClass, NgComponentOutlet, ViewportScroller} from '@angular/common';
+import {NgClass, NgComponentOutlet, ViewportScroller} from '@angular/common';
 import {ChartPoint} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
@@ -25,7 +25,6 @@ import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 import {StateService} from '../../singelton-services/state.service';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
-import {HttpErrorResponse} from '@angular/common/http';
 
 declare const $: any;
 
@@ -34,7 +33,7 @@ declare const $: any;
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, /*SimpleGroupbyResultComponent,*/ /*OshdbModule,*/ JsonPipe, NgComponentOutlet]
+  imports: [NgClass, /*SimpleGroupbyResultComponent,*/ /*OshdbModule,*/ NgComponentOutlet]
 })
 export class ResultComponent implements OnInit, AfterViewInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
