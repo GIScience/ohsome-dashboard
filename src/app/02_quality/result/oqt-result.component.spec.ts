@@ -29,14 +29,14 @@ describe('OqtResultComponent', () => {
     fixture = TestBed.createComponent(OqtResultComponent);
     document.getElementById('test-container')!.appendChild(fixture.nativeElement);
     component = fixture.componentInstance;
-    component.formValues = {
+    fixture.componentRef.setInput('formValues', {
       'topic': "building-count",
       'mapping-saturation': true,
       'currentness': false,
       'attribute-completeness': true,
       'attribute-completeness--attribute': "house-number",
       'bboxes': "8.6252588,49.3819766,8.7295724,49.4364995"
-    }
+    });
     fixture.detectChanges();
   });
 
@@ -50,21 +50,32 @@ describe('OqtResultComponent', () => {
   });
 
   it('should create the component with bpolys coordinate string', () => {
-    delete component.formValues['bboxes'];
-    component.formValues['bpolys'] = '8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30';
+    fixture.componentRef.setInput('formValues', {
+      'topic': "building-count",
+      'mapping-saturation': true,
+      'currentness': false,
+      'attribute-completeness': true,
+      'attribute-completeness--attribute': "house-number",
+      'bpolys': '8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30'
+    });
     component.ngOnInit();
     expect(component).toBeTruthy();
   });
 
   it('should create the component with bpolys coordinate string with id prefix', () => {
-    delete component.formValues['bboxes'];
-    component.formValues['bpolys'] = 'Harthausen:8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30';
+    fixture.componentRef.setInput('formValues', {
+      'topic': "building-count",
+      'mapping-saturation': true,
+      'currentness': false,
+      'attribute-completeness': true,
+      'attribute-completeness--attribute': "house-number",
+      'bpolys': 'Harthausen:8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30'
+    });
     component.ngOnInit();
     expect(component).toBeTruthy();
   });
 
   it('should create the component with bpolys geojson string with multiple features', () => {
-    delete component.formValues['bboxes'];
     const geojson = {
       "type": "FeatureCollection",
       "features": [
@@ -103,7 +114,14 @@ describe('OqtResultComponent', () => {
         }
       ]
     };
-    component.formValues['bpolys'] = JSON.stringify(geojson);
+    fixture.componentRef.setInput('formValues', {
+      'topic': "building-count",
+      'mapping-saturation': true,
+      'currentness': false,
+      'attribute-completeness': true,
+      'attribute-completeness--attribute': "house-number",
+      'bpolys': JSON.stringify(geojson)
+    });
     component.ngOnInit();
     expect(component).toBeTruthy();
   });

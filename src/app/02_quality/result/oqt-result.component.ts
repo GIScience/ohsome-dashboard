@@ -6,6 +6,7 @@ import {
   ComponentRef,
   HostBinding,
   inject,
+  input,
   OnInit
 } from '@angular/core';
 import {NgClass, ViewportScroller} from '@angular/common';
@@ -41,12 +42,13 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   protected oqtApiMetadataProviderService = inject(OqtApiMetadataProviderService);
 
   @HostBinding('id') public divId: string = 'result' + '_' + Date.now().toString();
-  formValues: {
+  formValues = input.required<{
     topic: string;
     bpolys?: string;
     bbox?: string;
     [formFieldName: string]: string | string[] | boolean | undefined;
-  };
+  }>();
+
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
@@ -78,7 +80,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     // associate params from formValues to their indicator and store them in a list to be distributed into distict indicator requests
     this.indicatorList = this.createIndicatorListWithParams();
 
-    const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(this.formValues));
+    const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(this.formValues()));
     this.boundaries = featureCollection([unifiedFeature]);
 
     this.changeDetectorRef.detectChanges();
@@ -109,14 +111,14 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
     // search for the indicators that have been checked in the form
     potentialIndicators.forEach(potIndicator => {
-      if (this.formValues[potIndicator]) {
+      if (this.formValues()[potIndicator]) {
         indicatorsToBeQueried.push(potIndicator);
       }
     });
 
     return indicatorsToBeQueried.reduce<IndicatorParams[]>((current, indicator) => {
 
-      let params: Params = Object.entries(this.formValues)
+      let params: Params = Object.entries(this.formValues())
         .filter(
           (entry): entry is [string, string | string[] | boolean] =>
             entry[1] !== undefined
@@ -138,7 +140,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   getThematicAccuracyLabel(topicKey: string): string | null {
-    const key = String(this.formValues?.[topicKey + '--' + this.thematicAccuracyCategoryType[topicKey]]);
+    const key = String(this.formValues()?.[topicKey + '--' + this.thematicAccuracyCategoryType[topicKey]]);
     console.log(topicKey + '--' + this.thematicAccuracyCategoryType[topicKey])
     return key && this.thematicAccuracyCategories[topicKey][key]
       ? this.thematicAccuracyCategories[topicKey][key].name

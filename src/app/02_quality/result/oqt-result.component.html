@@ -6,18 +6,18 @@
       <i class="cogs icon"></i><span i18n>OSM Quality Analyses</span>
     </h3>
     <div class="ui item">
-      @if (formValues.topic === "custom-topic") {
-        <span class="ui circular label topic" title="{{ formValues['topic-filter'] }}">
-          {{ formValues['topic-title'] }}
+      @if (formValues().topic === "custom-topic") {
+        <span class="ui circular label topic" title="{{ formValues()['topic-filter'] }}">
+          {{ formValues()['topic-title'] }}
         </span>
       } @else {
-        <span class="ui circular label topic" title="{{metadata.result.topics[formValues.topic].filter}}">
-          {{ metadata.result.topics[formValues.topic].name }}
+        <span class="ui circular label topic" title="{{metadata.result.topics[formValues().topic].filter}}">
+          {{ metadata.result.topics[formValues().topic].name }}
         </span>
       }
 
 
-      @if (formValues['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {
+      @if (formValues()['land-cover-thematic-accuracy'] === true && getThematicAccuracyLabel('land-cover-thematic-accuracy')) {
         <span
           class="ui circular label attribute"
           [title]="getThematicAccuracyLabel('land-cover-thematic-accuracy')"
@@ -25,7 +25,7 @@
           {{ getThematicAccuracyLabel('land-cover-thematic-accuracy') }}
         </span>
       }
-      @if (formValues['roads-thematic-accuracy'] === true && getThematicAccuracyLabel('roads-thematic-accuracy')) {
+      @if (formValues()['roads-thematic-accuracy'] === true && getThematicAccuracyLabel('roads-thematic-accuracy')) {
         <span
           class="ui circular label attribute"
           [title]="getThematicAccuracyLabel('roads-thematic-accuracy')"
@@ -70,11 +70,11 @@
       @for (indicator of indicatorList; track indicator) {
         <div class="indicator-container"
              [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
-          <app-indicator-result [topicKey]="formValues.topic"
+          <app-indicator-result [topicKey]="formValues().topic"
                                 [indicator]="indicator"
                                 [bpolys]="boundaries"
-                                [topicTitle]="String(formValues['topic-title'])"
-                                [topicFilter]=" String(formValues['topic-filter'])">
+                                [topicTitle]="String(formValues()['topic-title'])"
+                                [topicFilter]=" String(formValues()['topic-filter'])">
           </app-indicator-result>
         </div>
       }
