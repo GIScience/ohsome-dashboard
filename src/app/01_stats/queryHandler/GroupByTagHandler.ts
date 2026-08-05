@@ -1,17 +1,16 @@
 import {Observable} from 'rxjs';
 import {OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
-import {Type} from '@angular/core';
 import Papa, {UnparseConfig} from "papaparse";
 import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-chart.component';
 import Utils from '../../../utils';
 import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../shared/ohsome-api-v2-types';
-import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
+import {PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
 import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
-import {keys} from 'webdriverio/build/commands/browser/keys';
+
 
 
 export const groupByTagHandler: QueryHandler<any> = {
@@ -56,7 +55,8 @@ export const groupByTagHandler: QueryHandler<any> = {
 
     const x = response.result.timestamp;
     const length = x.length;
-    const traces = Object.entries(response.result.values).map(([key, value]) => {
+
+    const traces: Partial<PlotData>[] = Object.entries(response.result.values).map(([key, value]):Partial<PlotData> => {
       return {
         x,
         y: value as number[],
@@ -64,8 +64,15 @@ export const groupByTagHandler: QueryHandler<any> = {
         stackgroup: 'one',
         mode: 'none'
       }
+      // @ts-ignore
     }).sort((traceA, traceB) => traceB.y[length-1] - traceA.y[length-1]);
-
+    traces.push({
+      x,
+      y: response.result.value,
+      name: `Total ${yAxisText}`,
+      mode: 'lines',
+      line: { color: '#2185D0', width: 2 }
+    })
 
     return {
       "plotlyDataLayoutConfig": {
