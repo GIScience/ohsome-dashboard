@@ -63,10 +63,18 @@ export class StateService {
 
   isValidStatsForm = signal<boolean>(false);
   isValidExtractionForm = signal<boolean>(false);
-  isValidCurrentForm = computed<boolean>(()=>{
+  isValidCurrentForm = computed<boolean>(() => {
     const isValidStatsForm = this.isValidStatsForm();
     const isValidExtractionForm = this.isValidExtractionForm();
-    return (this.queryModeSignal() === 'ohsomeApi')? isValidStatsForm: isValidExtractionForm;
+    switch (this.queryModeSignal()) {
+      case 'ohsomeApi':
+        return isValidStatsForm;
+      case 'extraction':
+        return isValidExtractionForm;
+      default:
+        return true;
+    }
+    // return (this.queryModeSignal() === 'ohsomeApi') ? isValidStatsForm : isValidExtractionForm;
   })
 
 
