@@ -3,7 +3,7 @@ import {FeaturesResponse, OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v
 import Papa, {UnparseConfig} from "papaparse";
 import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-chart.component';
 import Utils from '../../../utils';
-import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
+import {unionFeatureDisplayNames, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../shared/ohsome-api-v2-types';
 import {PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
@@ -22,15 +22,15 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
   component: PlotlyChartComponent,
 
-  execute(formValues: StatsFormValues, api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<any> {
+  execute(formValues: StatsFormValues, aoiFeatures: Feature<Polygon | MultiPolygon>[], api: OhsomeApiV2Service, oqtApiMetadataProviderService: OqtApiMetadataProviderService): Observable<any> {
 
     const start = formValues?.start?.trim() ? formValues.start : "earliest";
 
-    const aoi = unionPolygonFeatures(toPolygonFeatures(formValues)).geometry as components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"];
+    const aoi = unionPolygonFeatures(aoiFeatures).geometry as components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"];
 
     const filter = getFilterFromFormValues(formValues, oqtApiMetadataProviderService);
 
-    const groupBy: components["schemas"]["GroupByTagModel"] = {type:'byTag', key: formValues.groupByTagKey};
+    const groupBy: components["schemas"]["GroupByTagModel"] = {type: 'byTag', key: formValues.groupByTagKey};
 
     const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter,
@@ -46,7 +46,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     return api.features(formValues.measure, body);
   },
 
-  toInputs(response: FeaturesResponse, formValues): {plotlyDataLayoutConfig: PlotlyDataLayoutConfig} {
+  toInputs(response: FeaturesResponse, formValues): { plotlyDataLayoutConfig: PlotlyDataLayoutConfig } {
 
     const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
 
@@ -58,7 +58,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     const x = groupByResult.timestamp;
     const length = x.length;
 
-    const traces: Partial<PlotData>[] = Object.entries(groupByResult.values).map(([key, value]):Partial<PlotData> => {
+    const traces: Partial<PlotData>[] = Object.entries(groupByResult.values).map(([key, value]): Partial<PlotData> => {
       return {
         x,
         y: value as number[],
@@ -67,13 +67,13 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
         mode: 'none'
       }
       // @ts-ignore
-    }).sort((traceA, traceB) => traceB.y[length-1] - traceA.y[length-1]);
+    }).sort((traceA, traceB) => traceB.y[length - 1] - traceA.y[length - 1]);
     traces.push({
       x,
       y: response.result.value,
       name: `Total ${yAxisText}`,
       mode: 'lines',
-      line: { color: '#2185D0', width: 2 }
+      line: {color: '#2185D0', width: 2}
     })
 
     return {
@@ -107,7 +107,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
     const rows = groupByResult.timestamp.map((ts, i) => {
       const row = [ts, groupByResult.value[i]];
-      Object.keys(groupByResult.values).forEach((key)=>{
+      Object.keys(groupByResult.values).forEach((key) => {
         row.push(groupByResult.values[key][i]);
       })
       return row;
@@ -124,8 +124,11 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     return Papa.unparse(data, unparseConfig);
   },
 
-  toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon>[]): string {
-    return String(unionPolygonFeatures(aoiPolygons).properties["display_name"])
+  toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon, {
+    id: any,
+    display_name: string
+  }>[]): string {
+    return unionFeatureDisplayNames(aoiPolygons);
   }
 
 }

@@ -51,10 +51,10 @@
           <i class="key icon" title="Tag Value Exploration"></i>{{ formValues()?.groupByTagKey }}
         </div>
       }
-      @if (getSelectedNames() !== '') {
+      @if (boundaryLabel() !== '') {
         <div id="boundaryLabelsItem" class="ui item">
           <i class="circle outline icon" title="selected areas"></i>
-          <span id="boundaryLabelsText" title="{{getSelectedNames()}}">{{ getSelectedNames() }}</span>
+          <span id="boundaryLabelsText" title="{{boundaryLabel()}}">{{ boundaryLabel() }}</span>
         </div>
       }
     </div>

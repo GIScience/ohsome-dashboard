@@ -5,7 +5,9 @@ import {OqtResultComponent} from '../02_quality/result/oqt-result.component';
 import {ExtractionResultComponent} from '../03_extraction/result/extraction-result.component';
 import {StateService} from '../singelton-services/state.service';
 import bbox from '@turf/bbox';
-import {toPolygonFeatures, unionPolygonFeatures} from '../shared/utils/boundaries.utils';
+import {toPolygonFeatures, unionFeatureDisplayNames} from '../shared/utils/boundaries.utils';
+import envelope from '@turf/envelope';
+import {featureCollection} from '@turf/helpers';
 
 @Directive({
   selector: '[appResultList]'
@@ -56,9 +58,11 @@ export class ResultListDirective implements OnInit {
 
   private createExtractionComponent(result) {
 
-    const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(result.formValues));
-    result.formValues.aoi = bbox(unifiedFeature);
-    result.formValues.originalAoi = unifiedFeature;
+    // const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(result.formValues));
+    const polygonFeatures = toPolygonFeatures(result.formValues);
+    const envelopeFeature = envelope(featureCollection(polygonFeatures));
+    result.formValues.aoi = bbox(envelopeFeature);
+    result.formValues.displayName = unionFeatureDisplayNames(polygonFeatures);
 
     const extractionResultItem = this.container.createComponent(ExtractionResultComponent, {index: 0});
     extractionResultItem.setInput('formValues', result.formValues);

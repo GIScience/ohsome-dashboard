@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   HostBinding,
   inject,
   input,
@@ -19,7 +20,6 @@ import moment from 'moment';
 import {QueryHandler, timeSeriesHandler} from '../queryHandler/TimeSeriesHandler';
 import {FeaturesError, OhsomeApiV2Service} from '../../ohsomeapi/ohsome-api-v2.service';
 import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
-import {Feature, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 import {StateService} from '../../singelton-services/state.service';
@@ -35,7 +35,7 @@ declare const $: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, /*SimpleGroupbyResultComponent,*/ /*OshdbModule,*/ NgComponentOutlet]
 })
-export class ResultComponent implements OnInit, AfterViewInit {
+export class ResultComponent implements OnInit, AfterViewInit/*, AfterContentInit*/ {
   private changeDetectorRef = inject(ChangeDetectorRef);
   private ohsomeApiV2 = inject(OhsomeApiV2Service)
   private viewportScroller = inject(ViewportScroller);
@@ -80,8 +80,18 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   protected handlerComponent = signal<Type<unknown> | null>(null);
   protected handlerInputs = signal<{}>({});
-  private handler: QueryHandler<any>;
-  private aoiPolygons: Feature<Polygon | MultiPolygon>[];
+  private handler = computed(() => {
+    const handler = this.queryHandlerRegistry.find(h => h.matches(this.formValues()));
+    if (!handler) {
+      throw new Error('No ResultHandler matches the current form values');
+    }
+    return handler as QueryHandler<any>;
+  });
+
+  //create boundary feautures as geojson with display_names
+  aoiPolygons = computed(() => {
+    return toPolygonFeatures(this.formValues());
+  })
 
 
   constructor() {
@@ -90,23 +100,19 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    const handler = this.queryHandlerRegistry.find(h => h.matches(this.formValues()));
-    if (!handler) {
-      throw new Error('No ResultHandler matches the current form values');
-    }
-    this.handler = handler as QueryHandler<any>;
 
-    //create boundary feautures as geojson
-    this.aoiPolygons = toPolygonFeatures(this.formValues());
-
-    // this.setTitle();
     this.unit = OhsomeApi.v1.format.Unit.getUnitByMeasure(this.formValues().measure);
 
-    this.getData();
+    this.isLoading = true;
+
+    setTimeout(() => {
+      this.getData()
+    }, 0);
     this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
+
     $('app-result .ui.dropdown').dropdown();
     this.viewportScroller.scrollToAnchor(this.divId);
   }
@@ -115,20 +121,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.componentRef.destroy();
   }
 
-  // Set the chart legend title
-  // setTitle() {
-  //   //simple filter
-  //   if (this.formValues.keys) {
-  //     // simple request
-  //     this.title = `${(this.formValues.keys) ? this.formValues.keys : '*'}=${(this.formValues.values) ? this.formValues.values : '*'}`;
-  //   } else if (this.formValues.filter) {
-  //     const filter = this.formValues.filter;
-  //     //limit string length to a maximum
-  //     const maxLength = 80;
-  //     this.title = (filter.length > maxLength) ? `${filter.slice(0, maxLength)} ...` : filter;
-  //   }
-  // }
-
   queryHandlerRegistry: QueryHandler<unknown>[] = [
     groupByTagHandler,
     timeSeriesHandler
@@ -136,12 +128,12 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
 
   getData() {
-    //new code starts here
     this.isLoading = true;
-    this.handler.execute(this.formValues(), this.ohsomeApiV2, this.oqtApiMetadataProviderService, this.aoiPolygons).subscribe({
+    this.changeDetectorRef.detectChanges();
+    this.handler().execute(this.formValues(), this.aoiPolygons(), this.ohsomeApiV2, this.oqtApiMetadataProviderService).subscribe({
       next: (response) => {
-        this.handlerComponent.set(this.handler.component);
-        this.handlerInputs.set(this.handler.toInputs(response, this.formValues()));
+        this.handlerComponent.set(this.handler().component);
+        this.handlerInputs.set(this.handler().toInputs(response, this.formValues()));
         this.data = response;
         this.changeDetectorRef.detectChanges();
       },
@@ -194,9 +186,10 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
 
-  getSelectedNames(): string {
-    return this.handler.toBoundaryLabel(this.formValues(), this.aoiPolygons);
-  }
+  boundaryLabel = computed(() => {
+    return this.handler().toBoundaryLabel(this.formValues(), this.aoiPolygons());
+  });
+
 
   // for download links
 
@@ -207,7 +200,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   getCSVDataURL(): SafeUrl {
     if (this.data) {
-      const csv = this.handler.toCSV(this.data);
+      const csv = this.handler().toCSV(this.data);
       const blob = new Blob([csv], {type: 'text/csv'});
       return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
     } else {

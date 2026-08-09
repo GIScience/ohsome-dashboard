@@ -38,7 +38,7 @@ export function parseBoundaryLists(
  */
 export function flatCoordsToPolygon(coords: number[]) {
   const ring = Array.from(
-    { length: coords.length / 2 },
+    {length: coords.length / 2},
     (_, i) => [coords[i * 2], coords[i * 2 + 1]] as [number, number]
   );
 
@@ -52,16 +52,22 @@ export function flatCoordsToPolygon(coords: number[]) {
 export function toPolygonFeatures(formValues: Partial<{
   bpolys?: string;
   bboxes?: string;
-}>): Feature<Polygon | MultiPolygon>[] {
+}>): Feature<Polygon | MultiPolygon, {
+  id: any,
+  display_name: string
+}>[] {
   const {bpolys, bboxes} = formValues;
 
   if (bboxes) {
     const bboxesInstance = new OhsomeApi.v1.request.Bboxes().parse(bboxes);
-    const features: Feature<Polygon, { id: string }>[] = bboxesInstance.boundaries.map(
+    const features: Feature<Polygon, { id: string, display_name: string }>[] = bboxesInstance.boundaries.map(
       (bbox, index) => {
         const id = (bbox.id) ? String(bbox.id) : `box ${index + 1}`;
         const coords: BBox = bbox.geometry.split(',').map(Number) as BBox;
-        return bbox2geojson(coords, {properties: {id}, id}) as unknown as Feature<Polygon, { id: string }>;
+        return bbox2geojson(coords, {properties: {id, display_name: id}, id}) as unknown as Feature<Polygon, {
+          id: string,
+          display_name: string
+        }>;
       }
     );
 
@@ -72,7 +78,10 @@ export function toPolygonFeatures(formValues: Partial<{
     // bpolys can be a geojson OR an ohsomeApi bpoly format
     if (Bpolys.isBPolysString(bpolys)) {
       const bpolysInstance = new Bpolys().parse(bpolys);
-      const features: Feature<Polygon>[] = bpolysInstance.boundaries.map((bpoly, index) => {
+      const features: Feature<Polygon, {
+        id: string,
+        display_name: string
+      }>[] = bpolysInstance.boundaries.map((bpoly, index) => {
         const id = (bpoly.id) ? String(bpoly.id) : `area ${index + 1}`;
         const coords1d: number[] = bpoly.geometry.split(',').map(Number);
 
@@ -81,14 +90,14 @@ export function toPolygonFeatures(formValues: Partial<{
         while (coords1d.length) {
           coords2d.push(coords1d.splice(0, 2));
         }
-        return polygon([coords2d], {id}, {id});
+        return polygon([coords2d], {id, display_name: id}, {id});
       });
 
       return features;
     } else {
       // geojson
-      const features = JSON.parse(bpolys).features as Feature<Polygon | MultiPolygon>[];
-      return features;
+      return (JSON.parse(bpolys).features as Feature<Polygon | MultiPolygon>[])
+        .map((f, index) => toLabeledFeature(f, getLabel(f, `area ${index + 1}`)));
     }
   }
 
@@ -131,6 +140,21 @@ function toLabeledFeature(feature, label): Feature<Polygon | MultiPolygon, { id:
 
 function getLabel(feature, defaultValue) {
   return getAvailablePropertyOrId(feature, ["display_name"], defaultValue);
+}
+
+export function unionFeatureDisplayNames(features: Feature<Polygon | MultiPolygon, {
+  id: any,
+  display_name: string
+}>[]): string {
+  if (features.length === 0) return '';
+  return features
+    .reduce(
+      (previousValue, currentValue, currentIndex) => {
+        if (currentIndex === 0) return previousValue;
+        return [previousValue, getLabel(currentValue, `area ${currentIndex + 1}`)].join(' + ');
+      },
+      getLabel(features[0], 'area 1'),
+    );
 }
 
 

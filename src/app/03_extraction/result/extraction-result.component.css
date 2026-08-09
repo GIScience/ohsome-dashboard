@@ -8,3 +8,15 @@
   overflow: hidden;
 }
 
+#header #boundaryLabelsItem {
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: baseline;
+  line-height: inherit;
+}
+
+#header #boundaryLabelsText {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+}

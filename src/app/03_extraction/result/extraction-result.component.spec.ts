@@ -5,7 +5,6 @@ import {ExtractionResultComponent} from './extraction-result.component';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../02_quality/oqt-api-metadata-provider.service.mock';
-import {feature} from '@turf/helpers';
 
 describe('ExtractionResultComponent', () => {
   let component: ExtractionResultComponent;
@@ -23,7 +22,7 @@ describe('ExtractionResultComponent', () => {
     fixture = TestBed.createComponent(ExtractionResultComponent);
     fixture.componentRef.setInput('formValues', {
       topic: 'cycleway',
-      originalAoi: feature(null, {id: 'testid', display_name: 'test_name'}),
+      displayName: 'test_name',
     })
     component = fixture.componentInstance;
     fixture.detectChanges();
