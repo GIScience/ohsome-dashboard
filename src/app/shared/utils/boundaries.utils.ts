@@ -157,7 +157,6 @@ export function unionFeatureDisplayNames(features: Feature<Polygon | MultiPolygo
     );
 }
 
-
 /**
  * Union features to a single feature with unioned label (display_name)
  * @param features use output of toPolygonFeatures()
@@ -165,31 +164,17 @@ export function unionFeatureDisplayNames(features: Feature<Polygon | MultiPolygo
 export function unionPolygonFeatures(
   features: Feature<Polygon | MultiPolygon>[]
 ): Feature<Polygon | MultiPolygon, { id: any, display_name: string }> {
+  if(features.length === 0) throw new Error("No features were provided to be unioned");
 
-
-  return features
-    .map((feature, index) => {
-      const label = getLabel(feature, `area ${index + 1}`);
-      return toLabeledFeature(feature, label);
-    })
-    .reduce(
-      (previousValue, currentValue, currentIndex) => {
-
-        const merged = union(featureCollection([previousValue, currentValue]));
-        if (merged) {
-
-          const mergedLabel = [getLabel(previousValue, `area ${currentIndex}`), getLabel(currentValue, `area ${currentIndex + 1}`)].join(' + ');
-
-          merged.id = mergedLabel;
-          merged.properties = {};
-          merged.properties['id'] = mergedLabel;
-          merged.properties['display_name'] = mergedLabel;
-
-          return merged as Feature<Polygon | MultiPolygon, { id: any, display_name: string }>;
-        } else {
-
-          throw new Error("Couldn't union the given PolygonFeatures");
-        }
-      }
-    );
+  const labelledFeatures = features.map((feature, index) => {
+    const label = getLabel(feature, `area ${index + 1}`);
+    return toLabeledFeature(feature, label);
+  });
+  const unionedFeature = (features.length === 1)? labelledFeatures[0] : union(featureCollection(features));
+  if (unionedFeature) {
+    const displayName = unionFeatureDisplayNames(labelledFeatures);
+    return toLabeledFeature(unionedFeature, displayName);
+  } else {
+    throw new Error("Couldn't union the given PolygonFeatures");
+  }
 }
