@@ -126,13 +126,12 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       .subscribe({
         next: (featureCollectionOrEmpty: string) => {
           this.adminBoundaries.set(featureCollectionOrEmpty);
-
           // immediately trigger the query if there are hashparams
           if (this.stateService.appState().firstForm) {
             this.stateService.updatePartialState({firstForm: false});
             setTimeout(() => {
-              console.log("FORM VALID", this.form.form.valid)
-              if (this.form.form.valid) {
+              console.log("FORM VALID", this.form.valid && this.isValidCurrentForm());
+              if (this.form.valid && this.isValidCurrentForm()) {
                 this.onSubmit();
               }
             }, 1000);

@@ -87,16 +87,6 @@ export class ExtractionQueryFormComponent {
 
   constructor() {
     console.log("Extraction Query Form constructor");
-    // immediately trigger the query if there are hashparams
-    if (this.stateService.appState().firstForm) {
-      this.stateService.updatePartialState({firstForm: false});
-      // TODO submit parent query form
-      // setTimeout(() => {
-      //   if (this.extractionForm().valid()) {
-      //     this.onSubmit(null);
-      //   }
-      // }, 1500);
-    }
 
     effect(() => {
       this.isValidExtractionForm.set(this.extractionForm().valid());
