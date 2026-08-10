@@ -23,7 +23,7 @@ import {
   thematicAccuracyCategoryNamesForBlank,
   thematicCategoryType
 } from '../query-form/oqt-api-query-form/thematic-accuracy-indicator/thematic-accuracy-indicator.constants';
-import {toPolygonFeatures, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
+import {toPolygonFeatures, unionFeatureDisplayNames, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {StateService} from '../../singelton-services/state.service';
 
 @Component({
@@ -53,8 +53,9 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
   metadata: MetadataResponseJSON;
 
-  title = '';
+  aoiLabel = '';
 
+  isPreparing = true;
   isLoading = false;
 
   indicatorList: IndicatorParams[]
@@ -78,11 +79,18 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
 
     // associate params from formValues to their indicator and store them in a list to be distributed into distict indicator requests
     this.indicatorList = this.createIndicatorListWithParams();
-
-    const unifiedFeature = unionPolygonFeatures(toPolygonFeatures(this.formValues()));
-    this.boundaries = featureCollection([unifiedFeature]);
-
+    const labelledFeatures = toPolygonFeatures(this.formValues());
+    this.aoiLabel = unionFeatureDisplayNames(labelledFeatures);
     this.changeDetectorRef.detectChanges();
+
+    setTimeout(()=>{
+      const unifiedFeature = unionPolygonFeatures(labelledFeatures);
+      this.boundaries = featureCollection([unifiedFeature]);
+      this.isPreparing = false;
+      this.changeDetectorRef.detectChanges();
+    },0);
+
+
   }
 
   ngAfterViewInit() {

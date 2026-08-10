@@ -19,6 +19,9 @@
 .result {
   margin-bottom: 1rem !important;
   background-color: whitesmoke;
+  .main {
+    min-height: 4rem;
+  }
 }
 
 .ui.circular.label.topic {

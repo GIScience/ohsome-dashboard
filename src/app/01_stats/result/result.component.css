@@ -19,6 +19,7 @@
 .result {
   margin-bottom: 1rem !important;
   background-color: whitesmoke;
+  min-height: 4rem;
 }
 
 .close.icon {

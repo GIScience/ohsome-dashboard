@@ -39,7 +39,7 @@
     <div id="boundaryLabelsItem" class="ui item">
       <i class="circle outline icon" title="selected areas"></i>
       <span id="boundaryLabelsText"
-            title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>
+            title="{{aoiLabel}}">{{ aoiLabel }}</span>
     </div>
   </div>
 
@@ -65,18 +65,20 @@
 
 
   <!-- Non Error results -->
-  <div class="main ui segment">
+  <div [ngClass]="{'loading' : isPreparing}" class="main ui segment">
     <div class="ui two column equal width grid">
-      @for (indicator of indicatorList; track indicator) {
-        <div class="indicator-container"
-             [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
-          <app-indicator-result [topicKey]="formValues().topic"
-                                [indicator]="indicator"
-                                [bpolys]="boundaries"
-                                [topicTitle]="String(formValues()['topic-title'])"
-                                [topicFilter]=" String(formValues()['topic-filter'])">
-          </app-indicator-result>
-        </div>
+      @if (!isPreparing) {
+        @for (indicator of indicatorList; track indicator) {
+          <div class="indicator-container"
+               [ngClass]="window.innerWidth <= 1200? 'ui sixteen wide column': 'ui column'">
+            <app-indicator-result [topicKey]="formValues().topic"
+                                  [indicator]="indicator"
+                                  [bpolys]="boundaries"
+                                  [topicTitle]="String(formValues()['topic-title'])"
+                                  [topicFilter]=" String(formValues()['topic-filter'])">
+            </app-indicator-result>
+          </div>
+        }
       }
     </div>
   </div>
