@@ -14,7 +14,7 @@
 
 /* for mobile < 768px */
 @media screen and (width < 900px ){
-  #header-message-item {display: none}
+  #header-message-item, #dashboard-text, #header-heigit-logo {display: none}
 }
 
 @media screen and (width < 415px ){

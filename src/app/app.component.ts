@@ -61,6 +61,11 @@ export class AppComponent implements AfterViewInit {
       action: 'hide'
     });
 
+    $('app-root #docsSelector').dropdown({
+      selectOnKeydown: false,
+      action: 'hide'
+    });
+
   }
 
   private handleAnnouncementClose() {

@@ -2,9 +2,9 @@
   <div class="ui container">
     <a href="" target="_blank" class="header link item">
       <img class="ui inline image" src="assets/images/ohsome_narrow.svg" alt="ohsome logo">
-      <span style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
+      <span id="dashboard-text" style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
     </a>
-    <div id="header-message-item" class="header item" i18n>Easy access to OSM History and Quality Analyses</div>
+    <!--    <div id="header-message-item" class="header item" i18n>Easy access to OSM History and Quality Analyses</div>-->
     <div class="right menu">
       <div id="languageSelector" class="ui dropdown item">
         <i class="globe icon"></i>
@@ -35,7 +35,29 @@
 
         </div>
       </div>
-      <div class="link item"><a href="https://heigit.org" target="_blank">
+
+      <div id="docsSelector" class="ui dropdown item">
+        <i class="book icon"></i>
+        Docs
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div class="header">
+            <i class="sitemap icon"></i>
+            Ohsome API
+          </div>
+          <div class="divider"></div>
+          <a class="item" href="https://docs.ohsome.org/ohsome-api/staging/">Docs & Examples</a>
+          <a class="item" href="https://api.heigit.org/ohsome-api/v2-rc/docs">OpenAPI Specification</a>
+          <div class="header">
+            <i class="sitemap icon"></i>
+            Ohsome Quality API
+          </div>
+          <div class="divider"></div>
+          <a class="item" href="https://api.quality.ohsome.org/v1/docs">OpenAPI Specification</a>
+        </div>
+      </div>
+
+      <div id="header-heigit-logo" class="link item"><a href="https://heigit.org" target="_blank">
         <img class="ui image" src="assets/images/HeiGIT_Logo_only.svg" alt="HeiGIT Logo">
       </a></div>
     </div>
