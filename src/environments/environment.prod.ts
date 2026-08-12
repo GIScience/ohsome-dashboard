@@ -6,10 +6,12 @@ export const environment: AppEnvironment = {
 
   //ohsomeAPI (osm history stats from OSHDB)
   oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
-  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
+  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api/v2-rc',
 
   //oqtApi (ohsome quality analyst)
-  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
+  // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
+  oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api/v1',
+
   // core, experimental, all, ...
   oqtApiProject: 'core',
   defaultTopicKey: 'cycleway',

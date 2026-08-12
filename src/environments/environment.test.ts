@@ -8,7 +8,8 @@ export const environment: AppEnvironment = {
   ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
 
   //oqtApi (ohsome quality analyst)
-  oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',
+  // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',
+  oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api-staging/v1',
 
   // core, experimental, all, ...
   oqtApiProject: 'all',
