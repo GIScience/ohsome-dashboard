@@ -298,28 +298,8 @@ export interface components {
         /** CollectionsExtractionRequestParametersModel */
         CollectionsExtractionRequestParametersModel: {
             /**
-             * Clip
-             * @description Whether to clip extracted features with AOI or not.
-             * @default true
-             */
-            clip: boolean;
-            /**
-             * Timestamp
-             * @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp.
-             * @default latest
-             * @example latest
-             * @example 2026-04-17T00:00:00Z
-             */
-            timestamp: string | "latest";
-            /**
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @default *
-             * @example geometry:line
-             */
-            member_filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:relation and type=route and route=bus and service=night
+             * @example type:node and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
             /**
@@ -332,23 +312,26 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-        };
-        /** ExtractionRequestParametersModel */
-        ExtractionRequestParametersModel: {
+            /**
+             * Time
+             * @default latest
+             */
+            time: string | "latest";
+            /**
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
+             * @default *
+             * @example geometry:line
+             */
+            member_filter: components["schemas"]["OhsomeFilter"];
             /**
              * Clip
              * @description Whether to clip extracted features with AOI or not.
              * @default true
              */
             clip: boolean;
-            /**
-             * Timestamp
-             * @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp.
-             * @default latest
-             * @example latest
-             * @example 2026-04-17T00:00:00Z
-             */
-            timestamp: string | "latest";
+        };
+        /** ExtractionRequestParametersModel */
+        ExtractionRequestParametersModel: {
             /**
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
@@ -364,6 +347,17 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            /**
+             * Time
+             * @default latest
+             */
+            time: string | "latest" | components["schemas"]["TimeRangeRequestModel"];
+            /**
+             * Clip
+             * @description Whether to clip extracted features with AOI or not.
+             * @default true
+             */
+            clip: boolean;
         };
         /** FilterRequestModel */
         FilterRequestModel: {
@@ -377,7 +371,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -434,7 +428,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -510,25 +504,29 @@ export interface components {
             number,
             number
         ];
+        /** SnapshotColumns */
+        SnapshotColumns: {
+            /** Timestamp */
+            timestamp: string[];
+            /** Value */
+            value: number[];
+        };
         /** SnapshotColumnsGrouped */
         SnapshotColumnsGrouped: {
             /** Timestamp */
             timestamp: string[];
             /** Value */
             value: number[];
-            /**
-             * Values
-             * @example null
-             */
-            values?: {
+            /** Values */
+            values: {
                 [key: string]: number[];
-            } | null;
+            };
         };
         /** SnapshotColumnsResponseModel */
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -538,7 +536,8 @@ export interface components {
              *     }
              */
             attribution: components["schemas"]["Attribution"];
-            result: components["schemas"]["SnapshotColumnsGrouped"];
+            /** Result */
+            result: components["schemas"]["SnapshotColumns"] | components["schemas"]["SnapshotColumnsGrouped"];
         };
         /** SnapshotRow */
         SnapshotRow: {
@@ -566,7 +565,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -603,33 +602,11 @@ export interface components {
              */
             end: string;
         };
-        /** TimeBinSizeRequestModel */
-        TimeBinSizeRequestModel: {
-            /**
-             * Start
-             * @description Start timestamp (ISO-8601, UTC). Earliest timestamp is 2007-10-08T00:00:00Z. As shorthand 'earliest' can be used instead of a timestamp.
-             * @example 2026-01-01T00:00:00Z
-             * @example earliest
-             */
-            start: string | "earliest";
-            /**
-             * End
-             * @description End timestamp (ISO-8601, UTC). To include the most recent data 'latest' can be used instead of a timestamp.
-             * @example 2026-04-17T00:00:00Z
-             */
-            end: string | "latest";
-            /**
-             * Binsize
-             * @description Bin size (ISO-8601 duration).
-             * @example P1M
-             */
-            binSize?: string | null;
-        };
         /** TimeBinsColumnsResponseModel */
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -641,10 +618,27 @@ export interface components {
             attribution: components["schemas"]["Attribution"];
             result: components["schemas"]["TimeBinColumns"];
         };
+        /** Time Bins */
+        TimeBinsRequestModel: {
+            /**
+             * Start
+             * @example 2025-01-01T00:00:00Z
+             */
+            start: string | "earliest";
+            /**
+             * End
+             * @example 2026-01-01T00:00:00Z
+             */
+            end: string | "latest";
+            /**
+             * Binsize
+             * @description Bin size (ISO-8601 duration).
+             * @example P1M
+             */
+            binSize?: string | null;
+        };
         /** TimeBinsRequestParametersModel */
         TimeBinsRequestParametersModel: {
-            /** @description Time bins defined using a start/end timestamp (ISO-8601, UTC) and a bin size (ISO-8601 duration). Last bin might not cover bin size. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
-            timeBins: components["schemas"]["TimeBinSizeRequestModel"];
             /**
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
@@ -660,12 +654,13 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            timeBins: components["schemas"]["TimeBinsRequestModel"];
         };
         /** TimeBinsResponseModel */
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+7e81112
+             * @default 2.0.0a6+91d3ad4
              */
             apiVersion: string;
             /**
@@ -678,19 +673,29 @@ export interface components {
             /** Result */
             result: components["schemas"]["TimeBinRow"][];
         };
-        /** TimeIntervalRequestModel */
-        TimeIntervalRequestModel: {
+        /** Time Range */
+        TimeRangeRequestModel: {
             /**
              * Start
-             * @description Start timestamp (ISO-8601, UTC). Earliest timestamp is 2007-10-08T00:00:00Z. As shorthand 'earliest' can be used instead of a timestamp.
-             * @example 2026-01-01T00:00:00Z
-             * @example earliest
+             * @example 2025-01-01T00:00:00Z
              */
             start: string | "earliest";
             /**
              * End
-             * @description End timestamp (ISO-8601, UTC). To include the most recent data 'latest' can be used instead of a timestamp.
-             * @example 2026-04-17T00:00:00Z
+             * @example 2026-01-01T00:00:00Z
+             */
+            end: string | "latest";
+        };
+        /** Time Series */
+        TimeSeriesRequestModel: {
+            /**
+             * Start
+             * @example 2025-01-01T00:00:00Z
+             */
+            start: string | "earliest";
+            /**
+             * End
+             * @example 2026-01-01T00:00:00Z
              */
             end: string | "latest";
             /**
@@ -707,8 +712,6 @@ export interface components {
              * @example null
              */
             groupBy?: components["schemas"]["GroupByTagModel"] | null;
-            /** @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
-            timeSeries: components["schemas"]["TimeIntervalRequestModel"];
             /**
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
              * @example type:node and natural=tree
@@ -724,6 +727,7 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            timeSeries: components["schemas"]["TimeSeriesRequestModel"];
         };
         /** ValidationError */
         ValidationError: {
@@ -889,7 +893,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+7e81112
+                     * @example # apiVersion: 2.0.0a6+91d3ad4
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -962,7 +966,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+7e81112
+                     * @example # apiVersion: 2.0.0a6+91d3ad4
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1039,7 +1043,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+7e81112
+                     * @example # apiVersion: 2.0.0a6+91d3ad4
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1062,14 +1066,13 @@ export interface operations {
     get_contributions_extract_extraction_features_parquet_get: {
         parameters: {
             query: {
-                /** @description Whether to clip extracted features with AOI or not. */
-                clip?: boolean;
-                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
-                timestamp?: string | "latest";
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
                 aoi: string;
+                time?: string | "latest";
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
             };
             header?: never;
             path?: never;
@@ -1129,14 +1132,13 @@ export interface operations {
     get_contributions_extract_arrow_extraction_features_arrow_get: {
         parameters: {
             query: {
-                /** @description Whether to clip extracted features with AOI or not. */
-                clip?: boolean;
-                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
-                timestamp?: string | "latest";
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
                 aoi: string;
+                time?: string | "latest";
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
             };
             header?: never;
             path?: never;
@@ -1196,16 +1198,15 @@ export interface operations {
     get_features_collections_extract_extraction_collections_parquet_get: {
         parameters: {
             query: {
-                /** @description Whether to clip extracted features with AOI or not. */
-                clip?: boolean;
-                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
-                timestamp?: string | "latest";
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
-                member_filter?: components["schemas"]["OhsomeFilter"];
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
                 aoi: string;
+                time?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                member_filter?: components["schemas"]["OhsomeFilter"];
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
             };
             header?: never;
             path?: never;
@@ -1265,16 +1266,15 @@ export interface operations {
     get_features_collections_members_extract_extraction_collections_members_parquet_get: {
         parameters: {
             query: {
-                /** @description Whether to clip extracted features with AOI or not. */
-                clip?: boolean;
-                /** @description Extraction timestamp (ISO-8601, UTC). For the most recent data 'latest' can be used instead of a timestamp. */
-                timestamp?: string | "latest";
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
-                member_filter?: components["schemas"]["OhsomeFilter"];
                 /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
                 filter: components["schemas"]["OhsomeFilter"];
                 /** @description Area of interest as Bounding Box. */
                 aoi: string;
+                time?: string | "latest";
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                member_filter?: components["schemas"]["OhsomeFilter"];
+                /** @description Whether to clip extracted features with AOI or not. */
+                clip?: boolean;
             };
             header?: never;
             path?: never;

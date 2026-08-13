@@ -123,7 +123,7 @@ export class ExtractionQueryFormComponent {
       "topic-filter": '',
       aoi: initialHashParams.get('aoi') ?? '', // todo remove
       clip: initialHashParams.get('clip')?.toLowerCase() !== "false", //only "true" is true
-      timestamp: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
+      time: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
     }
   }
 

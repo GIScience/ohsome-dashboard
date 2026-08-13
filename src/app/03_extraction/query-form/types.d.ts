@@ -25,7 +25,7 @@ interface QualityFormData extends SharedFormData {
 interface ExtractionFormData extends SharedFormData {
   aoi: AOIData;
   clip: boolean;
-  timestamp: string;
+  time: string;
 }
 
 export {

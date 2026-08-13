@@ -27,7 +27,7 @@ export class ExtractionResultComponent {
   readonly permalink: string = window.location.href;
 
   utcIsoTimestamp = computed(() => {
-    return this.formValues().timestamp + 'Z';
+    return this.formValues().time + 'Z';
   });
 
   // utcTimestamp = computed(() => {
@@ -69,7 +69,7 @@ export class ExtractionResultComponent {
     const params: ExtractionQueryParams = {
       aoi: formValues.aoi as string,
       clip: formValues.clip,
-      timestamp: formValues.timestamp,
+      time: formValues.time,
       filter: this.getFilterFromFormVaulues(formValues),
     }
     // @ts-ignore
