@@ -23,7 +23,7 @@ interface StateParams {
 
 @Service()
 export class StateService {
-  initialHashParams = new URLSearchParams(globalThis.location.hash.slice(1));
+  initialHashParams = StateService.getInitialHashParams();
 
   //shared form signals
   sharedFormSignals = {
@@ -130,6 +130,41 @@ export class StateService {
 
   }
 
+  static getInitialHashParams(): URLSearchParams {
+    const initialHashParams = new URLSearchParams(globalThis.location.hash.slice(1));
+
+    //support legacy permalinks (e.g. from taginfo
+    //if backend=ohsomeApi key value types --> transform to custom topic
+    const hasLegacyParams = initialHashParams.has('backend', 'ohsomeApi')
+      && initialHashParams.has('key')
+      && initialHashParams.has('value');
+
+    if (hasLegacyParams) {
+      const isNotEmptyKey = !!initialHashParams.get('key');
+      if (!isNotEmptyKey) return initialHashParams;
+
+      const key = initialHashParams.get('key')!;
+      const value = initialHashParams.get('value') || '*';
+      const isNotEmptyTypes = !!initialHashParams.get('types');
+      const types = (initialHashParams.get('types') || '').split(',');
+      const typeFilter = types.map(t => {
+        return `type:${t}`
+      }).join(' or ');
+      const topicFilterParts = [`${key}=${value}`];
+      if (isNotEmptyTypes) topicFilterParts.push(`(${typeFilter})`);
+      const topicFilter = topicFilterParts.join(' and ');
+
+      initialHashParams.delete('key');
+      initialHashParams.delete('value');
+      initialHashParams.delete('types');
+
+      initialHashParams.set('topic', 'custom-topic');
+      initialHashParams.set('topic-title', `${key}=${value}`);
+      initialHashParams.set('topic-filter', `${topicFilter}`);
+    }
+
+    return initialHashParams;
+  }
 
   static getInitialQueryMode = (initialHashParams: URLSearchParams) => {
     // initialize queryMode (old :backend) to choose form tab
