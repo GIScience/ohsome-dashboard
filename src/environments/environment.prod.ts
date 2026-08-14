@@ -4,9 +4,10 @@ import {AppEnvironment} from '../app/shared/shared-types';
 export const environment: AppEnvironment = {
   production: true,
 
-  //ohsomeAPI (osm history stats from OSHDB)
-  oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
-  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api/v2-rc',
+  //ohsomeAPI (stats and extraction)
+  ohsomeApiRootUrl: 'https://api.heigit.org/ohsome-api/v2-rc',
+
+  ohsomeApiDocsUrl: 'https://docs.ohsome.org/ohsome-api/v2/',
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
@@ -28,7 +29,7 @@ export const environment: AppEnvironment = {
   mapOptions: {
     zoom: 2,
     center: {lat: 0.0, lng: 0.0},
-    mapCenterFromPoly : false,
+    mapCenterFromPoly: false,
   },
   // zoomLevel : 2,
   // mapCenter : {lat: 0.0, lng: 0.0},
@@ -40,7 +41,7 @@ export const environment: AppEnvironment = {
   // selectedKey : 'natural',
   // selectedValue : 'tree',
   // selectedTypes : ['node'],
-  interval : 'P1Y',
+  interval: 'P1Y',
 
   // userManagement
   appwriteEndpoint: 'https://api.account.heigit.org',

@@ -5,19 +5,20 @@
 
 import {AppEnvironment} from '../app/shared/shared-types';
 
-export const environment: AppEnvironment =  {
+export const environment: AppEnvironment = {
   production: false,
 
-  //ohsomeAPI (osm history stats from OSHDB)
-  oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
-  ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
+  //ohsomeAPI (stats and extraction)
+  ohsomeApiRootUrl: 'https://api.heigit.org/ohsome-api-staging/v2',
   // ohsomeApiRootUrl : 'https://staging-ohsome-api.heigitk8s.de',
+
+  ohsomeApiDocsUrl: 'https://docs.ohsome.org/ohsome-api/staging/',
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',
   oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api-staging/v1',
-   // oqtApiRootUrl: 'http://127.0.0.1:8000',
+  // oqtApiRootUrl: 'http://127.0.0.1:8000',
   // core, experimental, all, ...
   oqtApiProject: 'all',
   defaultTopicKey: 'cycleway',
@@ -60,8 +61,8 @@ export const environment: AppEnvironment =  {
   // selectedTypes : ['node', 'way'],
   // startDate : '2019-03-01',
   // endDate : '2020-03-01',
-  interval : 'P1Y',
-  viewUpdateTime : false,
+  interval: 'P1Y',
+  viewUpdateTime: false,
 
   // userManagement
   // appwriteEndpoint: 'https://staging.api.account.heigit.org',

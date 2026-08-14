@@ -3,8 +3,8 @@ import * as L from 'leaflet';
 
 interface AppEnvironment {
   production: boolean;
-  oshdbRestApiRootUrl : string;
-  ohsomeApiRootUrl : string;
+  ohsomeApiRootUrl: string;
+  ohsomeApiDocsUrl: string;
   oqtApiRootUrl: string;
   oqtApiProject: string; //take from OpenApiSpec
   defaultTopicKey: string; //take from OpenApiSpec

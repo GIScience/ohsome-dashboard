@@ -3,9 +3,10 @@ import {AppEnvironment} from '../app/shared/shared-types';
 export const environment: AppEnvironment = {
   production: true,
 
-  //ohsomeAPI (osm history stats from OSHDB)
-  oshdbRestApiRootUrl : 'https://api.ohsome.org/v1',
+  //ohsomeAPI (stats and extraction)
   ohsomeApiRootUrl : 'https://api.heigit.org/ohsome-api-staging/v2',
+
+  ohsomeApiDocsUrl: 'https://docs.ohsome.org/ohsome-api/staging/',
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',

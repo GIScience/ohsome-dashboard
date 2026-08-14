@@ -46,14 +46,14 @@
             Ohsome API
           </div>
           <div class="divider"></div>
-          <a class="item" href="https://docs.ohsome.org/ohsome-api/staging/">Docs & Examples</a>
-          <a class="item" href="https://api.heigit.org/ohsome-api/v2-rc/docs">OpenAPI Specification</a>
+          <a class="item" [href]="`${environment.ohsomeApiDocsUrl}`">Docs & Examples</a>
+          <a class="item" [href]="`${environment.ohsomeApiRootUrl}/docs`">OpenAPI Specification</a>
           <div class="header">
             <i class="sitemap icon"></i>
             Ohsome Quality API
           </div>
           <div class="divider"></div>
-          <a class="item" href="https://api.quality.ohsome.org/v1/docs">OpenAPI Specification</a>
+          <a class="item" [href]="`${environment.oqtApiRootUrl}/docs`">OpenAPI Specification</a>
         </div>
       </div>
 
@@ -153,11 +153,19 @@
     </div>
     <div class="ui horizontal divider"></div>
     <div class="ui stackable equal width center aligned padded grid">
-      <div class="column">&copy; {{ currentYear }} HeiGIT gGmbH</div>
+      <div class="column">
+        <a href="https://heigit.org/privacy-policy/">Privacy Policy</a> &middot;
+        <a href="https://heigit.org/imprint/">Legal Notice</a> &middot;
+        <a href="https://heigit.org/further-legal-information/">Further Legal Information</a>
+        <div>&copy; {{ currentYear }} HeiGIT gGmbH</div>
+      </div>
     </div>
     <div class="ui stackable equal width center aligned padded grid">
-      <div class="column" i18n>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
-        &middot; ohsome-quality-API: {{ oqtApiVersion }}
+      <div class="column" i18n>
+        <div>Versions: Frontend: {{ frontendVersion }} &middot; ohsome-API: {{ ohsomeApiVersion }}
+          &middot; ohsome-quality-API: {{ oqtApiVersion }}
+        </div>
+        <div>ohsome Api temporal extent: {{ohsomeApiMetadataProviderService.getOhsomeMetadataResponse()?.temporalExtent | json}}</div>
       </div>
     </div>
   </div>

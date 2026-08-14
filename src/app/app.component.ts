@@ -4,7 +4,7 @@ import packageJson from '../../package.json';
 import {OqtApiMetadataProviderService} from './02_quality/oqt-api-metadata-provider.service';
 import {UrlHashParamsProviderService} from './singelton-services/url-hash-params-provider.service';
 import {StateService} from './singelton-services/state.service';
-import {NgClass} from '@angular/common';
+import {JsonPipe, NgClass} from '@angular/common';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
 import {ResultPanelComponent} from './result-panel/result-panel.component';
 import {WelcomeComponent} from './welcome/welcome.component';
@@ -19,7 +19,7 @@ declare const $: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, CopyPermalinkModalComponent]
+  imports: [NgClass, QueryPanelComponent, ResultPanelComponent, WelcomeComponent, CopyPermalinkModalComponent, JsonPipe]
 })
 export class AppComponent implements AfterViewInit {
   urlHashParamsProviderService = inject(UrlHashParamsProviderService);
