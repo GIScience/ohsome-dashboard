@@ -8,6 +8,14 @@
   overflow: hidden;
 }
 
+#header .ui.circular.label.topic {
+  /*font-family: 'latin_modern_mono_prop10Rg', monospace;*/
+  background-color: #E8E8E8 !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+  margin: 0 0.5rem !important;
+  text-transform: none !important;
+}
+
 #header #boundaryLabelsItem {
   min-width: 0;
   flex: 1 1 auto;

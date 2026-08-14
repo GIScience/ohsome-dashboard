@@ -11,8 +11,9 @@
           {{ formValues()['topic-title'] }}
         </span>
       } @else {
-        <span class="ui circular label topic" title="{{metadata.result.topics[formValues().topic].filter}}">
-          {{ metadata.result.topics[formValues().topic].name }}
+        <span class="ui circular label topic"
+              title="{{oqtApiMetadataProviderService.getTopicFilter(formValues().topic)}}">
+          {{ oqtApiMetadataProviderService.getTopicName(formValues().topic) }}
         </span>
       }
 

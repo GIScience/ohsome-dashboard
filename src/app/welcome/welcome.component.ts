@@ -25,6 +25,7 @@ import {MetadataResponseJSON} from '../02_quality/types/MetadataResponseJSON';
 import {StateService} from '../singelton-services/state.service';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import {QueryMode} from '../shared/shared-types';
+import {environment} from '../../environments/environment';
 
 declare const $: any;
 
@@ -214,4 +215,6 @@ export class WelcomeComponent {
     this.stateService.updatePartialState({queryMode});
     $('#welcome').modal('hide');
   }
+
+  protected readonly environment = environment;
 }

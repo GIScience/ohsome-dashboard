@@ -13,8 +13,11 @@
 
     <!--    TABS-->
     <div class="ui top attached tabular menu">
-      <a class="item" data-tab="intro" tabindex="0" (keydown.enter)="stateService.updatePartialState({welcomeTab: 'intro'})"><i class="home icon"></i><span i18n>Introduction</span></a>
-      <a class="item" data-tab="topicCatalog" tabindex="0" (keydown.enter)="stateService.updatePartialState({welcomeTab: 'topicCatalog'})"><i class="search icon"></i><span i18n>Topic Catalog</span></a>
+      <a class="item" data-tab="intro" tabindex="0"
+         (keydown.enter)="stateService.updatePartialState({welcomeTab: 'intro'})"><i class="home icon"></i><span i18n>Introduction</span></a>
+      <a class="item" data-tab="topicCatalog" tabindex="0"
+         (keydown.enter)="stateService.updatePartialState({welcomeTab: 'topicCatalog'})"><i
+        class="search icon"></i><span i18n>Topic Catalog</span></a>
       <!--      <a class="right item" data-tab="about"><i class="info cirlce icon"></i>About</a>-->
 
     </div>
@@ -25,66 +28,67 @@
     <div class="ui bottom attached active tab segment" data-tab="intro" tabindex="-1">
       <div class="ui centered link cards">
 
-          <!-- History Stats -->
-          <div class="card"
-               (click)="linkTo('ohsomeApi')"
-               (keydown.enter)="linkTo('ohsomeApi')"
-               tabindex="0" role="link" i18n-aria-label aria-label="Switch to History Stats">
-            <div class="content">
-              <h2 class="header" i18n>History Statistics</h2>
-              <div class="meta" i18n>Timeseries & Comparisons</div>
-              <div class="description" i18n>
-                Discover how OpenStreetMap data evolves over time.<br>
-                Explore how many buildings have been mapped or how the length of cycleways has grown in your region.<br>
-                Compare different areas, track mapping activity, and gain insights into how the community’s tagging practices change over time.
-              </div>
-              <div class="ui fluid bordered image">
-                <img src="assets/images/welcome/history_stats_example_en.png" i18n-alt alt="History Statistics Example">
-              </div>
+        <!-- History Stats -->
+        <div class="card"
+             (click)="linkTo('ohsomeApi')"
+             (keydown.enter)="linkTo('ohsomeApi')"
+             tabindex="0" role="link" i18n-aria-label aria-label="Switch to History Stats">
+          <div class="content">
+            <h2 class="header" i18n>History Statistics</h2>
+            <div class="meta" i18n>Timeseries & Comparisons</div>
+            <div class="description" i18n>
+              Discover how OpenStreetMap data evolves over time.<br>
+              Explore how many buildings have been mapped or how the length of cycleways has grown in your region.<br>
+              Compare different areas, track mapping activity, and gain insights into how the community’s tagging
+              practices change over time.
+            </div>
+            <div class="ui fluid bordered image">
+              <img src="assets/images/welcome/history_stats_example_en.png" i18n-alt alt="History Statistics Example">
             </div>
           </div>
+        </div>
 
-          <!-- Quality Analyses -->
-          <div class="card"
-               (click)="linkTo('oqtApi')"
-               (keydown.enter)="linkTo('oqtApi')"
-               tabindex="0" role="link" i18n-aria-label aria-label="Switch to Quality Analyses">
-            <div class="content">
-              <h2 class="header" i18n>Quality Analyses</h2>
-              <div class="meta" i18n>Indicators & more</div>
-              <div class="description" i18n>
-                Assess the quality of OpenStreetMap data.<br>
-                Choose from a wide range of predefined topics.<br>
-                Check out how complete, accurate and up-to-date OSM is for your region of interest.<br>
-                Gain confidence in OSM and find out if relevant features and attributes have been mapped.
-                And finally answer the question: Is OSM data fit for my purpose?
-              </div>
-              <div class="ui fluid bordered image">
-                <img src="assets/images/welcome/quality_analysis_example_en.png" i18n-alt alt="Quality Analyses Example">
-              </div>
+        <!-- Quality Analyses -->
+        <div class="card"
+             (click)="linkTo('oqtApi')"
+             (keydown.enter)="linkTo('oqtApi')"
+             tabindex="0" role="link" i18n-aria-label aria-label="Switch to Quality Analyses">
+          <div class="content">
+            <h2 class="header" i18n>Quality Analyses</h2>
+            <div class="meta" i18n>Indicators & more</div>
+            <div class="description" i18n>
+              Assess the quality of OpenStreetMap data.<br>
+              Check out how complete, accurate and up-to-date OSM is for your region of interest.<br>
+              Gain confidence in OSM and find out if relevant features and attributes have been mapped.
+              And finally answer the question: Is OSM data fit for my purpose?
+            </div>
+            <div class="ui fluid bordered image">
+              <img src="assets/images/welcome/quality_analysis_example_en.png" i18n-alt alt="Quality Analyses Example">
             </div>
           </div>
+        </div>
 
-          <!-- Data Extraction-->
-          <div class="card"
-               (click)="linkTo('extraction')"
-               (keydown.enter)="linkTo('extraction')"
-               tabindex="0" role="link" i18n-aria-label aria-label="Switch to Data Extraction">
-            <div class="content">
-              <h2 class="header" i18n>Data Extraction</h2>
-              <div class="meta" i18n>Download OSM</div>
-              <div class="description" i18n>
-                <p>We are working on a convenient way for you to download custom filtered OSM data.</p>
-                <p>In the meanwhile you can already download analysis results from the History Stats as CSV or JSON file.</p>
-                <p>For smaller regions you can already use our ohsome API directly here:<br>
-                <a target="_blank" href="https://api.ohsome.org/v1/swagger-ui.html?urls.primaryName=Data%20Extraction">ohsome API Swagger documentation</a>
-                </p>
-              </div>
-              <div class="ui fluid bordered image">
-                <img src="assets/images/welcome/data_extraction_en.png" i18n-alt alt="Data Extraction with Swagger">
-              </div>
+        <!-- Data Extraction-->
+        <div class="card"
+             (click)="linkTo('extraction')"
+             (keydown.enter)="linkTo('extraction')"
+             tabindex="0" role="link" i18n-aria-label aria-label="Switch to Data Extraction">
+          <div class="content">
+            <h2 class="header" i18n>Data Extraction</h2>
+            <div class="meta" i18n>Download OSM</div>
+            <div class="description" i18n>
+              <span>Extract custom filtered OpenStreetMap data for your area-of-interest, ready to be used for in-depth analysis in your own workflows.</span>
+              <br><br>
+              <span>Find further options to get OSM History Data for your application in our</span><br>
+              <a target="_blank" [href]="`${environment.ohsomeApiRootUrl}/docs`">ohsome
+                API Swagger documentation</a>.
+            </div>
+            <div class="ui fluid bordered image">
+              <img src="../../assets/images/welcome/data_extraction_example_en.png" i18n-alt
+                   alt="Data Extraction Example">
             </div>
           </div>
+        </div>
 
       </div><!--end of cards -->
     </div>
