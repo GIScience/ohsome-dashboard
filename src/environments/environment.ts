@@ -19,8 +19,6 @@ export const environment: AppEnvironment = {
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',
   oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api-staging/v1',
   // oqtApiRootUrl: 'http://127.0.0.1:8000',
-  // core, experimental, all, ...
-  oqtApiProject: 'all',
   defaultTopicKey: 'cycleway',
 
   //the WFS endpoint which will get appended a CQL_FILTER="id" IN (number, number, ...) param and should return a GeoJSON<FeatureCollection>

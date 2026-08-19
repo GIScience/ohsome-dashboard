@@ -23,7 +23,6 @@ describe('SimpleIndicatorComponent', () => {
     component.indicator = {
       "name": "Attribute Completeness",
       "description": "Derive the ratio of OSM features compared to features which match additional expected tags (e.g. amenity=hospital vs amenity=hospital and wheelchair=yes).",
-      "projects": ["bkg"],
       "qualityDimension": "completeness",
       "key": "attribute-completeness",
       "checked": true

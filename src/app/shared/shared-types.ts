@@ -6,7 +6,6 @@ interface AppEnvironment {
   ohsomeApiRootUrl: string;
   ohsomeApiDocsUrl: string;
   oqtApiRootUrl: string;
-  oqtApiProject: string; //take from OpenApiSpec
   defaultTopicKey: string; //take from OpenApiSpec
   ohsomeBoundaryWFSUrl: string;
   ohsomeBoundaryWMSUrl: string;
