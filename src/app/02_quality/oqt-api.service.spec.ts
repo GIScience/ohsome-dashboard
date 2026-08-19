@@ -50,12 +50,11 @@ describe('OqtApiServiceService', () => {
     expect(req.request.body).toEqual({param: 'value'});
   });
 
-  it('should perform a GET request to /metadata endpoint with project param', () => {
+  it('should perform a GET request to /metadata endpoint', () => {
     service.getMetadata().subscribe(() => {
     });
-    const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/metadata?project=${service.OQT_API_PROJECT}`);
+    const req = httpMock.expectOne(`${environment.oqtApiRootUrl}/metadata`);
     expect(req.request.method).toEqual('GET');
-    expect(req.request.params.get("project")).toEqual(service.OQT_API_PROJECT);
   });
 
   it('should perform a GET request to /metadata/indicators/${indicatorKey}/coverage', () => {
