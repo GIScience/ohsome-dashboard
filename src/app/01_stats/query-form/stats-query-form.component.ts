@@ -14,6 +14,7 @@ import {OhsomeApiMetadataProviderService} from '../../ohsomeapi/ohsome-api-metad
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
+import {MEASURE_OPTIONS} from '../../shared/utils/form.utils';
 
 @Component({
   selector: 'app-stats-query-form',
@@ -38,11 +39,7 @@ export class StatsQueryFormComponent {
 
   topics = this.ohsomeQualityApiMetadataProviderService.getOqtApiMetadata().result.topics;
   // Measure
-  protected measureOptions: { value: string; label: string }[] = [
-    {value: 'count', label: $localize`count`},
-    {value: 'length', label: $localize`length`},
-    {value: 'area', label: $localize`area`}
-  ];
+  protected measureOptions = MEASURE_OPTIONS;
 
   // Period
   protected periodOptions: { value: string, label: string }[] = [
