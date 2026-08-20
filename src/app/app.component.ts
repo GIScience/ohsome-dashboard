@@ -11,6 +11,7 @@ import {WelcomeComponent} from './welcome/welcome.component';
 import {AuthService} from './singelton-services/auth.service';
 import {environment} from '../environments/environment';
 import {CopyPermalinkModalComponent} from './copy-permalink-modal/copy-permalink-modal.component';
+import {getLocalizedOqapiDocsUrl} from './shared/shared-types';
 
 declare const $: any;
 
@@ -81,6 +82,10 @@ export class AppComponent implements AfterViewInit {
   switchLanguage(selectedLanguage: string): void {
     localStorage.setItem('locale', selectedLanguage)
     location.href = `../${selectedLanguage}/#${this.urlHashParamsProviderService.getHashURLSearchParams().toString()}`;
+  }
+
+  getOqapiDocsUrl(): string {
+    return getLocalizedOqapiDocsUrl(environment.oqapiDocsUrl);
   }
 
   protected readonly environment = environment;
