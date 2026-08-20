@@ -66,6 +66,12 @@ export function derivedField<TModel extends object, K extends keyof TModel>(
   });
 }
 
+export const MEASURE_OPTIONS: { value: string; label: string }[] = [
+  {value: 'count', label: $localize`count`},
+  {value: 'length', label: $localize`length`},
+  {value: 'area', label: $localize`area`}
+];
+
 export function getFilterFromFormValues(formValues, oqtApiMetadataProviderService: OqtApiMetadataProviderService){
     const topic = formValues.topic;
 

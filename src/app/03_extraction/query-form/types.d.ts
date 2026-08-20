@@ -20,6 +20,7 @@ interface StatsFormData extends SharedFormData {
 interface QualityFormData extends SharedFormData {
   indicators: string[];
   adminids: string;
+  measure: components['schemas']['MeasureRequestModel'];
 }
 
 interface ExtractionFormData extends SharedFormData {
