@@ -15,6 +15,8 @@ export const environment: AppEnvironment = {
 
   defaultTopicKey: 'cycleway',
 
+  oqapiDocsUrl: 'https://giscience.github.io/oqapi-jupyter-book',
+
   //the WFS endpoint which will get appended a CQL_FILTER="id" IN (number, number, ...) param and should return a GeoJSON<FeatureCollection>
   ohsomeBoundaryWFSUrl: 'https://maps.heigit.org/vector/service/ohsome/wfs?service=wfs&request=GetFeature&typeNames=ohsome:admin_world_water&outputFormat=application/json&version=2.0.0&srsName=EPSG:4326',
   ohsomeBoundaryWMSUrl: 'https://maps.heigit.org/raster/ohsome/wms',

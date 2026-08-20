@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@
 import {Checkbox, Indicator} from '../../../types/types';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import {getLocalizedOqapiDocsUrl} from '../../../../shared/shared-types';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
     selector: 'app-simple-indicator',
@@ -17,12 +19,9 @@ export class SimpleIndicatorComponent {
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
 
   getDescriptionWithLink(): string {
-    const locale = localStorage.getItem("locale") || "en";
     const link_text = $localize`Click here for more info.`
-    if (locale === 'de') {
-      return `${this.indicator.description} <br> <a target="_blank" href="https://giscience.github.io/oqapi-jupyter-book/${this.indicator.key}">${link_text}</a>`;
-    }
-    return `${this.indicator.description} <br> <a target="_blank" href="https://github.com/GIScience/ohsome-quality-api/blob/main/docs/indicators_${locale}.md">${link_text}</a>`;
+    const link = getLocalizedOqapiDocsUrl(environment.oqapiDocsUrl, this.indicator.key);
+    return `${this.indicator.description} <br> <a target="_blank" href="${link}">${link_text}</a>`;
   }
 
 }
