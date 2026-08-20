@@ -26,6 +26,7 @@ export class IndicatorResultComponent implements OnInit {
   @Input() topicKey: string;
   topicTitle= input<string>()
   topicFilter= input<string>()
+  measure= input<string>()
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
   @Input() indicator!: IndicatorParams;
 
@@ -83,6 +84,7 @@ export class IndicatorResultComponent implements OnInit {
         // delete body.topic
       body['topicTitle'] = this.topicTitle();
       body['topicFilter'] = this.topicFilter();
+      body['measure'] = this.measure();
     }
 
     return body;

@@ -102,6 +102,24 @@
 
             </div>
           </div>
+          <div class="item">
+            <div class="content">
+              <h4 class="ui header" i18n><i class="expand icon"></i>Measure</h4>
+              <div class="four inline fields">
+                @for (option of measureOptions; track option) {
+                  <div class="field">
+                    <div class="ui radio checkbox">
+                      <input [id]="'measure' + option.value" type="radio" [value]="option.value" [formField]="qualityForm.measure">
+                      <label [for]="'measure' + option.value" style="white-space: nowrap;">{{ option.label }}</label>
+                    </div>
+                  </div>
+                }
+              </div>
+              <input type="hidden"
+                     name="measure"
+                     [ngModel]="qualityForm.measure().value()">
+            </div>
+          </div>
         </div>
       </div>
 
