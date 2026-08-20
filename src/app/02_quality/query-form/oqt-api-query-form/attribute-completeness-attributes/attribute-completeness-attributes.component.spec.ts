@@ -18,11 +18,11 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   let fixture: ComponentFixture<AttributeCompletenessAttributesComponent>;
   const roadsTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["roads"];
   const enrichedRoadsTopic: Topic = {...roadsTopic, key: 'roads'};
-  const buildingCountTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["building-count"];
-  const enrichedBuildingCountTopic: Topic = {...buildingCountTopic, key: 'building-count'};
+  const buildingCountTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["buildings"];
+  const enrichedBuildingCountTopic: Topic = {...buildingCountTopic, key: 'buildings'};
   const enrichedTopicsMock = {
     roads: enrichedRoadsTopic,
-    'building-count': enrichedBuildingCountTopic,
+    'buildings': enrichedBuildingCountTopic,
   };
 
   beforeEach(async () => {
@@ -69,7 +69,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     vi.spyOn(component, 'sanitizeAttributeKeys');
 
 
-    // switch from topic roads to building-count
+    // switch from topic roads to buildings
     component.selectedTopic = enrichedBuildingCountTopic;
     component.ngOnChanges({
       selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
@@ -96,25 +96,25 @@ describe('AttributeCompletenessIndicatorComponent', () => {
       },
       {
         description: 'Single attribute NOT fitting to topic',
-        topicKey: 'building-count',
+        topicKey: 'buildings',
         hashParams: new URLSearchParams('attribute-completeness--attributes=name'),
         expected: ['height']
       },
       {
         description: 'Multi attribute NOT fitting to topic',
-        topicKey: 'building-count',
+        topicKey: 'buildings',
         hashParams: new URLSearchParams('attribute-completeness--attributes=name,maxspeed'),
         expected: ['height']
       },
       {
         description: 'Empty attribute',
-        topicKey: 'building-count',
+        topicKey: 'buildings',
         hashParams: new URLSearchParams('attribute-completeness--attributes='),
         expected: ['height']
       },
       {
         description: 'Not existing attribute (null)',
-        topicKey: 'building-count',
+        topicKey: 'buildings',
         hashParams: new URLSearchParams(''),
         expected: ['height']
       }
@@ -133,7 +133,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     const testCases = [
       {
         description: 'Get default attribute key for topic that has attributes',
-        topicKey: 'building-count',
+        topicKey: 'buildings',
         expected: 'height',
       },
       {
@@ -154,8 +154,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     const testCases = [
       {
         description: 'Get all attributes for a topic that has attributes',
-        topicKey: 'building-count',
-        expected: oqtAttributesResponseMock.result['building-count'],
+        topicKey: 'buildings',
+        expected: oqtAttributesResponseMock.result['buildings'],
       },
       {
         description: 'Get empty object for a topic that has NO attributes',
@@ -371,9 +371,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         filter: 'topic=one',
         aggregationType: 'count',
         description: 'This is test topic 1',
-        endpoint: '',
         indicators: ['minimal'],
-        projects: ['core'],
         source: null,
       };
       component.selectedAttributeKeys = ['attributeKey1'];

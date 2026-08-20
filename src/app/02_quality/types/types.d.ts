@@ -3,15 +3,10 @@ import * as Plotly from 'plotly.js-dist-min';
 import BaseResponseJSON from './BaseResponseJSON';
 import {KeyValue} from '@angular/common';
 
-/**
- * topic as of oqt v0.14.2 /metadata
- */
 interface RawTopicMetadata {
   name: string;
   description: string;
-  endpoint: string;
   aggregationType: 'count' | 'length' | 'area';
-  projects: string[];
   filter: string;
   ratioFilter?: string | null;
   source: string | null;
@@ -33,7 +28,6 @@ interface Topic extends RawTopicMetadata {
 interface RawIndicatorMetadata {
   name: string;
   description: string;
-  projects: string[];
   qualityDimension: string;
 }
 
@@ -43,11 +37,6 @@ interface RawQualityDimensionMetadata {
   source: string | null;
 }
 
-interface RawProjectMetadata {
-  name: string;
-  description: string;
-}
-
 interface Indicator extends RawIndicatorMetadata {
   key: string;
 }
@@ -55,12 +44,6 @@ interface Indicator extends RawIndicatorMetadata {
 // parameter information from the formValues
 type Params = { [paramName: string]: string | string[] | boolean }
 type IndicatorParams = KeyValue<string, { "params": Params | null }>;
-
-interface RawReportMetadata {
-  name: string;
-  description: string;
-  project: string;
-}
 
 interface RawAttributeMetadata {
   name: string,
@@ -81,8 +64,8 @@ type AttributeResponseJSON = BaseResponseJSON & { result: Record<string, Record<
 type IndicatorLabel = 'green' | 'yellow' | 'red' | 'undefined';
 
 interface IndicatorProperties {
-  metadata: { name: string; description: string; projects: string[]; qualityDimension: string },
-  topic: { key: string; name: string; description: string; projects: string[] },
+  metadata: { name: string; description: string; qualityDimension: string },
+  topic: { key: string; name: string; description: string },
   result: {
     description: string;
     timestampOQT: string;
@@ -98,9 +81,7 @@ interface IndicatorProperties {
 export {
   RawTopicMetadata,
   RawIndicatorMetadata,
-  RawReportMetadata,
   RawQualityDimensionMetadata,
-  RawProjectMetadata,
   RawAttributeMetadata,
   Topic,
   Indicator,

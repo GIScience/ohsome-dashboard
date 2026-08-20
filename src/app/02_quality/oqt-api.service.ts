@@ -18,15 +18,11 @@ const OQT_API_ROOT_URL = environment.oqtApiRootUrl;
 })
 export class OqtApiService {
 
-  OQT_API_PROJECT: string;
-
   private stateService = inject(StateService);
   private http = inject(HttpClient);
   private static readonly DEFAULT_HTTP_CONTEXT = new HttpContext();
 
   constructor() {
-    const project = null; //urlHashParamsProviderService.getHashURLSearchParams().get("project");
-    this.OQT_API_PROJECT = project || environment.oqtApiProject || 'core';
   }
 
   get(urlPath: string, queryParams = '', context: HttpContext = OqtApiService.DEFAULT_HTTP_CONTEXT): Observable<BaseResponseJSON> {
@@ -55,7 +51,7 @@ export class OqtApiService {
     // return of(oqtApiMetadataResponseMock);
     return this.get(
       'metadata',
-      `project=${this.OQT_API_PROJECT}`,
+      '',
       new HttpContext().set(SKIP_AUTH, true)) as Observable<MetadataResponseJSON>;
   }
 

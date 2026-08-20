@@ -175,7 +175,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
         topic.qualityDimensions = {};
         topic.indicators
           .forEach(topicIndicatorKey => {
-            //is topic indicator available in indicators list? This depends on the project query param
+            //is topic indicator available in indicators list?
             const topicIndicator = enrichedIndicators[topicIndicatorKey];
             if (!topicIndicator) {
               return;

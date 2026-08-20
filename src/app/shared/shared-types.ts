@@ -6,8 +6,8 @@ interface AppEnvironment {
   ohsomeApiRootUrl: string;
   ohsomeApiDocsUrl: string;
   oqtApiRootUrl: string;
-  oqtApiProject: string; //take from OpenApiSpec
   defaultTopicKey: string; //take from OpenApiSpec
+  oqapiDocsUrl: string;
   ohsomeBoundaryWFSUrl: string;
   ohsomeBoundaryWMSUrl: string;
   ohsomeBoundaryWMSLayer: string;
@@ -37,6 +37,12 @@ function isQueryMode(value: unknown): value is QueryMode {
 function isTopic(topicParam: string | null, oqtApiMetadataProviderService): boolean {
   const availableTopics = Object.keys(oqtApiMetadataProviderService.getOqtApiMetadata().result.topics);
   return !!topicParam && availableTopics.includes(topicParam);
+}
+
+function getLocalizedOqapiDocsUrl(baseUrl: string, path: string = ''): string {
+  const locale = localStorage.getItem('locale') || 'en';
+  const localePrefix = locale === 'de' ? '' : 'en/';
+  return `${baseUrl}/${localePrefix}${path}`;
 }
 
 
@@ -79,6 +85,7 @@ export {
   QueryMode,
   isQueryMode,
   isTopic,
+  getLocalizedOqapiDocsUrl,
   GrowthRateCssClass,
   BoundaryType,
   Userlayer,
