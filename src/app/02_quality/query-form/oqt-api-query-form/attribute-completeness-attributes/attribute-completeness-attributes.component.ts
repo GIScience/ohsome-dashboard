@@ -54,7 +54,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     this.attributes = this.oqtApiMetadataProviderService.getAttributes().result;
 
     // determine useCustomFilterMode
-    this.useCustomFilterMode.set(this.hasCustomFilterModeParams());
+    this.useCustomFilterMode.set(this.hasCustomFilterModeParams() || !this.topicHasAttributes(this.selectedTopic.key));
 
     //extract and sanitize selectedAttributeKeys
     this.selectedAttributeKeys = this.getAttributeKeysFromUrlHashParams(this.hashParams);
@@ -73,7 +73,16 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
     if (topicChange && !topicChange.firstChange) {
       this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
-      this.useCustomFilterMode.set(false);
+
+      const topicHasNoAttributes = !this.topicHasAttributes(this.selectedTopic.key);
+      this.useCustomFilterMode.set(topicHasNoAttributes);
+
+      // the displayed title/filter belonged to the previous topic; clear it so it can't
+      // look like an already-confirmed filter for a topic the user never defined one for
+      if (topicHasNoAttributes) {
+        this.customFilterTitle.set('');
+        this.customFilterDefinition.set('');
+      }
     }
   }
 
@@ -233,6 +242,15 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   ${combinedAttribute.combinedFilters}
 )`;
       }).join(' and ');
+    }
+  }
+
+  cancelCustomFilter(): void {
+    if (this.topicHasAttributes(this.selectedTopic.key)) {
+      this.useCustomFilterMode.set(false);
+    } else {
+      this.customFilterTitle.set('');
+      this.customFilterDefinition.set('');
     }
   }
 
