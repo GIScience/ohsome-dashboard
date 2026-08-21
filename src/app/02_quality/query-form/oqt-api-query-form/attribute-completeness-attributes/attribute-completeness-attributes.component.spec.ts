@@ -80,6 +80,193 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     expect(component.selectedAttributeKeys).toEqual([component.getDefaultAttributeKey(component.selectedTopic.key)]);
   });
 
+  const topicWithoutAttributes: Topic = {
+    key: 'topic-that-does-not-have-attributes',
+    name: 'Topic without attributes',
+    filter: 'topic=without-attributes',
+    aggregationType: 'count',
+    description: 'A topic that has no predefined attributes',
+    endpoint: '',
+    indicators: ['attribute-completeness'],
+    projects: ['core'],
+    source: null,
+  };
+
+  it('should force custom filter mode on init when the topic has no predefined attributes', () => {
+    component.selectedTopic = topicWithoutAttributes;
+    component.hashParams = new URLSearchParams();
+
+    component.ngOnInit();
+
+    expect(component.useCustomFilterMode()).toBe(true);
+  });
+
+  it('should force custom filter mode when switching to a topic without predefined attributes', () => {
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+
+    expect(component.useCustomFilterMode()).toBe(true);
+  });
+
+  it('should leave custom filter mode when switching back to a topic with predefined attributes', () => {
+    // switch to a topic without attributes first
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+    expect(component.useCustomFilterMode()).toBe(true);
+
+    // then back to a topic with predefined attributes
+    component.selectedTopic = enrichedBuildingCountTopic;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(topicWithoutAttributes, component.selectedTopic, false)
+    });
+
+    expect(component.useCustomFilterMode()).toBe(false);
+  });
+
+  it('should clear stale custom filter title/definition when switching to a topic without predefined attributes', () => {
+    // simulate a custom filter that was defined/shown for a previous topic
+    component.customFilterTitle.set('Stale Title from previous topic');
+    component.customFilterDefinition.set('stale=filter');
+
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+
+    expect(component.customFilterTitle()).toBe('');
+    expect(component.customFilterDefinition()).toBe('');
+  });
+
+  it('should not clear custom filter title/definition when switching between topics that both have predefined attributes', () => {
+    component.customFilterTitle.set('My title');
+    component.customFilterDefinition.set('my=filter');
+
+    component.selectedTopic = enrichedBuildingCountTopic;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+
+    expect(component.customFilterTitle()).toBe('My title');
+    expect(component.customFilterDefinition()).toBe('my=filter');
+  });
+
+  it('should show the cancel/delete icon for the custom filter label regardless of predefined attributes', () => {
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+    component.customFilterTitle.set('My title');
+    fixture.detectChanges();
+
+    const deleteIcon = fixture.nativeElement.querySelector('#custom-filter-wrapper-element i.delete.icon');
+    expect(deleteIcon).not.toBeNull();
+  });
+
+  describe('cancelCustomFilter()', () => {
+    it('should revert to dropdown mode when the topic has predefined attributes', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('My title');
+      component.useCustomFilterMode.set(true);
+
+      component.cancelCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(false);
+    });
+
+    it('should clear the custom filter back to the hint state when the topic has no predefined attributes', () => {
+      component.selectedTopic = topicWithoutAttributes;
+      component.useCustomFilterMode.set(true);
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('my=filter');
+
+      component.cancelCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(true);
+      expect(component.customFilterTitle()).toBe('');
+      expect(component.customFilterDefinition()).toBe('');
+    });
+  });
+
+  describe('confirmCustomFilter()', () => {
+    it('should fall back to dropdown mode when the title is empty and the topic has predefined attributes', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(false);
+    });
+
+    it('should enable custom filter mode when the title is set and the topic has predefined attributes', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('My title');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(true);
+    });
+
+    it('should enable custom filter mode when the title is empty but the topic has no predefined attributes', () => {
+      component.selectedTopic = topicWithoutAttributes;
+      component.customFilterTitle.set('');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(true);
+    });
+  });
+
+  it('should show the dropdown instead of the "no predefined attributes" hint when confirming an empty custom filter for a topic with predefined attributes', () => {
+    component.selectedTopic = enrichedRoadsTopic;
+    component.useCustomFilterMode.set(true);
+    component.customFilterTitle.set('');
+    fixture.detectChanges();
+
+    component.confirmCustomFilter();
+    fixture.detectChanges();
+
+    const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
+    const dropdown = fixture.nativeElement.querySelector('#search-select-attribute');
+    expect(hint).toBeNull();
+    expect(dropdown).not.toBeNull();
+  });
+
+  it('should show a hint instead of an empty label when no custom filter has been defined yet', () => {
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+    fixture.detectChanges();
+
+    const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
+    const label = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .ui.blue.basic.label');
+
+    expect(hint).not.toBeNull();
+    expect(label).toBeNull();
+  });
+
+  it('should show the label instead of the hint once a custom filter title has been defined', () => {
+    component.selectedTopic = topicWithoutAttributes;
+    component.ngOnChanges({
+      selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
+    });
+    component.customFilterTitle.set('My custom title');
+    fixture.detectChanges();
+
+    const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
+    const label = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .ui.blue.basic.label');
+
+    expect(hint).toBeNull();
+    expect(label).not.toBeNull();
+  });
+
   describe('getAttributeKeysFromUrlHashParams(hashParams)', () => {
     const hashParamsCases = [
       {
