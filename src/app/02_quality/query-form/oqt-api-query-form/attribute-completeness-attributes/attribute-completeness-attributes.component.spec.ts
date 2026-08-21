@@ -191,6 +191,53 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     });
   });
 
+  describe('confirmCustomFilter()', () => {
+    it('should fall back to dropdown mode when the title is empty and the topic has predefined attributes', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(false);
+    });
+
+    it('should enable custom filter mode when the title is set and the topic has predefined attributes', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('My title');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(true);
+    });
+
+    it('should enable custom filter mode when the title is empty but the topic has no predefined attributes', () => {
+      component.selectedTopic = topicWithoutAttributes;
+      component.customFilterTitle.set('');
+      component.useCustomFilterMode.set(false);
+
+      component.confirmCustomFilter();
+
+      expect(component.useCustomFilterMode()).toBe(true);
+    });
+  });
+
+  it('should show the dropdown instead of the "no predefined attributes" hint when confirming an empty custom filter for a topic with predefined attributes', () => {
+    component.selectedTopic = enrichedRoadsTopic;
+    component.useCustomFilterMode.set(true);
+    component.customFilterTitle.set('');
+    fixture.detectChanges();
+
+    component.confirmCustomFilter();
+    fixture.detectChanges();
+
+    const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
+    const dropdown = fixture.nativeElement.querySelector('#search-select-attribute');
+    expect(hint).toBeNull();
+    expect(dropdown).not.toBeNull();
+  });
+
   it('should show a hint instead of an empty label when no custom filter has been defined yet', () => {
     component.selectedTopic = topicWithoutAttributes;
     component.ngOnChanges({

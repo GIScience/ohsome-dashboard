@@ -245,6 +245,17 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     }
   }
 
+  confirmCustomFilter(): void {
+    // an empty title for a topic that has predefined attributes isn't a valid custom
+    // filter - fall back to the dropdown instead of showing the "no predefined attributes" hint
+    if (!this.customFilterTitle() && this.topicHasAttributes(this.selectedTopic.key)) {
+      this.useCustomFilterMode.set(false);
+      return;
+    }
+
+    this.useCustomFilterMode.set(true);
+  }
+
   cancelCustomFilter(): void {
     if (this.topicHasAttributes(this.selectedTopic.key)) {
       this.useCustomFilterMode.set(false);
