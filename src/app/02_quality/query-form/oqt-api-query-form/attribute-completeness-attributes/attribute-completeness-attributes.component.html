@@ -21,11 +21,17 @@
            [ngModel]="customFilterDefinition()"
            required>
     <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
-      <div #customAttributeLabelElement class="ui blue basic label">
-        <div>{{ customFilterTitle() }}</div>
-        <div><i (click)="useCustomFilterMode.set(false)" (keydown.enter)="triggerClick($event)"  tabindex="0"
-                class="delete icon"></i></div>
-      </div>
+      @if (customFilterTitle()) {
+        <div #customAttributeLabelElement class="ui blue basic label">
+          <div>{{ customFilterTitle() }}</div>
+          <div><i (click)="cancelCustomFilter()" (keydown.enter)="triggerClick($event)"  tabindex="0"
+                  class="delete icon"></i></div>
+        </div>
+      } @else {
+        <div class="custom-filter-hint" style="color: rgba(0,0,0,.4); font-style: italic;" i18n>
+          No custom attribute filter defined yet. Click the edit icon to define one.
+        </div>
+      }
     </div>
   }
   <button type="button" class="ui blue icon button"
@@ -122,7 +128,7 @@
     <!--    <div class="ui blue left floated basic button"><i class="save icon"></i>Save in Browser Cache</div>-->
     <div
       class="ui green approve button"
-      (click)="useCustomFilterMode.set(true)"
+      (click)="confirmCustomFilter()"
       (keydown.enter)="triggerClick($event)"
       tabindex="0"
       role="button"
