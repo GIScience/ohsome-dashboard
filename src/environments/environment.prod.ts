@@ -11,7 +11,7 @@ export const environment: AppEnvironment = {
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
-  oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api/v1',
+  oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api/v2',
 
   defaultTopicKey: 'cycleway',
 
