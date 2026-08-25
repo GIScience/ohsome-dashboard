@@ -86,9 +86,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     filter: 'topic=without-attributes',
     aggregationType: 'count',
     description: 'A topic that has no predefined attributes',
-    endpoint: '',
     indicators: ['attribute-completeness'],
-    projects: ['core'],
     source: null,
   };
 
