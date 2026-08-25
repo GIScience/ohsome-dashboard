@@ -10,14 +10,12 @@ export const indicatorResponseMock: IndicatorResponseJSON = {
     'metadata': {
       'name': 'Mapping Saturation',
       'description': 'Calculate if mapping has saturated. High saturation has been reached if the growth of the fitted curve is minimal.',
-      'projects': ['core', 'corine-land-cover', 'expanse', 'experimental', 'idealvgi', 'mapaction', 'sketchmap'],
       'qualityDimension': 'completeness'
     },
     'topic': {
       'key': 'building-count',
       'name': 'Building Count',
-      'description': 'All buildings as defined by all objects tagged with \'building=*\'.',
-      'projects': ['core']
+      'description': 'All buildings as defined by all objects tagged with \'building=*\'.'
     },
     'result': {
       'description': 'The saturation of the last 3 years is 99.65%.High saturation has been reached (97% < Saturation \u2264 100%).',
