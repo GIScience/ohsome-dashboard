@@ -151,7 +151,7 @@ export class StateService {
       const typeFilter = types.map(t => {
         return `type:${t}`
       }).join(' or ');
-      const topicFilterParts = [`${key}=${value}`];
+      const topicFilterParts = [`"${key}"="${value}"`];
       if (isNotEmptyTypes) topicFilterParts.push(`(${typeFilter})`);
       const topicFilter = topicFilterParts.join(' and ');
 
@@ -160,7 +160,7 @@ export class StateService {
       initialHashParams.delete('types');
 
       initialHashParams.set('topic', 'custom-topic');
-      initialHashParams.set('topic-title', `${key}=${value}`);
+      initialHashParams.set('topic-title', `"${key}"="${value}"`);
       initialHashParams.set('topic-filter', `${topicFilter}`);
     }
 
