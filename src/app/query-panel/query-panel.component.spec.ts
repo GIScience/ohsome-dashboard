@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {QueryPanelComponent} from './query-panel.component';
 import {OhsomeApiMetadataProviderService} from '../ohsomeapi/ohsome-api-metadata-provider.service';
 import OhsomeApiMetadataProviderServiceMock from '../ohsomeapi/ohsome-api-metadata-provider.service.mock';
-import {OshdbModule} from '../ohsomeapi/oshdb.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {provideHttpClient} from '@angular/common/http';
 import {OqtModule} from '../02_quality/oqt.module';
@@ -16,7 +15,6 @@ describe('QueryPanelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [BrowserModule,
-        OshdbModule,
         OqtModule, QueryPanelComponent],
     providers: [
         { provide: OhsomeApiMetadataProviderService, useValue: OhsomeApiMetadataProviderServiceMock },

@@ -1,6 +1,5 @@
 import {TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
-import {OshdbModule} from './ohsomeapi/oshdb.module';
 import {OhsomeApiMetadataProviderService} from './ohsomeapi/ohsome-api-metadata-provider.service';
 import OhsomeApiMetadataProviderServiceMock from './ohsomeapi/ohsome-api-metadata-provider.service.mock';
 import {QueryPanelComponent} from './query-panel/query-panel.component';
@@ -22,7 +21,6 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         BrowserModule,
-        OshdbModule,
         OqtModule,
         WelcomeComponent,
         ResultListDirective,
