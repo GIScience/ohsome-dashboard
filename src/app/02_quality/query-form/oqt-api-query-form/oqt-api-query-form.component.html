@@ -82,6 +82,7 @@
                 <app-prism-editor id="topicFilter"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"
                                   [formField]="qualityForm['topic-filter']"
+                                  [backgroundColor]="'#FFFFFF'"
                 ></app-prism-editor>
 <!--                <app-prism-editor id="topicFilter" [readonly]="false"-->
 <!--                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"-->
@@ -95,7 +96,7 @@
               } @else {
                 <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
-                                  [backgroundColor]="'#f9f9f9'"
+                                  [backgroundColor]="'#F3F4F5'"
                 ></app-prism-editor>
               }
 
