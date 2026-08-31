@@ -59,6 +59,9 @@ export class PrismEditorComponent implements OnInit, OnChanges {
       this.editor.scrollContainer.style.setProperty("--editor__bg-highlight", this.backgroundColor);
     }
 
+    this.editor.scrollContainer.style.setProperty("position", "relative");
+    this.editor.scrollContainer.style.setProperty("width", "100%");
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

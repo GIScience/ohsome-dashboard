@@ -2,6 +2,33 @@ Changelog
 =========
 
 ## current
+
+* fix: text field for custom topic filters is too small when empty  ([#99])
+
+[#99]: https://github.com/GIScience/ohsome-dashboard/issues/99
+
+## 2.0.3
+
+* fix: legacy parameters are always quoted in the generated custom topic
+
+## 2.0.2
+
+* feat: change URLs for ohsome quality API to v2
+* feat: add link to oqapi book to docs
+* fix: hint to set custom attribute for topics without predefined attributes ([#98])
+* feat: add option to select measure for custom topic
+  
+[#98]: https://github.com/GIScience/ohsome-dashboard/issues/98
+
+## 2.0.1
+
+* fix: welcome extraction image url
+
+## 2.0.0
+
+* feat: add UI for OSM Data Extraction via ohsomeApi v2
+* feat: switch from ohsome API v1 to v2
+* feat: add HeiGIT User Management
 * chore: update to angular v22
 * test: switch from karma/jasmine to vitest
 * style: migrate to eslint flat config format to support newer eslint versions 
