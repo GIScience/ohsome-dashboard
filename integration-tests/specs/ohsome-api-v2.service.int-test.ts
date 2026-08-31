@@ -32,11 +32,12 @@ describe('OhsomeApiv2Service', () => {
   it('should perform a features count request', async () => {
     const params: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter: "type:node and natural=tree",
-      timeSeries: {
+      time: {
         "start": "2026-01-01T00:00:00Z",
         "end": "2026-04-17T00:00:00Z",
         "interval": "P1M"
       },
+      clip: false,
       aoi:
         {
           "coordinates": [
