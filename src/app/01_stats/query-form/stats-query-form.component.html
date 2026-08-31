@@ -118,6 +118,18 @@
   <!--      </div> &lt;!&ndash;row&ndash;&gt;-->
 </div> <!--topic-details-->
 
+<div class="ui divider"></div>
+<!-- Clip -->
+<h6 class="ui right floated header"><i class="question circle outline icon" i18n-title title="The clip option defines whether the features to be analyzed should be clipped at the selected area-of-interest boundary before measuring their count/length/area. Not clipping for lines and especially polygons can speed up the analysis a lot for large AOIs while the impact for the result is low. Check it on if you are analyzing small areas like cities or smaller."></i></h6>
+<h4 class="ui left floated header"><i class="cut icon"></i>Clip</h4>
+<div class="ui toggle checkbox">
+  <input type="checkbox" [formField]="statsForm.clip">
+  <label>Clip geometries at area-of-interest boundary</label>
+  @if (statsForm.clip().value()){
+    <div class="ui info message">Hint: Mostly useful for small area-of-interests.</div>
+  }
+</div>
+
 <!-- Time -->
 <div class="ui divider"></div>
 <h4 class="ui header"><i class="calendar icon"></i>Date and Time Range</h4>

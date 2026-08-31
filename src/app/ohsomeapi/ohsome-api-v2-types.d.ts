@@ -83,7 +83,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stats/contributors/activity.json": {
+    "/stats/contributors/count.json": {
         parameters: {
             query?: never;
             header?: never;
@@ -93,14 +93,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** Active contributors per time bin. */
-        post: operations["post_contributors_activity_as_json_stats_contributors_activity_json_post"];
+        post: operations["post_contributors_count_as_json_stats_contributors_count_json_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/stats/contributors/activity.csv": {
+    "/stats/contributors/count.csv": {
         parameters: {
             query?: never;
             header?: never;
@@ -117,7 +117,48 @@ export interface paths {
          *     - Line terminator: `\n`
          *     - Quote character: `\`
          */
-        post: operations["post_contributors_activity_as_csv_stats_contributors_activity_csv_post"];
+        post: operations["post_contributors_count_as_csv_stats_contributors_count_csv_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stats/contributions/count.json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Contributions per time bin. */
+        post: operations["post_contributors_count_as_json_stats_contributions_count_json_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stats/contributions/count.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Active contributors per time bin.
+         * @description CSV Response Format:
+         *     - Delimiter: `;`
+         *     - Comments: `#`
+         *     - Line terminator: `\n`
+         *     - Quote character: `\`
+         */
+        post: operations["post_contributors_count_as_csv_stats_contributions_count_csv_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -176,37 +217,13 @@ export interface paths {
          * Download features.
          * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
          */
-        get: operations["get_contributions_extract_extraction_features_parquet_get"];
+        get: operations["get_features_extract_extraction_features_parquet_get"];
         put?: never;
         /**
          * Download features.
          * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
          */
-        post: operations["post_contributions_extract_extraction_features_parquet_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/extraction/features.arrow": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Download features.
-         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
-         */
-        get: operations["get_contributions_extract_arrow_extraction_features_arrow_get"];
-        put?: never;
-        /**
-         * Download features.
-         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
-         */
-        post: operations["post_contributions_extract_arrow_extraction_features_arrow_post"];
+        post: operations["post_features_extract_extraction_features_parquet_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -261,6 +278,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/extraction/contributions.parquet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download contributions.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
+        get: operations["get_contributions_extract_extraction_contributions_parquet_get"];
+        put?: never;
+        /**
+         * Download contributions.
+         * @description Nodes, ways, and relations tagged as `type=multipolygon` or `type=boundary` are included. Other relations can be queried with the `/extraction/collections.*` endpoints.
+         */
+        post: operations["post_contributions_extract_extraction_contributions_parquet_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -298,13 +339,14 @@ export interface components {
         /** CollectionsExtractionRequestParametersModel */
         CollectionsExtractionRequestParametersModel: {
             /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:node and natural=tree
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter).
+             * @example type:relation and type=route and route=bus and service=night
              */
             filter: components["schemas"]["OhsomeFilter"];
             /**
              * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
              */
             aoi: [
                 number,
@@ -312,17 +354,13 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            /**
-             * Time
-             * @default latest
-             */
+            /** Time */
             time: string | "latest";
             /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @default *
+             * @description Specific ohsome filter for members.
              * @example geometry:line
              */
-            member_filter: components["schemas"]["OhsomeFilter"];
+            member_filter?: components["schemas"]["OhsomeFilter"] | null;
             /**
              * Clip
              * @description Whether to clip extracted features with AOI or not.
@@ -330,16 +368,17 @@ export interface components {
              */
             clip: boolean;
         };
-        /** ExtractionRequestParametersModel */
-        ExtractionRequestParametersModel: {
+        /** ContributionsExtractionRequestParametersModel */
+        ContributionsExtractionRequestParametersModel: {
             /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:node and natural=tree
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
             /**
              * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
              */
             aoi: [
                 number,
@@ -347,10 +386,27 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeRangeRequestModel"];
+        };
+        /** ExtractionRequestParametersModel */
+        ExtractionRequestParametersModel: {
             /**
-             * Time
-             * @default latest
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
              */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            /** Time */
             time: string | "latest" | components["schemas"]["TimeRangeRequestModel"];
             /**
              * Clip
@@ -362,8 +418,9 @@ export interface components {
         /** FilterRequestModel */
         FilterRequestModel: {
             /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:node and natural=tree
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
              */
             filter: components["schemas"]["OhsomeFilter"];
         };
@@ -371,7 +428,7 @@ export interface components {
         FilterResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -428,7 +485,7 @@ export interface components {
         MetadataResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -526,7 +583,7 @@ export interface components {
         SnapshotColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -565,7 +622,7 @@ export interface components {
         SnapshotsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -577,6 +634,38 @@ export interface components {
             attribution: components["schemas"]["Attribution"];
             /** Result */
             result: (components["schemas"]["SnapshotRow"] | components["schemas"]["SnapshotRowGroupedByTag"])[];
+        };
+        /** StatsFeaturesRequestModel */
+        StatsFeaturesRequestModel: {
+            /**
+             * @description `(experimental, optional)`; If given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
+             * @example null
+             */
+            groupBy?: components["schemas"]["GroupByTagModel"] | null;
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            /** Time */
+            time: components["schemas"]["TimeSeriesRequestModel"] | string | "latest";
+            /**
+             * Clip
+             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
+             * @default false
+             */
+            clip: boolean;
         };
         /** TimeBinColumns */
         TimeBinColumns: {
@@ -606,7 +695,7 @@ export interface components {
         TimeBinsColumnsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -618,7 +707,10 @@ export interface components {
             attribution: components["schemas"]["Attribution"];
             result: components["schemas"]["TimeBinColumns"];
         };
-        /** Time Bins */
+        /**
+         * Time Bins
+         * @description Time bins defined using a start/end timestamp (ISO-8601, UTC) and a bin size (ISO-8601 duration). Last bin might not cover bin size. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time).
+         */
         TimeBinsRequestModel: {
             /**
              * Start
@@ -637,30 +729,11 @@ export interface components {
              */
             binSize?: string | null;
         };
-        /** TimeBinsRequestParametersModel */
-        TimeBinsRequestParametersModel: {
-            /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:node and natural=tree
-             */
-            filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
-             */
-            aoi: [
-                number,
-                number,
-                number,
-                number
-            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            timeBins: components["schemas"]["TimeBinsRequestModel"];
-        };
         /** TimeBinsResponseModel */
         TimeBinsResponseModel: {
             /**
              * Apiversion
-             * @default 2.0.0a6+91d3ad4
+             * @default 2.0.0rc2+bc3d6f5
              */
             apiVersion: string;
             /**
@@ -686,7 +759,10 @@ export interface components {
              */
             end: string | "latest";
         };
-        /** Time Series */
+        /**
+         * Time Series
+         * @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time).
+         */
         TimeSeriesRequestModel: {
             /**
              * Start
@@ -705,30 +781,6 @@ export interface components {
              */
             interval?: string | null;
         };
-        /** TimeSeriesRequestParametersModel */
-        TimeSeriesRequestParametersModel: {
-            /**
-             * @description (experimental, optional), if given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
-             * @example null
-             */
-            groupBy?: components["schemas"]["GroupByTagModel"] | null;
-            /**
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter)
-             * @example type:node and natural=tree
-             */
-            filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or WKT. As geometry only Polygon or MultiPolygon are allowed.
-             */
-            aoi: [
-                number,
-                number,
-                number,
-                number
-            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            timeSeries: components["schemas"]["TimeSeriesRequestModel"];
-        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -742,6 +794,72 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** TimeBinsRequestParametersModel */
+        ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel: {
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBinsRequestModel"];
+        };
+        /** TimeBinsRequestParametersModel */
+        ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel: {
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBinsRequestModel"];
+        };
+        /** TimeBinsRequestParametersModel */
+        ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel: {
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBinsRequestModel"];
+            /**
+             * Clip
+             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
+             * @default false
+             */
+            clip: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -754,7 +872,7 @@ export interface operations {
     validate_filter_get_filter_validation_get: {
         parameters: {
             query: {
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html). */
                 filter: components["schemas"]["OhsomeFilter"];
             };
             header?: never;
@@ -847,7 +965,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeSeriesRequestParametersModel"];
+                "application/json": components["schemas"]["StatsFeaturesRequestModel"];
             };
         };
         responses: {
@@ -882,7 +1000,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeSeriesRequestParametersModel"];
+                "application/json": components["schemas"]["StatsFeaturesRequestModel"];
             };
         };
         responses: {
@@ -893,7 +1011,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+91d3ad4
+                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -913,7 +1031,7 @@ export interface operations {
             };
         };
     };
-    post_contributors_activity_as_json_stats_contributors_activity_json_post: {
+    post_contributors_count_as_json_stats_contributors_count_json_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -922,7 +1040,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel"];
             };
         };
         responses: {
@@ -946,7 +1064,7 @@ export interface operations {
             };
         };
     };
-    post_contributors_activity_as_csv_stats_contributors_activity_csv_post: {
+    post_contributors_count_as_csv_stats_contributors_count_csv_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -955,7 +1073,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel"];
             };
         };
         responses: {
@@ -966,7 +1084,80 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+91d3ad4
+                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
+                     *     # attribution.url: https://ohsome.org/copyrights
+                     *     # attribution.text: © OpenStreetMap contributors
+                     *     start;end;value
+                     *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
+                     */
+                    "text/csv": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_contributors_count_as_json_stats_contributions_count_json_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimeBinsColumnsResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_contributors_count_as_csv_stats_contributions_count_csv_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -997,7 +1188,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel"];
             };
         };
         responses: {
@@ -1032,7 +1223,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel"];
             };
         };
         responses: {
@@ -1043,7 +1234,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0a6+91d3ad4
+                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1063,14 +1254,14 @@ export interface operations {
             };
         };
     };
-    get_contributions_extract_extraction_features_parquet_get: {
+    get_features_extract_extraction_features_parquet_get: {
         parameters: {
             query: {
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html). */
                 filter: components["schemas"]["OhsomeFilter"];
-                /** @description Area of interest as Bounding Box. */
+                /** @description xmin, ymin, xmax, ymax */
                 aoi: string;
-                time?: string | "latest";
+                time: string | "latest";
                 /** @description Whether to clip extracted features with AOI or not. */
                 clip?: boolean;
             };
@@ -1098,73 +1289,7 @@ export interface operations {
             };
         };
     };
-    post_contributions_extract_extraction_features_parquet_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_contributions_extract_arrow_extraction_features_arrow_get: {
-        parameters: {
-            query: {
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
-                filter: components["schemas"]["OhsomeFilter"];
-                /** @description Area of interest as Bounding Box. */
-                aoi: string;
-                time?: string | "latest";
-                /** @description Whether to clip extracted features with AOI or not. */
-                clip?: boolean;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    post_contributions_extract_arrow_extraction_features_arrow_post: {
+    post_features_extract_extraction_features_parquet_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1198,13 +1323,13 @@ export interface operations {
     get_features_collections_extract_extraction_collections_parquet_get: {
         parameters: {
             query: {
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter). */
                 filter: components["schemas"]["OhsomeFilter"];
-                /** @description Area of interest as Bounding Box. */
+                /** @description xmin, ymin, xmax, ymax */
                 aoi: string;
-                time?: string | "latest";
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
-                member_filter?: components["schemas"]["OhsomeFilter"];
+                time: string | "latest";
+                /** @description Specific ohsome filter for members. */
+                member_filter?: components["schemas"]["OhsomeFilter"] | null;
                 /** @description Whether to clip extracted features with AOI or not. */
                 clip?: boolean;
             };
@@ -1266,13 +1391,13 @@ export interface operations {
     get_features_collections_members_extract_extraction_collections_members_parquet_get: {
         parameters: {
             query: {
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter). */
                 filter: components["schemas"]["OhsomeFilter"];
-                /** @description Area of interest as Bounding Box. */
+                /** @description xmin, ymin, xmax, ymax */
                 aoi: string;
-                time?: string | "latest";
-                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter) */
-                member_filter?: components["schemas"]["OhsomeFilter"];
+                time: string | "latest";
+                /** @description Specific ohsome filter for members. */
+                member_filter?: components["schemas"]["OhsomeFilter"] | null;
                 /** @description Whether to clip extracted features with AOI or not. */
                 clip?: boolean;
             };
@@ -1310,6 +1435,71 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["CollectionsExtractionRequestParametersModel"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_contributions_extract_extraction_contributions_parquet_get: {
+        parameters: {
+            query: {
+                /** @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html). */
+                filter: components["schemas"]["OhsomeFilter"];
+                /** @description xmin, ymin, xmax, ymax */
+                aoi: string;
+                /** @description Time range defined using a start/end timestamp (ISO-8601, UTC). Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time). */
+                time: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_contributions_extract_extraction_contributions_parquet_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributionsExtractionRequestParametersModel"];
             };
         };
         responses: {

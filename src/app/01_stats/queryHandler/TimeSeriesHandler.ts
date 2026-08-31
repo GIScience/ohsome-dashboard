@@ -33,6 +33,7 @@ export interface QueryHandler<TResponse> {
 export interface StatsFormValues {
   filter: string;
   measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
+  clip: boolean;
   groupByTagKey: string;
   start: string;
   end: string;
@@ -60,12 +61,13 @@ export const timeSeriesHandler: QueryHandler<FeaturesResponse> = {
 
     const body: FeaturesRequestBody = {
       filter: filter,
-      timeSeries: {
+      time: {
         start,
         end: formValues.end,
         interval: formValues.interval
       },
-      aoi: aoi
+      aoi: aoi,
+      clip: formValues.clip
     }
 
     return api.features(formValues.measure, body);

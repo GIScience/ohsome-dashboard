@@ -127,19 +127,12 @@ export class StatsQueryFormComponent {
       "topic-filter": '',
       aoi: initialHashParams.get('aoi') ?? '', //TODO remove
       measure: Utils.getFromParamsOrDefault(initialHashParams, 'measure', `count`),
+      clip: Utils.getFromParamsOrDefault<boolean>(initialHashParams, 'clip', false),
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),
       end: Utils.getFromParamsOrDefault(initialHashParams, 'end', today),
       interval: Utils.getFromParamsOrDefault(initialHashParams, 'interval',Utils.loadEnv('interval', 'P1M')),
       groupByTagKey: Utils.getFromParamsOrDefault(initialHashParams, 'groupByTagKey', ''),
     }
-  }
-
-  private getInitialMeasure() {
-    const initialTopic = this.stateService.sharedFormSignals.topic();
-    if (initialTopic !== 'custom-topic') {
-      return this.ohsomeQualityApiMetadataProviderService.getTopicMeasure(initialTopic);
-    }
-    throw "customtopic measure not yet implemented"
   }
 
   protected setCustomTopic() {

@@ -43,6 +43,9 @@
       <div class="ui item">
         <i class="arrows alternate horizontal icon" title="measure"></i>{{ formValues()?.measure }}
       </div>
+    <div class="ui item">
+      <i class="cut icon" title="clip"></i>{{ formValues()?.clip ? 'clipped' : 'unclipped' }}
+    </div>
       @if (!!formValues()?.groupByTagKey) {
         <div class="ui item">
           <i class="list icon" title="Tag Value Exploration"></i>Tag Value Exploration

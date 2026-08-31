@@ -9,11 +9,11 @@ interface SharedFormData {
 
 interface StatsFormData extends SharedFormData {
   aoi: AOIData;
-  // time: string; //start/end/interval
   start: string;
   end: string;
   interval: string;
   measure: components['schemas']['MeasureRequestModel'];
+  clip: boolean;
   groupByTagKey: string;
 }
 

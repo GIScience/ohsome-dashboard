@@ -35,12 +35,13 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
     const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter,
-      timeSeries: {
+      time: {
         start,
         end: formValues.end,
         interval: formValues.interval
       },
       aoi,
+      clip: formValues.clip,
       groupBy
     }
 

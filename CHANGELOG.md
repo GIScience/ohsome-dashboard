@@ -3,9 +3,11 @@ Changelog
 
 ## current
 
+* feat: Add clip option to stats query form  ([#100])
 * fix: text field for custom topic filters is too small when empty  ([#99])
 
 [#99]: https://github.com/GIScience/ohsome-dashboard/issues/99
+[#100]: https://github.com/GIScience/ohsome-dashboard/issues/100
 
 ## 2.0.3
 
