@@ -6,7 +6,7 @@ import {PlotlyChartComponent} from '../../shared/components/plotly-chart/plotly-
 import Utils from '../../../utils';
 import {unionFeatureDisplayNames, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, GeoJsonProperties, MultiPolygon, Polygon} from 'geojson';
-import type {components, paths} from '../../shared/ohsome-api-v2-types';
+import type {components, paths} from '../../ohsomeapi/ohsome-api-v2-types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';

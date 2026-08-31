@@ -1,7 +1,7 @@
 import {afterNextRender, Component, ComponentRef, computed, HostBinding, inject, input} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {ExtractionFormData} from '../query-form/types';
-import {paths} from '../../shared/ohsome-api-v2-types';
+import {paths} from '../../ohsomeapi/ohsome-api-v2-types';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {ViewportScroller} from '@angular/common';
 import {StateService} from '../../singelton-services/state.service';

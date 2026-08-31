@@ -81,7 +81,7 @@ We are using auto-generated types based on the OAS spec of ohsome-api v2.
 
 As generator tool we use [openapi-typescript](https://openapi-ts.dev/).
 
-To update the type file in `src/app/shared/ohsome-api-v2-types.d.ts` run:
+To update the type file in `src/app/ohsomeapi/ohsome-api-v2-types.d.ts` run:
 
 ```shell
 npm run create-ohsome-api-v2-types

@@ -1,5 +1,5 @@
 import {AOIData} from '../../shared/components/aoi-input/aoi-input.component';
-import {components} from '../../shared/ohsome-api-v2-types';
+import {components} from '../../ohsomeapi/ohsome-api-v2-types';
 
 interface SharedFormData {
   topic: string;

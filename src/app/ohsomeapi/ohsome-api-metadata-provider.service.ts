@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {catchError, Observable, of, retry, tap, throwError} from 'rxjs';
 import {OhsomeApiV2Service} from './ohsome-api-v2.service';
-import {components} from '../shared/ohsome-api-v2-types';
+import {components} from './ohsome-api-v2-types';
 
 
 @Injectable({

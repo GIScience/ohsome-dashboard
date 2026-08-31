@@ -1,5 +1,5 @@
 import {GrowthRateCssClass} from '../../shared/shared-types';
-import {components} from '../../shared/ohsome-api-v2-types';
+import {components} from '../../ohsomeapi/ohsome-api-v2-types';
 
 function getCSVHeader(apiVersion: string, attribution: components['schemas']['Attribution']) {
   return `# apiVersion: ${apiVersion}

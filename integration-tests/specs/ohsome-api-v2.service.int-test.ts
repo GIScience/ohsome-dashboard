@@ -5,7 +5,7 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor} from '../../src/app/interceptors/auth.interceptor';
 import {ApplicationInitStatus, inject, provideAppInitializer} from '@angular/core';
 import {AuthService} from '../../src/app/singelton-services/auth.service';
-import {paths} from '../../src/app/shared/ohsome-api-v2-types';
+import {paths} from '../../src/app/ohsomeapi/ohsome-api-v2-types';
 
 describe('OhsomeApiv2Service', () => {
   let service: OhsomeApiV2Service;

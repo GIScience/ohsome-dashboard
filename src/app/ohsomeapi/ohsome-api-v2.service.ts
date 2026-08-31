@@ -2,7 +2,7 @@ import {inject, Service} from '@angular/core';
 import {HttpClient, HttpContext, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {SKIP_AUTH} from '../interceptors/skip-auth.token';
-import type {paths, components, operations} from '../shared/ohsome-api-v2-types';
+import type {paths, components, operations} from './ohsome-api-v2-types';
 import {catchError, throwError} from 'rxjs';
 // import {of} from 'rxjs';
 // import {ohsomeApiMetadataResponse} from './ohsome-api-metadata.response.mock';
