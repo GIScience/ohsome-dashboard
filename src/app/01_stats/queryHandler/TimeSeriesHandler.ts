@@ -10,6 +10,7 @@ import type {components, paths} from '../../shared/ohsome-api-v2-types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
+import {getCSVHeader} from '../result/result.utils';
 
 
 export interface QueryHandler<TResponse> {
@@ -119,7 +120,7 @@ export const timeSeriesHandler: QueryHandler<FeaturesResponse> = {
     const unparseConfig: UnparseConfig = {
       delimiter: ";"
     }
-    return Papa.unparse(data, unparseConfig);
+    return getCSVHeader(response.apiVersion, response.attribution) + Papa.unparse(data, unparseConfig);
   },
 
   toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon, {

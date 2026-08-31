@@ -1,4 +1,14 @@
 import {GrowthRateCssClass} from '../../shared/shared-types';
+import {AttributionJSON} from '../../02_quality/types/AttributionJSON';
+import {components} from '../../shared/ohsome-api-v2-types';
+
+function getCSVHeader(apiVersion: string, attribution: components['schemas']['Attribution']){
+  return `# apiVersion: ${apiVersion}
+# attribution.url: ${attribution.url}
+# attribution.text: ${attribution.text}
+`
+}
+
 
 /**
  * Calculates a growth rate in percent. Value between 0..1.
@@ -59,6 +69,7 @@ function computeGrowthRateCssClass(gRate: number | null): GrowthRateCssClass {
 }
 
 export {
+  getCSVHeader,
   shareOf,
   percentFormatter,
   growthRate,

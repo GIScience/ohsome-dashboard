@@ -10,6 +10,7 @@ import {PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
 import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
+import {getCSVHeader} from '../result/result.utils';
 
 type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
 
@@ -121,7 +122,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     const unparseConfig: UnparseConfig = {
       delimiter: ";"
     }
-    return Papa.unparse(data, unparseConfig);
+    return getCSVHeader(response.apiVersion, response.attribution) + Papa.unparse(data, unparseConfig);
   },
 
   toBoundaryLabel(formValues: StatsFormValues, aoiPolygons: Feature<Polygon | MultiPolygon, {
