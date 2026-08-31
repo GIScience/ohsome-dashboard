@@ -1,34 +1,11 @@
 import {GrowthRateCssClass} from '../../shared/shared-types';
-import {AttributionJSON} from '../../02_quality/types/AttributionJSON';
 import {components} from '../../shared/ohsome-api-v2-types';
 
-function getCSVHeader(apiVersion: string, attribution: components['schemas']['Attribution']){
+function getCSVHeader(apiVersion: string, attribution: components['schemas']['Attribution']) {
   return `# apiVersion: ${apiVersion}
 # attribution.url: ${attribution.url}
 # attribution.text: ${attribution.text}
 `
-}
-
-
-/**
- * Calculates a growth rate in percent. Value between 0..1.
- * growthRate = ((current - past) / past)
- * @param {number} past
- * @param {number} current
- * @returns {number} growth rate
- */
-function growthRate(past: number, current: number) {
-  if (past === 0) {
-    return null;
-  }
-  return ((current - past) / past);
-}
-
-function shareOf(part: number, whole: number) {
-  if (whole === 0) {
-    return null;
-  }
-  return (part / whole);
 }
 
 function percentFormatter(percent: number | null): string {
@@ -70,8 +47,6 @@ function computeGrowthRateCssClass(gRate: number | null): GrowthRateCssClass {
 
 export {
   getCSVHeader,
-  shareOf,
   percentFormatter,
-  growthRate,
   computeGrowthRateCssClass
 };
