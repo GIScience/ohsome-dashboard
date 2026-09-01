@@ -46,7 +46,7 @@ export class ExtractionQueryFormComponent {
   extractionForm = form(this.extractionFormModel, (schemaPath) => {
     required(schemaPath['topic-filter'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
-      message: ' An ohsome filter is required.'
+      message: $localize` An ohsome filter is required.`
     });
     // validate(schemaPath.aoi, ({value}) => {
     //   console.log("VALIDATOR", value());
@@ -57,7 +57,7 @@ export class ExtractionQueryFormComponent {
     // });
     validate(schemaPath, () => {
       return this.authService.isAnon()
-        ? {kind: 'signInRequire', message: " You need to be signed in."}
+        ? {kind: 'signInRequire', message: $localize` You need to be signed in.`}
         : null;
     })
   });

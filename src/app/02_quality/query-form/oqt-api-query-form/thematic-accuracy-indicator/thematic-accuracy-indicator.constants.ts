@@ -19,28 +19,34 @@ const corineLandCoverClassMapLevel2: Record<
   "52": { name: $localize`Marine waters`, class: 5 },
 };
 
-export const thematicAttributeMap: Record<
+function thematicAttributeMap(): Record<
   string,
   { name: string}
-> = {
-  "surface": { name: $localize`Surface`},
-  "oneway": { name: $localize`Oneway`},
-  "lanes": { name: $localize`Lanes`},
-  "name": { name: $localize`Name`},
-  "width": { name: $localize`Width`},
-};
+> {
+  return {
+    "surface": { name: $localize`Surface`},
+    "oneway": { name: $localize`Oneway`},
+    "lanes": { name: $localize`Lanes`},
+    "name": { name: $localize`Name`},
+    "width": { name: $localize`Width`},
+  };
+}
 
-export const categoryRegistry = {
-  "land-cover-thematic-accuracy": corineLandCoverClassMapLevel2,
-  "roads-thematic-accuracy" : thematicAttributeMap
-} as const;
+export function categoryRegistry() {
+  return {
+    "land-cover-thematic-accuracy": corineLandCoverClassMapLevel2(),
+    "roads-thematic-accuracy" : thematicAttributeMap()
+  };
+}
 
 export const thematicCategoryType = {
   "land-cover-thematic-accuracy" : "corine_land_cover_class",
   "roads-thematic-accuracy" : "attribute"
 }
 
-export const thematicAccuracyCategoryNamesForBlank = {
-  "land-cover-thematic-accuracy" : $localize`All Classes`,
-  "roads-thematic-accuracy" : $localize`All Attributes`
+export function thematicAccuracyCategoryNamesForBlank(): Record<string, string> {
+  return {
+    "land-cover-thematic-accuracy" : $localize`All Classes`,
+    "roads-thematic-accuracy" : $localize`All Attributes`
+  };
 }
