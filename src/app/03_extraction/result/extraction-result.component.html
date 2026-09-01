@@ -42,13 +42,13 @@
 
     @if (getAoiLabel() !== '') {
       <div id="boundaryLabelsItem" class="ui item">
-        <i class="circle outline icon" title="selected areas"></i>
+        <i class="circle outline icon" i18n-title title="selected areas"></i>
         <span id="boundaryLabelsText" title="{{getAoiLabel()}}">{{ getAoiLabel() }}</span>
       </div>
     }
 
     <!--        <div id="boundaryLabelsItem" class="ui item">-->
-    <!--          <i class="circle outline icon" title="selected areas"></i>-->
+    <!--          <i class="circle outline icon" i18n-title title="selected areas"></i>-->
     <!--          <span id="boundaryLabelsText"-->
     <!--                title="{{Utils.sanitizeLabel(boundaries.features[0].id)}}">{{ Utils.sanitizeLabel(boundaries.features[0].id) }}</span>-->
     <!--        </div>-->
@@ -68,7 +68,7 @@
 
     <!-- Permalink -->
     <a class="ui link item" [href]="permalink" (click)="showPermalink($event)"><i
-      class="share icon" title="Share"></i></a>
+      class="share icon" i18n-title title="Share"></i></a>
     <a class="ui link item" (click)="close()"><i class="large close icon"></i></a>
   </div>
 </div>
@@ -88,9 +88,9 @@
       <div class="ui centered stackable cards">
         <div class="card">
           <div class="content">
-            <div class="center aligned header">Extent</div>
+            <div class="center aligned header" i18n>Extent</div>
             <div class="center aligned meta">&nbsp;</div>
-            The download links will extract your requested data in a BBOX based on your selected area of interest.
+            <span i18n>The download links will extract your requested data in a BBOX based on your selected area of interest.</span>
           </div>
           <!--          <div class="ui image aoi-thumbnail">-->
           <!--            <img [src]="formValues()['mapDataUrl']" alt="Thumbnail of selected area of interest.">-->
@@ -100,12 +100,12 @@
         <div class="card">
           <div class="content">
             <!--            TODO store logos locally-->
-            <div class="center aligned header">Geo <img class="tiny ui image"
+            <div class="center aligned header" i18n>Geo <img class="tiny ui image"
                                                         src="https://www.apache.org/logos/res/parquet/default.png"
-                                                        alt="Apache Parquet Logo">
+                                                        i18n-alt alt="Apache Parquet Logo">
             </div>
-            <div class="center aligned meta">Storage, Exchange & Analysis</div>
-            <div class="description">
+            <div class="center aligned meta" i18n>Storage, Exchange & Analysis</div>
+            <div class="description" i18n>
               Recommended for most users.<br>
               A portable geospatial file format that works with GeoPandas, DuckDB, QGIS, GDAL, and many other GIS tools.
             </div>
@@ -113,7 +113,7 @@
           <div class="center aligned extra content">
             <a class="ui blue button" [href]="getDownloadUrl('parquet')"
                download
-               target="_blank">
+               target="_blank" i18n>
               <i class="download icon"></i>Download Parquet
             </a>
           </div>
@@ -143,8 +143,8 @@
 <!--        </div>-->
       </div>
       <div class="ui info message">
-        <h3 class="header">Hint: GeoParquetViewer</h3>
-        <p>For a quick visualisation of GeoParquet files in your browser, you can use <a href="https://geoparquet.info/" target="_blank"><i class="external alternate icon"></i>GeoParquetViewer</a>.</p>
+        <h3 class="header" i18n>Hint: GeoParquetViewer</h3>
+        <p i18n>For a quick visualisation of GeoParquet files in your browser, you can use <a href="https://geoparquet.info/" target="_blank"><i class="external alternate icon"></i>GeoParquetViewer</a>.</p>
       </div>
 
     </div>

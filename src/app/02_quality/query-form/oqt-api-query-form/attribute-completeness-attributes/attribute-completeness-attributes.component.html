@@ -35,6 +35,7 @@
     </div>
   }
   <button type="button" class="ui blue icon button"
+          i18n-data-tooltip
           data-tooltip="View and edit attributes filter."
           data-inverted
           (click)="showAttributeFilterEditDialog()"
@@ -48,7 +49,7 @@
 <div id="attribute-details" class="ui modal">
   <i class="close icon"></i>
   <div class="header">
-    <div id="title">Title will be set automatically</div>
+    <div id="title" i18n>Title will be set automatically</div>
   </div>
   <div class="content">
     <div class="ui three column divided grid">
@@ -58,7 +59,7 @@
       <!--      </div>-->
       <div class="column">
         <h4 class="ui header" i18n>ohsome Filter definition:</h4>
-        <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter">Filter text will be set automatically</code></pre>
+        <pre><code #attributeFilter id="attributeFilter" class="language-ohsome-filter" i18n>Filter text will be set automatically</code></pre>
       </div>
     </div>
   </div>
@@ -132,8 +133,9 @@
       (keydown.enter)="triggerClick($event)"
       tabindex="0"
       role="button"
+      i18n
     >OK
     </div>
-    <div class="ui red cancel button" tabindex="0" role="button" (keydown.enter)="triggerClick($event)">Cancel</div>
+    <div class="ui red cancel button" tabindex="0" role="button" (keydown.enter)="triggerClick($event)" i18n>Cancel</div>
   </div>
 </div>
