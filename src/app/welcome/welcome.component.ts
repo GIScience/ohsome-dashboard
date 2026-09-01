@@ -128,7 +128,7 @@ export class WelcomeComponent {
         layout: 'fitDataFill',
         selectableRows: "highlight",
         columns: [{
-          title: "Topic", frozen: true, columns: [{
+          title: $localize`Topic`, frozen: true, columns: [{
             title: "",
             field: "topic",
             headerSort: false,

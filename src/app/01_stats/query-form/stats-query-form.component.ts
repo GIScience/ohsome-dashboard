@@ -58,7 +58,7 @@ export class StatsQueryFormComponent {
     // required(schemaPath.aoi);
     required(schemaPath['topic-filter'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
-      message: ' An ohsome filter is required.'
+      message: $localize` An ohsome filter is required.`
     });
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});

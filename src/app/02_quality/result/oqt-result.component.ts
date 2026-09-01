@@ -146,7 +146,7 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
     console.log(topicKey + '--' + this.thematicAccuracyCategoryType[topicKey])
     return key && this.thematicAccuracyCategories[topicKey][key]
       ? this.thematicAccuracyCategories[topicKey][key].name
-      : thematicAccuracyCategoryNamesForBlank[topicKey];
+      : thematicAccuracyCategoryNamesForBlank()[topicKey];
   }
 
   protected readonly Utils = Utils;
