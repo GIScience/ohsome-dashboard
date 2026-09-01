@@ -41,22 +41,22 @@
       <!--    </h3>-->
       <!--  TODO clean up group by labels-->
       <div class="ui item">
-        <i class="arrows alternate horizontal icon" title="measure"></i>{{ formValues()?.measure }}
+        <i class="arrows alternate horizontal icon" i18n-title title="measure"></i>{{ formValues()?.measure }}
       </div>
     <div class="ui item">
       <i class="cut icon" title="clip"></i>{{ formValues()?.clip ? 'clipped' : 'unclipped' }}
     </div>
       @if (!!formValues()?.groupByTagKey) {
-        <div class="ui item">
-          <i class="list icon" title="Tag Value Exploration"></i>Tag Value Exploration
+        <div class="ui item" i18n>
+          <i class="list icon" i18n-title title="Tag Value Exploration"></i>Tag Value Exploration
         </div>
         <div class="ui item">
-          <i class="key icon" title="Tag Value Exploration"></i>{{ formValues()?.groupByTagKey }}
+          <i class="key icon" i18n-title title="Tag Value Exploration"></i>{{ formValues()?.groupByTagKey }}
         </div>
       }
       @if (boundaryLabel() !== '') {
         <div id="boundaryLabelsItem" class="ui item">
-          <i class="circle outline icon" title="selected areas"></i>
+          <i class="circle outline icon" i18n-title title="selected areas"></i>
           <span id="boundaryLabelsText" title="{{boundaryLabel()}}">{{ boundaryLabel() }}</span>
         </div>
       }
@@ -64,15 +64,15 @@
 
     <div class="ui right borderless text menu">
       <div [ngClass]="isLoading ? 'ui disabled dropdown item' : 'ui dropdown item'">
-        <i class="download icon" title="Download"></i>
+        <i class="download icon" i18n-title title="Download"></i>
         <div class="menu">
-          <a class="item" [href]="getJSONDataURL()" download="result.json"><i class="file icon"></i> Ohsome JSON</a>
-          <a class="item" [href]="getCSVDataURL()" download="result.csv"><i class="file icon"></i> CSV</a>
+          <a class="item" [href]="getJSONDataURL()" download="result.json" i18n><i class="file icon"></i> Ohsome JSON</a>
+          <a class="item" [href]="getCSVDataURL()" download="result.csv" i18n><i class="file icon"></i> CSV</a>
         </div>
       </div>
-      <a class="ui link item" title="Share Permalink to this result" [href]="permalink" (click)="showPermalink($event)"><i
-        class="share icon" title="Share"></i></a>
-      <a class="ui link item" title="Remove this result from the list" (click)="onClose()"><i
+      <a class="ui link item" i18n-title title="Share Permalink to this result" [href]="permalink" (click)="showPermalink($event)"><i
+        class="share icon" i18n-title title="Share"></i></a>
+      <a class="ui link item" i18n-title title="Remove this result from the list" (click)="onClose()"><i
         class="large close icon"></i></a>
     </div>
   </div>
