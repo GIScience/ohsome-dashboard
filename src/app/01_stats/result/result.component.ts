@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NgClass, NgComponentOutlet, ViewportScroller} from '@angular/common';
-import {ChartPoint} from 'chart.js';
 import {OhsomeApi} from '@giscience/ohsome-js-utils';
 
 import moment from 'moment';
@@ -150,41 +149,6 @@ export class ResultComponent implements OnInit, AfterViewInit/*, AfterContentIni
     })
 
   }
-
-  //TODO cleanup
-  private yAxesFormatter(value, index, values) {
-    const unitFactor = this.UNITS[this.unit].factor;
-    if (values[0] > unitFactor) {
-      return value / unitFactor + ' k' + this.unit;
-    } else {
-      return parseFloat(value.toFixed(1)) + ' ' + this.unit;
-    }
-  }
-
-  //TODO cleanup
-  // private labelFormatter(tooltipItem: ChartTooltipItem, data: ChartData) {
-  private labelFormatter(tooltipItem: any, data: any) {
-    const timestamp = (data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as ChartPoint).x;
-    const yValue = (data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as ChartPoint).y;
-
-    return this.moment(timestamp).format('YYYY-MM-DD') + ': ' + this.kFormatter(parseFloat(yValue ? yValue.toString() : ''), this.unit);
-  }
-
-  public kFormatter(meter: number, unit: string): string {
-    let value = meter;
-    let unitString = this.UNITS[unit].units[0]; // 'm';
-    const unitFactor = this.UNITS[unit].factor;
-    let decimals = 1;
-    if (meter >= unitFactor) {
-      value = meter / unitFactor;
-      unitString = this.UNITS[unit].units[1]; // 'km';
-    }
-    if (meter >= 100 * unitFactor) {
-      decimals = 0;
-    }
-    return value.toFixed(decimals) + ' ' + unitString;
-  }
-
 
   boundaryLabel = computed(() => {
     return this.handler().toBoundaryLabel(this.formValues(), this.aoiPolygons());

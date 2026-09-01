@@ -53,14 +53,12 @@
               "node_modules/jquery/dist/jquery.js",
               "Semantic-UI-2.5.0/dist/semantic.js",
               "node_modules/semantic-ui-calendar/dist/calendar.js",
-              "node_modules/chart.js/dist/Chart.js",
               "node_modules/prismjs/components/prism-core.js"
             ],
             "allowedCommonJsDependencies": [
               "leaflet",
               "moment",
               "@giscience/ohsome-js-utils",
-              "chart.js",
               "plotly.js-dist-min"
             ],
             "browser": "src/main.ts"
