@@ -27,7 +27,7 @@ import {
 import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
 import {KeyValuePipe} from '@angular/common';
 import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
-import {getFormValidationMessages, MEASURE_OPTIONS} from '../../../shared/utils/form.utils';
+import {getFormValidationMessages, getMeasureOptions} from '../../../shared/utils/form.utils';
 
 @Component({
   selector: 'app-oqt-api-query-form',
@@ -63,7 +63,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   });
 
   // Measure
-  protected measureOptions = MEASURE_OPTIONS;
+  protected measureOptions = getMeasureOptions();
 
   //new
 
