@@ -22,6 +22,7 @@ import {toPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {groupByTagHandler} from '../queryHandler/GroupByTagHandler';
 import {StateService} from '../../singelton-services/state.service';
+import {getMeasureLabel} from '../../shared/utils/form.utils';
 import Response = OhsomeApi.v1.response.Response;
 import GroupByResponse = OhsomeApi.v1.response.GroupByResponse;
 
@@ -178,4 +179,5 @@ export class ResultComponent implements OnInit, AfterViewInit/*, AfterContentIni
   }
 
   protected readonly GroupByResponse = GroupByResponse;
+  protected readonly getMeasureLabel = getMeasureLabel;
 }
