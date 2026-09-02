@@ -57,7 +57,7 @@ export class ThematicAccuracyIndicatorComponent implements OnInit {
   }
   ngOnInit() {
     this.selectedCategoryIds = this.getThematicCategoryFromUrlHashParams(this.hashParams);
-    this.categories = categoryRegistry[this.indicatorKey]
+    this.categories = categoryRegistry()[this.indicatorKey]
     this.categoryType = thematicCategoryType[this.indicatorKey];
 
     this.thematicDropdownOptions = {

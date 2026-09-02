@@ -196,11 +196,15 @@
     "5885452247889934944": "Thema",
     "4447668871712407032": "Dokumentation",
     "8435122484019310667": "Ohsome Quality API",
-    "6627551976444260400": "oder",
+    "6627551976444260400": "",
     "1427947148846293650": "Ohsome API",
     "1968687791363110018": "OpenAPI-Spezifikation",
     "4023255928917172821": "Tipp: Meist nur bei kleinen Untersuchungsgebieten sinnvoll.",
     "8157084727408364992": "Dokumentation & Beispiele",
-    "7021682092822110294": "Die Zuschneiden-Option legt fest, ob die zu analysierenden Objekte vor der Zählung ihrer Anzahl/Länge/Fläche am Rand des ausgewählten Untersuchungsgebiets zugeschnitten werden sollen. Kein Zuschneiden von Linien und insbesondere Polygonen kann die Analyse für große Untersuchungsgebiete stark beschleunigen, während sich die Auswirkung auf das Ergebnis in Grenzen hält. Aktiviere die Option, wenn du kleine Gebiete wie Städte oder kleinere Bereiche analysierst."
+    "7021682092822110294": "Die Zuschneiden-Option legt fest, ob die zu analysierenden Objekte vor der Zählung ihrer Anzahl/Länge/Fläche am Rand des ausgewählten Untersuchungsgebiets zugeschnitten werden sollen. Kein Zuschneiden von Linien und insbesondere Polygonen kann die Analyse für große Untersuchungsgebiete stark beschleunigen, während sich die Auswirkung auf das Ergebnis in Grenzen hält. Aktiviere die Option, wenn du kleine Gebiete wie Städte oder kleinere Bereiche analysierst.",
+    "1340154391385722501": "Gesamt {$PH}",
+    "6475129446634914943": "Zuschneiden",
+    "668115876417401925": "zugeschnitten",
+    "4048371793238773460": "nicht zugeschnitten"
   }
 }

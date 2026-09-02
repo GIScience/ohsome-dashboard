@@ -66,11 +66,21 @@ export function derivedField<TModel extends object, K extends keyof TModel>(
   });
 }
 
-export const MEASURE_OPTIONS: { value: string; label: string }[] = [
-  {value: 'count', label: $localize`count`},
-  {value: 'length', label: $localize`length`},
-  {value: 'area', label: $localize`area`}
-];
+// a function, not a module-level constant: $localize inside a top-level const
+// runs once when the JS module is parsed - before the app's runtime
+// loadTranslations() call finishes - and freezes the untranslated text forever.
+// A function's body only runs when something calls it, always later.
+export function getMeasureOptions(): { value: string; label: string }[] {
+  return [
+    {value: 'count', label: $localize`count`},
+    {value: 'length', label: $localize`length`},
+    {value: 'area', label: $localize`area`}
+  ];
+}
+
+export function getMeasureLabel(measure: string): string {
+  return getMeasureOptions().find(option => option.value === measure)?.label ?? measure;
+}
 
 export function getFilterFromFormValues(formValues, oqtApiMetadataProviderService: OqtApiMetadataProviderService){
     const topic = formValues.topic;
