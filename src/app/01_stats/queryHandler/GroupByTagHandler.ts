@@ -6,7 +6,7 @@ import Utils from '../../../utils';
 import {unionFeatureDisplayNames, unionPolygonFeatures} from '../../shared/utils/boundaries.utils';
 import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../ohsomeapi/ohsome-api-v2-types';
-import {PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
+import {Layout, PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {getFilterFromFormValues} from '../../shared/utils/form.utils';
 import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
@@ -70,6 +70,9 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
       }
       // @ts-ignore
     }).sort((traceA, traceB) => traceB.y[length - 1] - traceA.y[length - 1]);
+
+    const hovermode: Layout['hovermode'] = traces.length <= 10 ? 'x unified' : 'closest';
+
     traces.push({
       x,
       y: response.result.value,
@@ -82,7 +85,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
       "plotlyDataLayoutConfig": {
         data: traces,
         layout: {
-          hovermode: 'x unified',
+          hovermode,
           xaxis: {
             showspikes: true,            // Enable the spike line
             spikemode: 'across+marker',  // Draw across plot area AND show target marker
