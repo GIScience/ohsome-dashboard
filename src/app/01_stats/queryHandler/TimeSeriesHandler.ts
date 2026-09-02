@@ -9,7 +9,7 @@ import {Feature, GeoJsonProperties, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../ohsomeapi/ohsome-api-v2-types';
 import {PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
-import {getFilterFromFormValues} from '../../shared/utils/form.utils';
+import {getFilterFromFormValues, getMeasureLabel} from '../../shared/utils/form.utils';
 import {getCSVHeader} from '../result/result.utils';
 
 
@@ -75,7 +75,7 @@ export const timeSeriesHandler: QueryHandler<FeaturesResponse> = {
 
   toInputs(response: FeaturesResponse, formValues): { plotlyDataLayoutConfig: PlotlyDataLayoutConfig } {
 
-    let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
+    let yAxisText = Utils.capitalizeFirstLetter(getMeasureLabel(formValues.measure));
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
     const hasUnit = !!unit;
     if (hasUnit) yAxisText += ` [${unit}]`
