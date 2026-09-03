@@ -64,7 +64,7 @@ export class StatsQueryFormComponent {
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
     required(schemaPath.groupByTagKey, {
       when: () => this.groupByTag(),
-      message: ' A tag key is required for tag value exploration.'
+      message: $localize` A tag key is required for tag value exploration.`
     });
   });
 

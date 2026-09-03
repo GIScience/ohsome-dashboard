@@ -47,10 +47,18 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //new
   qualityFormModel = this.stateService.qualityFormModel;
   qualityForm = form(this.qualityFormModel, (schemaPath) => {
+    required(schemaPath['topic-title'], {
+      when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
+      message: $localize` A custom topic title is required.`
+    });
+    required(schemaPath['topic-filter'], {
+      when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
+      message: $localize` An ohsome filter is required.`
+    });
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
     validate(schemaPath.indicators, ({value}) => value().length === 0
-      ? {kind: 'atLeastOneIndicatorRequired', message: ' At least one quality indicator must be selected.'}
+      ? {kind: 'atLeastOneIndicatorRequired', message: $localize` At least one quality indicator must be selected.`}
       : null);
   });
 
@@ -82,7 +90,6 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   // Indicators
   public indicators: Record<string, Checkbox<Indicator>>;
-  public defaultCheckedIndicators: string[] = ['mapping-saturation'];
 
   //Quality Dimensions
   public qualityDimensions: Record<string, RawQualityDimensionMetadata>;
@@ -264,8 +271,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
   setIndicators(indicatorsParam: string | null) {
     console.log(">>>>>>>set indicators", indicatorsParam);
-    let indicatorValues = indicatorsParam?.split(',').filter((ele) => ele.trim() !== '');
-    indicatorValues = (!indicatorValues || indicatorValues.length === 0) ? this.defaultCheckedIndicators : indicatorValues;
+    const indicatorValues = indicatorsParam?.split(',').filter((ele) => ele.trim() !== '') ?? [];
     indicatorValues.forEach(indicator => this.indicators[indicator].checked = true);
   }
 

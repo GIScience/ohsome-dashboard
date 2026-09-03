@@ -64,5 +64,27 @@ describe('OqtApiQueryFormComponent', () => {
       expect(stateService.isValidQualityForm()).toBe(true);
       expect(stateService.qualityFormMessages()).toEqual([]);
     });
+
+    it('requires an ohsome filter once the topic is switched to "custom-topic"', () => {
+      component.indicators['mapping-saturation'].checked = false;
+      stateService.qualityFormModel.update((model) => ({
+        ...model, topic: 'custom-topic', 'topic-title': 'My custom topic', 'topic-filter': ''
+      }));
+      TestBed.tick();
+
+      expect(stateService.isValidQualityForm()).toBe(false);
+      expect(stateService.qualityFormMessages()).toEqual(['An ohsome filter is required.']);
+    });
+
+    it('requires a custom topic title once the topic is switched to "custom-topic"', () => {
+      component.indicators['mapping-saturation'].checked = false;
+      stateService.qualityFormModel.update((model) => ({
+        ...model, topic: 'custom-topic', 'topic-title': '', 'topic-filter': 'building=*'
+      }));
+      TestBed.tick();
+
+      expect(stateService.isValidQualityForm()).toBe(false);
+      expect(stateService.qualityFormMessages()).toEqual(['A custom topic title is required.']);
+    });
   });
 });
