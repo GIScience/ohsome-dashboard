@@ -26,8 +26,8 @@ import {
 } from './attribute-completeness-attributes/attribute-completeness-attributes.component';
 import {ThematicAccuracyIndicatorComponent} from './thematic-accuracy-indicator/thematic-accuracy-indicator.component';
 import {KeyValuePipe} from '@angular/common';
-import {disabled, form, FormField, required} from '@angular/forms/signals';
-import {MEASURE_OPTIONS} from '../../../shared/utils/form.utils';
+import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
+import {getFormValidationMessages, MEASURE_OPTIONS} from '../../../shared/utils/form.utils';
 
 @Component({
   selector: 'app-oqt-api-query-form',
@@ -49,6 +49,9 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   qualityForm = form(this.qualityFormModel, (schemaPath) => {
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
+    validate(schemaPath.indicators, ({value}) => value().length === 0
+      ? {kind: 'atLeastOneIndicatorRequired', message: ' At least one quality indicator must be selected.'}
+      : null);
   });
 
   // Measure
@@ -143,6 +146,12 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
       if (topic !== 'custom-topic') {
         this.qualityForm.measure().value.set(this.oqtApiMetadataProviderService.getTopicMeasure(topic));
       }
+    });
+
+    effect(() => {
+      const qualityForm = this.qualityForm();
+      this.stateService.isValidQualityForm.set(qualityForm.valid());
+      this.stateService.qualityFormMessages.set(getFormValidationMessages(qualityForm.errorSummary()));
     });
 
     // update appState to store custom topic init when coming form url

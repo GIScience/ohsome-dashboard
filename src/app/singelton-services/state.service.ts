@@ -70,18 +70,31 @@ export class StateService {
 
   isValidStatsForm = signal<boolean>(false);
   isValidExtractionForm = signal<boolean>(false);
+  isValidQualityForm = signal<boolean>(false);
   isValidCurrentForm = computed<boolean>(() => {
-    const isValidStatsForm = this.isValidStatsForm();
-    const isValidExtractionForm = this.isValidExtractionForm();
     switch (this.queryModeSignal()) {
       case 'ohsomeApi':
-        return isValidStatsForm;
+        return this.isValidStatsForm();
       case 'extraction':
-        return isValidExtractionForm;
-      default:
-        return true;
+        return this.isValidExtractionForm();
+      case 'oqtApi':
+        return this.isValidQualityForm();
     }
-    // return (this.queryModeSignal() === 'ohsomeApi') ? isValidStatsForm : isValidExtractionForm;
+  })
+
+  // human-readable "what is missing" messages, pushed by each query-form component from its signal form's errorSummary()
+  statsFormMessages = signal<string[]>([]);
+  extractionFormMessages = signal<string[]>([]);
+  qualityFormMessages = signal<string[]>([]);
+  currentFormMessages = computed<string[]>(() => {
+    switch (this.queryModeSignal()) {
+      case 'ohsomeApi':
+        return this.statsFormMessages();
+      case 'extraction':
+        return this.extractionFormMessages();
+      case 'oqtApi':
+        return this.qualityFormMessages();
+    }
   })
 
 

@@ -16,6 +16,7 @@ import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
 import {toPng} from 'html-to-image';
 import {AuthService} from '../../singelton-services/auth.service';
+import {getFormValidationMessages} from '../../shared/utils/form.utils';
 
 @Component({
   selector: 'app-extraction-query-form',
@@ -89,7 +90,9 @@ export class ExtractionQueryFormComponent {
     console.log("Extraction Query Form constructor");
 
     effect(() => {
-      this.isValidExtractionForm.set(this.extractionForm().valid());
+      const extractionForm = this.extractionForm();
+      this.isValidExtractionForm.set(extractionForm.valid());
+      this.stateService.extractionFormMessages.set(getFormValidationMessages(extractionForm.errorSummary()));
     });
   }
 

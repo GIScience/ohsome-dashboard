@@ -35,13 +35,16 @@ import {AuthService} from "../singelton-services/auth.service";
 import {StateService} from '../singelton-services/state.service';
 import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
 import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
+import {
+  FormValidationMessagesComponent
+} from '../shared/components/form-validation-messages/form-validation-messages.component';
 
 @Component({
   selector: 'app-query-panel',
   templateUrl: './query-panel.component.html',
   styleUrls: ['./query-panel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent]
+  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent, FormValidationMessagesComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);
@@ -65,6 +68,16 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   });
 
   isValidCurrentForm = this.stateService.isValidCurrentForm;
+
+  // combines the "area of interest" requirement (shared by all three tabs, tracked by the legacy NgForm `f`)
+  // with the messages of the currently active tab's signal form, so the Run button always shows what's missing.
+  protected currentValidationMessages(form: NgForm): string[] {
+    const messages = [...this.stateService.currentFormMessages()];
+    if (form && !form.valid) {
+      messages.unshift($localize`Please select an area of interest.`);
+    }
+    return messages;
+  }
 
   public readonly initialHashParams: URLSearchParams;
 

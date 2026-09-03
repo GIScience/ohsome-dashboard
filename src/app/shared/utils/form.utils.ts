@@ -1,4 +1,5 @@
 import {effect, Signal, untracked, WritableSignal} from '@angular/core';
+import {ValidationError} from '@angular/forms/signals';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 
 /**
@@ -71,6 +72,13 @@ export const MEASURE_OPTIONS: { value: string; label: string }[] = [
   {value: 'length', label: $localize`length`},
   {value: 'area', label: $localize`area`}
 ];
+
+export function getFormValidationMessages(errorSummary: ValidationError.WithFieldTree[]): string[] {
+  const messages = errorSummary
+    .map(error => error.message?.trim())
+    .filter((message): message is string => !!message);
+  return Array.from(new Set(messages));
+}
 
 export function getFilterFromFormValues(formValues, oqtApiMetadataProviderService: OqtApiMetadataProviderService){
     const topic = formValues.topic;
