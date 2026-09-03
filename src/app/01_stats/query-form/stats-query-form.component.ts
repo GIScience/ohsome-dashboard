@@ -62,7 +62,10 @@ export class StatsQueryFormComponent {
     });
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
-    required(schemaPath.groupByTagKey, {when: () => this.groupByTag()});
+    required(schemaPath.groupByTagKey, {
+      when: () => this.groupByTag(),
+      message: ' A tag key is required for tag value exploration.'
+    });
   });
 
   isValidStatsForm = this.stateService.isValidStatsForm;
