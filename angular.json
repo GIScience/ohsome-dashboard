@@ -130,11 +130,21 @@
                 }
               ]
             },
-            "development": {
+            "development-en": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "localize": ["en"],
+              "baseHref": "/en/"
+            },
+            "development-de": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "localize": ["de"],
+              "baseHref": "/de/"
             },
             "testing": {
               "aot": false,
@@ -155,11 +165,14 @@
             "production": {
               "buildTarget": "dashboard:build:production"
             },
-            "development": {
-              "buildTarget": "dashboard:build:development"
+            "development-en": {
+              "buildTarget": "dashboard:build:development-en"
+            },
+            "development-de": {
+              "buildTarget": "dashboard:build:development-de"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development-en"
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",

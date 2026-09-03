@@ -4,7 +4,9 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --configuration=development-en",
+    "start:en": "ng serve --configuration=development-en",
+    "start:de": "ng serve --configuration=development-de",
     "build:prod": "ng build --configuration=production && cp src/redirect-locale.html dist/index.html",
     "build:test": "ng build --configuration=test && cp src/redirect-locale.html dist/index.html",
     "build-idai": "ng build --configuration=idai && cp src/redirect-locale.html dist/index.html",
