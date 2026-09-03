@@ -8,7 +8,7 @@ import {Feature, MultiPolygon, Polygon} from 'geojson';
 import type {components, paths} from '../../ohsomeapi/ohsome-api-v2-types';
 import {PlotData, PlotlyDataLayoutConfig} from 'plotly.js-dist-min';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
-import {getFilterFromFormValues} from '../../shared/utils/form.utils';
+import {getFilterFromFormValues, getMeasureLabel} from '../../shared/utils/form.utils';
 import {QueryHandler, StatsFormValues} from './TimeSeriesHandler';
 import {getCSVHeader} from '../result/result.utils';
 
@@ -52,7 +52,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
     const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
 
-    let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
+    let yAxisText = Utils.capitalizeFirstLetter(getMeasureLabel(formValues.measure));
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
     const hasUnit = !!unit;
     if (hasUnit) yAxisText += ` [${unit}]`
@@ -73,7 +73,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     traces.push({
       x,
       y: response.result.value,
-      name: `Total ${yAxisText}`,
+      name: $localize`Total ${yAxisText}`,
       mode: 'lines',
       line: {color: '#2185D0', width: 2}
     })

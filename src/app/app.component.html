@@ -25,12 +25,12 @@
         <i class="dropdown icon"></i>
         <div class="menu">
           @if (authService.isAnon()) {
-            <div class="item" (click)="authService.login()"><i class="sign-in icon"></i>Login</div>
-            <div class="item" (click)="authService.register()"><i class="user plus icon"></i>Register</div>
+            <div class="item" (click)="authService.login()" i18n><i class="sign-in icon"></i>Login</div>
+            <div class="item" (click)="authService.register()" i18n><i class="user plus icon"></i>Register</div>
           }
           @if (!authService.isAnon()) {
-            <div class="item" (click)="authService.logout()">Logout</div>
-            <a class="item" [href]="environment.accountFrontendUrl" target="_blank">Account Info</a>
+            <div class="item" (click)="authService.logout()" i18n>Logout</div>
+            <a class="item" [href]="environment.accountFrontendUrl" target="_blank" i18n>Account Info</a>
           }
 
         </div>
@@ -46,15 +46,15 @@
             Ohsome API
           </div>
           <div class="divider"></div>
-          <a class="item" [href]="`${environment.ohsomeApiDocsUrl}`" target="_blank">Docs & Examples</a>
-          <a class="item" [href]="`${environment.ohsomeApiRootUrl}/docs`" target="_blank">OpenAPI Specification</a>
+          <a class="item" [href]="`${environment.ohsomeApiDocsUrl}`" target="_blank" i18n>Docs & Examples</a>
+          <a class="item" [href]="`${environment.ohsomeApiRootUrl}/docs`" target="_blank" i18n>OpenAPI Specification</a>
           <div class="header">
             <i class="sitemap icon"></i>
             Ohsome Quality API
           </div>
           <div class="divider"></div>
-          <a class="item" [href]="getOqapiDocsUrl()" target="_blank">Docs & Examples</a>
-          <a class="item" [href]="`${environment.oqtApiRootUrl}/docs`" target="_blank">OpenAPI Specification</a>
+          <a class="item" [href]="getOqapiDocsUrl()" target="_blank" i18n>Docs & Examples</a>
+          <a class="item" [href]="`${environment.oqtApiRootUrl}/docs`" target="_blank" i18n>OpenAPI Specification</a>
         </div>
       </div>
 
@@ -81,7 +81,7 @@
   <!--  q: {{ stateService.qualityFormModel() | json }} <br>-->
   <!--  l: {{ stateService.legacyFormModel()  | json }} <br>-->
   <!--  e: {{ stateService.extractionFormModel() | json }}-->
-  <h3>Select a type of ohsome query:</h3>
+  <h3 i18n>Select a type of ohsome query:</h3>
   <div class="ui three inverted labeled item tabs menu" style="background-color: #3E6184">
 
     <a class="item" data-tab="tab-ohsome-api"
@@ -99,7 +99,7 @@
        [ngClass]="queryModeSignal() === 'extraction' ? ['active', 'blue'] : ''"
        (click)="this.stateService.updatePartialState({'queryMode':'extraction'})"
        (keydown.enter)="this.stateService.updatePartialState({'queryMode':'extraction'})" tabindex="0">
-      <i class="download icon"></i>OSM Data Extraction</a>
+      <i class="download icon"></i><span i18n>OSM Data Extraction</span></a>
 
   </div>
 
@@ -134,10 +134,10 @@
         </p>
         <h4 class="header" i18n>Data Analyses are powered by:</h4>
         <div class="ui list">
-          <div class="item">OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
+          <div class="item" i18n>OSM History Stats: <a href="https://github.com/GIScience/ohsome-api" target="_blank">ohsome
             API</a> (AGPL-3.0)
           </div>
-          <div class="item"> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
+          <div class="item" i18n> OSM Quality Analyses: <a href="https://github.com/GIScience/ohsome-quality-api"
                                                       target="_blank">ohsome quality API</a> (AGPL-3.0)
           </div>
         </div>
@@ -154,7 +154,7 @@
     </div>
     <div class="ui horizontal divider"></div>
     <div class="ui stackable equal width center aligned padded grid">
-      <div class="column">
+      <div class="column" i18n>
         <a href="https://heigit.org/privacy-policy/">Privacy Policy</a> &middot;
         <a href="https://heigit.org/imprint/">Legal Notice</a> &middot;
         <a href="https://heigit.org/further-legal-information/">Further Legal Information</a>

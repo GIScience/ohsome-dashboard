@@ -145,13 +145,13 @@
       <h4 class="ui header" i18n>Area of interest</h4>
 
       <div id="boundaryTypeButtons" class="ui top attached buttons leaflet-pm-toolbar">
-        <button type="button" class="ui button" title="Select admin boundaries"
+        <button type="button" class="ui button" i18n-title title="Select admin boundaries"
                 [ngClass]="{'active': boundaryType === 'admin'}"
                 (click)="boundaryType = 'admin'"><i class="admin icon"></i></button>
-        <button type="button" class="ui button active" title="Draw boxes"
+        <button type="button" class="ui button active" i18n-title title="Draw boxes"
                 [ngClass]="{'active': boundaryType === 'bbox'}"
                 (click)="boundaryType = 'bbox'"><i class="bbox icon"></i></button>
-        <button type="button" class="ui button" title="Draw polygons" [ngClass]="{'active': boundaryType === 'bpoly'}"
+        <button type="button" class="ui button" i18n-title title="Draw polygons" [ngClass]="{'active': boundaryType === 'bpoly'}"
                 (click)="boundaryType = 'bpoly'"><i class="bpoly icon"></i></button>
       </div>
 
@@ -187,6 +187,7 @@
                 type="button"
                 class="ui tiny red icon button"
                 (click)="onRemoveAllBoundaries()"
+                i18n-title
                 title="Remove all"
               >
                 <i class="close icon"></i>
@@ -201,7 +202,7 @@
           <label for="bboxes" i18n>Bounding Box</label>
           <div class="ui action input">
             <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
-            <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear"
+            <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" i18n-title title="Clear"
                     [disabled]="!bboxes.trim()">
               <i class="close icon"></i>
             </button>
@@ -214,7 +215,7 @@
           <label for="bpolys" i18n>Bounding Polygon</label>
           <div class="ui action input">
             <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
-            <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear"
+            <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" i18n-title title="Clear"
                     [disabled]="!bpolys.trim()">
               <i class="close icon"></i>
             </button>
@@ -239,7 +240,7 @@
       <div class="sixteen wide column">
         <!--        <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">-->
         <!--TODO validate extraction form: update aoi bbox on every from change-->
-        <button [disabled]="!(f.valid && isValidCurrentForm())" class="ui green  right labeled icon button" type="submit">
+        <button [disabled]="!(f.valid && isValidCurrentForm())" class="ui green  right labeled icon button" type="submit" i18n>
           Create Download Asset<i class="download icon"></i>
         </button>
         <!--        @if (extractionForm().invalid()) {-->
@@ -250,12 +251,12 @@
         <!--          </div>-->
         <!--        }-->
         @if (authService.isAnon()) {
-          <div class="ui message">
+          <div class="ui message" i18n>
             To download OSM Data you need to &nbsp;&nbsp;
             <div class="ui buttons">
               <button type="button" class="ui blue button" (click)="authService.login()"><i class="sign-in icon"></i>Login
               </button>
-              <div class="or"></div>
+              <div class="or" i18n-data-text data-text="or"></div>
               <button type="button" class="ui blue button" (click)="authService.register()"><i
                 class="user plus icon"></i>Register
               </button>
