@@ -14,7 +14,7 @@ import {OhsomeApiMetadataProviderService} from '../../ohsomeapi/ohsome-api-metad
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
-import {MEASURE_OPTIONS} from '../../shared/utils/form.utils';
+import {getFormValidationMessages, MEASURE_OPTIONS} from '../../shared/utils/form.utils';
 
 @Component({
   selector: 'app-stats-query-form',
@@ -62,7 +62,10 @@ export class StatsQueryFormComponent {
     });
     required(schemaPath.measure);
     disabled(schemaPath.measure, {when: ({valueOf}) => valueOf(schemaPath.topic) !== 'custom-topic'});
-    required(schemaPath.groupByTagKey, {when: () => this.groupByTag()});
+    required(schemaPath.groupByTagKey, {
+      when: () => this.groupByTag(),
+      message: $localize` A tag key is required for tag value exploration.`
+    });
   });
 
   isValidStatsForm = this.stateService.isValidStatsForm;
@@ -99,7 +102,9 @@ export class StatsQueryFormComponent {
     });
 
     effect(() => {
-      this.isValidStatsForm.set(this.statsForm().valid());
+      const statsForm = this.statsForm();
+      this.isValidStatsForm.set(statsForm.valid());
+      this.stateService.statsFormMessages.set(getFormValidationMessages(statsForm.errorSummary()));
     });
   }
 
