@@ -1,4 +1,4 @@
-import {computed, effect, Service, signal} from '@angular/core';
+import {computed, effect, Service, signal, WritableSignal} from '@angular/core';
 import {isQueryMode, QueryMode} from '../shared/shared-types';
 import equal from 'fast-deep-equal/es6';
 import {ExtractionFormData, QualityFormData, StatsFormData} from '../03_extraction/query-form/types';
@@ -6,6 +6,7 @@ import Utils from '../../utils';
 import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
 import {linkField} from '../shared/utils/form.utils';
 import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
+import {components} from '../ohsomeapi/ohsome-api-v2-types';
 
 interface PermalinkDialogState {
   open: boolean;
@@ -26,10 +27,16 @@ export class StateService {
   initialHashParams = StateService.getInitialHashParams();
 
   //shared form signals
-  sharedFormSignals = {
+  sharedFormSignals: {
+    topic: WritableSignal<string>;
+    'topic-title': WritableSignal<string>;
+    'topic-filter': WritableSignal<string>;
+    measure: WritableSignal<components['schemas']['MeasureRequestModel']>;
+  } = {
     topic: signal<string>(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic', Utils.loadEnv('defaultTopicKey', 'cycleway'))),
     'topic-title': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-title', '')),
     'topic-filter': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-filter', '')),
+    "measure": signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'measure', 'count')),
   };
 
 
@@ -128,10 +135,12 @@ export class StateService {
     linkField(this.statsFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.statsFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.statsFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
+    linkField(this.statsFormModel, 'measure', this.sharedFormSignals['measure']);
 
     linkField(this.qualityFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.qualityFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.qualityFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
+    linkField(this.qualityFormModel, 'measure', this.sharedFormSignals['measure']);
 
     linkField(this.extractionFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.extractionFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
