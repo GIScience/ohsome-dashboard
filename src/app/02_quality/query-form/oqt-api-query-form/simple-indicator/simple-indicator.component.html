@@ -1,6 +1,6 @@
 <div class="ui toggle checkbox" [ngClass]="(indicator.checked)? 'checked':''">
-  <input type="checkbox" name="{{indicator.key}}" id="{{qualityDimension}}-{{indicator.key}}" attr.data-indicator-key="{{indicator.key}}"
-         [ngModel]="indicator.checked" (change)="this.indicatorToggle.emit({indicator, state: indicator.checked = !indicator.checked })">
+  <input type="checkbox" id="{{qualityDimension}}-{{indicator.key}}" attr.data-indicator-key="{{indicator.key}}"
+         [checked]="indicator.checked" (change)="this.indicatorToggle.emit({indicator, state: indicator.checked = !indicator.checked })">
   <label for="{{indicator.key}}">
     <div class="content">
       <a class="header">{{indicator.name}}</a>

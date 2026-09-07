@@ -67,7 +67,7 @@ export class ExtractionResultComponent {
   buildDownloadParams(formValues: ExtractionFormData) {
     type ExtractionQueryParams = paths['/extraction/features.parquet']['get']['parameters']['query'];
     const params: ExtractionQueryParams = {
-      aoi: formValues.aoi as string,
+      aoi: formValues.aoi as unknown as string,
       clip: formValues.clip,
       time: formValues.time,
       filter: this.getFilterFromFormVaulues(formValues),

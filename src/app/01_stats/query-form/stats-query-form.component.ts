@@ -1,5 +1,4 @@
 import {Component, computed, effect, inject, signal} from '@angular/core';
-import {ControlContainer, FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {KeyValuePipe} from '@angular/common';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {
@@ -19,16 +18,13 @@ import {getFormValidationMessages, MEASURE_OPTIONS} from '../../shared/utils/for
 @Component({
   selector: 'app-stats-query-form',
   imports: [
-    FormsModule,
     KeyValuePipe,
     PrismEditorComponent,
-    ReactiveFormsModule,
     SuiMultiSelectSearchDropdownComponent,
     FormField
   ],
   templateUrl: './stats-query-form.component.html',
   styleUrl: './stats-query-form.component.css',
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
 })
 export class StatsQueryFormComponent {
 // urlHashParamsProviderService = inject(UrlHashParamsProviderService);
@@ -55,7 +51,7 @@ export class StatsQueryFormComponent {
   statsFormModel = this.stateService.statsFormModel;
 
   statsForm = form(this.statsFormModel, (schemaPath) => {
-    // required(schemaPath.aoi);
+    required(schemaPath.topic, {message: $localize` Please select a topic.`});
     required(schemaPath['topic-filter'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
       message: ' An ohsome filter is required.'
@@ -65,6 +61,14 @@ export class StatsQueryFormComponent {
     required(schemaPath.groupByTagKey, {
       when: () => this.groupByTag(),
       message: $localize` A tag key is required for tag value exploration.`
+    });
+    required(schemaPath.bboxes, {
+      when: () => this.stateService.boundaryType() === 'bbox',
+      message: $localize` Please draw a bounding box.`
+    });
+    required(schemaPath.bpolys, {
+      when: () => this.stateService.boundaryType() !== 'bbox',
+      message: $localize` Please select or draw an area of interest.`
     });
   });
 
@@ -130,7 +134,8 @@ export class StatsQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: initialHashParams.get('aoi') ?? '', //TODO remove
+      bboxes: '',
+      bpolys: '',
       measure: Utils.getFromParamsOrDefault(initialHashParams, 'measure', `count`),
       clip: Utils.getFromParamsOrDefault<boolean>(initialHashParams, 'clip', false),
       start: Utils.getFromParamsOrDefault(initialHashParams, 'start', '2010-01-01T00:00'),

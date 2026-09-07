@@ -2,16 +2,18 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
-  forwardRef,
   inject,
+  input,
   Input,
+  model,
   NgZone,
   OnChanges,
   SimpleChanges,
   viewChild
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {FormValueControl} from '@angular/forms/signals';
 import * as L from 'leaflet';
 import {LatLngBounds, Layer, LayerOptions, LeafletEvent, LeafletMouseEvent, PM} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
@@ -26,16 +28,9 @@ import OhsomeApiRequest = OhsomeApi.v1.request;
   templateUrl: './boundary-input.component.html',
   styleUrls: ['./boundary-input.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BoundaryInputComponent),
-      multi: true
-    }
-  ]
 })
 
-export class BoundaryInputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+export class BoundaryInputComponent implements FormValueControl<string>, AfterViewInit, OnChanges {
   private readonly ngZone = inject(NgZone);
 
   protected boundaryMapElement = viewChild.required<ElementRef<HTMLDivElement>>('boundaryMap');
@@ -73,7 +68,6 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
     maxZoom: undefined,
     userDefinedPolygonLayers: []
   };
-  private _value = ''; // Input value which is used by ngModel
   private _interactionType: BoundaryInputComponentInteractionType = 'bbox';
   private _options: BoundaryInputComponentOptions = this.defaultOptions;
 
@@ -104,56 +98,38 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
   };
 
   private isListeningToPmRemove = false;
+  private mapInitialized = false;
+
+  private lastEmittedValue: string | null = null;
 
   public map: L.Map;
+
+  value = model<string>('');
+  disabled = input(false);
+
+  constructor() {
+    effect(() => {
+      const value = this.value();
+      if (!this.mapInitialized || value === this.lastEmittedValue) {
+        return;
+      }
+      this.updateMapFromValue(value);
+    });
+  }
 
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
       this.initMap(this.interactionType);
-      this.updateMapFromValue(this._value);
+      this.mapInitialized = true;
+      this.updateMapFromValue(this.value());
     })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
-    console.log("userLayers", userLayers)
+    const optionsChange = changes["options"];
+    if (!optionsChange) return;
+    const userLayers = optionsChange.currentValue.userDefinedPolygonLayers
     this.addOrUpdateUserDefinedLayers(userLayers);
-
-  }
-
-  // ControlValueAccesor methods
-  // write value to this component (map)
-  writeValue(val: string): void {
-    this.value = val || '';
-  }
-
-  propagateChange = (_: any) => {
-    console.log('propagateChange', _);
-  };
-
-  // register a callback that is expected to be triggered every time the value changes from the map
-  registerOnChange(fn: any): void {
-    console.log('registerOnChange', fn);
-    this.propagateChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    // throw new Error("Method not implemented.");
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  @Input() disabled = false;
-
-  get value(): string {
-    return this._value;
-  }
-
-  set value(val: string) {
-    this._value = val;
-    if (this.map) this.updateMapFromValue(val);
   }
 
   // @param value is a text representation of a boundary value (bboxes=... or bcircles=... or bpolys=...
@@ -276,8 +252,9 @@ export class BoundaryInputComponent implements ControlValueAccessor, AfterViewIn
 
       }
     });
-    // update ngModel through ControlValueAccessor
-    this.propagateChange(_value.join('|'));
+    const joinedValue = _value.join('|');
+    this.lastEmittedValue = joinedValue;
+    this.value.set(joinedValue);
   }
 
   private initMap(interactionType: string): void {

@@ -1,6 +1,4 @@
 <div class="ui one column grid">
-  <!-- Identifier to distinguish ohsome query from oqt query -->
-  <input type="hidden" name="backend" value="oqtApi" ngModel="oqtApi">
   <div class="row">
     <div class="column">
       <!-- 1. Topic or AOI-->
@@ -17,10 +15,8 @@
           <div class="editable-topic">
             <div class="field">
               <app-sui-multi-select-search-dropdown #searchSelectTopic
-                                                    [required]="true"
                                                     [multiple]="false"
-                                                    name="topic"
-                                                    [(ngModel)]="selectedTopicKey"
+                                                    [formField]="qualityForm.topic"
                                                     [options]="{fullTextSearch: 'exact'}"
                                                     [selectOptions]="topics | keyvalue">
               </app-sui-multi-select-search-dropdown>
@@ -46,9 +42,6 @@
               {{ topics[selectedTopicKey].description }}
             </div>
           </div>
-          <!--name="topic-title"-->
-          <!--required-->
-<!--          [ngModel]="qualityForm['topic-title']().value()"-->
           @if (selectedTopicKey === 'custom-topic') {
             <div class="item">
               <div class="content">
@@ -58,18 +51,6 @@
                        [formField]="qualityForm['topic-title']"
                        i18n-placeholder
                 >
-                <input type="hidden"
-                       name="topic-title"
-                       [ngModel]="qualityForm['topic-title']().value()"
-                >
-<!--                <input type="text" id="topic-title"-->
-<!--                       name="topic-title"-->
-<!--                       placeholder="Enter your Topic Title"-->
-<!--                       [ngModel]="topicTitleDefinition()"-->
-<!--                       (ngModelChange)="setCustomTopicTitleDefinition($event)"-->
-<!--                       required-->
-<!--                       i18n-placeholder-->
-<!--                >-->
               </div>
             </div>
           }
@@ -83,15 +64,6 @@
                                   [formField]="qualityForm['topic-filter']"
                                   [backgroundColor]="'#FFFFFF'"
                 ></app-prism-editor>
-<!--                <app-prism-editor id="topicFilter" [readonly]="false"-->
-<!--                                  [partialSetupOptions]="{wordWrap: true, lineNumbers: true}"-->
-<!--                                  [value]="topicFilterDefinition()"-->
-<!--                                  (valueChange)="setCustomTopicFilterDefinition($event)"-->
-<!--                ></app-prism-editor>-->
-                <input type="hidden" id="topic-filter"
-                       name="topic-filter"
-                       [ngModel]="qualityForm['topic-filter']().value()"
-                >
               } @else {
                 <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"
@@ -113,9 +85,6 @@
                 </div>
               }
             </div>
-            <input type="hidden"
-                  name="measure"
-                  [ngModel]="qualityForm.measure().value()">
           </div>
         </div>
       </div>
@@ -146,7 +115,9 @@
                           <app-attribute-completeness-attributes
                             [selectedTopic]="topics[selectedTopicKey]"
                             [hashParams]="hashParams"
-                            [indicatorKey]="indicator.key"
+                            [attributesField]="qualityForm['attribute-completeness--attributes']"
+                            [attributeTitleField]="qualityForm['attribute-completeness--attribute-title']"
+                            [attributeFilterField]="qualityForm['attribute-completeness--attribute-filter']"
                           ></app-attribute-completeness-attributes>
                         }
                       }
