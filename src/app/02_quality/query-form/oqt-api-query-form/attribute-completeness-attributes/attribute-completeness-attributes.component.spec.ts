@@ -4,8 +4,8 @@ import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
 import {provideHttpClient} from '@angular/common/http';
-import {NgForm} from '@angular/forms';
-import {provideAppInitializer, SimpleChange} from '@angular/core';
+import {provideAppInitializer, signal, SimpleChange, WritableSignal} from '@angular/core';
+import {form, FieldTree} from '@angular/forms/signals';
 import {oqtAttributesResponseMock} from '../../../oqt-api-metadata.response.mock';
 import {OqtAttribute, RawTopicMetadata, Topic} from '../../../types/types';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
@@ -13,9 +13,16 @@ import {By} from '@angular/platform-browser';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../app-initializers';
 
+interface TestFormModel {
+  attributes: string[];
+  title: string;
+  filter: string;
+}
+
 describe('AttributeCompletenessIndicatorComponent', () => {
   let component: AttributeCompletenessAttributesComponent;
   let fixture: ComponentFixture<AttributeCompletenessAttributesComponent>;
+  let formModel: WritableSignal<TestFormModel>;
   const roadsTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["roads"];
   const enrichedRoadsTopic: Topic = {...roadsTopic, key: 'roads'};
   const buildingCountTopic: RawTopicMetadata = OqtApiMetadataProviderServiceMock.getOqtApiMetadata().result.topics["buildings"];
@@ -25,11 +32,24 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     'buildings': enrichedBuildingCountTopic,
   };
 
+  function attributesField(): FieldTree<string[]> {
+    return testForm.attributes as unknown as FieldTree<string[]>;
+  }
+
+  function attributeTitleField(): FieldTree<string> {
+    return testForm.title as unknown as FieldTree<string>;
+  }
+
+  function attributeFilterField(): FieldTree<string> {
+    return testForm.filter as unknown as FieldTree<string>;
+  }
+
+  let testForm: FieldTree<TestFormModel>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OqtModule, PrismEditorComponent],
       providers: [
-        NgForm,
         {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
         provideAppInitializer(() => {
           const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
@@ -42,10 +62,14 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     fixture = TestBed.createComponent(AttributeCompletenessAttributesComponent);
     component = fixture.componentInstance;
+    formModel = signal<TestFormModel>({attributes: [], title: '', filter: ''});
+    testForm = TestBed.runInInjectionContext(() => form(formModel));
+    component.attributesField = attributesField();
+    component.attributeTitleField = attributeTitleField();
+    component.attributeFilterField = attributeFilterField();
     component.selectedTopic = enrichedRoadsTopic;
-    component.indicatorKey = "attribute-completeness";
     component.hashParams = new URLSearchParams("attribute-completeness--attributes=name");
-    component.selectedAttributeKeys = ['name'];
+    attributesField()().value.set(['name']);
     component.attributes = component.oqtApiMetadataProviderService.getAttributes().result;
     fixture.detectChanges();
   });
@@ -60,8 +84,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.customFilterTitle()).toBe('Test Title');
-    expect(component.customFilterDefinition()).toBe('userfilter=test');
+    expect(attributeTitleField()().value()).toBe('Test Title');
+    expect(attributeFilterField()().value()).toBe('userfilter=test');
 
   });
 
@@ -77,7 +101,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     fixture.detectChanges();
 
     expect(component.sanitizeAttributeKeys).toHaveBeenCalled();
-    expect(component.selectedAttributeKeys).toEqual([component.getDefaultAttributeKey(component.selectedTopic.key)]);
+    expect(attributesField()().value()).toEqual([component.getDefaultAttributeKey(component.selectedTopic.key)]);
   });
 
   const topicWithoutAttributes: Topic = {
@@ -127,29 +151,29 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
   it('should clear stale custom filter title/definition when switching to a topic without predefined attributes', () => {
     // simulate a custom filter that was defined/shown for a previous topic
-    component.customFilterTitle.set('Stale Title from previous topic');
-    component.customFilterDefinition.set('stale=filter');
+    attributeTitleField()().value.set('Stale Title from previous topic');
+    attributeFilterField()().value.set('stale=filter');
 
     component.selectedTopic = topicWithoutAttributes;
     component.ngOnChanges({
       selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
     });
 
-    expect(component.customFilterTitle()).toBe('');
-    expect(component.customFilterDefinition()).toBe('');
+    expect(attributeTitleField()().value()).toBe('');
+    expect(attributeFilterField()().value()).toBe('');
   });
 
   it('should not clear custom filter title/definition when switching between topics that both have predefined attributes', () => {
-    component.customFilterTitle.set('My title');
-    component.customFilterDefinition.set('my=filter');
+    attributeTitleField()().value.set('My title');
+    attributeFilterField()().value.set('my=filter');
 
     component.selectedTopic = enrichedBuildingCountTopic;
     component.ngOnChanges({
       selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
     });
 
-    expect(component.customFilterTitle()).toBe('My title');
-    expect(component.customFilterDefinition()).toBe('my=filter');
+    expect(attributeTitleField()().value()).toBe('My title');
+    expect(attributeFilterField()().value()).toBe('my=filter');
   });
 
   it('should show the cancel/delete icon for the custom filter label regardless of predefined attributes', () => {
@@ -157,7 +181,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     component.ngOnChanges({
       selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
     });
-    component.customFilterTitle.set('My title');
+    attributeTitleField()().value.set('My title');
     fixture.detectChanges();
 
     const deleteIcon = fixture.nativeElement.querySelector('#custom-filter-wrapper-element i.delete.icon');
@@ -167,7 +191,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   describe('cancelCustomFilter()', () => {
     it('should revert to dropdown mode when the topic has predefined attributes', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('My title');
+      attributeTitleField()().value.set('My title');
       component.useCustomFilterMode.set(true);
 
       component.cancelCustomFilter();
@@ -178,21 +202,21 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     it('should clear the custom filter back to the hint state when the topic has no predefined attributes', () => {
       component.selectedTopic = topicWithoutAttributes;
       component.useCustomFilterMode.set(true);
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('my=filter');
+      attributeTitleField()().value.set('My title');
+      attributeFilterField()().value.set('my=filter');
 
       component.cancelCustomFilter();
 
       expect(component.useCustomFilterMode()).toBe(true);
-      expect(component.customFilterTitle()).toBe('');
-      expect(component.customFilterDefinition()).toBe('');
+      expect(attributeTitleField()().value()).toBe('');
+      expect(attributeFilterField()().value()).toBe('');
     });
   });
 
   describe('confirmCustomFilter()', () => {
     it('should fall back to dropdown mode when the title is empty and the topic has predefined attributes', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('');
+      attributeTitleField()().value.set('');
       component.useCustomFilterMode.set(false);
 
       component.confirmCustomFilter();
@@ -202,7 +226,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should enable custom filter mode when the title is set and the topic has predefined attributes', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('My title');
+      attributeTitleField()().value.set('My title');
       component.useCustomFilterMode.set(false);
 
       component.confirmCustomFilter();
@@ -212,7 +236,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should enable custom filter mode when the title is empty but the topic has no predefined attributes', () => {
       component.selectedTopic = topicWithoutAttributes;
-      component.customFilterTitle.set('');
+      attributeTitleField()().value.set('');
       component.useCustomFilterMode.set(false);
 
       component.confirmCustomFilter();
@@ -224,7 +248,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   it('should show the dropdown instead of the "no predefined attributes" hint when confirming an empty custom filter for a topic with predefined attributes', () => {
     component.selectedTopic = enrichedRoadsTopic;
     component.useCustomFilterMode.set(true);
-    component.customFilterTitle.set('');
+    attributeTitleField()().value.set('');
     fixture.detectChanges();
 
     component.confirmCustomFilter();
@@ -255,7 +279,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     component.ngOnChanges({
       selectedTopic: new SimpleChange(enrichedRoadsTopic, component.selectedTopic, false)
     });
-    component.customFilterTitle.set('My custom title');
+    attributeTitleField()().value.set('My custom title');
     fixture.detectChanges();
 
     const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
@@ -498,11 +522,6 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     testCases.forEach((testCase) => {
       it(testCase.description, async () => {
-        // // Re-create the component fresh for this test case
-        // fixture = TestBed.createComponent(AttributeCompletenessAttributesComponent);
-        // component = fixture.componentInstance;
-        // service = TestBed.inject(OqtApiMetadataProviderService);
-
         // Spy is bound to THIS iteration's testCase
         const filterValues = [...testCase.filterValues];
         const nameValues = [...testCase.nameValues];
@@ -514,7 +533,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         fixture.detectChanges();
 
         component.selectedTopic = topics[testCase.selectedTopicKey];
-        component.selectedAttributeKeys = testCase.selectedAttributeKeys;
+        attributesField()().value.set(testCase.selectedAttributeKeys);
         fixture.detectChanges();
 
         component.ngZone.runOutsideAngular(() => {
@@ -559,7 +578,7 @@ describe('AttributeCompletenessIndicatorComponent', () => {
         indicators: ['minimal'],
         source: null,
       };
-      component.selectedAttributeKeys = ['attributeKey1'];
+      attributesField()().value.set(['attributeKey1']);
       fixture.detectChanges();
 
       component.showAttributeFilterEditDialog();

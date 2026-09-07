@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
+import {FieldTree, FormField} from '@angular/forms/signals';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
 import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
@@ -13,9 +13,8 @@ declare const Prism;
     selector: 'app-attribute-completeness-attributes',
     templateUrl: './attribute-completeness-attributes.component.html',
     styleUrl: './attribute-completeness-attributes.component.css',
-    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe]
+    imports: [SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, KeyValuePipe, FormField]
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
   ngZone = inject(NgZone);
@@ -23,27 +22,26 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
   @Input({required: true}) selectedTopic!: Topic;
   @Input() hashParams!: URLSearchParams;
-  @Input({required: true}) indicatorKey!: string;
+  @Input({required: true}) attributesField!: FieldTree<string[]>;
+  @Input({required: true}) attributeTitleField!: FieldTree<string>;
+  @Input({required: true}) attributeFilterField!: FieldTree<string>;
 
   @ViewChild('attributeFilter', {static: false}) preElem: ElementRef<HTMLPreElement>;
 
   customAttributeLabelElement = viewChild<ElementRef<HTMLDivElement>>('customAttributeLabelElement')
 
   attributes: Record<string, Record<string, OqtAttribute>>;
-  selectedAttributeKeys: string[];
 
   combinedAttributeFilters: string;
 
   // used to define wether to display dropdown with predefined attributes (false) or display the  user defined custom attribute
   useCustomFilterMode = signal(false);
-  customFilterTitle = signal<string>('');
-  customFilterDefinition = signal<string>('');
 
   constructor() {
-    // update popup content whenever the signal customFilterDefinition changes
+    // update popup content whenever the custom attribute filter changes
     effect(() => {
       $(this.customAttributeLabelElement()?.nativeElement).popup({
-        content: this.customFilterDefinition(),
+        content: this.attributeFilterField().value(),
         variation: 'inverted'
       })
     });
@@ -57,12 +55,12 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     this.useCustomFilterMode.set(this.hasCustomFilterModeParams() || !this.topicHasAttributes(this.selectedTopic.key));
 
     //extract and sanitize selectedAttributeKeys
-    this.selectedAttributeKeys = this.getAttributeKeysFromUrlHashParams(this.hashParams);
+    this.attributesField().value.set(this.getAttributeKeysFromUrlHashParams(this.hashParams));
 
     //extract customFilter
     if (this.useCustomFilterMode()) {
-      this.customFilterTitle.set(this.hashParams.get('attribute-completeness--attribute-title') ?? '');
-      this.customFilterDefinition.set(this.hashParams.get('attribute-completeness--attribute-filter') ?? '');
+      this.attributeTitleField().value.set(this.hashParams.get('attribute-completeness--attribute-title') ?? '');
+      this.attributeFilterField().value.set(this.hashParams.get('attribute-completeness--attribute-filter') ?? '');
     }
 
   }
@@ -72,7 +70,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     const topicChange: SimpleChange = changes['selectedTopic'];
 
     if (topicChange && !topicChange.firstChange) {
-      this.selectedAttributeKeys = this.sanitizeAttributeKeys(this.selectedAttributeKeys);
+      this.attributesField().value.set(this.sanitizeAttributeKeys(this.attributesField().value()));
 
       const topicHasNoAttributes = !this.topicHasAttributes(this.selectedTopic.key);
       this.useCustomFilterMode.set(topicHasNoAttributes);
@@ -80,8 +78,8 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
       // the displayed title/filter belonged to the previous topic; clear it so it can't
       // look like an already-confirmed filter for a topic the user never defined one for
       if (topicHasNoAttributes) {
-        this.customFilterTitle.set('');
-        this.customFilterDefinition.set('');
+        this.attributeTitleField().value.set('');
+        this.attributeFilterField().value.set('');
       }
     }
   }
@@ -208,7 +206,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     const attributeList: {
       combinedNames: string,
       combinedFilters: string
-    }[] = this.selectedAttributeKeys.flatMap((attributeKey) => {
+    }[] = this.attributesField().value().flatMap((attributeKey) => {
       const filter = this.oqtApiMetadataProviderService.getAttributeFilter(this.selectedTopic.key, attributeKey);
       const name = this.oqtApiMetadataProviderService.getAttributeName(this.selectedTopic.key, attributeKey);
       return name != undefined && filter != undefined ? [{combinedNames: name, combinedFilters: filter}] : [];
@@ -248,7 +246,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   confirmCustomFilter(): void {
     // an empty title for a topic that has predefined attributes isn't a valid custom
     // filter - fall back to the dropdown instead of showing the "no predefined attributes" hint
-    if (!this.customFilterTitle() && this.topicHasAttributes(this.selectedTopic.key)) {
+    if (!this.attributeTitleField().value() && this.topicHasAttributes(this.selectedTopic.key)) {
       this.useCustomFilterMode.set(false);
       return;
     }
@@ -260,8 +258,8 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     if (this.topicHasAttributes(this.selectedTopic.key)) {
       this.useCustomFilterMode.set(false);
     } else {
-      this.customFilterTitle.set('');
-      this.customFilterDefinition.set('');
+      this.attributeTitleField().value.set('');
+      this.attributeFilterField().value.set('');
     }
   }
 
@@ -270,8 +268,8 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     // compute the current attributeFilter as an AND-combination of the selected attributes
     if (!this.useCustomFilterMode()) {
       const {combinedNames, combinedFilters} = this.combineSelectedAttributes();
-      this.customFilterTitle.set(combinedNames)
-      this.customFilterDefinition.set(combinedFilters);
+      this.attributeTitleField().value.set(combinedNames)
+      this.attributeFilterField().value.set(combinedFilters);
     }
 
     this.openAttributesEditorModal()
@@ -300,7 +298,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   }
 
   setCustomFilerTitle($event: Event) {
-    this.customFilterTitle.set(($event.target as HTMLInputElement).value);
+    this.attributeTitleField().value.set(($event.target as HTMLInputElement).value);
   }
 
   triggerClick(event: Event) {

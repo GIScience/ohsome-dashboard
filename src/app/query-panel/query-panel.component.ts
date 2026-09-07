@@ -3,13 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
-  OnDestroy,
-  OnInit,
-  signal,
   ViewChild
 } from '@angular/core';
-import {FormsModule, NgForm} from '@angular/forms';
 import {DataService} from '../singelton-services/data.service';
 import {propEach} from '@turf/meta';
 import envelope from '@turf/envelope';
@@ -23,11 +20,9 @@ import {BoundarySelectInputComponent} from '../shared/components/boundary-select
 import {BoundaryInputComponent} from '../shared/components/boundary-input/boundary-input.component';
 import {LatLngBoundsExpression} from 'leaflet';
 import {BoundaryInputComponentOptions, BoundaryType, isQueryMode, QueryMode, Userlayer} from '../shared/shared-types';
-import Utils from '../../utils';
 import {UrlHashParamsProviderService} from '../singelton-services/url-hash-params-provider.service';
 import {OqtApiMetadataProviderService} from '../02_quality/oqt-api-metadata-provider.service';
 import {OsmBoundaryProviderService} from '../singelton-services/osm-boundary-provider.service';
-import {Subscription} from 'rxjs';
 import bboxPolygon from '@turf/bbox-polygon';
 import {NgClass} from '@angular/common';
 import {OqtApiQueryFormComponent} from '../02_quality/query-form/oqt-api-query-form/oqt-api-query-form.component';
@@ -39,31 +34,14 @@ import {
   FormValidationMessagesComponent
 } from '../shared/components/form-validation-messages/form-validation-messages.component';
 
-// Several fields across the three tabs are still validated via the legacy, shared NgForm `f`
-// (rather than the new signal forms) - the AOI picker for all tabs, and a few OQT indicator
-// sub-forms (e.g. "Attribute Completeness") that haven't been migrated yet. Each entry maps
-// the control name(s) a field registers under to the message to show when any of them is invalid.
-const LEGACY_FORM_CONTROL_MESSAGES: { controlNames: string[]; message: string }[] = [
-  {controlNames: ['bboxes', 'bpolys'], message: $localize`Please select an area of interest.`},
-  {controlNames: ['topic'], message: $localize`Please select a topic.`},
-  {
-    controlNames: [
-      'attribute-completeness--attributes',
-      'attribute-completeness--attribute-title',
-      'attribute-completeness--attribute-filter',
-    ],
-    message: $localize`Select at least one attribute, or define a custom attribute filter, for the "Attribute Completeness" indicator.`
-  },
-];
-
 @Component({
   selector: 'app-query-panel',
   templateUrl: './query-panel.component.html',
   styleUrls: ['./query-panel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent, FormValidationMessagesComponent]
+  imports: [NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent, FormValidationMessagesComponent]
 })
-export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class QueryPanelComponent implements AfterViewChecked {
   private dataService = inject(DataService);
   protected authService = inject(AuthService);
   ohsomeApiMetadataProviderService = inject(OhsomeApiMetadataProviderService);
@@ -73,8 +51,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   private osmBoundaryProviderService = inject(OsmBoundaryProviderService);
 
 
-  @ViewChild('f', {static: true})
-  form: NgForm;
   @ViewChild('bsi', {static: false})
   mapInput: BoundarySelectInputComponent | BoundaryInputComponent;
 
@@ -86,20 +62,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   isValidCurrentForm = this.stateService.isValidCurrentForm;
 
-  // legacy support of NgForms
-  protected currentValidationMessages(form: NgForm): string[] {
-    const messages: string[] = [];
-    if (form) {
-      for (const {controlNames, message} of LEGACY_FORM_CONTROL_MESSAGES) {
-        if (controlNames.some((name) => form.controls[name]?.invalid)) {
-          messages.push(message);
-        }
-      }
-    }
-    messages.push(...this.stateService.currentFormMessages());
-    return messages;
-  }
-
   public readonly initialHashParams: URLSearchParams;
 
   // default map settings
@@ -108,19 +70,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   public minZoom = 0;
   public maxBounds: LatLngBoundsExpression = [[-90, -180], [90, 180]];
   public mapCenter = environment.mapOptions.center;
-  public bboxes = '';
   public bcircles = '';
-  public bpolys = '';
-  protected adminBoundaries = signal<string>(''); //contains the current FeatureCollection from ngModel
-  //TODO shoud be stored in app state
-  private _boundaryType: BoundaryType = 'admin';
+  protected bboxes = this.stateService.sharedFormSignals.bboxes;
+  protected bpolys = this.stateService.sharedFormSignals.bpolys;
+  protected boundaryType = this.stateService.boundaryType;
   public userDefinedPolygonLayers: Userlayer[] = [];
 
   public mapOptions: BoundaryInputComponentOptions;
 
   private _selectedNames: string[] = [];
-
-  private formChangesSubscription: Subscription;
 
   constructor() {
     const spatialExtent = environment.mapOptions.maskPoly ?? bboxPolygon([-180, -90, 180, 90]).geometry;
@@ -141,11 +99,6 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.initialHashParams = this.stateService.initialHashParams;
     console.log("QP constructor hashParams: " + this.initialHashParams);
 
-    // settings from hash: map setttings for ohsomeApi AND oqtApi
-    this.bboxes = Utils.getFromParamsOrDefault(this.initialHashParams, 'bboxes', Utils.loadEnv('bboxes', this.bboxes));
-    this.bpolys = Utils.getFromParamsOrDefault(this.initialHashParams, 'bpolys', Utils.loadEnv('bpolys', this.bpolys));
-    this._boundaryType = this.getBoundaryTypeFromHashParams(this.initialHashParams) ?? Utils.loadEnv('boundaryType', this._boundaryType);
-
     this.mapOptions = {
       center: this.mapCenter,
       zoom: this.zoom,
@@ -159,19 +112,25 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.osmBoundaryProviderService.getOsmBoundariesByIds(ids)
       .subscribe({
         next: (featureCollectionOrEmpty: string) => {
-          this.adminBoundaries.set(featureCollectionOrEmpty);
+          this.bpolys.set(featureCollectionOrEmpty);
           // immediately trigger the query if there are hashparams
           if (this.stateService.appState().firstForm) {
             this.stateService.updatePartialState({firstForm: false});
             setTimeout(() => {
-              console.log("FORM VALID", this.form.valid && this.isValidCurrentForm());
-              if (this.form.valid && this.isValidCurrentForm()) {
+              console.log("FORM VALID", this.isValidCurrentForm());
+              if (this.isValidCurrentForm()) {
                 this.onSubmit();
               }
             }, 1000);
           }
         }
       });
+
+    // keep the permalink-friendly params in sync with whichever tab's form is active
+    effect(() => {
+      const permalinkParams = this.getPermalinkParamsFromFormValues(this.getActiveFormValue());
+      this.stateService.legacyFormModel.set(permalinkParams);
+    });
 
   } // constructor end
 
@@ -189,21 +148,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     this.mapOptions = {...this.mapOptions, userDefinedPolygonLayers: $event};
   }
 
-  ngOnInit() {
-    // runs on every form change
-    // TODO remove
-    this.formChangesSubscription = this.form.form.valueChanges.subscribe(formValue => {
-      const permalinkParams = this.getPermalinkParamsFromFormValues(formValue);
-      // old way
-      //  this.urlHashParamsProviderService.setHashParams(permalinkParams);
-      // new way
-      this.stateService.legacyFormModel.set(permalinkParams);
-    });
-
-  }
-
-  ngOnDestroy() {
-    this.formChangesSubscription?.unsubscribe();
+  private getActiveFormValue(): Record<string, any> {
+    switch (this.queryModeSignal()) {
+      case 'ohsomeApi':
+        return this.stateService.statsFormModel();
+      case 'extraction':
+        return this.stateService.extractionFormModel();
+      case 'oqtApi':
+        return this.stateService.qualityFormModel();
+    }
   }
 
   ngAfterViewChecked() {
@@ -212,31 +165,33 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
   }
 
-  private getBoundaryTypeFromHashParams(hashParams: URLSearchParams): BoundaryType | undefined {
-    let boundaryType: BoundaryType | undefined = undefined;
-    if (hashParams.get('bboxes')) {
-      boundaryType = 'bbox';
-    } else if (hashParams.get('bpolys')) {
-      boundaryType = 'bpoly';
-    } else if (hashParams.get('adminids')) {
-      boundaryType = 'admin';
-    }
-    return boundaryType;
-  }
-
-  get boundaryType(): BoundaryType {
-    return this._boundaryType;
-  }
-
-  set boundaryType(value: BoundaryType) {
+  protected setBoundaryType(value: BoundaryType): void {
+    const previousType = this.boundaryType();
     this.mapCenter = this.mapInput.map.getCenter();
     this.zoom = this.mapInput.map.getZoom();
     this.mapOptions = {...this.mapOptions, center: this.mapInput.map.getCenter(), zoom: this.mapInput.map.getZoom()};
-    this._boundaryType = value;
+    // bboxes/bpolys are both always-present fields on the form model now (unlike the old NgForm,
+    // where only the active boundary type's control ever existed) - clear the one that's no longer
+    // active so a stale value can't outrank the newly drawn one when building the request's AOI
+    // (toPolygonFeatures() in boundaries.utils.ts always prefers bboxes over bpolys when both are set).
+    // 'bpoly' and 'admin' both write to bpolys but in incompatible formats (raw bpoly DSL vs GeoJSON
+    // FeatureCollection), so switching between them must also clear it - otherwise the leftover value
+    // fails to parse as the new tab's format (e.g. getPermalinkParamsFromFormValues() JSON.parsing a
+    // stale bpoly-DSL string throws, which silently breaks that change-detection pass and makes the
+    // tab switch itself only visibly complete on the next click).
+    if (value === 'bbox') {
+      this.bpolys.set('');
+    } else {
+      this.bboxes.set('');
+      if (previousType !== value) {
+        this.bpolys.set('');
+      }
+    }
+    this.stateService.boundaryType.set(value);
   }
 
   get selectedNames(): string[] {
-    if (this.form.controls['bpolys'] && this.boundaryType === 'admin') {
+    if (this.boundaryType() === 'admin') {
       this._selectedNames = this.getSelectedPropertyValues('display_name').map(String);
       return this._selectedNames;
     }
@@ -244,14 +199,15 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   }
 
   public getSelectedPropertyValues(propertyName: string) {
-    if (!('bpolys' in this.form.controls) || !this.form.controls['bpolys'].value || this.form.controls['bpolys'].value.trim() === '') {
+    const bpolys = this.bpolys();
+    if (!bpolys || bpolys.trim() === '') {
       return [];
     }
 
     const selectedPropertyvalues: GeoJsonProperties[] = [];
 
     try {
-      const geoJson = JSON.parse(this.form.controls['bpolys'].value);
+      const geoJson = JSON.parse(bpolys);
       propEach(geoJson, (properties) => {
         if (properties) {
           if (propertyName in properties) {
@@ -272,8 +228,7 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
 
     // set osm boundary id
     // admin and bpoly will send bpolys param to backend but for admin we only want to store the ids in the permalink
-    if (this.boundaryType === 'admin') {
-      // delete bpolys and add adminIds
+    if (this.boundaryType() === 'admin') {
       // replace geojson with id
       if (permalinkParams.bpolys) {
         const bpolys = JSON.parse(permalinkParams.bpolys);
@@ -281,25 +236,13 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
           permalinkParams.adminids = this.getSelectedPropertyValues('id').join(',');
         }
       }
-      delete permalinkParams.bpolys;
+      permalinkParams.bpolys = undefined;
     }
 
-    // transform indicator checkboxes to list
+    // indicators/attribute-completeness--attributes are arrays on the form model; URL hash params need comma-joined strings
     if (this.queryModeSignal() === 'oqtApi') {
-      //get indicators to be queried
-      const potentialIndicators = Object.keys(this.oqtApiMetadataProviderService.getOqtApiMetadata().result.indicators);
-      const indicatorsToBeQueried: string[] = [];
-      // search for the indicators that have been checked in the form
-      potentialIndicators.forEach(potIndicator => {
-        if (formValue[potIndicator]) {
-          indicatorsToBeQueried.push(potIndicator);
-        }
-      });
-      permalinkParams.indicators = indicatorsToBeQueried.join(',');
-      potentialIndicators.forEach(indicator => delete permalinkParams[indicator]);
+      permalinkParams.indicators = (formValue.indicators ?? []).join(',');
 
-
-      // transform attribute-completeness--attributes
       if (permalinkParams["attribute-completeness--attributes"]) {
         permalinkParams["attribute-completeness--attributes"] = permalinkParams["attribute-completeness--attributes"].join(',');
       }
@@ -310,33 +253,17 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   }
 
 
-  onSubmit() {
-    console.log('Form Value', this.form.value);
-    const queryPanelFormValue = structuredClone(this.form.value);
-    let formValue = queryPanelFormValue;
-
-    //here we merge old style ngmodel form values with new signal form values
-    const queryMode = this.stateService.queryModeSignal();
-    switch (queryMode) {
-      case "ohsomeApi":
-        formValue = {...formValue, ...this.stateService.statsFormModel()};
-        break;
-      case "extraction":
-        formValue = {...formValue, ...this.stateService.extractionFormModel()};
-    }
-    this.dataService.pushFormValues(formValue, this._boundaryType);
+  onSubmit(event?: Event) {
+    event?.preventDefault();
+    const formValue = {...this.getActiveFormValue()};
+    this.dataService.pushFormValues(formValue, this.boundaryType());
   }
 
   removeAdminBoundary(event: MouseEvent) {
     const featureIndex = event.currentTarget?.['dataset']['featureIndex'];
-    const featureCollection = JSON.parse(this.adminBoundaries());
+    const featureCollection = JSON.parse(this.bpolys());
     featureCollection.features.splice(featureIndex, 1);
-    if (featureCollection.features.length === 0) {
-      this.adminBoundaries.set('');
-    } else {
-      this.adminBoundaries.set(JSON.stringify(featureCollection));
-    }
-
+    this.bpolys.set(featureCollection.features.length === 0 ? '' : JSON.stringify(featureCollection));
   }
 
   onRemoveAllBoundaries(): void {
@@ -344,12 +271,8 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
       this.mapInput.removeAllBoundaries();
     }
 
-    if (this.boundaryType === 'admin') {
-      this.adminBoundaries.set('');
-    }
-
-    this.form.controls['bboxes']?.setValue('');
-    this.form.controls['bpolys']?.setValue('');
+    this.bboxes.set('');
+    this.bpolys.set('');
   }
 
   protected readonly window = window;

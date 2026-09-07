@@ -23,6 +23,8 @@ describe('StatsQueryFormComponent', () => {
     fixture = TestBed.createComponent(StatsQueryFormComponent);
     component = fixture.componentInstance;
     stateService = TestBed.inject(StateService);
+    // these tests are about topic/measure/groupByTag validity, not the AOI picker - give it a valid value up front
+    stateService.sharedFormSignals.bpolys.set('some-valid-bpolys-value');
     fixture.detectChanges();
   });
 

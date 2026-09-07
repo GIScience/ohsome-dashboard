@@ -1,7 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OqtApiQueryFormComponent} from './oqt-api-query-form.component';
-import {FormsModule, NgForm} from '@angular/forms';
 import {provideHttpClient} from '@angular/common/http';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../oqt-api-metadata-provider.service.mock';
@@ -16,9 +15,8 @@ describe('OqtApiQueryFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [FormsModule, OqtModule, OqtApiQueryFormComponent],
+    imports: [OqtModule, OqtApiQueryFormComponent],
     providers: [
-        NgForm,
         { provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock },
         provideHttpClient()
     ]
@@ -28,6 +26,7 @@ describe('OqtApiQueryFormComponent', () => {
     fixture = TestBed.createComponent(OqtApiQueryFormComponent);
     component = fixture.componentInstance;
     stateService = TestBed.inject(StateService);
+    stateService.sharedFormSignals.bpolys.set('some-valid-bpolys-value');
     fixture.detectChanges();
   });
 

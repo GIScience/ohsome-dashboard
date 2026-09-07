@@ -1,5 +1,5 @@
 import {computed, effect, Service, signal, WritableSignal} from '@angular/core';
-import {isQueryMode, QueryMode} from '../shared/shared-types';
+import {BoundaryType, isQueryMode, QueryMode} from '../shared/shared-types';
 import equal from 'fast-deep-equal/es6';
 import {ExtractionFormData, QualityFormData, StatsFormData} from '../03_extraction/query-form/types';
 import Utils from '../../utils';
@@ -32,12 +32,19 @@ export class StateService {
     'topic-title': WritableSignal<string>;
     'topic-filter': WritableSignal<string>;
     measure: WritableSignal<paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure']>;
+    bboxes: WritableSignal<string>;
+    bpolys: WritableSignal<string>;
   } = {
     topic: signal<string>(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic', Utils.loadEnv('defaultTopicKey', 'cycleway'))),
     'topic-title': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-title', '')),
     'topic-filter': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-filter', '')),
     "measure": signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'measure', 'count')),
+    bboxes: signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'bboxes', Utils.loadEnv('bboxes', ''))),
+    bpolys: signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'bpolys', Utils.loadEnv('bpolys', ''))),
   };
+
+  // which boundary-input widget is currently active in the AOI picker
+  boundaryType: WritableSignal<BoundaryType> = signal(StateService.getInitialBoundaryType(this.initialHashParams));
 
 
   statsFormModel = signal<StatsFormData>(
@@ -56,9 +63,14 @@ export class StateService {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
+      bboxes: '',
+      bpolys: '',
       "indicators": Utils.getFromParamsOrDefault(this.initialHashParams, 'indicators', ['mapping-saturation']),
       "adminids": Utils.getFromParamsOrDefault(this.initialHashParams, 'adminids', ''),
       "measure": Utils.getFromParamsOrDefault(this.initialHashParams, 'measure', 'count'),
+      "attribute-completeness--attributes": Utils.getFromParamsOrDefault(this.initialHashParams, 'attribute-completeness--attributes', []),
+      "attribute-completeness--attribute-title": Utils.getFromParamsOrDefault(this.initialHashParams, 'attribute-completeness--attribute-title', ''),
+      "attribute-completeness--attribute-filter": Utils.getFromParamsOrDefault(this.initialHashParams, 'attribute-completeness--attribute-filter', ''),
     },
     {
       equal: (a, b) => {
@@ -136,15 +148,21 @@ export class StateService {
     linkField(this.statsFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.statsFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
     linkField(this.statsFormModel, 'measure', this.sharedFormSignals['measure']);
+    linkField(this.statsFormModel, 'bboxes', this.sharedFormSignals['bboxes']);
+    linkField(this.statsFormModel, 'bpolys', this.sharedFormSignals['bpolys']);
 
     linkField(this.qualityFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.qualityFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.qualityFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
     linkField(this.qualityFormModel, 'measure', this.sharedFormSignals['measure']);
+    linkField(this.qualityFormModel, 'bboxes', this.sharedFormSignals['bboxes']);
+    linkField(this.qualityFormModel, 'bpolys', this.sharedFormSignals['bpolys']);
 
     linkField(this.extractionFormModel, 'topic', this.sharedFormSignals['topic']);
     linkField(this.extractionFormModel, 'topic-title', this.sharedFormSignals['topic-title']);
     linkField(this.extractionFormModel, 'topic-filter', this.sharedFormSignals['topic-filter']);
+    linkField(this.extractionFormModel, 'bboxes', this.sharedFormSignals['bboxes']);
+    linkField(this.extractionFormModel, 'bpolys', this.sharedFormSignals['bpolys']);
 
 
     effect(() => {
@@ -187,6 +205,17 @@ export class StateService {
     }
 
     return initialHashParams;
+  }
+
+  static getInitialBoundaryType(initialHashParams: URLSearchParams): BoundaryType {
+    if (initialHashParams.get('bboxes')) {
+      return 'bbox';
+    } else if (initialHashParams.get('bpolys')) {
+      return 'bpoly';
+    } else if (initialHashParams.get('adminids')) {
+      return 'admin';
+    }
+    return Utils.loadEnv<BoundaryType>('boundaryType', 'admin');
   }
 
   static getInitialQueryMode = (initialHashParams: URLSearchParams) => {
