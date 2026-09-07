@@ -128,6 +128,13 @@
     "8606546867449697486": "Data Extraktion mit Swagger",
     "5790286451234271031": "Vordefinierte 'Themen' und verfügbare Indikatoren:",
     "7055939305301334826": "Es konnte kein valider Key für die HeiGIT APIs generiert werden.",
-    "8950123402223308957": "Schreib eine Mail an support(at)account.heigit.org falls dies kein bekanntes Problem ist."
+    "8950123402223308957": "Schreib eine Mail an support(at)account.heigit.org falls dies kein bekanntes Problem ist.",
+    "7984526684174861638": "Bitte ein Untersuchungsgebiet auswählen.",
+    "7215213878385370142": "Bitte ein Thema auswählen.",
+    "40163034910520193": "Für den Indikator \"Attribute Completeness\" mindestens ein Attribut auswählen oder einen benutzerdefinierten Attributfilter festlegen.",
+    "6980062824870306052": " Für die Tag-Wert-Exploration ist ein Tag-Key erforderlich.",
+    "4420055000316709036": " Ein selbst erstellter Themen-Titel ist erforderlich.",
+    "3253845464017938209": " Ein ohsome-Filter ist erforderlich.",
+    "4678588727217917761": " Mindestens ein Qualitätsindikator muss ausgewählt werden."
   }
 }
