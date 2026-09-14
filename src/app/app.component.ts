@@ -33,6 +33,7 @@ export class AppComponent implements AfterViewInit {
   public hasAnnouncement: boolean;
   public announcement: string;
   public currentYear: string = new Date().getFullYear().toString();
+  protected mobileMenuOpen = false;
   protected readonly window = window;
   protected readonly frontendVersion: string = packageJson.version;
   protected readonly ohsomeApiVersion: string;

@@ -5,7 +5,7 @@
       <span id="dashboard-text" style="color: #000; vertical-align: middle">&nbsp;&nbsp;DASHBOARD</span>
     </a>
     <!--    <div id="header-message-item" class="header item" i18n>Easy access to OSM History and Quality Analyses</div>-->
-    <div class="right menu">
+    <div class="right menu" [ngClass]="{'mobile-open': mobileMenuOpen}">
       <div id="languageSelector" class="ui dropdown item">
         <i class="globe icon"></i>
         <div class="text" i18n>Language</div>
@@ -62,6 +62,11 @@
         <img class="ui image" src="assets/images/HeiGIT_Logo_only.svg" alt="HeiGIT Logo">
       </a></div>
     </div>
+    <a id="mobileMenuToggle" class="item" title="Menu"
+       (click)="mobileMenuOpen = !mobileMenuOpen" (keydown.enter)="mobileMenuOpen = !mobileMenuOpen"
+       tabindex="0">
+      <i class="large icon" [ngClass]="mobileMenuOpen ? 'close' : 'sidebar'"></i>
+    </a>
   </div>
 </div>
 @if (hasAnnouncement) {
