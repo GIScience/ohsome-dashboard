@@ -99,6 +99,7 @@ export const timeSeriesHandler: QueryHandler<FeaturesResponse> = {
             spikedash: 'dash'
           },
           yaxis: {
+            rangemode: 'tozero',
             title: {
               text: yAxisText
             },

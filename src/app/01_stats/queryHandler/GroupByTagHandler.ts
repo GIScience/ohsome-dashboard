@@ -95,6 +95,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
             spikedash: 'dash',
           },
           yaxis: {
+            rangemode: 'tozero',
             title: {
               text: yAxisText
             },
