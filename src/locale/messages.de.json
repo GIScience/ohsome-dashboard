@@ -136,7 +136,7 @@
     "6980062824870306052": " Für die Tag-Wert-Exploration ist ein Tag-Key erforderlich.",
     "4420055000316709036": " Ein selbst erstellter Themen-Titel ist erforderlich.",
     "3253845464017938209": " Ein ohsome-Filter ist erforderlich.",
-    "4678588727217917761": " Mindestens ein Qualitätsindikator muss ausgewählt werden."
+    "4678588727217917761": " Mindestens ein Qualitätsindikator muss ausgewählt werden.",
     "8950123402223308957": "Schreib eine Mail an support(at)account.heigit.org falls dies kein bekanntes Problem ist.",
     "1055157633460008240": " Noch kein eigener Attributfilter definiert. Klicke auf das Bearbeiten-Symbol, um einen zu erstellen. ",
     "4969402992408025928": "{$START_TAG_DIV}Versionen: Frontend: {$INTERPOLATION} · ohsome-API: {$INTERPOLATION_1} · ohsome-quality-API: {$INTERPOLATION_2} {$CLOSE_TAG_DIV}{$START_TAG_DIV}ohsome API zeitliche Abdeckung: {$INTERPOLATION_3}{$CLOSE_TAG_DIV}",
@@ -170,7 +170,7 @@
     "2159130950882492111": "Abbrechen",
     "2383858827930498531": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Zuschneiden",
     "1383780364200720416": "Geometrien am Rand des Untersuchungsgebiets zuschneiden",
-    "4760982925156268307": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Zeitpunkt der Momentaufnahme",
+    "4760982925156268307": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Zeitpunkt",
     "1257082357159986794": " Du musst angemeldet sein.",
     "6769954508212686549": "Ausdehnung",
     "2537624914138659010": "Die Download-Links extrahieren deine angeforderten Daten in einer Bounding Box basierend auf deinem ausgewählten Untersuchungsgebiet.",
