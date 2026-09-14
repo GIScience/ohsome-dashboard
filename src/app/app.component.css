@@ -20,3 +20,36 @@
 @media screen and (width < 415px ){
   #languageSelector .text {display: none}
 }
+
+#mobileMenuToggle {
+  display: none;
+}
+
+@media screen and (width < 768px) {
+  .ui.top.fixed.menu .right.menu {
+    display: none;
+  }
+
+  .ui.top.fixed.menu .right.menu.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    background: #fff;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
+    z-index: 999;
+  }
+
+  .ui.top.fixed.menu .right.menu.mobile-open .item {
+    width: 100%;
+  }
+
+  #mobileMenuToggle {
+    display: flex;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}
