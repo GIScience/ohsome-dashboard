@@ -17,10 +17,6 @@
   #header-message-item, #dashboard-text, #header-heigit-logo {display: none}
 }
 
-@media screen and (width < 415px ){
-  #languageSelector .text {display: none}
-}
-
 #mobileMenuToggle {
   display: none;
 }
@@ -33,6 +29,7 @@
   .ui.top.fixed.menu .right.menu.mobile-open {
     display: flex;
     flex-direction: column;
+    align-items: end;
     position: absolute;
     top: 100%;
     right: 0;
@@ -41,10 +38,6 @@
     background: #fff;
     box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
     z-index: 999;
-  }
-
-  .ui.top.fixed.menu .right.menu.mobile-open .item {
-    width: 100%;
   }
 
   #mobileMenuToggle {
