@@ -5,15 +5,15 @@
   <br>
   <div class="ui form">
     <div class="field">
-      <label>Copy Permalink</label>
+      <label i18n>Copy Permalink</label>
       <div class="field-button">
         <input type="text" id="permalink" #permalinkInput readonly (click)="permalinkInput.select()" [value]="dialogState().permalink">
         @if (navigator.clipboard && window.isSecureContext){
-          <button #copyButton class="ui primary button" (click)="copyPermalink()"><i
+          <button #copyButton class="ui primary button" (click)="copyPermalink()" i18n><i
             class="copy icon"></i>&nbsp;Copy
           </button>
         } @else {
-          <button class="ui disabled button" disabled>Press Ctrl&#8209;C</button>
+          <button class="ui disabled button" disabled i18n>Press Ctrl&#8209;C</button>
         }
       </div>
     </div>

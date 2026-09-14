@@ -121,24 +121,24 @@
 <div class="ui divider"></div>
 <!-- Clip -->
 <h6 class="ui right floated header"><i class="question circle outline icon" i18n-title title="The clip option defines whether the features to be analyzed should be clipped at the selected area-of-interest boundary before measuring their count/length/area. Not clipping for lines and especially polygons can speed up the analysis a lot for large AOIs while the impact for the result is low. Check it on if you are analyzing small areas like cities or smaller."></i></h6>
-<h4 class="ui left floated header"><i class="cut icon"></i>Clip</h4>
+<h4 class="ui left floated header" i18n><i class="cut icon"></i>Clip</h4>
 <div class="ui toggle checkbox">
   <input type="checkbox" [formField]="statsForm.clip">
-  <label>Clip geometries at area-of-interest boundary</label>
+  <label i18n>Clip geometries at area-of-interest boundary</label>
   @if (statsForm.clip().value()){
-    <div class="ui info message">Hint: Mostly useful for small area-of-interests.</div>
+    <div class="ui info message" i18n>Hint: Mostly useful for small area-of-interests.</div>
   }
 </div>
 
 <!-- Time -->
 <div class="ui divider"></div>
-<h4 class="ui header"><i class="calendar icon"></i>Date and Time Range</h4>
+<h4 class="ui header" i18n><i class="calendar icon"></i>Date and Time Range</h4>
 <div class="two fields">
-  <div class="field"><label>Start<input type="datetime-local" [formField]="statsForm.start"></label></div>
-  <div class="field"><label>End<input type="datetime-local" [formField]="statsForm.end"></label></div>
+  <div class="field"><label i18n>Start<input type="datetime-local" [formField]="statsForm.start"></label></div>
+  <div class="field"><label i18n>End<input type="datetime-local" [formField]="statsForm.end"></label></div>
 </div>
 <div class="field">
-  <label>Interval<select [formField]="statsForm.interval">
+  <label i18n>Interval<select [formField]="statsForm.interval">
     @for (option of periodOptions; track option.value) {
       <option [value]="option.value">{{ option.label }}</option>
     }
@@ -150,14 +150,14 @@
 <div class="ui divider"></div>
 <div class="ui toggle checkbox">
   <input type="checkbox" [checked]="groupByTag()" (change)="groupByTag.update((old)=>!old)">
-  <label>
+  <label i18n>
     Tag Value Exploration
   </label><br>
 </div>
 @if (groupByTag()) {
   <div class="field">
-    <input type="text" placeholder="Insert a Tag Key" [formField]="statsForm.groupByTagKey">
-    <p>Insert a tag-key to explore all tag-values used in the data specified by the given filter.</p>
+    <input type="text" i18n-placeholder placeholder="Insert a Tag Key" [formField]="statsForm.groupByTagKey">
+    <p i18n>Insert a tag-key to explore all tag-values used in the data specified by the given filter.</p>
   </div>
 }
 
