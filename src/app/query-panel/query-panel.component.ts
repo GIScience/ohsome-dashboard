@@ -35,13 +35,33 @@ import {AuthService} from "../singelton-services/auth.service";
 import {StateService} from '../singelton-services/state.service';
 import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
 import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
+import {
+  FormValidationMessagesComponent
+} from '../shared/components/form-validation-messages/form-validation-messages.component';
+
+// Several fields across the three tabs are still validated via the legacy, shared NgForm `f`
+// (rather than the new signal forms) - the AOI picker for all tabs, and a few OQT indicator
+// sub-forms (e.g. "Attribute Completeness") that haven't been migrated yet. Each entry maps
+// the control name(s) a field registers under to the message to show when any of them is invalid.
+const LEGACY_FORM_CONTROL_MESSAGES: { controlNames: string[]; message: string }[] = [
+  {controlNames: ['bboxes', 'bpolys'], message: $localize`Please select an area of interest.`},
+  {controlNames: ['topic'], message: $localize`Please select a topic.`},
+  {
+    controlNames: [
+      'attribute-completeness--attributes',
+      'attribute-completeness--attribute-title',
+      'attribute-completeness--attribute-filter',
+    ],
+    message: $localize`Select at least one attribute, or define a custom attribute filter, for the "Attribute Completeness" indicator.`
+  },
+];
 
 @Component({
   selector: 'app-query-panel',
   templateUrl: './query-panel.component.html',
   styleUrls: ['./query-panel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent]
+  imports: [FormsModule, NgClass, OqtApiQueryFormComponent, BoundarySelectInputComponent, BoundaryInputComponent, StatsQueryFormComponent, ExtractionQueryFormComponent, FormValidationMessagesComponent]
 })
 export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy {
   private dataService = inject(DataService);
@@ -65,6 +85,20 @@ export class QueryPanelComponent implements OnInit, AfterViewChecked, OnDestroy 
   });
 
   isValidCurrentForm = this.stateService.isValidCurrentForm;
+
+  // legacy support of NgForms
+  protected currentValidationMessages(form: NgForm): string[] {
+    const messages: string[] = [];
+    if (form) {
+      for (const {controlNames, message} of LEGACY_FORM_CONTROL_MESSAGES) {
+        if (controlNames.some((name) => form.controls[name]?.invalid)) {
+          messages.push(message);
+        }
+      }
+    }
+    messages.push(...this.stateService.currentFormMessages());
+    return messages;
+  }
 
   public readonly initialHashParams: URLSearchParams;
 

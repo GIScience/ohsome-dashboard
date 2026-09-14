@@ -61,7 +61,6 @@
                 <input type="hidden"
                        name="topic-title"
                        [ngModel]="qualityForm['topic-title']().value()"
-                       required
                 >
 <!--                <input type="text" id="topic-title"-->
 <!--                       name="topic-title"-->
@@ -92,7 +91,7 @@
                 <input type="hidden" id="topic-filter"
                        name="topic-filter"
                        [ngModel]="qualityForm['topic-filter']().value()"
-                       required>
+                >
               } @else {
                 <app-prism-editor id="topicFilter" [readonly]="true" [value]="this.topics[selectedTopicKey].filter"
                                   [partialSetupOptions]="{wordWrap: true, lineNumbers: false}"

@@ -128,6 +128,13 @@
     "1565516189397987767": "Download OSM",
     "8140899462647138073": "{$START_PARAGRAPH}We are working on a convenient way for you to download custom filtered OSM data.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}In the meanwhile you can already download analysis results from the History Stats as CSV or JSON file.{$CLOSE_PARAGRAPH}{$START_PARAGRAPH}For smaller regions you can already use our ohsome API directly here:{$LINE_BREAK}{$START_LINK}ohsome API Swagger documentation{$CLOSE_LINK}{$CLOSE_PARAGRAPH}",
     "8606546867449697486": "Data Extraction with Swagger",
-    "5790286451234271031": "Available topics and indicators:"
+    "5790286451234271031": "Available topics and indicators:",
+    "7984526684174861638": "Please select an area of interest.",
+    "7215213878385370142": "Please select a topic.",
+    "40163034910520193": "Select at least one attribute, or define a custom attribute filter, for the \"Attribute Completeness\" indicator.",
+    "6980062824870306052": " A tag key is required for tag value exploration.",
+    "4420055000316709036": " A custom topic title is required.",
+    "3253845464017938209": " An ohsome filter is required.",
+    "4678588727217917761": " At least one quality indicator must be selected."
   }
 }

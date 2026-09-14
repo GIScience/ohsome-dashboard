@@ -232,6 +232,7 @@
         <button [disabled]="!(f.valid && isValidCurrentForm())" type="submit" class="ui green right labeled icon button" i18n>
           <i class="play icon"></i>Run Query
         </button>
+        <app-form-validation-messages [messages]="currentValidationMessages(f)"></app-form-validation-messages>
       </div>
     </div>
   } @else {
@@ -242,13 +243,7 @@
         <button [disabled]="!(f.valid && isValidCurrentForm())" class="ui green  right labeled icon button" type="submit">
           Create Download Asset<i class="download icon"></i>
         </button>
-        <!--        @if (extractionForm().invalid()) {-->
-        <!--          <div class="ui left pointing red basic label">-->
-        <!--            @for (error of extractionForm().errorSummary(); track error.kind) {-->
-        <!--              <span>{{ error.message }}</span>-->
-        <!--            }-->
-        <!--          </div>-->
-        <!--        }-->
+        <app-form-validation-messages [messages]="currentValidationMessages(f)"></app-form-validation-messages>
         @if (authService.isAnon()) {
           <div class="ui message">
             To download OSM Data you need to &nbsp;&nbsp;
