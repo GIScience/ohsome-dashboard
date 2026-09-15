@@ -1,5 +1,5 @@
 @if (messages().length > 0) {
-  <div class="ui left pointing red basic label">
+  <div [attr.class]="'ui ' + arrowDirection() + ' pointing red basic label'">
     @for (message of messages(); track message) {
       <div>{{ message }}</div>
     }
