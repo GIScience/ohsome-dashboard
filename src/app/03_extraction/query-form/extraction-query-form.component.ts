@@ -45,17 +45,19 @@ export class ExtractionQueryFormComponent {
   extractionFormModel = this.stateService.extractionFormModel;
 
   extractionForm = form(this.extractionFormModel, (schemaPath) => {
+    required(schemaPath.topic, {message: $localize` Please select a topic.`});
     required(schemaPath['topic-filter'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
       message: ' An ohsome filter is required.'
     });
-    // validate(schemaPath.aoi, ({value}) => {
-    //   console.log("VALIDATOR", value());
-    //   const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
-    //   return numberOfShapes !== 1
-    //     ? {kind: 'singleBboxRequired', message: ' A single bounding box is required.'}
-    //     : null;
-    // });
+    required(schemaPath.bboxes, {
+      when: () => this.stateService.boundaryType() === 'bbox',
+      message: $localize` Please draw a bounding box.`
+    });
+    required(schemaPath.bpolys, {
+      when: () => this.stateService.boundaryType() !== 'bbox',
+      message: $localize` Please select or draw an area of interest.`
+    });
     validate(schemaPath, () => {
       return this.authService.isAnon()
         ? {kind: 'signInRequire', message: " You need to be signed in."}
@@ -124,7 +126,8 @@ export class ExtractionQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: initialHashParams.get('aoi') ?? '', // todo remove
+      bboxes: '',
+      bpolys: '',
       clip: initialHashParams.get('clip')?.toLowerCase() !== "false", //only "true" is true
       time: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
     }

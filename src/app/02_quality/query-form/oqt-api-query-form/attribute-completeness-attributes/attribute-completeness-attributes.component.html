@@ -3,27 +3,17 @@
 <div class="editable-attributes">
   @if (!useCustomFilterMode()) {
     <div class="field">
-      <app-sui-multi-select-search-dropdown [required]="true"
-                                            [multiple]="true"
+      <app-sui-multi-select-search-dropdown [multiple]="true"
                                             id="search-select-attribute"
-                                            name="{{indicatorKey}}--attributes"
-                                            [(ngModel)]="selectedAttributeKeys"
+                                            [formField]="attributesField"
                                             [options]="attributesDropdownOptions"
                                             [selectOptions]="getAttributesByTopicKey(this.selectedTopic.key) | keyvalue"></app-sui-multi-select-search-dropdown>
     </div>
   } @else {
-    <input type="hidden" id="attribute-title"
-           name="{{indicatorKey}}--attribute-title"
-           [ngModel]="customFilterTitle()"
-           required>
-    <input type="hidden" id="attribute-filter"
-           name="{{indicatorKey}}--attribute-filter"
-           [ngModel]="customFilterDefinition()"
-           required>
     <div id="custom-filter-wrapper-element" class="field" style="background-color: white">
-      @if (customFilterTitle()) {
+      @if (attributeTitleField().value()) {
         <div #customAttributeLabelElement class="ui blue basic label">
-          <div>{{ customFilterTitle() }}</div>
+          <div>{{ attributeTitleField().value() }}</div>
           <div><i (click)="cancelCustomFilter()" (keydown.enter)="triggerClick($event)"  tabindex="0"
                   class="delete icon"></i></div>
         </div>
@@ -110,14 +100,14 @@
 
     <div class="field">
       <label for="customTitle">Attribute Title</label>
-      <input id="customTitle" class="ui header" type="text" [value]="customFilterTitle()"
-             (change)="setCustomFilerTitle($event)" required>
+      <input id="customTitle" class="ui header" type="text" [value]="attributeTitleField().value()"
+             (change)="setCustomFilerTitle($event)">
     </div>
     <div class="field">
       <label>Attribute Filter (<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">How does this
         work?</a>)
-        <app-prism-editor id="customAttributeFilter" [value]="customFilterDefinition()"
-                          (valueChange)="customFilterDefinition.set($event)">
+        <app-prism-editor id="customAttributeFilter" [value]="attributeFilterField().value()"
+                          (valueChange)="attributeFilterField().value.set($event)">
         </app-prism-editor>
       </label>
     </div>
