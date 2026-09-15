@@ -190,50 +190,98 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   });
 
   describe('confirmCustomFilter()', () => {
-    it('should fall back to dropdown mode when the title is empty and the topic has predefined attributes', () => {
+    it('should reject an empty title and keep the current mode', () => {
       component.selectedTopic = enrichedRoadsTopic;
       component.customFilterTitle.set('');
+      component.customFilterDefinition.set('my=filter');
       component.useCustomFilterMode.set(false);
 
-      component.confirmCustomFilter();
-
+      expect(component.confirmCustomFilter()).toBe(false);
       expect(component.useCustomFilterMode()).toBe(false);
     });
 
-    it('should enable custom filter mode when the title is set and the topic has predefined attributes', () => {
+    it('should reject an empty filter definition and keep the current mode', () => {
       component.selectedTopic = enrichedRoadsTopic;
       component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('');
       component.useCustomFilterMode.set(false);
 
-      component.confirmCustomFilter();
+      expect(component.confirmCustomFilter()).toBe(false);
+      expect(component.useCustomFilterMode()).toBe(false);
+    });
 
+    it('should reject whitespace-only title and filter definition', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('   ');
+      component.customFilterDefinition.set('\n  ');
+      component.useCustomFilterMode.set(false);
+
+      expect(component.confirmCustomFilter()).toBe(false);
+      expect(component.useCustomFilterMode()).toBe(false);
+    });
+
+    it('should enable custom filter mode when both title and filter definition are set', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('my=filter');
+      component.useCustomFilterMode.set(false);
+
+      expect(component.confirmCustomFilter()).toBe(true);
       expect(component.useCustomFilterMode()).toBe(true);
     });
 
-    it('should enable custom filter mode when the title is empty but the topic has no predefined attributes', () => {
+    it('should enable custom filter mode for a topic without predefined attributes', () => {
       component.selectedTopic = topicWithoutAttributes;
-      component.customFilterTitle.set('');
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('my=filter');
       component.useCustomFilterMode.set(false);
 
-      component.confirmCustomFilter();
-
+      expect(component.confirmCustomFilter()).toBe(true);
       expect(component.useCustomFilterMode()).toBe(true);
     });
   });
 
-  it('should show the dropdown instead of the "no predefined attributes" hint when confirming an empty custom filter for a topic with predefined attributes', () => {
-    component.selectedTopic = enrichedRoadsTopic;
-    component.useCustomFilterMode.set(true);
-    component.customFilterTitle.set('');
-    fixture.detectChanges();
+  describe('custom filter validation', () => {
+    it('should report a message for each blank field', () => {
+      component.customFilterTitle.set('');
+      component.customFilterDefinition.set('  ');
 
-    component.confirmCustomFilter();
-    fixture.detectChanges();
+      expect(component.isCustomFilterValid()).toBe(false);
+      expect(component.customFilterMessages()).toEqual([
+        ' An attribute title is required.',
+        ' An attribute filter is required.',
+      ]);
+    });
 
-    const hint = fixture.nativeElement.querySelector('#custom-filter-wrapper-element .custom-filter-hint');
-    const dropdown = fixture.nativeElement.querySelector('#search-select-attribute');
-    expect(hint).toBeNull();
-    expect(dropdown).not.toBeNull();
+    it('should report only the blank field', () => {
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('');
+
+      expect(component.customFilterMessages()).toEqual([' An attribute filter is required.']);
+    });
+
+    it('should report no messages when both fields are filled', () => {
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('my=filter');
+
+      expect(component.isCustomFilterValid()).toBe(true);
+      expect(component.customFilterMessages()).toEqual([]);
+    });
+
+    it('should disable the OK button of the editor modal while the custom filter is incomplete', () => {
+      component.customFilterTitle.set('');
+      component.customFilterDefinition.set('');
+      fixture.detectChanges();
+
+      const okButton = fixture.nativeElement.querySelector('#attributes-editor .actions .approve.button');
+      expect(okButton.classList).toContain('disabled');
+
+      component.customFilterTitle.set('My title');
+      component.customFilterDefinition.set('my=filter');
+      fixture.detectChanges();
+
+      expect(okButton.classList).not.toContain('disabled');
+    });
   });
 
   it('should show a hint instead of an empty label when no custom filter has been defined yet', () => {

@@ -1,10 +1,13 @@
-import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild } from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
 import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
 import { PrismEditorComponent } from '../../../../shared/components/prism-editor/prism-editor.component';
 import { KeyValuePipe } from '@angular/common';
+import {
+  FormValidationMessagesComponent
+} from '../../../../shared/components/form-validation-messages/form-validation-messages.component';
 
 declare const $: any;
 declare const Prism;
@@ -15,7 +18,7 @@ declare const Prism;
     styleUrl: './attribute-completeness-attributes.component.css',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe]
+    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe, FormValidationMessagesComponent]
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
   ngZone = inject(NgZone);
@@ -38,6 +41,15 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   useCustomFilterMode = signal(false);
   customFilterTitle = signal<string>('');
   customFilterDefinition = signal<string>('');
+
+  // a custom attribute filter needs both a title and a filter definition to be usable
+  readonly isCustomFilterTitleBlank = computed(() => this.customFilterTitle().trim() === '');
+  readonly isCustomFilterDefinitionBlank = computed(() => this.customFilterDefinition().trim() === '');
+  readonly isCustomFilterValid = computed(() => !this.isCustomFilterTitleBlank() && !this.isCustomFilterDefinitionBlank());
+  readonly customFilterMessages = computed(() => [
+    ...(this.isCustomFilterTitleBlank() ? [$localize` An attribute title is required.`] : []),
+    ...(this.isCustomFilterDefinitionBlank() ? [$localize` An attribute filter is required.`] : []),
+  ]);
 
   constructor() {
     // update popup content whenever the signal customFilterDefinition changes
@@ -245,15 +257,14 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     }
   }
 
-  confirmCustomFilter(): void {
-    // an empty title for a topic that has predefined attributes isn't a valid custom
-    // filter - fall back to the dropdown instead of showing the "no predefined attributes" hint
-    if (!this.customFilterTitle() && this.topicHasAttributes(this.selectedTopic.key)) {
-      this.useCustomFilterMode.set(false);
-      return;
+  // returns false to keep the editor modal open when the custom filter is incomplete
+  confirmCustomFilter(): boolean {
+    if (!this.isCustomFilterValid()) {
+      return false;
     }
 
     this.useCustomFilterMode.set(true);
+    return true;
   }
 
   cancelCustomFilter(): void {
@@ -290,7 +301,9 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
         context: 'div#attributes-editor-dimmer',
         // context: 'body',
         // detachable: 'true' will move the modal-element inside the context element dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
-        detachable: true
+        detachable: true,
+        // returning false prevents fomantic from closing the modal on the 'approve' button
+        onApprove: () => this.ngZone.run(() => this.confirmCustomFilter())
       }).modal('show');
     });
 
