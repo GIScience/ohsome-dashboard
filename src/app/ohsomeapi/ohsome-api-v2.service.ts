@@ -14,9 +14,13 @@ type OhsomeApiGetMetadataResponse = paths['/metadata']['get']['responses']['200'
 type FeaturesOperation = operations['post_features_as_json_stats_features__measure__json_post'];
 export type FeaturesRequestBody = FeaturesOperation['requestBody']['content']['application/json'];
 export type FeaturesResponse    = FeaturesOperation['responses'][200]['content']['application/json'];
+export type FeaturesBadRequestError = FeaturesOperation['responses'][400]['content']['application/json'];
 export type FeaturesValidationError = FeaturesOperation['responses'][422]['content']['application/json'];
+export type FeaturesGatewayTimeoutError = FeaturesOperation['responses'][422]['content']['application/json'];
 export type FeaturesError =
   | { kind: 'validation'; error: FeaturesValidationError }
+  | { kind: 'timeout'; error: FeaturesGatewayTimeoutError }
+  | { kind: 'badRequest'; error: FeaturesBadRequestError }
   | { kind: 'http'; error: HttpErrorResponse };
 
 
@@ -43,8 +47,14 @@ export class OhsomeApiV2Service {
       catchError((err: HttpErrorResponse) => {
         let featuresError: FeaturesError;
         switch (err.status) {
+          case 400:
+            featuresError = {kind: 'badRequest', error: err.error as FeaturesBadRequestError};
+            break
           case 422:
             featuresError = {kind: 'validation', error: err.error as FeaturesValidationError};
+            break
+          case 504:
+            featuresError = {kind: 'timeout', error: err.error as FeaturesGatewayTimeoutError};
             break
           default:
             featuresError = { kind: 'http', error: err };

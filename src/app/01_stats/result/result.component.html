@@ -102,7 +102,11 @@
               }
             }
           }
-
+          @if (error.kind === 'timeout' || error.kind === 'badRequest') {
+            @for (detail of error.error.detail; track detail) {
+              <div>{{detail.msg}}</div>
+            }
+          }
         </div>
       </div>
     }
