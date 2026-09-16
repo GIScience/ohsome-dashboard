@@ -125,7 +125,8 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     }
 
     const unparseConfig: UnparseConfig = {
-      delimiter: ";"
+      delimiter: ";",
+      quotes: true
     }
     return getCSVHeader(response.apiVersion, response.attribution) + Papa.unparse(data, unparseConfig);
   },
