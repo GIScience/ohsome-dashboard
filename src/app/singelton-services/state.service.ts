@@ -6,7 +6,7 @@ import Utils from '../../utils';
 import {ExtractionQueryFormComponent} from '../03_extraction/query-form/extraction-query-form.component';
 import {linkField} from '../shared/utils/form.utils';
 import {StatsQueryFormComponent} from '../01_stats/query-form/stats-query-form.component';
-import {components} from '../ohsomeapi/ohsome-api-v2-types';
+import {paths} from '../ohsomeapi/ohsome-api-v2-types';
 
 interface PermalinkDialogState {
   open: boolean;
@@ -31,7 +31,7 @@ export class StateService {
     topic: WritableSignal<string>;
     'topic-title': WritableSignal<string>;
     'topic-filter': WritableSignal<string>;
-    measure: WritableSignal<components['schemas']['MeasureRequestModel']>;
+    measure: WritableSignal<paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure']>;
   } = {
     topic: signal<string>(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic', Utils.loadEnv('defaultTopicKey', 'cycleway'))),
     'topic-title': signal(Utils.getFromParamsOrDefault(this.initialHashParams, 'topic-title', '')),

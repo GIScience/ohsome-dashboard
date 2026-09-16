@@ -1,5 +1,5 @@
 import {AOIData} from '../../shared/components/aoi-input/aoi-input.component';
-import {components} from '../../ohsomeapi/ohsome-api-v2-types';
+import {paths} from '../../ohsomeapi/ohsome-api-v2-types';
 
 interface SharedFormData {
   topic: string;
@@ -12,7 +12,7 @@ interface StatsFormData extends SharedFormData {
   start: string;
   end: string;
   interval: string;
-  measure: components['schemas']['MeasureRequestModel'];
+  measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
   clip: boolean;
   groupByTagKey: string;
 }
@@ -20,7 +20,7 @@ interface StatsFormData extends SharedFormData {
 interface QualityFormData extends SharedFormData {
   indicators: string[];
   adminids: string;
-  measure: components['schemas']['MeasureRequestModel'];
+  measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
 }
 
 interface ExtractionFormData extends SharedFormData {

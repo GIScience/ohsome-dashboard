@@ -31,7 +31,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
     const filter = getFilterFromFormValues(formValues, oqtApiMetadataProviderService);
 
-    const groupBy: components["schemas"]["GroupByTagModel"] = {type: 'byTag', key: formValues.groupByTagKey};
+    const groupBy: components["schemas"]["GroupByTag"] = {type: 'byTag', key: formValues.groupByTagKey};
 
     const body: paths['/stats/features/{measure}.json']['post']['requestBody']['content']['application/json'] = {
       filter,
@@ -50,7 +50,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
   toInputs(response: FeaturesResponse, formValues): { plotlyDataLayoutConfig: PlotlyDataLayoutConfig } {
 
-    const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
+    const groupByResult = response.result as NoUndefinedField<components['schemas']['TimeSeriesGroupedByResult']>
 
     let yAxisText = Utils.capitalizeFirstLetter(`${formValues.measure}`);
     const unit = Utils.getUnitByMeasure(formValues.measure).trim()
@@ -60,7 +60,7 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
     const x = groupByResult.timestamp;
     const length = x.length;
 
-    const traces: Partial<PlotData>[] = Object.entries(groupByResult.values).map(([key, value]): Partial<PlotData> => {
+    const traces: Partial<PlotData>[] = Object.entries(groupByResult.group).map(([key, value]): Partial<PlotData> => {
       return {
         x,
         y: value as number[],
@@ -109,18 +109,18 @@ export const groupByTagHandler: QueryHandler<FeaturesResponse> = {
 
   toCSV(response: FeaturesResponse): string {
 
-    const groupByResult = response.result as NoUndefinedField<components['schemas']['SnapshotColumnsGrouped']>
+    const groupByResult = response.result as NoUndefinedField<components['schemas']['TimeSeriesGroupedByResult']>
 
     const rows = groupByResult.timestamp.map((ts, i) => {
       const row = [ts, groupByResult.value[i]];
-      Object.keys(groupByResult.values).forEach((key) => {
-        row.push(groupByResult.values[key][i]);
+      Object.keys(groupByResult.group).forEach((key) => {
+        row.push(groupByResult.group[key][i]);
       })
       return row;
     })
 
     const data = {
-      fields: ["timestamp", "total", ...Object.keys(groupByResult.values)],
+      fields: ["timestamp", "total", ...Object.keys(groupByResult.group)],
       data: rows
     }
 

@@ -336,8 +336,15 @@ export interface components {
              */
             text: string;
         };
-        /** CollectionsExtractionRequestParametersModel */
-        CollectionsExtractionRequestParametersModel: {
+        /** Error */
+        Error: {
+            /** Type */
+            type: string;
+            /** Msg */
+            msg: string;
+        };
+        /** ExtractionCollectionsRequest */
+        ExtractionCollectionsRequest: {
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#filter).
@@ -368,8 +375,8 @@ export interface components {
              */
             clip: boolean;
         };
-        /** ContributionsExtractionRequestParametersModel */
-        ContributionsExtractionRequestParametersModel: {
+        /** ExtractionContributionsRequest */
+        ExtractionContributionsRequest: {
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
@@ -386,10 +393,10 @@ export interface components {
                 number,
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            time: components["schemas"]["TimeRangeRequestModel"];
+            time: components["schemas"]["TimeRange"];
         };
-        /** ExtractionRequestParametersModel */
-        ExtractionRequestParametersModel: {
+        /** ExtractionFeaturesRequest */
+        ExtractionFeaturesRequest: {
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
@@ -407,7 +414,7 @@ export interface components {
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
             /** Time */
-            time: string | "latest" | components["schemas"]["TimeRangeRequestModel"];
+            time: string | "latest" | components["schemas"]["TimeRange"];
             /**
              * Clip
              * @description Whether to clip extracted features with AOI or not.
@@ -415,8 +422,8 @@ export interface components {
              */
             clip: boolean;
         };
-        /** FilterRequestModel */
-        FilterRequestModel: {
+        /** FilterRequest */
+        FilterRequest: {
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
@@ -424,24 +431,8 @@ export interface components {
              */
             filter: components["schemas"]["OhsomeFilter"];
         };
-        /** FilterResponseModel */
-        FilterResponseModel: {
-            /**
-             * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
-             */
-            apiVersion: string;
-            /**
-             * @default {
-             *       "url": "https://ohsome.org/copyrights",
-             *       "text": "© OpenStreetMap contributors"
-             *     }
-             */
-            attribution: components["schemas"]["Attribution"];
-            filter: components["schemas"]["OhsomeFilter"];
-        };
-        /** GroupByTagModel */
-        GroupByTagModel: {
+        /** GroupByTag */
+        GroupByTag: {
             /**
              * Type
              * @constant
@@ -450,24 +441,24 @@ export interface components {
             /** Key */
             key: string;
         };
+        /** HTTPError */
+        HTTPError: {
+            /** Detail */
+            detail: components["schemas"]["Error"][];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
-        /** HealthCheck */
-        HealthCheck: {
+        /** HealthResponse */
+        HealthResponse: {
             /**
              * Status
              * @default Ok
              */
             status: string;
         };
-        /**
-         * MeasureRequestModel
-         * @enum {string}
-         */
-        MeasureRequestModel: "count" | "length" | "area";
         /** Metadata */
         Metadata: {
             /**
@@ -481,11 +472,11 @@ export interface components {
              */
             end: string;
         };
-        /** MetadataResponseModel */
-        MetadataResponseModel: {
+        /** MetadataResponse */
+        MetadataResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
+             * @default 2.0.0rc2+45857f1
              */
             apiVersion: string;
             /**
@@ -561,29 +552,31 @@ export interface components {
             number,
             number
         ];
-        /** SnapshotColumns */
-        SnapshotColumns: {
-            /** Timestamp */
-            timestamp: string[];
-            /** Value */
-            value: number[];
+        /** StatsContributionsRequest */
+        StatsContributionsRequest: {
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBins"];
         };
-        /** SnapshotColumnsGrouped */
-        SnapshotColumnsGrouped: {
-            /** Timestamp */
-            timestamp: string[];
-            /** Value */
-            value: number[];
-            /** Values */
-            values: {
-                [key: string]: number[];
-            };
-        };
-        /** SnapshotColumnsResponseModel */
-        SnapshotColumnsResponseModel: {
+        /** StatsContributionsResponse */
+        StatsContributionsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
+             * @default 2.0.0rc2+45857f1
              */
             apiVersion: string;
             /**
@@ -593,36 +586,33 @@ export interface components {
              *     }
              */
             attribution: components["schemas"]["Attribution"];
-            /** Result */
-            result: components["schemas"]["SnapshotColumns"] | components["schemas"]["SnapshotColumnsGrouped"];
+            result: components["schemas"]["TimeBinsResult"];
         };
-        /** SnapshotRow */
-        SnapshotRow: {
-            /** Value */
-            value: number;
+        /** StatsContributorsRequest */
+        StatsContributorsRequest: {
             /**
-             * Timestamp
-             * Format: date-time
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
              */
-            timestamp: string;
-        };
-        /** SnapshotRowGroupedByTag */
-        SnapshotRowGroupedByTag: {
-            /** Value */
-            value: number;
+            filter: components["schemas"]["OhsomeFilter"];
             /**
-             * Timestamp
-             * Format: date-time
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
              */
-            timestamp: string;
-            /** Tagvalue */
-            tagvalue: string;
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBins"];
         };
-        /** SnapshotsResponseModel */
-        SnapshotsResponseModel: {
+        /** StatsContributorsResponse */
+        StatsContributorsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
+             * @default 2.0.0rc2+45857f1
              */
             apiVersion: string;
             /**
@@ -632,16 +622,57 @@ export interface components {
              *     }
              */
             attribution: components["schemas"]["Attribution"];
-            /** Result */
-            result: (components["schemas"]["SnapshotRow"] | components["schemas"]["SnapshotRowGroupedByTag"])[];
+            result: components["schemas"]["TimeBinsResult"];
         };
-        /** StatsFeaturesRequestModel */
-        StatsFeaturesRequestModel: {
+        /** StatsCurrentnessRequest */
+        StatsCurrentnessRequest: {
+            /**
+             * Filter
+             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
+             * @example geometry:point and natural=tree
+             */
+            filter: components["schemas"]["OhsomeFilter"];
+            /**
+             * Aoi
+             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
+             */
+            aoi: [
+                number,
+                number,
+                number,
+                number
+            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
+            time: components["schemas"]["TimeBins"];
+            /**
+             * Clip
+             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
+             * @default false
+             */
+            clip: boolean;
+        };
+        /** StatsCurrentnessResponse */
+        StatsCurrentnessResponse: {
+            /**
+             * Apiversion
+             * @default 2.0.0rc2+45857f1
+             */
+            apiVersion: string;
+            /**
+             * @default {
+             *       "url": "https://ohsome.org/copyrights",
+             *       "text": "© OpenStreetMap contributors"
+             *     }
+             */
+            attribution: components["schemas"]["Attribution"];
+            result: components["schemas"]["TimeBinsResult"];
+        };
+        /** StatsFeaturesRequest */
+        StatsFeaturesRequest: {
             /**
              * @description `(experimental, optional)`; If given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
              * @example null
              */
-            groupBy?: components["schemas"]["GroupByTagModel"] | null;
+            groupBy?: components["schemas"]["GroupByTag"] | null;
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
@@ -659,7 +690,7 @@ export interface components {
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
             /** Time */
-            time: components["schemas"]["TimeSeriesRequestModel"] | string | "latest";
+            time: components["schemas"]["TimeSeries"] | string | "latest";
             /**
              * Clip
              * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
@@ -667,35 +698,11 @@ export interface components {
              */
             clip: boolean;
         };
-        /** TimeBinColumns */
-        TimeBinColumns: {
-            /** Start */
-            start: string[];
-            /** End */
-            end: string[];
-            /** Value */
-            value: number[];
-        };
-        /** TimeBinRow */
-        TimeBinRow: {
-            /** Value */
-            value: number;
-            /**
-             * Start
-             * Format: date-time
-             */
-            start: string;
-            /**
-             * End
-             * Format: date-time
-             */
-            end: string;
-        };
-        /** TimeBinsColumnsResponseModel */
-        TimeBinsColumnsResponseModel: {
+        /** StatsFeaturesResponse */
+        StatsFeaturesResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
+             * @default 2.0.0rc2+45857f1
              */
             apiVersion: string;
             /**
@@ -705,13 +712,14 @@ export interface components {
              *     }
              */
             attribution: components["schemas"]["Attribution"];
-            result: components["schemas"]["TimeBinColumns"];
+            /** Result */
+            result: components["schemas"]["TimeSeriesResult"] | components["schemas"]["TimeSeriesGroupedByResult"];
         };
         /**
-         * Time Bins
+         * TimeBins
          * @description Time bins defined using a start/end timestamp (ISO-8601, UTC) and a bin size (ISO-8601 duration). Last bin might not cover bin size. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time).
          */
-        TimeBinsRequestModel: {
+        TimeBins: {
             /**
              * Start
              * @example 2025-01-01T00:00:00Z
@@ -729,25 +737,17 @@ export interface components {
              */
             binSize?: string | null;
         };
-        /** TimeBinsResponseModel */
-        TimeBinsResponseModel: {
-            /**
-             * Apiversion
-             * @default 2.0.0rc2+bc3d6f5
-             */
-            apiVersion: string;
-            /**
-             * @default {
-             *       "url": "https://ohsome.org/copyrights",
-             *       "text": "© OpenStreetMap contributors"
-             *     }
-             */
-            attribution: components["schemas"]["Attribution"];
-            /** Result */
-            result: components["schemas"]["TimeBinRow"][];
+        /** TimeBinsResult */
+        TimeBinsResult: {
+            /** Start */
+            start: string[];
+            /** End */
+            end: string[];
+            /** Value */
+            value: number[];
         };
-        /** Time Range */
-        TimeRangeRequestModel: {
+        /** TimeRange */
+        TimeRange: {
             /**
              * Start
              * @example 2025-01-01T00:00:00Z
@@ -760,10 +760,10 @@ export interface components {
             end: string | "latest";
         };
         /**
-         * Time Series
+         * TimeSeries
          * @description Time series defined using a start/end timestamp (ISO-8601, UTC) and a interval (ISO-8601 duration). The interval between the last two timestamp might not fit given duration. Please take a look at the [documentation](https://docs.ohsome.org/ohsome-api/staging/reference.html#time).
          */
-        TimeSeriesRequestModel: {
+        TimeSeries: {
             /**
              * Start
              * @example 2025-01-01T00:00:00Z
@@ -781,6 +781,24 @@ export interface components {
              */
             interval?: string | null;
         };
+        /** TimeSeriesGroupedByResult */
+        TimeSeriesGroupedByResult: {
+            /** Timestamp */
+            timestamp: string[];
+            /** Value */
+            value: number[];
+            /** Group */
+            group: {
+                [key: string]: number[];
+            };
+        };
+        /** TimeSeriesResult */
+        TimeSeriesResult: {
+            /** Timestamp */
+            timestamp: string[];
+            /** Value */
+            value: number[];
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -793,72 +811,6 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
-        };
-        /** TimeBinsRequestParametersModel */
-        ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel: {
-            /**
-             * Filter
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
-             * @example geometry:point and natural=tree
-             */
-            filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
-             */
-            aoi: [
-                number,
-                number,
-                number,
-                number
-            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            time: components["schemas"]["TimeBinsRequestModel"];
-        };
-        /** TimeBinsRequestParametersModel */
-        ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel: {
-            /**
-             * Filter
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
-             * @example geometry:point and natural=tree
-             */
-            filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
-             */
-            aoi: [
-                number,
-                number,
-                number,
-                number
-            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            time: components["schemas"]["TimeBinsRequestModel"];
-        };
-        /** TimeBinsRequestParametersModel */
-        ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel: {
-            /**
-             * Filter
-             * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
-             * @example geometry:point and natural=tree
-             */
-            filter: components["schemas"]["OhsomeFilter"];
-            /**
-             * Aoi
-             * @description Area of interest as a GeoJSON Geometry, Bounding Box or Well Known Text (WGS84, EPSG:4326).
-             */
-            aoi: [
-                number,
-                number,
-                number,
-                number
-            ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
-            time: components["schemas"]["TimeBinsRequestModel"];
-            /**
-             * Clip
-             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
-             * @default false
-             */
-            clip: boolean;
         };
     };
     responses: never;
@@ -886,8 +838,15 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
                 content: {
-                    "application/json": components["schemas"]["FilterResponseModel"];
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -897,6 +856,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -910,7 +878,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["FilterRequestModel"];
+                "application/json": components["schemas"]["FilterRequest"];
             };
         };
         responses: {
@@ -919,8 +887,15 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
                 content: {
-                    "application/json": components["schemas"]["FilterResponseModel"];
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -930,6 +905,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -949,7 +933,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MetadataResponseModel"];
+                    "application/json": components["schemas"]["MetadataResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -959,13 +961,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                measure: components["schemas"]["MeasureRequestModel"];
+                measure: "count" | "length" | "area";
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["StatsFeaturesRequestModel"];
+                "application/json": components["schemas"]["StatsFeaturesRequest"];
             };
         };
         responses: {
@@ -975,7 +977,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SnapshotColumnsResponseModel"];
+                    "application/json": components["schemas"]["StatsFeaturesResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -987,6 +998,15 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
         };
     };
     post_features_as_csv_stats_features__measure__csv_post: {
@@ -994,13 +1014,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                measure: components["schemas"]["MeasureRequestModel"];
+                measure: "count" | "length" | "area";
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["StatsFeaturesRequestModel"];
+                "application/json": components["schemas"]["StatsFeaturesRequest"];
             };
         };
         responses: {
@@ -1011,13 +1031,22 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
+                     * @example # apiVersion: 2.0.0rc2+45857f1
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
                      *     2026-01-01T00:00:00Z;163
                      */
                     "text/csv": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1027,6 +1056,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1040,7 +1078,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsContributorsRequest"];
             };
         };
         responses: {
@@ -1050,7 +1088,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TimeBinsColumnsResponseModel"];
+                    "application/json": components["schemas"]["StatsContributorsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1060,6 +1107,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1073,7 +1129,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__contributors__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsContributorsRequest"];
             };
         };
         responses: {
@@ -1084,13 +1140,22 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
+                     * @example # apiVersion: 2.0.0rc2+45857f1
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
                      *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
                      */
                     "text/csv": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1100,6 +1165,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1113,7 +1187,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsContributionsRequest"];
             };
         };
         responses: {
@@ -1123,7 +1197,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TimeBinsColumnsResponseModel"];
+                    "application/json": components["schemas"]["StatsContributionsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1133,6 +1216,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1146,7 +1238,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__contributions__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsContributionsRequest"];
             };
         };
         responses: {
@@ -1157,13 +1249,22 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
+                     * @example # apiVersion: 2.0.0rc2+45857f1
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
                      *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
                      */
                     "text/csv": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1173,6 +1274,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1182,13 +1292,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                measure: components["schemas"]["MeasureRequestModel"];
+                measure: "count" | "length" | "area";
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsCurrentnessRequest"];
             };
         };
         responses: {
@@ -1198,7 +1308,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TimeBinsColumnsResponseModel"];
+                    "application/json": components["schemas"]["StatsCurrentnessResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1210,6 +1329,15 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
         };
     };
     post_currentness_as_csv_stats_currentness__measure__csv_post: {
@@ -1217,13 +1345,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                measure: components["schemas"]["MeasureRequestModel"];
+                measure: "count" | "length" | "area";
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ohsome_api__routers__stats__currentness__TimeBinsRequestParametersModel"];
+                "application/json": components["schemas"]["StatsCurrentnessRequest"];
             };
         };
         responses: {
@@ -1234,13 +1362,22 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+bc3d6f5
+                     * @example # apiVersion: 2.0.0rc2+45857f1
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
                      *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
                      */
                     "text/csv": string;
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
             /** @description Validation Error */
@@ -1250,6 +1387,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1278,6 +1424,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1285,6 +1440,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1298,7 +1462,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ExtractionRequestParametersModel"];
+                "application/json": components["schemas"]["ExtractionFeaturesRequest"];
             };
         };
         responses: {
@@ -1309,6 +1473,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1316,6 +1489,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1346,6 +1528,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1353,6 +1544,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1366,7 +1566,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CollectionsExtractionRequestParametersModel"];
+                "application/json": components["schemas"]["ExtractionCollectionsRequest"];
             };
         };
         responses: {
@@ -1377,6 +1577,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1384,6 +1593,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1414,6 +1632,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1421,6 +1648,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1434,7 +1670,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CollectionsExtractionRequestParametersModel"];
+                "application/json": components["schemas"]["ExtractionCollectionsRequest"];
             };
         };
         responses: {
@@ -1445,6 +1681,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1452,6 +1697,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1479,6 +1733,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1486,6 +1749,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1499,7 +1771,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ContributionsExtractionRequestParametersModel"];
+                "application/json": components["schemas"]["ExtractionContributionsRequest"];
             };
         };
         responses: {
@@ -1510,6 +1782,15 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1517,6 +1798,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };
@@ -1536,7 +1826,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HealthCheck"];
+                    "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
+                };
+            };
+            /** @description Gateway Timeout */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPError"];
                 };
             };
         };

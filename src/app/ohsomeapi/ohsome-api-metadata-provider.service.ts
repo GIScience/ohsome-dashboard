@@ -10,11 +10,11 @@ import {components} from './ohsome-api-v2-types';
 export class OhsomeApiMetadataProviderService {
   private ohsomeApiService = inject(OhsomeApiV2Service);
 
-  private ohsomeMetadataResponse: components['schemas']['MetadataResponseModel'];
+  private ohsomeMetadataResponse: components['schemas']['MetadataResponse'];
   private ohsomeApiAnnouncement = '';
   public ohsomeApiAvailable = false;
 
-  public getOhsomeMetadataResponse(): components['schemas']['MetadataResponseModel'] | undefined {
+  public getOhsomeMetadataResponse(): components['schemas']['MetadataResponse'] | undefined {
     return this.ohsomeMetadataResponse;
   }
 
@@ -26,7 +26,7 @@ export class OhsomeApiMetadataProviderService {
     return this.ohsomeApiAnnouncement;
   }
 
-  loadOhsomeMetadata(): Observable<components['schemas']['MetadataResponseModel']> {
+  loadOhsomeMetadata(): Observable<components['schemas']['MetadataResponse']> {
     // return of(ohsomeApiMetadataResponse)
     return this.ohsomeApiService.metadata()
       .pipe(
