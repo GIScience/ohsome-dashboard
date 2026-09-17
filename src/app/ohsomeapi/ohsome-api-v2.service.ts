@@ -13,14 +13,16 @@ type OhsomeApiGetMetadataResponse = paths['/metadata']['get']['responses']['200'
 
 type FeaturesOperation = operations['post_features_as_json_stats_features__measure__json_post'];
 export type FeaturesRequestBody = FeaturesOperation['requestBody']['content']['application/json'];
-export type FeaturesResponse    = FeaturesOperation['responses'][200]['content']['application/json'];
+export type FeaturesResponse = FeaturesOperation['responses'][200]['content']['application/json'];
 export type FeaturesBadRequestError = FeaturesOperation['responses'][400]['content']['application/json'];
 export type FeaturesValidationError = FeaturesOperation['responses'][422]['content']['application/json'];
 export type FeaturesGatewayTimeoutError = FeaturesOperation['responses'][422]['content']['application/json'];
+export type FeaturesTykError = { error: string };
 export type FeaturesError =
   | { kind: 'validation'; error: FeaturesValidationError }
   | { kind: 'timeout'; error: FeaturesGatewayTimeoutError }
   | { kind: 'badRequest'; error: FeaturesBadRequestError }
+  | { kind: 'tyk'; error: FeaturesTykError }
   | { kind: 'http'; error: HttpErrorResponse };
 
 
@@ -49,15 +51,18 @@ export class OhsomeApiV2Service {
         switch (err.status) {
           case 400:
             featuresError = {kind: 'badRequest', error: err.error as FeaturesBadRequestError};
-            break
+            break;
           case 422:
             featuresError = {kind: 'validation', error: err.error as FeaturesValidationError};
-            break
+            break;
           case 504:
             featuresError = {kind: 'timeout', error: err.error as FeaturesGatewayTimeoutError};
-            break
+            break;
+          case 429:
+            featuresError = {kind: 'tyk', error: err.error as FeaturesTykError};
+            break;
           default:
-            featuresError = { kind: 'http', error: err };
+            featuresError = {kind: 'http', error: err};
         }
         return throwError(() => featuresError);
       })

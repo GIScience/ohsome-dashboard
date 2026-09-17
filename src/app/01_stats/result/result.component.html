@@ -94,6 +94,9 @@
             <h4>{{error.error.status}} {{error.error.name}}</h4>
             <div>{{error.error.message}}</div>
           }
+          @if (error.kind === 'tyk') {
+            <div>{{ error.error.error }}</div>
+          }
           @if (error.kind === 'validation') {
             @for (detail of error.error.detail; track detail) {
               <div>{{detail.msg}}</div>
