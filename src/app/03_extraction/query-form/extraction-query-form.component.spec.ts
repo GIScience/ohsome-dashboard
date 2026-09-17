@@ -27,6 +27,8 @@ describe('ExtractionQueryFormComponent', () => {
     component = fixture.componentInstance;
     stateService = TestBed.inject(StateService);
     authService = TestBed.inject(AuthService);
+
+    stateService.sharedFormSignals.bpolys.set('some-valid-bpolys-value');
     fixture.detectChanges();
   });
 

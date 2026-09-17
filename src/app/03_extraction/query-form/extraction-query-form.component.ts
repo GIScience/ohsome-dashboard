@@ -1,5 +1,5 @@
 import {Component, computed, effect, inject} from '@angular/core';
-import {form, FormField, required, submit, validate} from '@angular/forms/signals';
+import {form, FormField, required, validate} from '@angular/forms/signals';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {FormsModule} from '@angular/forms';
@@ -14,7 +14,6 @@ import {ExtractionFormData} from './types';
 import Utils from '../../../utils';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
-import {toPng} from 'html-to-image';
 import {AuthService} from '../../singelton-services/auth.service';
 import {getFormValidationMessages} from '../../shared/utils/form.utils';
 
@@ -45,17 +44,19 @@ export class ExtractionQueryFormComponent {
   extractionFormModel = this.stateService.extractionFormModel;
 
   extractionForm = form(this.extractionFormModel, (schemaPath) => {
+    required(schemaPath.topic, {message: $localize` Please select a topic.`});
     required(schemaPath['topic-filter'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
       message: ' An ohsome filter is required.'
     });
-    // validate(schemaPath.aoi, ({value}) => {
-    //   console.log("VALIDATOR", value());
-    //   const numberOfShapes = value().toString().split('|').filter((s) => s.trim() !== '').length;
-    //   return numberOfShapes !== 1
-    //     ? {kind: 'singleBboxRequired', message: ' A single bounding box is required.'}
-    //     : null;
-    // });
+    required(schemaPath.bboxes, {
+      when: () => this.stateService.boundaryType() === 'bbox',
+      message: $localize` Please draw a bounding box.`
+    });
+    required(schemaPath.bpolys, {
+      when: () => this.stateService.boundaryType() !== 'bbox',
+      message: $localize` Please select or draw an area of interest.`
+    });
     validate(schemaPath, () => {
       return this.authService.isAnon()
         ? {kind: 'signInRequire', message: " You need to be signed in."}
@@ -96,26 +97,6 @@ export class ExtractionQueryFormComponent {
     });
   }
 
-  async onSubmit(event: Event | null) {
-    event?.preventDefault();
-    const mapDataUrl = await this.getImageUrlFromMap();
-
-    const formValues = {...this.extractionForm().value(), backend: 'extraction', mapDataUrl};
-
-    submit(this.extractionForm, async () => {
-      console.log('Create Extraction Asset', event);
-      // Add logic here
-      console.log("EXTRACTION FORM", this.extractionForm())
-      this.dataservice.pushFormValues(formValues, 'bbox')
-    });
-  }
-
-  async getImageUrlFromMap() {
-    const node = document.querySelector<HTMLDivElement>('#boundaryMap');
-    if (!node) return '';
-    return await toPng(node);
-  }
-
   static buildInitialModel(initialHashParams: URLSearchParams): ExtractionFormData {
     const now = new Date();
     now.setUTCHours(0, 0, 0, 0);
@@ -124,7 +105,8 @@ export class ExtractionQueryFormComponent {
       topic: '',
       "topic-title": '',
       "topic-filter": '',
-      aoi: initialHashParams.get('aoi') ?? '', // todo remove
+      bboxes: '',
+      bpolys: '',
       clip: initialHashParams.get('clip')?.toLowerCase() !== "false", //only "true" is true
       time: Utils.getFromParamsOrDefault(initialHashParams, 'timestamp', today)
     }

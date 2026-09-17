@@ -31,9 +31,7 @@ describe('OqtResultComponent', () => {
     component = fixture.componentInstance;
     fixture.componentRef.setInput('formValues', {
       'topic': "building-count",
-      'mapping-saturation': true,
-      'currentness': false,
-      'attribute-completeness': true,
+      'indicators': ['mapping-saturation', 'attribute-completeness'],
       'attribute-completeness--attribute': "house-number",
       'bboxes': "8.6252588,49.3819766,8.7295724,49.4364995"
     });
@@ -52,9 +50,7 @@ describe('OqtResultComponent', () => {
   it('should create the component with bpolys coordinate string', () => {
     fixture.componentRef.setInput('formValues', {
       'topic': "building-count",
-      'mapping-saturation': true,
-      'currentness': false,
-      'attribute-completeness': true,
+      'indicators': ['mapping-saturation', 'attribute-completeness'],
       'attribute-completeness--attribute': "house-number",
       'bpolys': '8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30'
     });
@@ -65,9 +61,7 @@ describe('OqtResultComponent', () => {
   it('should create the component with bpolys coordinate string with id prefix', () => {
     fixture.componentRef.setInput('formValues', {
       'topic': "building-count",
-      'mapping-saturation': true,
-      'currentness': false,
-      'attribute-completeness': true,
+      'indicators': ['mapping-saturation', 'attribute-completeness'],
       'attribute-completeness--attribute': "house-number",
       'bpolys': 'Harthausen:8.33,49.30,8.33,49.28,8.35,49.28,8.36,49.29,8.35,49.30,8.33,49.30'
     });
@@ -116,9 +110,7 @@ describe('OqtResultComponent', () => {
     };
     fixture.componentRef.setInput('formValues', {
       'topic': "building-count",
-      'mapping-saturation': true,
-      'currentness': false,
-      'attribute-completeness': true,
+      'indicators': ['mapping-saturation', 'attribute-completeness'],
       'attribute-completeness--attribute': "house-number",
       'bpolys': JSON.stringify(geojson)
     });

@@ -10,7 +10,6 @@ import {
   Output,
   Renderer2
 } from '@angular/core';
-import {ControlContainer, FormsModule, NgForm} from '@angular/forms';
 import {Checkbox, Indicator, RawQualityDimensionMetadata, Topic} from '../../types/types';
 import {OqtApiMetadataProviderService} from '../../oqt-api-metadata-provider.service';
 import {Userlayer} from '../../../shared/shared-types';
@@ -33,9 +32,8 @@ import {getFormValidationMessages, MEASURE_OPTIONS} from '../../../shared/utils/
   selector: 'app-oqt-api-query-form',
   templateUrl: './oqt-api-query-form.component.html',
   styleUrls: ['./oqt-api-query-form.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent, FormField]
+  imports: [SuiMultiSelectSearchDropdownComponent, PrismEditorComponent, SimpleIndicatorComponent, AttributeCompletenessAttributesComponent, KeyValuePipe, ThematicAccuracyIndicatorComponent, FormField]
 })
 export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
 
@@ -47,6 +45,7 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
   //new
   qualityFormModel = this.stateService.qualityFormModel;
   qualityForm = form(this.qualityFormModel, (schemaPath) => {
+    required(schemaPath.topic, {message: $localize` Please select a topic.`});
     required(schemaPath['topic-title'], {
       when: ({valueOf}) => valueOf(schemaPath.topic) === 'custom-topic',
       message: $localize` A custom topic title is required.`
@@ -60,6 +59,24 @@ export class OqtApiQueryFormComponent implements OnInit, OnDestroy {
     validate(schemaPath.indicators, ({value}) => value().length === 0
       ? {kind: 'atLeastOneIndicatorRequired', message: $localize` At least one quality indicator must be selected.`}
       : null);
+    required(schemaPath.bboxes, {
+      when: () => this.stateService.boundaryType() === 'bbox',
+      message: $localize` Please draw a bounding box.`
+    });
+    required(schemaPath.bpolys, {
+      when: () => this.stateService.boundaryType() !== 'bbox',
+      message: $localize` Please select or draw an area of interest.`
+    });
+    validate(schemaPath['attribute-completeness--attributes'], ({valueOf}) => {
+      if (!valueOf(schemaPath.indicators).includes('attribute-completeness')) return null;
+      const hasAttributes = valueOf(schemaPath['attribute-completeness--attributes']).length > 0;
+      const hasCustomFilter = !!valueOf(schemaPath['attribute-completeness--attribute-title'])
+        && !!valueOf(schemaPath['attribute-completeness--attribute-filter']);
+      return hasAttributes || hasCustomFilter ? null : {
+        kind: 'attributeCompletenessRequired',
+        message: $localize` Select at least one attribute, or define a custom attribute filter, for the "Attribute Completeness" indicator.`
+      };
+    });
   });
 
   // Measure

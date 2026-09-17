@@ -1,6 +1,5 @@
-<form #f="ngForm" (ngSubmit)="onSubmit()" class="ui stackable   celled grid container form"
+<form (submit)="onSubmit($event)" class="ui stackable   celled grid container form"
       xmlns="http://www.w3.org/1999/html" style="background-color: unset">
-  <!-- TODO only for oqt appAtLeastOneOqtIndicatorCheckboxChecked-->
 
   <!--  <div class="ui blue inverted three labeled item tabs menu">-->
 
@@ -146,34 +145,34 @@
 
       <div id="boundaryTypeButtons" class="ui top attached buttons leaflet-pm-toolbar">
         <button type="button" class="ui button" title="Select admin boundaries"
-                [ngClass]="{'active': boundaryType === 'admin'}"
-                (click)="boundaryType = 'admin'"><i class="admin icon"></i></button>
+                [ngClass]="{'active': boundaryType() === 'admin'}"
+                (click)="setBoundaryType('admin')"><i class="admin icon"></i></button>
         <button type="button" class="ui button active" title="Draw boxes"
-                [ngClass]="{'active': boundaryType === 'bbox'}"
-                (click)="boundaryType = 'bbox'"><i class="bbox icon"></i></button>
-        <button type="button" class="ui button" title="Draw polygons" [ngClass]="{'active': boundaryType === 'bpoly'}"
-                (click)="boundaryType = 'bpoly'"><i class="bpoly icon"></i></button>
+                [ngClass]="{'active': boundaryType() === 'bbox'}"
+                (click)="setBoundaryType('bbox')"><i class="bbox icon"></i></button>
+        <button type="button" class="ui button" title="Draw polygons" [ngClass]="{'active': boundaryType() === 'bpoly'}"
+                (click)="setBoundaryType('bpoly')"><i class="bpoly icon"></i></button>
       </div>
 
-      @if (boundaryType === 'admin') {
-        <app-boundary-select-input #bsi name="bpolys"
+      @if (boundaryType() === 'admin') {
+        <app-boundary-select-input #bsi
                                    [options]="mapOptions"
-                                   [(ngModel)]="adminBoundaries" required></app-boundary-select-input>
+                                   [(value)]="bpolys"></app-boundary-select-input>
       }
-      @if (boundaryType === 'bbox') {
-        <app-boundary-input #bsi name="bboxes"
+      @if (boundaryType() === 'bbox') {
+        <app-boundary-input #bsi
                             [interactionType]="'bbox'"
                             [options]="mapOptions"
-                            [(ngModel)]="bboxes" required></app-boundary-input>
+                            [(value)]="bboxes"></app-boundary-input>
       }
-      @if (boundaryType === 'bpoly') {
-        <app-boundary-input #bsi name="bpolys"
+      @if (boundaryType() === 'bpoly') {
+        <app-boundary-input #bsi
                             [interactionType]="'bpoly'"
                             [options]="mapOptions"
-                            [(ngModel)]="bpolys" required></app-boundary-input>
+                            [(value)]="bpolys"></app-boundary-input>
       }
 
-      @if (boundaryType === 'admin') {
+      @if (boundaryType() === 'admin') {
         <div class="field">
           <label i18n>Selected areas</label>
           <div class="selected-names ui blue labels">
@@ -196,26 +195,26 @@
         </div>
       }
 
-      @if (boundaryType === 'bbox') {
+      @if (boundaryType() === 'bbox') {
         <div class="field">
           <label for="bboxes" i18n>Bounding Box</label>
           <div class="ui action input">
-            <input type="text" id="bboxes" name="bboxes" [(ngModel)]="bboxes">
-            <button type="button" class="ui tiny red icon button" (click)="bboxes = ''" title="Clear"
-                    [disabled]="!bboxes.trim()">
+            <input type="text" id="bboxes" [value]="bboxes()" (input)="bboxes.set($any($event.target).value)">
+            <button type="button" class="ui tiny red icon button" (click)="bboxes.set('')" title="Clear"
+                    [disabled]="!bboxes().trim()">
               <i class="close icon"></i>
             </button>
           </div>
         </div>
       }
 
-      @if (boundaryType === 'bpoly') {
+      @if (boundaryType() === 'bpoly') {
         <div class="field">
           <label for="bpolys" i18n>Bounding Polygon</label>
           <div class="ui action input">
-            <input type="text" id="bpolys" name="bpolys" [(ngModel)]="bpolys">
-            <button type="button" class="ui tiny red icon button" (click)="bpolys = ''" title="Clear"
-                    [disabled]="!bpolys.trim()">
+            <input type="text" id="bpolys" [value]="bpolys()" (input)="bpolys.set($any($event.target).value)">
+            <button type="button" class="ui tiny red icon button" (click)="bpolys.set('')" title="Clear"
+                    [disabled]="!bpolys().trim()">
               <i class="close icon"></i>
             </button>
           </div>
@@ -229,10 +228,10 @@
   @if (queryModeSignal() !== 'extraction') {
     <div id="query-submit" class="row">
       <div class="sixteen wide column">
-        <button [disabled]="!(f.valid && isValidCurrentForm())" type="submit" class="ui green right labeled icon button" i18n>
+        <button [disabled]="!isValidCurrentForm()" type="submit" class="ui green right labeled icon button" i18n>
           <i class="play icon"></i>Run Query
         </button>
-        <app-form-validation-messages [messages]="currentValidationMessages(f)"></app-form-validation-messages>
+        <app-form-validation-messages [messages]="stateService.currentFormMessages()"></app-form-validation-messages>
       </div>
     </div>
   } @else {
@@ -240,10 +239,10 @@
       <div class="sixteen wide column">
         <!--        <button [disabled]="extractionForm().invalid()" class="ui green  right labeled icon button" type="submit">-->
         <!--TODO validate extraction form: update aoi bbox on every from change-->
-        <button [disabled]="!(f.valid && isValidCurrentForm())" class="ui green  right labeled icon button" type="submit">
+        <button [disabled]="!isValidCurrentForm()" class="ui green  right labeled icon button" type="submit">
           Create Download Asset<i class="download icon"></i>
         </button>
-        <app-form-validation-messages [messages]="currentValidationMessages(f)"></app-form-validation-messages>
+        <app-form-validation-messages [messages]="stateService.currentFormMessages()"></app-form-validation-messages>
         @if (authService.isAnon()) {
           <div class="ui message">
             To download OSM Data you need to &nbsp;&nbsp;

@@ -4,7 +4,6 @@ import {OqtModule} from '../../../oqt.module';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import OqtApiMetadataProviderServiceMock from '../../../oqt-api-metadata-provider.service.mock';
 import {provideHttpClient} from '@angular/common/http';
-import {NgForm} from '@angular/forms';
 import {provideAppInitializer} from '@angular/core';
 import {PrismEditorComponent} from '../../../../shared/components/prism-editor/prism-editor.component';
 import {preparePrismToRenderOhsomeFilterLangauge} from '../../../../../app-initializers';
@@ -21,7 +20,6 @@ describe('ThematicAccuracyIndicatorComponent', () => {
       await TestBed.configureTestingModule({
         imports: [OqtModule, PrismEditorComponent],
         providers: [
-          NgForm,
           {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
           provideAppInitializer(() => {
             const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
@@ -36,7 +34,7 @@ describe('ThematicAccuracyIndicatorComponent', () => {
       component = fixture.componentInstance;
       component.indicatorKey = "land-cover-thematic-accuracy";
       component.hashParams = new URLSearchParams("land-cover-thematic-accuracy--corine_land_cover_class=11");
-      component.selectedCategoryIds = '11';
+      component.selectedCategoryIds.set('11');
       fixture.detectChanges();
     });
 
@@ -83,7 +81,6 @@ describe('ThematicAccuracyIndicatorComponent', () => {
       await TestBed.configureTestingModule({
         imports: [OqtModule, PrismEditorComponent],
         providers: [
-          NgForm,
           {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
           provideAppInitializer(() => {
             const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
@@ -98,7 +95,7 @@ describe('ThematicAccuracyIndicatorComponent', () => {
       component = fixture.componentInstance;
       component.indicatorKey = "roads-thematic-accuracy";
       component.hashParams = new URLSearchParams("roads-thematic-accuracy--attribute=surface");
-      component.selectedCategoryIds = 'surface';
+      component.selectedCategoryIds.set('surface');
       fixture.detectChanges();
     });
 

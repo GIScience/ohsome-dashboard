@@ -12,7 +12,6 @@ import {
 import {NgClass, ViewportScroller} from '@angular/common';
 import {FeatureCollection, MultiPolygon, Polygon} from 'geojson';
 import {OqtApiMetadataProviderService} from '../oqt-api-metadata-provider.service';
-import {MetadataResponseJSON} from '../types/MetadataResponseJSON';
 import {featureCollection} from '@turf/helpers';
 import Utils from '../../../utils';
 import {UrlHashParamsProviderService} from '../../singelton-services/url-hash-params-provider.service';
@@ -51,8 +50,6 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   boundaryType: string;
   componentRef: ComponentRef<OqtResultComponent>;
 
-  metadata: MetadataResponseJSON;
-
   aoiLabel = '';
 
   isPreparing = true;
@@ -70,7 +67,6 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   thematicAccuracyCategoryType = thematicCategoryType
 
   constructor() {
-    this.metadata = this.oqtApiMetadataProviderService.getOqtApiMetadata();
     this.changeDetectorRef.detach();
     this.viewportScroller.setOffset([0, 100]);
   }
@@ -107,16 +103,8 @@ export class OqtResultComponent implements OnInit, AfterViewInit {
   }
 
   createIndicatorListWithParams(): IndicatorParams[] {
-    //get indicators to be queried
-    const potentialIndicators = Object.keys(this.metadata.result.indicators);
-    const indicatorsToBeQueried: string[] = [];
-
-    // search for the indicators that have been checked in the form
-    potentialIndicators.forEach(potIndicator => {
-      if (this.formValues()[potIndicator]) {
-        indicatorsToBeQueried.push(potIndicator);
-      }
-    });
+    // indicators checked in the form are already a plain key array on formValues
+    const indicatorsToBeQueried = (this.formValues()['indicators'] as string[] | undefined) ?? [];
 
     return indicatorsToBeQueried.reduce<IndicatorParams[]>((current, indicator) => {
 

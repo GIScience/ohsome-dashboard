@@ -1,5 +1,5 @@
-import { Component, ElementRef, forwardRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, effect, ElementRef, input, Input, model, NgZone, OnChanges, OnInit, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import {FormValueControl} from '@angular/forms/signals';
 import * as L from 'leaflet';
 import {LayerOptions, LeafletEvent} from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
@@ -15,21 +15,13 @@ import {BoundaryInputComponentOptions, Userlayer} from '../../shared-types';
     templateUrl: './boundary-select-input.component.html',
     styleUrls: ['./boundary-select-input.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => BoundarySelectInputComponent),
-            multi: true
-        }
-    ]
 })
 
-export class BoundarySelectInputComponent implements ControlValueAccessor, OnInit, OnChanges {
+export class BoundarySelectInputComponent implements FormValueControl<string>, OnInit, OnChanges {
   private elRef = inject(ElementRef);
   private readonly ngZone = inject(NgZone);
 
-
-  @Input() disabled = false;
+  disabled = input(false);
 
   @Input('options')
   get options(): BoundaryInputComponentOptions {
@@ -50,63 +42,43 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     maxZoom: undefined,
     userDefinedPolygonLayers: []
   };
-  private _value = ''; // Input value which is used by ngModel
   private _options: BoundaryInputComponentOptions = this.defaultOptions;
 
   private boundaryLayer; // WmsSelect
   //group for user defined layers
   private userDefinedLayersGroup = L.layerGroup();
 
+  private mapInitialized = false;
+
+  private lastEmittedValue: string | null = null;
+
   public map: L.Map;
+
+  value = model<string>('');
+
+  constructor() {
+    effect(() => {
+      const value = this.value();
+      if (!this.mapInitialized || value === this.lastEmittedValue) {
+        return;
+      }
+      this.updateMapFromValue(value);
+    });
+  }
 
   ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
       this.initMap();
+      this.mapInitialized = true;
+      this.updateMapFromValue(this.value());
     })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log("MAPCHANGE")
-    // // this.options = changes["options"].currentValue as BoundaryInputComponentOptions
-    const userLayers = changes["options"].currentValue.userDefinedPolygonLayers
-    // console.log("userLayers", userLayers)
+    const optionsChange = changes["options"];
+    if (!optionsChange) return;
+    const userLayers = optionsChange.currentValue.userDefinedPolygonLayers
     this.addOrUpdateUserDefinedLayers(userLayers);
-  }
-
-  // ControlValueAccesor methods
-  // write value to this component (map)
-  writeValue(val: string): void {
-    console.log('CVA::writeValue');
-    this.value = val;
-  }
-
-  propagateChange = (_: any) => {
-    console.log('propagateChange', _);
-  };
-
-  // register a callback that is expected to be triggered every time the value changes from the map
-  registerOnChange(fn: any): void {
-    console.log('registerOnChange', fn);
-    this.propagateChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    // throw new Error("Method not implemented.");
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  get value(): string {
-    console.log('GET: value');
-    return this._value;
-  }
-
-  set value(val: string) {
-    console.log('SET: value', val);
-    this._value = val;
-    this.updateMapFromValue(val);
   }
 
   // @param value is a text representation of a bpolys GeoJSON FeatureCollection
@@ -133,13 +105,6 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
     const bounds = this.boundaryLayer.getBounds();
     if (!bounds.isValid()) return;
     this.map.flyToBounds(this.boundaryLayer.getBounds(), {padding: [20, 20]});
-  }
-
-  private updateValueFromMap() {
-    console.log('Map -> Value');
-    const _value = JSON.stringify(this.boundaryLayer.getData());
-    // update ngModel through ControlValueAccessor
-    this.propagateChange(_value);
   }
 
   private initMap(): void {
@@ -211,7 +176,8 @@ export class BoundarySelectInputComponent implements ControlValueAccessor, OnIni
           }
           newValue = JSON.stringify(jsonval);
         }
-        this.propagateChange(newValue);
+        this.lastEmittedValue = newValue;
+        this.value.set(newValue);
       })
     ;
   }
