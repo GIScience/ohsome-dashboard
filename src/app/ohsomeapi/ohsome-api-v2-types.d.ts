@@ -336,13 +336,6 @@ export interface components {
              */
             text: string;
         };
-        /** Error */
-        Error: {
-            /** Type */
-            type: string;
-            /** Msg */
-            msg: string;
-        };
         /** ExtractionCollectionsRequest */
         ExtractionCollectionsRequest: {
             /**
@@ -441,10 +434,40 @@ export interface components {
             /** Key */
             key: string;
         };
-        /** HTTPError */
-        HTTPError: {
-            /** Detail */
-            detail: components["schemas"]["Error"][];
+        /** HTTPBadRequestError */
+        HTTPBadRequestError: {
+            /** Error */
+            error: string;
+            /** Type */
+            type?: string | null;
+        };
+        /** HTTPForbiddenError */
+        HTTPForbiddenError: {
+            /** Error */
+            error: string;
+            /** Type */
+            type?: string | null;
+        };
+        /** HTTPGatewayTimeoutError */
+        HTTPGatewayTimeoutError: {
+            /** Error */
+            error: string;
+            /** Type */
+            type?: string | null;
+        };
+        /** HTTPTooManyRequestsError */
+        HTTPTooManyRequestsError: {
+            /** Error */
+            error: string;
+            /** Type */
+            type?: string | null;
+        };
+        /** HTTPUnauthorizedError */
+        HTTPUnauthorizedError: {
+            /** Error */
+            error: string;
+            /** Type */
+            type?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -476,7 +499,7 @@ export interface components {
         MetadataResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+45857f1
+             * @default 2.0.0rc2+c0be651
              */
             apiVersion: string;
             /**
@@ -576,7 +599,7 @@ export interface components {
         StatsContributionsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+45857f1
+             * @default 2.0.0rc2+c0be651
              */
             apiVersion: string;
             /**
@@ -612,7 +635,7 @@ export interface components {
         StatsContributorsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+45857f1
+             * @default 2.0.0rc2+c0be651
              */
             apiVersion: string;
             /**
@@ -626,6 +649,12 @@ export interface components {
         };
         /** StatsCurrentnessRequest */
         StatsCurrentnessRequest: {
+            /**
+             * Clip
+             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
+             * @default false
+             */
+            clip: boolean;
             /**
              * Filter
              * @description Filter for OSM data. Please refer to the [ohsome filter language documentation](https://docs.ohsome.org/ohsome-api/staging/reference/filter.html).
@@ -643,18 +672,12 @@ export interface components {
                 number
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
             time: components["schemas"]["TimeBins"];
-            /**
-             * Clip
-             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
-             * @default false
-             */
-            clip: boolean;
         };
         /** StatsCurrentnessResponse */
         StatsCurrentnessResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+45857f1
+             * @default 2.0.0rc2+c0be651
              */
             apiVersion: string;
             /**
@@ -668,6 +691,12 @@ export interface components {
         };
         /** StatsFeaturesRequest */
         StatsFeaturesRequest: {
+            /**
+             * Clip
+             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
+             * @default false
+             */
+            clip: boolean;
             /**
              * @description `(experimental, optional)`; If given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
              * @example null
@@ -691,18 +720,12 @@ export interface components {
             ] | (components["schemas"]["Polygon"] | components["schemas"]["MultiPolygon"]) | string;
             /** Time */
             time: components["schemas"]["TimeSeries"] | string | "latest";
-            /**
-             * Clip
-             * @description If true, length and area calculations use the clipped feature geometries. Clipping can be computationally expensive for large AOIs, depending on your ohsome filter, and is usually unnecessary.
-             * @default false
-             */
-            clip: boolean;
         };
         /** StatsFeaturesResponse */
         StatsFeaturesResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+45857f1
+             * @default 2.0.0rc2+c0be651
              */
             apiVersion: string;
             /**
@@ -846,7 +869,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -858,13 +899,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -895,7 +945,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -907,13 +975,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -942,7 +1019,34 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
                 };
             };
             /** @description Gateway Timeout */
@@ -951,7 +1055,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -986,7 +1090,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -998,13 +1120,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1031,7 +1162,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+45857f1
+                     * @example # apiVersion: 2.0.0rc2+c0be651
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     timestamp;result
@@ -1046,7 +1177,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1058,13 +1207,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1097,7 +1255,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1109,13 +1285,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1140,7 +1325,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+45857f1
+                     * @example # apiVersion: 2.0.0rc2+c0be651
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1155,7 +1340,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1167,13 +1370,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1206,7 +1418,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1218,13 +1448,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1249,7 +1488,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+45857f1
+                     * @example # apiVersion: 2.0.0rc2+c0be651
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1264,7 +1503,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1276,13 +1533,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1317,7 +1583,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1329,13 +1613,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1362,7 +1655,7 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+45857f1
+                     * @example # apiVersion: 2.0.0rc2+c0be651
                      *     # attribution.url: https://ohsome.org/copyrights
                      *     # attribution.text: © OpenStreetMap contributors
                      *     start;end;value
@@ -1377,7 +1670,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1389,13 +1700,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/csv": components["schemas"]["HTTPError"];
+                    "text/csv": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1430,7 +1750,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1442,13 +1780,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1479,7 +1826,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1491,13 +1856,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1534,7 +1908,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1546,13 +1938,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1583,7 +1984,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1595,13 +2014,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1638,7 +2066,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1650,13 +2096,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1687,7 +2142,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1699,13 +2172,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1739,7 +2221,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1751,13 +2251,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1788,7 +2297,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
                 };
             };
             /** @description Validation Error */
@@ -1800,13 +2327,22 @@ export interface operations {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
+                };
+            };
             /** @description Gateway Timeout */
             504: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };
@@ -1835,7 +2371,34 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPBadRequestError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPUnauthorizedError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPForbiddenError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPTooManyRequestsError"];
                 };
             };
             /** @description Gateway Timeout */
@@ -1844,7 +2407,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HTTPError"];
+                    "application/json": components["schemas"]["HTTPGatewayTimeoutError"];
                 };
             };
         };

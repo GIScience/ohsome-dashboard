@@ -15,16 +15,24 @@ type FeaturesOperation = operations['post_features_as_json_stats_features__measu
 export type FeaturesRequestBody = FeaturesOperation['requestBody']['content']['application/json'];
 export type FeaturesResponse = FeaturesOperation['responses'][200]['content']['application/json'];
 export type FeaturesBadRequestError = FeaturesOperation['responses'][400]['content']['application/json'];
+export type FeaturesUnauthorizedError = FeaturesOperation['responses'][401]['content']['application/json'];
+export type FeaturesForbiddenError = FeaturesOperation['responses'][403]['content']['application/json'];
 export type FeaturesValidationError = FeaturesOperation['responses'][422]['content']['application/json'];
-export type FeaturesGatewayTimeoutError = FeaturesOperation['responses'][422]['content']['application/json'];
-export type FeaturesTykError = { error: string };
+export type FeaturesTooManyRequestsError = FeaturesOperation['responses'][429]['content']['application/json'];
+export type FeaturesGatewayTimeoutError = FeaturesOperation['responses'][504]['content']['application/json'];
+
+type FeaturesHttpError =
+  FeaturesBadRequestError
+  | FeaturesUnauthorizedError
+  | FeaturesForbiddenError
+  | FeaturesTooManyRequestsError
+  | FeaturesGatewayTimeoutError;
+
+export type FeaturesErrorMessage = { message: string };
 export type FeaturesError =
   | { kind: 'validation'; error: FeaturesValidationError }
-  | { kind: 'timeout'; error: FeaturesGatewayTimeoutError }
-  | { kind: 'badRequest'; error: FeaturesBadRequestError }
-  | { kind: 'tyk'; error: FeaturesTykError }
-  | { kind: 'http'; error: HttpErrorResponse };
-
+  | { kind: 'http'; error: HttpErrorResponse }
+  | FeaturesErrorMessage;
 
 @Service()
 export class OhsomeApiV2Service {
@@ -49,17 +57,15 @@ export class OhsomeApiV2Service {
       catchError((err: HttpErrorResponse) => {
         let featuresError: FeaturesError;
         switch (err.status) {
-          case 400:
-            featuresError = {kind: 'badRequest', error: err.error as FeaturesBadRequestError};
+          case 400: // bad request
+          case 401: // unauthorized
+          case 403: // forbidden
+          case 429: // tooManyRequests
+          case 504: // timeout
+            featuresError = {message: (err.error as FeaturesHttpError).error};
             break;
-          case 422:
+          case 422: // validation
             featuresError = {kind: 'validation', error: err.error as FeaturesValidationError};
-            break;
-          case 504:
-            featuresError = {kind: 'timeout', error: err.error as FeaturesGatewayTimeoutError};
-            break;
-          case 429:
-            featuresError = {kind: 'tyk', error: err.error as FeaturesTykError};
             break;
           default:
             featuresError = {kind: 'http', error: err};

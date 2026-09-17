@@ -90,14 +90,12 @@
         <i class="exclamation triangle icon"></i>
         <div class="content">
           <h3 class="header" i18n>Sorry, we were unable to process your query!</h3>
-          @if (error.kind === 'http'){
+          <!-- unknown http error -->
+          @if ('kind' in error && error.kind === 'http'){
             <h4>{{error.error.status}} {{error.error.name}}</h4>
             <div>{{error.error.message}}</div>
           }
-          @if (error.kind === 'tyk') {
-            <div>{{ error.error.error }}</div>
-          }
-          @if (error.kind === 'validation') {
+          @if ('kind' in error && error.kind === 'validation') {
             @for (detail of error.error.detail; track detail) {
               <div>{{detail.msg}}</div>
               @if (detail.loc){
@@ -105,10 +103,9 @@
               }
             }
           }
-          @if (error.kind === 'timeout' || error.kind === 'badRequest') {
-            @for (detail of error.error.detail; track detail) {
-              <div>{{detail.msg}}</div>
-            }
+
+          @if ('message' in error) {
+              <div>{{error.message}}</div>
           }
         </div>
       </div>
