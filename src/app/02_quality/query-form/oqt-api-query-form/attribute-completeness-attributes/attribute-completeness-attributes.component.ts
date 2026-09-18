@@ -35,16 +35,19 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
 
-  combinedAttributeFilters: string;
-
   // used to define wether to display dropdown with predefined attributes (false) or display the  user defined custom attribute
   useCustomFilterMode = signal(false);
   customFilterTitle = signal<string>('');
   customFilterDefinition = signal<string>('');
 
+  // draft state: what the editor modal is currently editing.
+  // only copied into customFilterTitle/customFilterDefinition once the user confirms a valid filter
+  draftFilterTitle = signal<string>('');
+  draftFilterDefinition = signal<string>('');
+
   // a custom attribute filter needs both a title and a filter definition to be usable
-  readonly isCustomFilterTitleBlank = computed(() => this.customFilterTitle().trim() === '');
-  readonly isCustomFilterDefinitionBlank = computed(() => this.customFilterDefinition().trim() === '');
+  readonly isCustomFilterTitleBlank = computed(() => this.draftFilterTitle().trim() === '');
+  readonly isCustomFilterDefinitionBlank = computed(() => this.draftFilterDefinition().trim() === '');
   readonly isCustomFilterValid = computed(() => !this.isCustomFilterTitleBlank() && !this.isCustomFilterDefinitionBlank());
   readonly customFilterMessages = computed(() => [
     ...(this.isCustomFilterTitleBlank() ? [$localize` An attribute title is required.`] : []),
@@ -263,6 +266,8 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
       return false;
     }
 
+    this.customFilterTitle.set(this.draftFilterTitle().trim());
+    this.customFilterDefinition.set(this.draftFilterDefinition().trim());
     this.useCustomFilterMode.set(true);
     return true;
   }
@@ -278,11 +283,16 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
   showAttributeFilterEditDialog() {
 
-    // compute the current attributeFilter as an AND-combination of the selected attributes
-    if (!this.useCustomFilterMode()) {
+    // the drafts are discarded unless the user confirms a valid filter
+    if (this.useCustomFilterMode()) {
+      // start from the confirmed filter
+      this.draftFilterTitle.set(this.customFilterTitle());
+      this.draftFilterDefinition.set(this.customFilterDefinition());
+    } else {
+      // start from the AND-combination of the selected attributes
       const {combinedNames, combinedFilters} = this.combineSelectedAttributes();
-      this.customFilterTitle.set(combinedNames)
-      this.customFilterDefinition.set(combinedFilters);
+      this.draftFilterTitle.set(combinedNames);
+      this.draftFilterDefinition.set(combinedFilters);
     }
 
     this.openAttributesEditorModal()
@@ -313,7 +323,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   }
 
   setCustomFilerTitle($event: Event) {
-    this.customFilterTitle.set(($event.target as HTMLInputElement).value);
+    this.draftFilterTitle.set(($event.target as HTMLInputElement).value);
   }
 
   triggerClick(event: Event) {

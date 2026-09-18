@@ -192,8 +192,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
   describe('confirmCustomFilter()', () => {
     it('should reject an empty title and keep the current mode', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('');
-      component.customFilterDefinition.set('my=filter');
+      component.draftFilterTitle.set('');
+      component.draftFilterDefinition.set('my=filter');
       component.useCustomFilterMode.set(false);
 
       expect(component.confirmCustomFilter()).toBe(false);
@@ -202,8 +202,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should reject an empty filter definition and keep the current mode', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('');
       component.useCustomFilterMode.set(false);
 
       expect(component.confirmCustomFilter()).toBe(false);
@@ -212,8 +212,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should reject whitespace-only title and filter definition', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('   ');
-      component.customFilterDefinition.set('\n  ');
+      component.draftFilterTitle.set('   ');
+      component.draftFilterDefinition.set('\n  ');
       component.useCustomFilterMode.set(false);
 
       expect(component.confirmCustomFilter()).toBe(false);
@@ -222,8 +222,8 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should enable custom filter mode when both title and filter definition are set', () => {
       component.selectedTopic = enrichedRoadsTopic;
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('my=filter');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('my=filter');
       component.useCustomFilterMode.set(false);
 
       expect(component.confirmCustomFilter()).toBe(true);
@@ -232,19 +232,92 @@ describe('AttributeCompletenessIndicatorComponent', () => {
 
     it('should enable custom filter mode for a topic without predefined attributes', () => {
       component.selectedTopic = topicWithoutAttributes;
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('my=filter');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('my=filter');
       component.useCustomFilterMode.set(false);
 
       expect(component.confirmCustomFilter()).toBe(true);
       expect(component.useCustomFilterMode()).toBe(true);
     });
+
+    it('should commit the draft (trimmed) into the custom filter', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.draftFilterTitle.set('  My title  ');
+      component.draftFilterDefinition.set('  my=filter\n');
+
+      expect(component.confirmCustomFilter()).toBe(true);
+      expect(component.customFilterTitle()).toBe('My title');
+      expect(component.customFilterDefinition()).toBe('my=filter');
+    });
+
+    it('should keep the previously confirmed filter when the draft is incomplete', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('Confirmed title');
+      component.customFilterDefinition.set('confirmed=filter');
+
+      component.draftFilterTitle.set('');
+      component.draftFilterDefinition.set('half typed');
+
+      expect(component.confirmCustomFilter()).toBe(false);
+      expect(component.customFilterTitle()).toBe('Confirmed title');
+      expect(component.customFilterDefinition()).toBe('confirmed=filter');
+    });
+  });
+
+  describe('editor draft state', () => {
+    it('should not touch the confirmed filter while the editor is being edited', () => {
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('Confirmed title');
+      component.customFilterDefinition.set('confirmed=filter');
+      component.useCustomFilterMode.set(true);
+
+      // user types in the editor but never presses OK
+      component.setCustomFilerTitle({target: {value: 'Typed title'}} as unknown as Event);
+      component.draftFilterDefinition.set('typed=filter');
+
+      expect(component.customFilterTitle()).toBe('Confirmed title');
+      expect(component.customFilterDefinition()).toBe('confirmed=filter');
+      expect(component.useCustomFilterMode()).toBe(true);
+    });
+
+    it('should seed the drafts from the confirmed filter when opening the editor in custom filter mode', () => {
+      vi.spyOn(component, 'openAttributesEditorModal').mockImplementation(() => {
+      });
+      component.selectedTopic = enrichedRoadsTopic;
+      component.customFilterTitle.set('Confirmed title');
+      component.customFilterDefinition.set('confirmed=filter');
+      component.useCustomFilterMode.set(true);
+      // leftovers of an earlier, abandoned editing session
+      component.draftFilterTitle.set('abandoned');
+      component.draftFilterDefinition.set('abandoned=filter');
+
+      component.showAttributeFilterEditDialog();
+
+      expect(component.draftFilterTitle()).toBe('Confirmed title');
+      expect(component.draftFilterDefinition()).toBe('confirmed=filter');
+    });
+
+    it('should seed the drafts from the selected attributes when opening the editor in dropdown mode', () => {
+      vi.spyOn(component, 'openAttributesEditorModal').mockImplementation(() => {
+      });
+      vi.spyOn(component, 'combineSelectedAttributes').mockReturnValue({
+        combinedNames: 'Attribute 1',
+        combinedFilters: 'attr=one'
+      });
+      component.selectedTopic = enrichedRoadsTopic;
+      component.useCustomFilterMode.set(false);
+
+      component.showAttributeFilterEditDialog();
+
+      expect(component.draftFilterTitle()).toBe('Attribute 1');
+      expect(component.draftFilterDefinition()).toBe('attr=one');
+    });
   });
 
   describe('custom filter validation', () => {
     it('should report a message for each blank field', () => {
-      component.customFilterTitle.set('');
-      component.customFilterDefinition.set('  ');
+      component.draftFilterTitle.set('');
+      component.draftFilterDefinition.set('  ');
 
       expect(component.isCustomFilterValid()).toBe(false);
       expect(component.customFilterMessages()).toEqual([
@@ -254,30 +327,30 @@ describe('AttributeCompletenessIndicatorComponent', () => {
     });
 
     it('should report only the blank field', () => {
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('');
 
       expect(component.customFilterMessages()).toEqual([' An attribute filter is required.']);
     });
 
     it('should report no messages when both fields are filled', () => {
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('my=filter');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('my=filter');
 
       expect(component.isCustomFilterValid()).toBe(true);
       expect(component.customFilterMessages()).toEqual([]);
     });
 
     it('should disable the OK button of the editor modal while the custom filter is incomplete', () => {
-      component.customFilterTitle.set('');
-      component.customFilterDefinition.set('');
+      component.draftFilterTitle.set('');
+      component.draftFilterDefinition.set('');
       fixture.detectChanges();
 
       const okButton = fixture.nativeElement.querySelector('#attributes-editor .actions .approve.button');
       expect(okButton.classList).toContain('disabled');
 
-      component.customFilterTitle.set('My title');
-      component.customFilterDefinition.set('my=filter');
+      component.draftFilterTitle.set('My title');
+      component.draftFilterDefinition.set('my=filter');
       fixture.detectChanges();
 
       expect(okButton.classList).not.toContain('disabled');
