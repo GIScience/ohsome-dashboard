@@ -7,4 +7,6 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 })
 export class FormValidationMessagesComponent {
   messages = input<string[]>([]);
+  // side the label's pointing arrow is rendered on
+  arrowDirection = input<'left' | 'right'>('left');
 }

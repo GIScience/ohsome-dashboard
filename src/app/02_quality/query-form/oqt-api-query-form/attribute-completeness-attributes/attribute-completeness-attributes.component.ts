@@ -1,10 +1,13 @@
-import { Component, effect, ElementRef, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Input, NgZone, OnChanges, OnInit, signal, SimpleChange, SimpleChanges, ViewChild, viewChild } from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 import {OqtApiMetadataProviderService} from '../../../oqt-api-metadata-provider.service';
 import {OqtAttribute, Topic} from '../../../types/types';
 import { SuiMultiSelectSearchDropdownComponent } from '../../../../shared/components/sui-dropdown/sui-multi-select-search-dropdown.component';
 import { PrismEditorComponent } from '../../../../shared/components/prism-editor/prism-editor.component';
 import { KeyValuePipe } from '@angular/common';
+import {
+  FormValidationMessagesComponent
+} from '../../../../shared/components/form-validation-messages/form-validation-messages.component';
 
 declare const $: any;
 declare const Prism;
@@ -15,7 +18,7 @@ declare const Prism;
     styleUrl: './attribute-completeness-attributes.component.css',
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe]
+    imports: [SuiMultiSelectSearchDropdownComponent, FormsModule, PrismEditorComponent, KeyValuePipe, FormValidationMessagesComponent]
 })
 export class AttributeCompletenessAttributesComponent implements OnInit, OnChanges {
   ngZone = inject(NgZone);
@@ -32,12 +35,24 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   attributes: Record<string, Record<string, OqtAttribute>>;
   selectedAttributeKeys: string[];
 
-  combinedAttributeFilters: string;
-
   // used to define wether to display dropdown with predefined attributes (false) or display the  user defined custom attribute
   useCustomFilterMode = signal(false);
   customFilterTitle = signal<string>('');
   customFilterDefinition = signal<string>('');
+
+  // draft state: what the editor modal is currently editing.
+  // only copied into customFilterTitle/customFilterDefinition once the user confirms a valid filter
+  draftFilterTitle = signal<string>('');
+  draftFilterDefinition = signal<string>('');
+
+  // a custom attribute filter needs both a title and a filter definition to be usable
+  readonly isCustomFilterTitleBlank = computed(() => this.draftFilterTitle().trim() === '');
+  readonly isCustomFilterDefinitionBlank = computed(() => this.draftFilterDefinition().trim() === '');
+  readonly isCustomFilterValid = computed(() => !this.isCustomFilterTitleBlank() && !this.isCustomFilterDefinitionBlank());
+  readonly customFilterMessages = computed(() => [
+    ...(this.isCustomFilterTitleBlank() ? [$localize` An attribute title is required.`] : []),
+    ...(this.isCustomFilterDefinitionBlank() ? [$localize` An attribute filter is required.`] : []),
+  ]);
 
   constructor() {
     // update popup content whenever the signal customFilterDefinition changes
@@ -245,15 +260,16 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
     }
   }
 
-  confirmCustomFilter(): void {
-    // an empty title for a topic that has predefined attributes isn't a valid custom
-    // filter - fall back to the dropdown instead of showing the "no predefined attributes" hint
-    if (!this.customFilterTitle() && this.topicHasAttributes(this.selectedTopic.key)) {
-      this.useCustomFilterMode.set(false);
-      return;
+  // returns false to keep the editor modal open when the custom filter is incomplete
+  confirmCustomFilter(): boolean {
+    if (!this.isCustomFilterValid()) {
+      return false;
     }
 
+    this.customFilterTitle.set(this.draftFilterTitle().trim());
+    this.customFilterDefinition.set(this.draftFilterDefinition().trim());
     this.useCustomFilterMode.set(true);
+    return true;
   }
 
   cancelCustomFilter(): void {
@@ -267,11 +283,16 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
 
   showAttributeFilterEditDialog() {
 
-    // compute the current attributeFilter as an AND-combination of the selected attributes
-    if (!this.useCustomFilterMode()) {
+    // the drafts are discarded unless the user confirms a valid filter
+    if (this.useCustomFilterMode()) {
+      // start from the confirmed filter
+      this.draftFilterTitle.set(this.customFilterTitle());
+      this.draftFilterDefinition.set(this.customFilterDefinition());
+    } else {
+      // start from the AND-combination of the selected attributes
       const {combinedNames, combinedFilters} = this.combineSelectedAttributes();
-      this.customFilterTitle.set(combinedNames)
-      this.customFilterDefinition.set(combinedFilters);
+      this.draftFilterTitle.set(combinedNames);
+      this.draftFilterDefinition.set(combinedFilters);
     }
 
     this.openAttributesEditorModal()
@@ -290,7 +311,9 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
         context: 'div#attributes-editor-dimmer',
         // context: 'body',
         // detachable: 'true' will move the modal-element inside the context element dom for the modal content stays inside the component when detachable=false otherwise it would be moved to the
-        detachable: true
+        detachable: true,
+        // returning false prevents fomantic from closing the modal on the 'approve' button
+        onApprove: () => this.ngZone.run(() => this.confirmCustomFilter())
       }).modal('show');
     });
 
@@ -300,7 +323,7 @@ export class AttributeCompletenessAttributesComponent implements OnInit, OnChang
   }
 
   setCustomFilerTitle($event: Event) {
-    this.customFilterTitle.set(($event.target as HTMLInputElement).value);
+    this.draftFilterTitle.set(($event.target as HTMLInputElement).value);
   }
 
   triggerClick(event: Event) {

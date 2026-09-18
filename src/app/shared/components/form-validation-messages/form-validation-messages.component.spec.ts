@@ -47,4 +47,26 @@ describe('FormValidationMessagesComponent', () => {
       'An ohsome filter is required.',
     ]);
   });
+
+  // semantic ui selects the arrow direction via [class*="left pointing"], so the assertions check the
+  // rendered class string rather than a css selector, which would match regardless of the word order
+  it('points the arrow to the left by default', () => {
+    fixture.componentRef.setInput('messages', ['An ohsome filter is required.']);
+    fixture.detectChanges();
+
+    const label = fixture.debugElement.query(By.css('div.ui.label')).nativeElement as HTMLElement;
+
+    expect(label.getAttribute('class')).toContain('left pointing');
+  });
+
+  it('points the arrow to the right when arrowDirection is set to right', () => {
+    fixture.componentRef.setInput('messages', ['An ohsome filter is required.']);
+    fixture.componentRef.setInput('arrowDirection', 'right');
+    fixture.detectChanges();
+
+    const label = fixture.debugElement.query(By.css('div.ui.label')).nativeElement as HTMLElement;
+
+    expect(label.getAttribute('class')).toContain('right pointing');
+    expect(label.getAttribute('class')).not.toContain('left pointing');
+  });
 });

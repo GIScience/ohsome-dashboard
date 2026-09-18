@@ -1,5 +1,5 @@
 import {Component, computed, effect, inject} from '@angular/core';
-import {form, FormField, required, submit, validate} from '@angular/forms/signals';
+import {form, FormField, required, validate} from '@angular/forms/signals';
 import {PrismEditorComponent} from '../../shared/components/prism-editor/prism-editor.component';
 import {OqtApiMetadataProviderService} from '../../02_quality/oqt-api-metadata-provider.service';
 import {FormsModule} from '@angular/forms';
@@ -14,7 +14,6 @@ import {ExtractionFormData} from './types';
 import Utils from '../../../utils';
 import {BoundaryInputComponentOptions} from '../../shared/shared-types';
 import {environment} from '../../../environments/environment';
-import {toPng} from 'html-to-image';
 import {AuthService} from '../../singelton-services/auth.service';
 import {getFormValidationMessages} from '../../shared/utils/form.utils';
 
@@ -94,26 +93,6 @@ export class ExtractionQueryFormComponent {
       this.isValidExtractionForm.set(extractionForm.valid());
       this.stateService.extractionFormMessages.set(getFormValidationMessages(extractionForm.errorSummary()));
     });
-  }
-
-  async onSubmit(event: Event | null) {
-    event?.preventDefault();
-    const mapDataUrl = await this.getImageUrlFromMap();
-
-    const formValues = {...this.extractionForm().value(), backend: 'extraction', mapDataUrl};
-
-    submit(this.extractionForm, async () => {
-      console.log('Create Extraction Asset', event);
-      // Add logic here
-      console.log("EXTRACTION FORM", this.extractionForm())
-      this.dataservice.pushFormValues(formValues, 'bbox')
-    });
-  }
-
-  async getImageUrlFromMap() {
-    const node = document.querySelector<HTMLDivElement>('#boundaryMap');
-    if (!node) return '';
-    return await toPng(node);
   }
 
   static buildInitialModel(initialHashParams: URLSearchParams): ExtractionFormData {

@@ -110,14 +110,14 @@
 
     <div class="field">
       <label for="customTitle">Attribute Title</label>
-      <input id="customTitle" class="ui header" type="text" [value]="customFilterTitle()"
-             (change)="setCustomFilerTitle($event)" required>
+      <input id="customTitle" class="ui header" type="text" [value]="draftFilterTitle()"
+             (input)="setCustomFilerTitle($event)">
     </div>
     <div class="field">
       <label>Attribute Filter (<a href="https://docs.ohsome.org/ohsome-api/v1/filter.html" target="_blank">How does this
         work?</a>)
-        <app-prism-editor id="customAttributeFilter" [value]="customFilterDefinition()"
-                          (valueChange)="customFilterDefinition.set($event)">
+        <app-prism-editor id="customAttributeFilter" [value]="draftFilterDefinition()"
+                          (valueChange)="draftFilterDefinition.set($event)">
         </app-prism-editor>
       </label>
     </div>
@@ -126,9 +126,10 @@
     <!-- these functions will be implemented later-->
     <!--    <div class="ui blue left floated basic button"><i class="checkmark icon"></i>Validate</div>-->
     <!--    <div class="ui blue left floated basic button"><i class="save icon"></i>Save in Browser Cache</div>-->
+    <app-form-validation-messages class="attribute-filter-errors" [messages]="customFilterMessages()" [arrowDirection]="'right'"/>
     <div
       class="ui green approve button"
-      (click)="confirmCustomFilter()"
+      [class.disabled]="!isCustomFilterValid()"
       (keydown.enter)="triggerClick($event)"
       tabindex="0"
       role="button"
