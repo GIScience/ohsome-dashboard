@@ -194,7 +194,7 @@
             ],
             "buildTarget": ":build:testing",
             "runner": "vitest",
-            "runnerConfig": "vitest-base.config.ts",
+            "runnerConfig": "vitest-base.config.mts",
             "exclude": ["src/**/environment.test.ts"],
             "setupFiles": ["test-setup-files/test-setup.ts"],
             "coverageInclude": ["src/**/*.ts"],
