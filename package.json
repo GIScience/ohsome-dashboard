@@ -94,10 +94,9 @@
   "allowScripts": {
     "@parcel/watcher@2.5.6": true,
     "edgedriver@6.3.0": true,
-    "esbuild@0.28.1": true,
-    "esbuild@0.27.7": true,
     "geckodriver@6.1.0": true,
-    "lmdb@3.5.4": true,
-    "msgpackr-extract@3.0.4": true
+    "msgpackr-extract@3.0.4": true,
+    "esbuild@0.28.2": true,
+    "lmdb@3.5.6": true
   }
 }
