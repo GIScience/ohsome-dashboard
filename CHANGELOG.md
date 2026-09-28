@@ -3,6 +3,10 @@ Changelog
 
 ## current
 
+## 2.1.0
+
+* feat: compatible with oshome-api (2.0.0rc2+c0be651): breaking change in group by response
+* feat: add form validation messages
 * feat: Add clip option to stats query form  ([#100])
 * fix: text field for custom topic filters is too small when empty  ([#99])
 
