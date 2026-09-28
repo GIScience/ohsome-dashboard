@@ -70,11 +70,12 @@ export interface paths {
         put?: never;
         /**
          * Aggregate features by {measure} as time series.
-         * @description CSV Response Format:
+         * @description CSV response format:
          *     - Delimiter: `;`
          *     - Comments: `#`
          *     - Line terminator: `\n`
-         *     - Quote character: `\`
+         *     - Quote character: `"
+         *     All fields are quoted.
          */
         post: operations["post_features_as_csv_stats_features__measure__csv_post"];
         delete?: never;
@@ -111,11 +112,12 @@ export interface paths {
         put?: never;
         /**
          * Active contributors per time bin.
-         * @description CSV Response Format:
+         * @description CSV response format:
          *     - Delimiter: `;`
          *     - Comments: `#`
          *     - Line terminator: `\n`
-         *     - Quote character: `\`
+         *     - Quote character: `"
+         *     All fields are quoted.
          */
         post: operations["post_contributors_count_as_csv_stats_contributors_count_csv_post"];
         delete?: never;
@@ -152,11 +154,12 @@ export interface paths {
         put?: never;
         /**
          * Active contributors per time bin.
-         * @description CSV Response Format:
+         * @description CSV response format:
          *     - Delimiter: `;`
          *     - Comments: `#`
          *     - Line terminator: `\n`
-         *     - Quote character: `\`
+         *     - Quote character: `"
+         *     All fields are quoted.
          */
         post: operations["post_contributors_count_as_csv_stats_contributions_count_csv_post"];
         delete?: never;
@@ -193,11 +196,12 @@ export interface paths {
         put?: never;
         /**
          * Currentness of features in time bins.
-         * @description CSV Response Format:
+         * @description CSV response format:
          *     - Delimiter: `;`
          *     - Comments: `#`
          *     - Line terminator: `\n`
-         *     - Quote character: `\`
+         *     - Quote character: `"
+         *     All fields are quoted.
          */
         post: operations["post_currentness_as_csv_stats_currentness__measure__csv_post"];
         delete?: never;
@@ -499,7 +503,7 @@ export interface components {
         MetadataResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+c0be651
+             * @default 2.0.0rc2+c614fc5
              */
             apiVersion: string;
             /**
@@ -599,7 +603,7 @@ export interface components {
         StatsContributionsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+c0be651
+             * @default 2.0.0rc2+c614fc5
              */
             apiVersion: string;
             /**
@@ -635,7 +639,7 @@ export interface components {
         StatsContributorsResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+c0be651
+             * @default 2.0.0rc2+c614fc5
              */
             apiVersion: string;
             /**
@@ -677,7 +681,7 @@ export interface components {
         StatsCurrentnessResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+c0be651
+             * @default 2.0.0rc2+c614fc5
              */
             apiVersion: string;
             /**
@@ -689,7 +693,24 @@ export interface components {
             attribution: components["schemas"]["Attribution"];
             result: components["schemas"]["TimeBinsResult"];
         };
-        /** StatsFeaturesRequest */
+        /**
+         * StatsFeaturesRequest
+         * @example {
+         *       "aoi": [
+         *         8.68812,
+         *         49.4039,
+         *         8.72362,
+         *         49.41582
+         *       ],
+         *       "clip": false,
+         *       "filter": "geometry:point and natural=tree",
+         *       "time": {
+         *         "end": "2026-01-01T00:00:00Z",
+         *         "interval": "P1M",
+         *         "start": "2025-01-01T00:00:00Z"
+         *       }
+         *     }
+         */
         StatsFeaturesRequest: {
             /**
              * Clip
@@ -698,8 +719,13 @@ export interface components {
              */
             clip: boolean;
             /**
-             * @description `(experimental, optional)`; If given indicates that the results should also values for individual subsets of the result defined by the presence of tags with the given key
-             * @example null
+             * @description Splits the result into subsets for each distinct value of the specified OSM tag key.
+             * @example {
+             *       "groupBy": {
+             *         "key": "natural",
+             *         "type": "byTag"
+             *       }
+             *     }
              */
             groupBy?: components["schemas"]["GroupByTag"] | null;
             /**
@@ -725,7 +751,7 @@ export interface components {
         StatsFeaturesResponse: {
             /**
              * Apiversion
-             * @default 2.0.0rc2+c0be651
+             * @default 2.0.0rc2+c614fc5
              */
             apiVersion: string;
             /**
@@ -1162,11 +1188,11 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+c0be651
-                     *     # attribution.url: https://ohsome.org/copyrights
-                     *     # attribution.text: © OpenStreetMap contributors
-                     *     timestamp;result
-                     *     2026-01-01T00:00:00Z;163
+                     * @example "# apiVersion: 2.0.0rc2+c614fc5"
+                     *     "# attribution.url: https://ohsome.org/copyrights"
+                     *     "# attribution.text: © OpenStreetMap contributors"
+                     *     "timestamp";"result"
+                     *     "2026-01-01T00:00:00Z";"163"
                      */
                     "text/csv": string;
                 };
@@ -1325,11 +1351,11 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+c0be651
-                     *     # attribution.url: https://ohsome.org/copyrights
-                     *     # attribution.text: © OpenStreetMap contributors
-                     *     start;end;value
-                     *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
+                     * @example "# apiVersion: 2.0.0rc2+c614fc5"
+                     *     "# attribution.url: https://ohsome.org/copyrights"
+                     *     "# attribution.text: © OpenStreetMap contributors"
+                     *     "start";"end";"value"
+                     *     "2007-10-08T00:00:00Z;2026-01-01T00:00:00Z";"163"
                      */
                     "text/csv": string;
                 };
@@ -1488,11 +1514,11 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+c0be651
-                     *     # attribution.url: https://ohsome.org/copyrights
-                     *     # attribution.text: © OpenStreetMap contributors
-                     *     start;end;value
-                     *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
+                     * @example "# apiVersion: 2.0.0rc2+c614fc5"
+                     *     "# attribution.url: https://ohsome.org/copyrights"
+                     *     "# attribution.text: © OpenStreetMap contributors"
+                     *     "start";"end";"value"
+                     *     "2007-10-08T00:00:00Z;2026-01-01T00:00:00Z";"163"
                      */
                     "text/csv": string;
                 };
@@ -1655,11 +1681,11 @@ export interface operations {
                 };
                 content: {
                     /**
-                     * @example # apiVersion: 2.0.0rc2+c0be651
-                     *     # attribution.url: https://ohsome.org/copyrights
-                     *     # attribution.text: © OpenStreetMap contributors
-                     *     start;end;value
-                     *     2007-10-08T00:00:00Z;2026-01-01T00:00:00Z;163
+                     * @example "# apiVersion: 2.0.0rc2+c614fc5"
+                     *     "# attribution.url: https://ohsome.org/copyrights"
+                     *     "# attribution.text: © OpenStreetMap contributors"
+                     *     "start";"end";"value"
+                     *     "2007-10-08T00:00:00Z;2026-01-01T00:00:00Z";"163"
                      */
                     "text/csv": string;
                 };
