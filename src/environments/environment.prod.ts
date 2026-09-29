@@ -5,9 +5,9 @@ export const environment: AppEnvironment = {
   production: true,
 
   //ohsomeAPI (stats and extraction)
-  ohsomeApiRootUrl: 'https://api.heigit.org/ohsome-api/v2-rc',
+  ohsomeApiRootUrl: 'https://api.heigit.org/ohsome-api/v2',
 
-  ohsomeApiDocsUrl: 'https://docs.ohsome.org/ohsome-api/v2/',
+  ohsomeApiDocsUrl: 'https://docs.ohsome.org/ohsome-api/stable',
 
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test',
