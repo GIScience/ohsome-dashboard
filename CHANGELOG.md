@@ -3,6 +3,9 @@ Changelog
 
 ## current
 
+* build: remove build command for idai configuration
+* chore: change ohsome API url in prod environment
+
 ## 2.1.0
 
 * feat: compatible with oshome-api (2.0.0rc2+c0be651): breaking change in group by response
