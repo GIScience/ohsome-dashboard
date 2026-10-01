@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+## 2.1.1
+
 * build: remove build command for idai configuration
 * chore: change ohsome API url in prod environment
 
