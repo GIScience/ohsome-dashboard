@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+## 2.2.0
+
 * i18n: translate changes of v2 to german
 
 ## 2.1.1
