@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+* i18n: translate changes of v2 to german
+
 ## 2.1.1
 
 * build: remove build command for idai configuration

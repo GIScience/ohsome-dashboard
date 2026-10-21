@@ -1,5 +1,5 @@
 {
-  "locale": "de",
+  "locale": "en",
   "translations": {
     "8008761738243063999": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT}Topic",
     "3288216878135909618": "Edit the topic filter.",
@@ -171,7 +171,7 @@
     "40163034910520193": "Select at least one attribute, or define a custom attribute filter, for the \"Attribute Completeness\" indicator.",
     "6980062824870306052": " A tag key is required for tag value exploration.",
     "4420055000316709036": " A custom topic title is required.",
-    "4678588727217917761": " At least one quality indicator must be selected."
+    "4678588727217917761": " At least one quality indicator must be selected.",
     "4244100108753071040": "{$START_TAG_SPAN}Extract custom filtered OpenStreetMap data for your area-of-interest, ready to be used for in-depth analysis in your own workflows.{$CLOSE_TAG_SPAN}{$LINE_BREAK}{$LINE_BREAK}{$START_TAG_SPAN}Find further options to get OSM History Data for your application in our{$CLOSE_TAG_SPAN}{$LINE_BREAK}{$START_LINK}ohsome API Swagger documentation{$CLOSE_LINK}. ",
     "5651250769930561306": "Data Extraction Example",
     "5885452247889934944": "Topic",
