@@ -39,8 +39,6 @@ export class ThematicAccuracyIndicatorComponent implements OnInit {
 
   getThematicCategoryFromUrlHashParams(hashParams: URLSearchParams): string {
 
-    console.log("hashParams", hashParams);
-
     // 1. extract the category from URL
     const thematicCategoryFromUrl: string | null = hashParams.get(this.indicatorKey + '--' + this.categoryType);
 
@@ -56,16 +54,14 @@ export class ThematicAccuracyIndicatorComponent implements OnInit {
     return thematicCategoryFromUrl;
   }
   ngOnInit() {
-    this.selectedCategoryIds = this.getThematicCategoryFromUrlHashParams(this.hashParams);
     this.categories = categoryRegistry()[this.indicatorKey]
     this.categoryType = thematicCategoryType[this.indicatorKey];
+    this.selectedCategoryIds = this.getThematicCategoryFromUrlHashParams(this.hashParams);
 
     this.thematicDropdownOptions = {
       fullTextSearch: 'exact',
       clearable: true,
     };
-    console.log(this.indicatorKey + '--' + this.categoryType);
-    console.log(this.categoryType);
   }
 
   protected readonly thematicCategoryType = thematicCategoryType;
