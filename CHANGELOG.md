@@ -3,6 +3,8 @@ Changelog
 
 ## current
 
+fix: attributes of thematic accuracy indicators are now parsed from URL
+
 ## 2.2.0
 
 * i18n: translate changes of v2 to german
