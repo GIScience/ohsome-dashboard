@@ -573,6 +573,11 @@ export const oqtApiMetadataResponseMock: MetadataResponseJSON = {
           "name": "Road Accuracy",
           "description": "Comparison of OSM road attributes with the attributes from the <a target=\"_blank\" href=\"https://mis.bkg.bund.de/trefferanzeige?docuuid=66656563-c818-4587-bde1-f4bed2787851\">Digitales Landschaftsmodell (DLM) </a> dataset.",
           "qualityDimension": "none"
+        },
+        "bridges-thematic-accuracy": {
+          "name": "Bridge Accuracy",
+          "description": "Comparison of OSM bridge attributes with the attributes from the <a target=\"_blank\" href=\"https://mis.bkg.bund.de/trefferanzeige?docuuid=66656563-c818-4587-bde1-f4bed2787851\">Digitales Landschaftsmodell (DLM) </a> dataset.",
+          "qualityDimension": "none"
         }
       },
       "topics": {
@@ -585,7 +590,8 @@ export const oqtApiMetadataResponseMock: MetadataResponseJSON = {
             "mapping-saturation",
             "currentness",
             "user-activity",
-            "attribute-completeness"
+            "attribute-completeness",
+            "bridges-thematic-accuracy"
           ],
           "source": null
         },

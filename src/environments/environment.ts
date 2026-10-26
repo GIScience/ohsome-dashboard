@@ -17,8 +17,8 @@ export const environment: AppEnvironment = {
   //oqtApi (ohsome quality analyst)
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1',
   // oqtApiRootUrl: 'https://api.quality.ohsome.org/v1-test/',
-  oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api-staging/v2',
-  // oqtApiRootUrl: 'http://127.0.0.1:8000',
+ // oqtApiRootUrl: 'https://api.heigit.org/ohsome-quality-api-staging/v2',
+  oqtApiRootUrl: 'http://127.0.0.1:8000',
   defaultTopicKey: 'cycleway',
 
   oqapiDocsUrl: 'https://giscience.github.io/oqapi-jupyter-book',

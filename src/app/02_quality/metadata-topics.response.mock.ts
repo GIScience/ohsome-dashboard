@@ -13,7 +13,8 @@ export const oqtMetadataTopicsResponseMock = {
       "mapping-saturation",
       "currentness",
       "user-activity",
-      "attribute-completeness"
+      "attribute-completeness",
+      "bridges-thematic-accuracy"
     ],
       "source": null
   },
