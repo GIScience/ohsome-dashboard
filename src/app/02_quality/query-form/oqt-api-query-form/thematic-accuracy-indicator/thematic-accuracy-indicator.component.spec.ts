@@ -137,4 +137,66 @@ describe('ThematicAccuracyIndicatorComponent', () => {
       })
     });
   });
+
+
+  describe('with bridges-thematic-accuracy indicator', () => {
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [OqtModule, PrismEditorComponent],
+        providers: [
+          NgForm,
+          {provide: OqtApiMetadataProviderService, useValue: OqtApiMetadataProviderServiceMock},
+          provideAppInitializer(() => {
+            const initializerFn = (preparePrismToRenderOhsomeFilterLangauge)();
+            return initializerFn();
+          }),
+          provideHttpClient()
+        ]
+      })
+        .compileComponents();
+
+      fixture = TestBed.createComponent(ThematicAccuracyIndicatorComponent);
+      component = fixture.componentInstance;
+      component.indicatorKey = "bridges-thematic-accuracy";
+      component.hashParams = new URLSearchParams("bridges-thematic-accuracy--attribute=width");
+      component.selectedCategoryIds = 'width';
+      fixture.detectChanges();
+    });
+
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+
+    describe('getThematicAccuracyFromUrlHashParams', () => {
+      const hashParamsCases = [
+        {
+          description: 'Valid thematic attribute',
+          topicKey: 'bridges_all_ways',
+          hashParams: new URLSearchParams('bridges-thematic-accuracy--attribute=width'),
+          expected: 'width'
+        },
+        {
+          description: 'Road only thematic attribute is invalid for bridges',
+          topicKey: 'bridges_all_ways',
+          hashParams: new URLSearchParams('bridges-thematic-accuracy--attribute=surface'),
+          expected: ''
+        },
+        {
+          description: 'No thematic attribute selected',
+          topicKey: 'bridges_all_ways',
+          hashParams: new URLSearchParams('bridges-thematic-accuracy--attribute='),
+          expected: ''
+        }
+      ];
+
+      hashParamsCases.forEach((hashParamsCase) => {
+        it(hashParamsCase.description, () => {
+          const result = component.getThematicCategoryFromUrlHashParams(hashParamsCase.hashParams);
+          expect(result).toEqual(hashParamsCase.expected);
+        })
+      })
+    });
+  });
 });

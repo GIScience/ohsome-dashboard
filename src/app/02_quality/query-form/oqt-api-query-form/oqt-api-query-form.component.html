@@ -166,6 +166,14 @@
                           ></app-thematic-accuracy-indicator>
                         }
                       }
+                      @case ("bridges-thematic-accuracy") {
+                        @if (indicator.checked) {
+                          <app-thematic-accuracy-indicator
+                            [indicatorKey]="indicator.key"
+                            [hashParams]="hashParams"
+                          ></app-thematic-accuracy-indicator>
+                        }
+                      }
                     }
                   </app-simple-indicator>
                 </div>

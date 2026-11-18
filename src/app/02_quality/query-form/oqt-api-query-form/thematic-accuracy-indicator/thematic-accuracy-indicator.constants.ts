@@ -37,21 +37,38 @@ function thematicAttributeMap(): Record<
   };
 }
 
+// the attributes of a bridge differ from those of a road, so they get their own map.
+// `Width`/`Height` carry an i18n meaning to keep them translatable independently of
+// the road attributes (de: "Fahrbahnbreite" vs. "Breite").
+function bridgeThematicAttributeMap(): Record<
+  string,
+  { name: string}
+> {
+  return {
+    "name": { name: $localize`Name`},
+    "width": { name: $localize`:bridge attribute|Width of a bridge:Width`},
+    "height": { name: $localize`:bridge attribute|Height of a bridge:Height`},
+  };
+}
+
 export function categoryRegistry() {
   return {
     "land-cover-thematic-accuracy": corineLandCoverClassMapLevel2(),
-    "roads-thematic-accuracy" : thematicAttributeMap()
+    "roads-thematic-accuracy" : thematicAttributeMap(),
+    "bridges-thematic-accuracy" : bridgeThematicAttributeMap()
   };
 }
 
 export const thematicCategoryType = {
   "land-cover-thematic-accuracy" : "corine_land_cover_class",
-  "roads-thematic-accuracy" : "attribute"
+  "roads-thematic-accuracy" : "attribute",
+  "bridges-thematic-accuracy" : "attribute"
 }
 
 export function thematicAccuracyCategoryNamesForBlank(): Record<string, string> {
   return {
     "land-cover-thematic-accuracy" : $localize`All Classes`,
-    "roads-thematic-accuracy" : $localize`All Attributes`
+    "roads-thematic-accuracy" : $localize`All Attributes`,
+    "bridges-thematic-accuracy" : $localize`All Attributes`
   };
 }
