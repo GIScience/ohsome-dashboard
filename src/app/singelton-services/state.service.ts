@@ -59,6 +59,7 @@ export class StateService {
       "indicators": Utils.getFromParamsOrDefault(this.initialHashParams, 'indicators', ['mapping-saturation']),
       "adminids": Utils.getFromParamsOrDefault(this.initialHashParams, 'adminids', ''),
       "measure": Utils.getFromParamsOrDefault(this.initialHashParams, 'measure', 'count'),
+      "clipped": this.initialHashParams.get('clipped')?.toLowerCase() === 'true',
     },
     {
       equal: (a, b) => {

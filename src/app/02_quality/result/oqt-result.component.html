@@ -77,7 +77,8 @@
                                   [bpolys]="boundaries"
                                   [topicTitle]="String(formValues()['topic-title'])"
                                   [topicFilter]=" String(formValues()['topic-filter'])"
-                                  [measure]="String(formValues()['measure'])">
+                                  [measure]="String(formValues()['measure'])"
+                                  [clipped]="formValues()['clipped'] === true">
             </app-indicator-result>
           </div>
         }
