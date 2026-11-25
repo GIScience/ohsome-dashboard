@@ -155,6 +155,7 @@
                   <app-simple-indicator
                     [indicator]="indicator"
                     [qualityDimension]="qualityDimension"
+                    [ignoresClippedParam]="!indicator.supportsClipping && qualityForm.clipped().value()"
                     (indicatorToggle)="onIndicatorToggle($event)"
                   >
                     @switch (indicator.key) {
