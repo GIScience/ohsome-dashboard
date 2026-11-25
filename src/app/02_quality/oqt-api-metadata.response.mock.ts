@@ -532,47 +532,56 @@ export const oqtApiMetadataResponseMock: MetadataResponseJSON = {
         "mapping-saturation": {
           "name": "Mapping Saturation",
           "description": "Calculate if mapping has saturated. High saturation has been reached if the growth of the fitted curve is minimal.",
-          "qualityDimension": "completeness"
+          "qualityDimension": "completeness",
+          "supportsClipping": true
         },
         "currentness": {
           "name": "Currentness",
           "description": "Estimate currentness of features by classifying contributions based on topic specific temporal thresholds into three groups: up-to-date, in-between and out-of-date.",
-          "qualityDimension": "currentness"
+          "qualityDimension": "currentness",
+          "supportsClipping": true
         },
         "road-comparison": {
           "name": "Road Comparison",
           "description": "Compare the road length of OSM roads with the road length of reference data.",
-          "qualityDimension": "completeness"
+          "qualityDimension": "completeness",
+          "supportsClipping": false
         },
         "building-comparison": {
           "name": "Building Comparison",
           "description": "Comparison of OSM buildings with the buildings of reference datasets.",
-          "qualityDimension": "completeness"
+          "qualityDimension": "completeness",
+          "supportsClipping": true
         },
         "attribute-completeness": {
           "name": "Attribute Completeness",
           "description": "Derive the ratio of OSM features compared to features which match additional expected tags (e.g. amenity=hospital vs amenity=hospital and wheelchair=yes).",
-          "qualityDimension": "completeness"
+          "qualityDimension": "completeness",
+          "supportsClipping": true
         },
         "land-cover-thematic-accuracy": {
           "name": "Land Cover Thematic Accuracy",
           "description": "Thematic accuracy OpenStreetMap land cover data in comparison to the <a href=\"https://land.copernicus.eu/en/products/corine-land-cover\">CORINE Land Cover (CLC)</a> dataset.",
-          "qualityDimension": "thematic-accuracy"
+          "qualityDimension": "thematic-accuracy",
+          "supportsClipping": false
         },
         "land-cover-completeness": {
           "name": "Land Cover Completeness",
           "description": "Percentage of the area of interest that is covered by OpenStreetMap land cover data.",
-          "qualityDimension": "completeness"
+          "qualityDimension": "completeness",
+          "supportsClipping": false
         },
         "user-activity": {
           "name": "User Activity",
           "description": "Shows the count of unique mappers per month for the selected topic. None-quality indicator.",
-          "qualityDimension": "none"
+          "qualityDimension": "none",
+          "supportsClipping": false
         },
         "roads-thematic-accuracy": {
           "name": "Road Accuracy",
           "description": "Comparison of OSM road attributes with the attributes from the <a target=\"_blank\" href=\"https://mis.bkg.bund.de/trefferanzeige?docuuid=66656563-c818-4587-bde1-f4bed2787851\">Digitales Landschaftsmodell (DLM) </a> dataset.",
-          "qualityDimension": "none"
+          "qualityDimension": "none",
+          "supportsClipping": false
         }
       },
       "topics": {

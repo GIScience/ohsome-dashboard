@@ -27,6 +27,7 @@ export class IndicatorResultComponent implements OnInit {
   topicTitle= input<string>()
   topicFilter= input<string>()
   measure= input<string>()
+  clipped= input<boolean>(false)
   @Input() bpolys: FeatureCollection<Polygon | MultiPolygon>;// Feature<Polygon | MultiPolygon>;
   @Input() indicator!: IndicatorParams;
 
@@ -58,6 +59,7 @@ export class IndicatorResultComponent implements OnInit {
     let body = {
       topic: this.topicKey,
       bpolys: this.bpolys,
+      clipped: this.clipped(),
     }
 
 

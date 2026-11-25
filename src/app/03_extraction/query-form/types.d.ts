@@ -21,6 +21,7 @@ interface QualityFormData extends SharedFormData {
   indicators: string[];
   adminids: string;
   measure: paths['/stats/features/{measure}.json']['post']['parameters']['path']['measure'];
+  clipped: boolean;
 }
 
 interface ExtractionFormData extends SharedFormData {

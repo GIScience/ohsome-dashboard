@@ -29,6 +29,7 @@ interface RawIndicatorMetadata {
   name: string;
   description: string;
   qualityDimension: string;
+  supportsClipping: boolean;
 }
 
 interface RawQualityDimensionMetadata {

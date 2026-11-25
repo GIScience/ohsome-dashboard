@@ -75,6 +75,14 @@ describe('IndicatorResultComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should send the clipped flag as a boolean to the oqapi backend', () => {
+    expect((component as any).prepareRequestBody().clipped).toBe(false);
+
+    fixture.componentRef.setInput('clipped', true);
+
+    expect((component as any).prepareRequestBody().clipped).toBe(true);
+  });
+
   it('should perform getIndicatorResults successfully', () => {
 
     vi.spyOn(component['oqtApi'], 'getIndicator').mockReturnValue(of(indicatorResponseMock));

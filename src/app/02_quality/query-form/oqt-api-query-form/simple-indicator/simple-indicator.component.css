@@ -1,0 +1,12 @@
+.ui.toggle.checkbox {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.clip-warning-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: help;
+}

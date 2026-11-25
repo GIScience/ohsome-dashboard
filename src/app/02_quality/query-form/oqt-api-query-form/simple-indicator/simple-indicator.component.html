@@ -2,6 +2,19 @@
   <input type="checkbox" name="{{indicator.key}}" id="{{qualityDimension}}-{{indicator.key}}" attr.data-indicator-key="{{indicator.key}}"
          [ngModel]="indicator.checked" (change)="this.indicatorToggle.emit({indicator, state: indicator.checked = !indicator.checked })">
   <label for="{{indicator.key}}">
+    @if (ignoresClippedParam) {
+      <span class="clip-warning-icon"
+            data-tooltip="The clip setting has no effect here."
+            data-inverted
+            data-position="right center"
+            i18n-data-tooltip
+      >
+        <i class="icons">
+          <i class="grey cut icon"></i>
+          <i class="grey ban corner icon"></i>
+        </i>
+      </span>
+    }
     <div class="content">
       <a class="header">{{indicator.name}}</a>
       <div [innerHTML]=getDescriptionWithLink() class="description"></div>

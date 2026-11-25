@@ -24,6 +24,7 @@ describe('SimpleIndicatorComponent', () => {
       "name": "Attribute Completeness",
       "description": "Derive the ratio of OSM features compared to features which match additional expected tags (e.g. amenity=hospital vs amenity=hospital and wheelchair=yes).",
       "qualityDimension": "completeness",
+      "supportsClipping": true,
       "key": "attribute-completeness",
       "checked": true
     }
@@ -34,5 +35,15 @@ describe('SimpleIndicatorComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should not show the clip warning icon by default', () => {
+    expect(fixture.nativeElement.querySelector('.cut.icon')).toBeNull();
+  });
+
+  it('should show the clip warning icon when ignoresClippedParam is true', () => {
+    component.ignoresClippedParam = true;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.cut.icon')).not.toBeNull();
   });
 });

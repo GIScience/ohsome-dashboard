@@ -16,6 +16,7 @@ import {environment} from '../../../../../environments/environment';
 export class SimpleIndicatorComponent {
   @Input() indicator!: Checkbox<Indicator>;
   @Input() qualityDimension!: string;
+  @Input() ignoresClippedParam = false;
   @Output() indicatorToggle: EventEmitter<{indicator: Indicator, state: boolean}> = new EventEmitter<{indicator: Indicator, state: boolean}>();
 
   getDescriptionWithLink(): string {
