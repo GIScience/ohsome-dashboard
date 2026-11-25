@@ -38,12 +38,12 @@ describe('SimpleIndicatorComponent', () => {
   });
 
   it('should not show the clip warning icon by default', () => {
-    expect(fixture.nativeElement.querySelector('.exclamation.triangle.icon')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.cut.icon')).toBeNull();
   });
 
   it('should show the clip warning icon when ignoresClippedParam is true', () => {
     component.ignoresClippedParam = true;
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.exclamation.triangle.icon')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.cut.icon')).not.toBeNull();
   });
 });
